@@ -1,0 +1,33 @@
+import { cardData } from "@/constant/ExperienceCard";
+import React from "react";
+import ExperienceCard from "./ExperienceCard";
+
+export default function Experience() {
+  return (
+    <div className=" bg-[#0037FF] mt-10 md:mt-20 ">
+      <div className="container mx-auto px-5 lg:px-28 py-16">
+        <div className=" text-center">
+          <p className="text-base font-bold leading-7 text-white">
+            WHY CHOOSE FISHING TRIPPER?
+          </p>
+          <h1 className="mt-4 text-white text-xl md:text-4xl font-normal leading-10 mb-2">
+            Experience Fishing Like Never Before
+          </h1>
+          <p className="text-sm md:text-[18px] font-normal text-white leading-8 px-0 lg:px-32 font-satoshi">
+            Planning your fishing adventure has never been easier. With flexible
+            options, top-rated captains, and seamless booking, we make sure your
+            trip is tailored just for you. Whether youre a seasoned angler or a
+            first-timer, weve got everything you need for an unforgettable
+            experience on the water.
+          </p>
+        </div>
+
+        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 mt-16">
+          {cardData.map((cardInfo, index) => (
+            <ExperienceCard key={index} cardInfo={cardInfo} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

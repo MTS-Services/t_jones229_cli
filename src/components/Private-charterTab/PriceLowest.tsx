@@ -1,0 +1,28 @@
+import TopChartersCard from "../Home/TopChartersCard";
+import Loader from "../ui/Loader";
+
+interface PriceLowestProps {
+  currentItems: any[];
+  isLoading: boolean;
+}
+
+export default function PriceLowest({
+  currentItems,
+  isLoading,
+}: PriceLowestProps) {
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  return (
+    <div>
+      <div className="">
+        {currentItems && currentItems?.length > 0
+          ? currentItems?.map((card: any) => (
+              <TopChartersCard key={card.id} boatInfo={card} />
+            ))
+          : "No data available"}
+      </div>
+    </div>
+  );
+}
