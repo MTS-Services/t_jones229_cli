@@ -54,7 +54,14 @@ export default function Information({ setIsLicenceImage }: InformationProps) {
 
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [idCounter, setIdCounter] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Stable ID generator
+  const generateId = () => {
+    setIdCounter(prev => prev + 1);
+    return `license-file-${idCounter}-${Date.now()}`;
+  };
 
   // Reset form values when data loads
   useEffect(() => {
@@ -85,7 +92,7 @@ export default function Information({ setIsLicenceImage }: InformationProps) {
     );
 
     validFiles.forEach((file) => {
-      const id = Math.random().toString(36).substr(2, 9);
+      const id = generateId();
       const preview = URL.createObjectURL(file);
       const type = file.type.startsWith("image/") ? "image" : "video";
 

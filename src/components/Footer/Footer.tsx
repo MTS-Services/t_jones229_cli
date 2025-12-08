@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
               />
             </div>
             <p className=" hidden md:block text-[#424242] text-sm font-normal mt-4 hover:text-[#FF9500] transition-colors duration-300 ease-in-out">
-              Copyright ©{new Date().getFullYear()}. Fishing tripper.
+              Copyright ©2024. Fishing tripper.
             </p>
           </div>
 
@@ -194,7 +194,7 @@ const Footer: React.FC = () => {
             </div>
 
             <p className="block md:hidden text-[#424242] text-sm font-normal mt-4 hover:text-[#FF9500] transition-colors duration-300 ease-in-out">
-              Copyright ©{new Date().getFullYear()}. Fishing tripper.
+              Copyright ©2024. Fishing tripper.
             </p>
           </div>
         </div>

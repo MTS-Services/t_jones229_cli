@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, type DragEvent, type ChangeEvent } from "react";
+import { useState, useRef, useCallback, type DragEvent, type ChangeEvent } from "react";
 import { X, Upload, Play, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { Card } from "antd";
@@ -24,8 +24,15 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
   const { setValue } = useFormContext<{ photos: string[] }>();
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [idCounter, setIdCounter] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
+
+  // Stable ID generator
+  const generateId = useCallback(() => {
+    setIdCounter(prev => prev + 1);
+    return `file-${idCounter}-${Date.now()}`;
+  }, [idCounter]);
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -62,7 +69,7 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
     });
 
     validFiles.forEach((file) => {
-      const id = Math.random().toString(36).substr(2, 9);
+      const id = generateId();
       const preview = URL.createObjectURL(file);
       const type = file.type.startsWith("image/") ? "image" : "video";
 
