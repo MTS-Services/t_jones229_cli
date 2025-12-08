@@ -53,6 +53,6 @@ lerna-debug.log*
 
 # Lock files (if using different package managers)
 # Uncomment the one you're NOT using
-# package-lock.json  # if using yarn or bun
+package-lock.json  # if using yarn or bun
 # yarn.lock          # if using npm or bun
 bun.lockb            # if using npm or yarn
