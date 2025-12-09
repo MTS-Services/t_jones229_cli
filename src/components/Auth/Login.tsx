@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import Button from "@/components/ReUsible/Button";
-import Loader from "@/components/ui/Loader";
-import { useLoginMutation, useSignupMutation } from "@/redux/api/authApi";
-import { setUser } from "@/redux/slices/authSlice";
-import { signInWithGoogle } from "@/services/authService";
-import Cookies from "js-cookie";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { FcGoogle } from "react-icons/fc";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import Button from '@/components/ReUsible/Button';
+import Loader from '@/components/ui/Loader';
+import { useLoginMutation, useSignupMutation } from '@/redux/api/authApi';
+import { setUser } from '@/redux/slices/authSlice';
+import { signInWithGoogle } from '@/services/authService';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { FcGoogle } from 'react-icons/fc';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const {
@@ -32,8 +32,9 @@ export default function Login() {
       const res = await loginFn(userInfo);
 
       if (res?.data?.success) {
-        Cookies.set("token", res?.data?.data?.accessToken);
-        Cookies.set("currentUserRole", res?.data?.data?.role);
+        Cookies.set('token', res?.data?.data?.accessToken);
+        Cookies.set('currentUserRole', res?.data?.data?.role);
+
         dispatch(
           setUser({
             user: res?.data?.data,
@@ -41,29 +42,45 @@ export default function Login() {
             isAuthenticated: true,
           })
         );
-        toast.success(res?.data?.message || "Login successful!");
-
-        if (res?.data?.data?.role === "SUPERADMIN") {
-          route.push("/");
+        toast.success(res?.data?.message || 'Login successful!');
+        if (res?.data?.data?.role === 'SUPERADMIN') {
+          route.push('/');
         } else {
-          route.push("/");
+          route.push('/');
         }
       } else {
-        // In case success is false but no error is thrown
-        const errorMessage =
-          (res?.error &&
-            "data" in res.error &&
-            (res.error as any).data?.message) ||
-          "Login failed";
+        console.log('Login response data:', res);
+        // Handle RTK Query error structure
+        let errorMessage = 'Login failed - Please check your credentials';
+
+        if (res?.error) {
+          if ('data' in res.error && res.error.data?.message) {
+            errorMessage = res.error.data.message;
+          } else if (
+            'status' in res.error &&
+            res.error.status === 'FETCH_ERROR'
+          ) {
+            errorMessage =
+              'Cannot connect to server - Please check if the API is running';
+          } else if (res.error.error) {
+            errorMessage = res.error.error;
+          }
+        } else if (res?.data?.message) {
+          errorMessage = res.data.message;
+        }
+
+        console.log('Login failed:', errorMessage);
         toast.error(errorMessage);
       }
     } catch (error: any) {
       // Attempt to extract message from error response
       const errorMessage =
+        error?.data?.message ||
         error?.response?.data?.message ||
         error?.message ||
-        "Something went wrong!";
+        'Network error - Please check your connection';
       toast.error(errorMessage);
+      console.error('Login error details:', error);
     }
   };
 
@@ -72,17 +89,17 @@ export default function Login() {
     try {
       const { user } = await providerFunc();
       const loginInfo = {
-        firstName: user?.name?.split(" ")[0] || "",
-        lastName: user?.name?.split(" ")[1] || "",
+        firstName: user?.name?.split(' ')[0] || '',
+        lastName: user?.name?.split(' ')[1] || '',
         email: user.email,
-        registerType: "GOOGLE",
-        password: "",
+        registerType: 'GOOGLE',
+        password: '',
       };
 
       const res = await registerFN(loginInfo);
       if (res?.data?.success) {
-        Cookies.set("token", res?.data?.data?.accessToken);
-        Cookies.set("currentUserRole", res?.data?.data?.role);
+        Cookies.set('token', res?.data?.data?.accessToken);
+        Cookies.set('currentUserRole', res?.data?.data?.role);
       }
       // Dispatch to Redux
       dispatch(
@@ -93,9 +110,9 @@ export default function Login() {
         })
       );
 
-      route.push("/");
+      route.push('/');
     } catch (err) {
-      console.error("Login error:", err);
+      console.error('Login error:', err);
     }
   };
 
@@ -104,103 +121,103 @@ export default function Login() {
       {/* Login Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="md:bg-white  md:p-10 rounded-lg md:shadow-lg"
+        className='md:bg-white  md:p-10 rounded-lg md:shadow-lg'
       >
         <div>
           <label
-            htmlFor="email"
-            className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+            htmlFor='email'
+            className='text-base text-start font-bold text-white md:text-[#171717] block mb-1'
           >
             Email Address
           </label>
           <input
-            type="email"
-            id="email"
-            {...register("email", {
-              required: "Email is required",
+            type='email'
+            id='email'
+            {...register('email', {
+              required: 'Email is required',
               pattern: {
                 value: /^\S+@\S+\.\S+$/,
-                message: "Invalid email format",
+                message: 'Invalid email format',
               },
             })}
-            placeholder="Enter your email address"
-            className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder='Enter your email address'
+            className='w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400'
           />
           {errors.email && (
-            <p className="text-red-500 text-sm mt-1 text-left">
+            <p className='text-red-500 text-sm mt-1 text-left'>
               {errors.email.message as string}
             </p>
           )}
         </div>
 
-        <div className="mt-4">
+        <div className='mt-4'>
           <label
-            htmlFor="password"
-            className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+            htmlFor='password'
+            className='text-base text-start font-bold text-white md:text-[#171717] block mb-1'
           >
             Password
           </label>
           <input
-            type="password"
-            id="password"
-            {...register("password", {
-              required: "Password is required",
+            type='password'
+            id='password'
+            {...register('password', {
+              required: 'Password is required',
               minLength: {
                 value: 6,
-                message: "Password must be at least 6 characters long",
+                message: 'Password must be at least 6 characters long',
               },
             })}
-            placeholder="Set your password"
-            className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder='Set your password'
+            className='w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400'
           />
           {errors.password && (
-            <p className="text-red-500 text-sm mt-1 text-left">
+            <p className='text-red-500 text-sm mt-1 text-left'>
               {errors.password.message as string}
             </p>
           )}
         </div>
 
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center py-6">
-          <label className="flex items-center space-x-2 cursor-pointer">
+        <div className='flex flex-col-reverse md:flex-row justify-between items-start md:items-center py-6'>
+          <label className='flex items-center space-x-2 cursor-pointer'>
             <input
-              type="checkbox"
-              className="w-5 h-5 border-gray-400 rounded-sm focus:ring-blue-500 focus:ring-2"
-              {...register("remember")}
+              type='checkbox'
+              className='w-5 h-5 border-gray-400 rounded-sm focus:ring-blue-500 focus:ring-2'
+              {...register('remember')}
             />
-            <span className="text-white md:text-[#171717] text-base font-normal leading-7">
+            <span className='text-white md:text-[#171717] text-base font-normal leading-7'>
               Remember me
             </span>
           </label>
           <Link
-            href={"/forgot-password"}
-            className="text-base text-white md:text-[#3D53F5] font-bold leading-7"
+            href={'/forgot-password'}
+            className='text-base text-white md:text-[#3D53F5] font-bold leading-7'
           >
             Forgot your Password?
           </Link>
         </div>
 
         <Button
-          type="submit"
-          variant="secondary"
+          type='submit'
+          variant='secondary'
           disabled={isLoading}
           className={`w-full font-bold ${
-            isLoading ? "cursor-not-allowed" : ""
+            isLoading ? 'cursor-not-allowed' : ''
           }`}
         >
-          {isLoading ? <Loader /> : "Log in"}
+          {isLoading ? <Loader /> : 'Log in'}
         </Button>
 
-        <h1 className="text-base font-normal text-white md:text-[#616161] pt-8 pb-4">
+        <h1 className='text-base font-normal text-white md:text-[#616161] pt-8 pb-4'>
           Or continue with
         </h1>
 
-        <div className="grid grid-cols-1 gap-3">
+        <div className='grid grid-cols-1 gap-3'>
           <Button
             onClick={() => handleLogin(signInWithGoogle)}
-            variant="ghost"
-            className="flex items-center gap-3"
+            variant='ghost'
+            className='flex items-center gap-3'
           >
-            <FcGoogle /> <span className="text-white">Google</span>
+            <FcGoogle /> <span className='text-white'>Google</span>
           </Button>
         </div>
       </form>

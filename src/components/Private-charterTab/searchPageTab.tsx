@@ -1,23 +1,24 @@
-import type { TabsProps } from "antd";
-import { ConfigProvider, Tabs } from "antd";
-import Recommended from "./Recommended";
-import PriceHighest from "./PriceHighest";
-import PriceLowest from "./PriceLowest";
-import { useGetAllBoatQuery } from "@/redux/api/boatApi";
-import { Pagination } from "../dashboard/admin/button/Pagination";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import { ConfigProvider, Tabs } from 'antd';
+import type { TabsProps } from 'antd';
+import Recommended from './Recommended';
+import PriceHighest from './PriceHighest';
+import PriceLowest from './PriceLowest';
+import InteractiveMap from '../List-boat-form/GoogleMap';
+import { useGetAllBoatQuery } from '@/redux/api/boatApi';
+import { Pagination } from '../dashboard/admin/button/Pagination';
 
 const SearchTab = () => {
-  const [key, setKey] = useState<string>("1");
+  const [key, setKey] = useState<string>('1');
   const [currentPage, setCurrentPage] = useState(1);
   const [queryParams, setQueryParams] = useState({});
 
   const buildQueryParams = (page: number): Record<string, string> => {
-    const city = localStorage.getItem("location");
-    const startDate = localStorage.getItem("StartDate");
-    const endDate = localStorage.getItem("date");
-    const bookingType = localStorage.getItem("bookingType");
-    const guests = localStorage.getItem("Guests");
+    const city = localStorage.getItem('location');
+    const startDate = localStorage.getItem('StartDate');
+    const endDate = localStorage.getItem('date');
+    const bookingType = localStorage.getItem('bookingType');
+    const guests = localStorage.getItem('Guests');
 
     const params: Record<string, string> = {};
 
@@ -25,7 +26,7 @@ const SearchTab = () => {
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
     // if (bookingType) params.sharedBooking = bookingType;
-    if (bookingType && bookingType !== "undefined" && bookingType !== "null") {
+    if (bookingType && bookingType !== 'undefined' && bookingType !== 'null') {
       params.sharedBooking = bookingType;
     }
     // if (bookingType) params.sharedBooking = bookingType;
@@ -36,11 +37,11 @@ const SearchTab = () => {
     // h_t_l=true
     // l_t_h=true
     // params.h_t_l = "true";
-    if (key === "2") params.h_t_l = "true";
-    if (key === "3") params.l_t_h = "true";
+    if (key === '2') params.h_t_l = 'true';
+    if (key === '3') params.l_t_h = 'true';
 
     params.page = page.toString();
-    params.limit = "10";
+    params.limit = '10';
 
     return params;
   };
@@ -60,24 +61,24 @@ const SearchTab = () => {
     setCurrentPage(1);
   };
 
-  const items: TabsProps["items"] = [
+  const items: TabsProps['items'] = [
     {
-      key: "1",
-      label: "All",
+      key: '1',
+      label: 'All',
       children: (
         <Recommended currentItems={currentItems} isLoading={isLoading} />
       ),
     },
     {
-      key: "2",
-      label: "Price (Highest)",
+      key: '2',
+      label: 'Price (Highest)',
       children: (
         <PriceHighest currentItems={currentItems} isLoading={isLoading} />
       ),
     },
     {
-      key: "3",
-      label: "Price (Lowest)",
+      key: '3',
+      label: 'Price (Lowest)',
       children: (
         <PriceLowest currentItems={currentItems} isLoading={isLoading} />
       ),
@@ -85,31 +86,35 @@ const SearchTab = () => {
   ];
 
   return (
-    <div className="">
-      <ConfigProvider
-        theme={{
-          components: {
-            Tabs: {
-              itemHoverColor: "#242424",
-              colorPrimary: "#3D53F5",
-              colorText: "#242424",
-              itemColor: "#878787",
-              itemSelectedColor: "#242424",
-              fontSize: 16,
-            },
-          },
-        }}
-      >
-        <section className="pt-[28px]  px2 md:px-5">
-          <div className="container">
-            <div className="p-4">
-              <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-            </div>
-          </div>
-        </section>
-      </ConfigProvider>
+    <div className=''>
+      <div className='flex container'>
+        <div className=''>
+          <ConfigProvider
+            theme={{
+              components: {
+                Tabs: {
+                  itemHoverColor: '#242424',
+                  colorPrimary: '#3D53F5',
+                  colorText: '#242424',
+                  itemColor: '#878787',
+                  itemSelectedColor: '#242424',
+                  fontSize: 16,
+                },
+              },
+            }}
+          >
+            <Tabs defaultActiveKey='1' items={items} onChange={onChange} />
+          </ConfigProvider>
+        </div>
+
+        <div className='ml-10 mt-10'>
+          <h1>Hello Map</h1>
+          <InteractiveMap />
+        </div>
+      </div>
+
       {totalPages > 1 && (
-        <div className="container mx-auto">
+        <div className='container mx-auto'>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

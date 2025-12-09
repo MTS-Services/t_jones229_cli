@@ -1,5 +1,5 @@
 // store/slices/paymentMethodSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface PaymentMethodState {
   paymentMethodId: string | null;
@@ -10,7 +10,7 @@ const initialState: PaymentMethodState = {
 };
 
 const paymentMethodSlice = createSlice({
-  name: "paymentMethod",
+  name: 'paymentMethod',
   initialState,
   reducers: {
     setPaymentMethodId: (state, action: PayloadAction<string>) => {

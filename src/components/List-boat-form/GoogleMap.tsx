@@ -1,11 +1,11 @@
 // components/InteractiveMap.js
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { useState, useCallback } from "react";
-import { useFormContext } from "react-hook-form";
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { useState, useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 const containerStyle = {
-  width: "100%",
-  height: "300px",
+  width: '100%',
+  height: '300px',
 };
 
 const center = {
@@ -29,7 +29,7 @@ export default function InteractiveMap() {
           lat: event.latLng.lat(),
           lng: event.latLng.lng(),
         });
-        setValue("location", {
+        setValue('location', {
           latitude: event.latLng.lat(),
           longitude: event.latLng.lng(),
         }); // Update form state with new marker position
@@ -39,7 +39,9 @@ export default function InteractiveMap() {
   );
 
   return (
-    <LoadScript googleMapsApiKey={"AIzaSyA7WrnLWhDQgtcsi9WArm3ffyKc3GAdVXU"}>
+    <LoadScript
+      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
+    >
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
@@ -50,7 +52,7 @@ export default function InteractiveMap() {
           <Marker
             position={markerPosition}
             icon={{
-              url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+              url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
             }}
           />
         )}

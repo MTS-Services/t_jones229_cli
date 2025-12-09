@@ -1,5 +1,5 @@
 // src/slices/authSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define types for the login user and auth state
 export interface LoginUser {
@@ -33,7 +33,7 @@ const initialState: AuthState = {
 
 // Create the auth slice
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<AuthState>) => {

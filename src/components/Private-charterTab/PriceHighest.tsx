@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import TopChartersCard from "../Home/TopChartersCard";
-import Loader from "../ui/Loader";
-import { useGetAllBoatQuery } from "@/redux/api/boatApi";
-import Pagination from "../ReUsible/Pagination";
+import React, { useEffect, useState } from 'react';
+import TopChartersCard from '../Home/TopChartersCard';
+import Loader from '../ui/Loader';
+import { useGetAllBoatQuery } from '@/redux/api/boatApi';
+import Pagination from '../ReUsible/Pagination';
 
 interface PriceHighestProps {
   currentItems: any[];
@@ -18,12 +18,12 @@ export default function PriceHighest({
   }
   return (
     <div>
-      <div className="">
+      <div className=''>
         {currentItems && currentItems?.length > 0
           ? currentItems?.map((card: any) => (
               <TopChartersCard key={card.id} boatInfo={card} />
             ))
-          : "No data available"}
+          : 'No data available'}
       </div>
     </div>
   );
