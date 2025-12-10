@@ -161,9 +161,9 @@ export default function SearchBar() {
                   Select Destination{" "}
                 </h1>
                 {filteredDestinations.length > 0 ? (
-                  filteredDestinations?.map((destination: any) => (
+                  filteredDestinations?.map((destination: any, index: number) => (
                     <div
-                      key={destination.name}
+                      key={`${destination?.city}-${destination?.name || index}`}
                       onClick={() => handleSelectDestination(destination)}
                       className="px-4 cursor-pointer hover:bg-gray-100 flex items-center  gap-3 border-b py-3"
                     >

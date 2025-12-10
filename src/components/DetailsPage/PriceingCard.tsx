@@ -18,7 +18,23 @@ const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
   const handleclick = (id: number) => {
     console.log(id)
     console.log(bookingType)
-    route.push(`/payment?type=${bookingType}&boatId=${boatId}&tripId=${id}`);
+    
+    // Get date and guests from localStorage to pass as URL params
+    const date = localStorage.getItem("date");
+    const guests = localStorage.getItem("Guests");
+    
+    // Build URL with all necessary parameters
+    const params = new URLSearchParams({
+      type: bookingType || 'false',
+      boatId: boatId,
+      tripId: id.toString(),
+    });
+    
+    if (date) params.append('date', date);
+    if (guests) params.append('guests', guests);
+    if (bookingType) params.append('bookingType', bookingType);
+    
+    route.push(`/payment?${params.toString()}`);
   };
 
   return (

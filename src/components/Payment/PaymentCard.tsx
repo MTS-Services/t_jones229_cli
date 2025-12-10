@@ -7,7 +7,6 @@ export default function PaymentCard({
   filterTrip,
   image,
   location,
-  handleSubmit,
   isLoading,
   setSelectedPayment,
   selectedPayment,
@@ -142,11 +141,11 @@ export default function PaymentCard({
             </p>
 
             <button
-              className={`w-full  text-black font-medium py-3 rounded"bg-yellow-400 bg-yellow-500
-              `}
-              onClick={handleSubmit}
+              type="submit"
+              disabled={isLoading}
+              className={`w-full text-black font-medium py-3 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed`}
             >
-              {isLoading ? 'Sending...' : 'Continue'}
+              {isLoading ? 'Processing...' : 'Continue'}
             </button>
           </div>
         </div>

@@ -21,10 +21,15 @@ export default function HomeNavbar() {
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false); // Mobile menu state
+  const [mounted, setMounted] = useState(false); // Prevent hydration mismatch
 
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
   const route = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,7 +94,7 @@ export default function HomeNavbar() {
 
         {/* Menu - Desktop */}
         <div className='hidden lg:flex gap-4 items-center'>
-          {user ? (
+          {mounted && user ? (
             <div
               onClick={handleLogout}
               className={`cursor-pointer text-base font-normal hover:text-[#FF9500] transition-colors duration-300 ${
@@ -98,7 +103,7 @@ export default function HomeNavbar() {
             >
               Log out
             </div>
-          ) : (
+          ) : mounted ? (
             <>
               <Link
                 href='/signup'
@@ -117,9 +122,9 @@ export default function HomeNavbar() {
                 Login
               </Link>
             </>
-          )}
+          ) : null}
 
-          {user && (
+          {mounted && user && (
             <Button
               // link="/dashboard/edit-user-details"
               link={
@@ -137,7 +142,7 @@ export default function HomeNavbar() {
             </Button>
           )}
 
-          {!user && (
+          {mounted && !user && (
             <Button
               link='/boat-list'
               variant='primary'
@@ -150,7 +155,7 @@ export default function HomeNavbar() {
         </div>
 
         {/* Mobile Menu - Slide Down */}
-        {menuOpen && (
+        {menuOpen && mounted && (
           <div className='absolute top-full left-0 w-full bg-white shadow-lg p-4 flex flex-col gap-4 lg:hidden text-black'>
             {user ? (
               <div

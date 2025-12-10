@@ -16,8 +16,13 @@ const center = {
 // Define LatLngLiteral type since it's not exported by @react-google-maps/api
 type LatLngLiteral = { lat: number; lng: number };
 
-export default function InteractiveMap() {
-  const { setValue } = useFormContext();
+interface InteractiveMapProps {
+  onLocationSelect?: (location: { latitude: number; longitude: number }) => void;
+}
+
+export default function InteractiveMap({ onLocationSelect }: InteractiveMapProps = {}) {
+  // Try to get form context, but don't fail if it doesn't exist
+  const formContext = useFormContext?.() || null;
   const [markerPosition, setMarkerPosition] = useState<LatLngLiteral | null>(
     null
   );
@@ -25,17 +30,29 @@ export default function InteractiveMap() {
   const handleMapClick = useCallback(
     (event: google.maps.MapMouseEvent) => {
       if (event.latLng) {
-        setMarkerPosition({
+        const position = {
           lat: event.latLng.lat(),
           lng: event.latLng.lng(),
-        });
-        setValue('location', {
-          latitude: event.latLng.lat(),
-          longitude: event.latLng.lng(),
-        }); // Update form state with new marker position
+        };
+        const location = {
+          latitude: position.lat,
+          longitude: position.lng,
+        };
+        
+        setMarkerPosition(position);
+        
+        // Update form context if available
+        if (formContext?.setValue) {
+          formContext.setValue('location', location);
+        }
+        
+        // Call optional callback
+        if (onLocationSelect) {
+          onLocationSelect(location);
+        }
       }
     },
-    [setValue]
+    [formContext, onLocationSelect]
   );
 
   return (
