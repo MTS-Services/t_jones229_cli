@@ -54,16 +54,17 @@ export default function Login() {
         let errorMessage = 'Login failed - Please check your credentials';
 
         if (res?.error) {
-          if ('data' in res.error && res.error.data?.message) {
-            errorMessage = res.error.data.message;
+          const error = res.error as { data?: { message?: string }; status?: string; error?: string };
+          if ('data' in error && error.data?.message) {
+            errorMessage = error.data.message;
           } else if (
-            'status' in res.error &&
-            res.error.status === 'FETCH_ERROR'
+            'status' in error &&
+            error.status === 'FETCH_ERROR'
           ) {
             errorMessage =
               'Cannot connect to server - Please check if the API is running';
-          } else if (res.error.error) {
-            errorMessage = res.error.error;
+          } else if (error.error) {
+            errorMessage = error.error;
           }
         } else if (res?.data?.message) {
           errorMessage = res.data.message;
