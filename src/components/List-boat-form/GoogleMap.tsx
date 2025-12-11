@@ -83,8 +83,6 @@ export default function InteractiveMap({ onLocationSelect, initialLocation }: In
 
   useEffect(() => {
     setMounted(true);
-    // Import Leaflet CSS
-    import('leaflet/dist/leaflet.css');
     
     // Fix for default marker icon
     const L = require('leaflet');
