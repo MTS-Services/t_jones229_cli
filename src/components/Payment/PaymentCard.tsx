@@ -2,6 +2,18 @@
 import placeholderImage from '@/assets/payment/payment.png';
 import Image from 'next/image';
 import { FaMapMarkerAlt } from 'react-icons/fa';
+import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
+
+// Dynamically import map component
+const PaymentMap = dynamic(() => import('./PaymentMap'), { 
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+      <span className="text-gray-400 text-sm">Loading map...</span>
+    </div>
+  )
+});
 
 export default function PaymentCard({
   filterTrip,
@@ -32,9 +44,14 @@ export default function PaymentCard({
         <h2 className='text-xl font-normal text-[#242424]'>
           {filterTrip?.tripName}
         </h2>
-        <div className='flex items-center mt-4 mb-6 text-[#242424]'>
+        <div className='flex items-center mt-4 mb-4 text-[#242424]'>
           <FaMapMarkerAlt className='text-yellow-500 mr-2' />
           <span>{location?.city}</span>
+        </div>
+
+        {/* Map */}
+        <div className='mb-4 rounded-lg overflow-hidden border border-gray-200'>
+          <PaymentMap location={location} />
         </div>
 
         <hr className='my-4 border-gray-300' />

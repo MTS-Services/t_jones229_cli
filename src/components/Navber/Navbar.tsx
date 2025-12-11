@@ -19,12 +19,18 @@ export default function Navbar() {
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const path = usePathname();
   const pathName = path.split('/')[1];
 
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
   const route = useRouter();
+
+  // Prevent hydration mismatch by waiting for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -105,7 +111,7 @@ export default function Navbar() {
           )}
 
           <div className='hidden lg:flex items-center gap-3'>
-            {user ? (
+            {mounted && user ? (
               <div
                 onClick={handleLogout}
                 className='text-[15px] font-semibold text-[#242424] hover:text-[#FF9500] cursor-pointer'
@@ -129,7 +135,7 @@ export default function Navbar() {
               </>
             )}
 
-            {user ? (
+            {mounted && user ? (
               <Button
                 link={
                   user.role === 'USER'
@@ -161,7 +167,9 @@ export default function Navbar() {
         {menuOpen && (
           <div className='lg:hidden absolute right-0 top-5 w-full  mt-4 flex flex-col gap-4 bg-white shadow-md p-4 rounded-xl text-[#242424]'>
             <div className=' pt-4 mt-4 flex flex-col gap-3 space-y-3 w-full'>
-              {user ? (
+              {!mounted ? (
+                <div className="animate-pulse h-4 w-16 bg-gray-200 rounded"></div>
+              ) : user ? (
                 <div
                   onClick={handleLogout}
                   className='hover:text-[#FF9500] cursor-pointer'
@@ -179,7 +187,9 @@ export default function Navbar() {
                 </>
               )}
 
-              {user ? (
+              {!mounted ? (
+                <div className="animate-pulse h-10 w-24 bg-gray-200 rounded"></div>
+              ) : user ? (
                 <Button
                   link={
                     user.role === 'USER'

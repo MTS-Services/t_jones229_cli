@@ -19,6 +19,14 @@ const roleAccess = {
     '/all-customer',
     '/customer-info',
   ],
+  ADMIN: [
+    '/dashboard',
+    '/user-management',
+    '/trips-management',
+    '/all-captain',
+    '/all-customer',
+    '/customer-info',
+  ],
   USER: [
     '/edit-user-details',
     '/your-trips',
@@ -40,6 +48,14 @@ const roleAccess = {
     '/manage-bookings',
     '/membership',
     '/support',
+    '/boat-list-form/Information',
+    '/boat-list-form/photos-and-video',
+    '/boat-list-form/fishing',
+    '/boat-list-form/meeting-point',
+    '/boat-list-form/meeting-point-map',
+    '/boat-list-form/description',
+    '/boat-list-form/trips',
+    '/boat-list-form/terms',
   ],
 };
 

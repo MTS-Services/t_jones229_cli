@@ -9,34 +9,34 @@ import { CardProps } from '@/types/pricingCard';
 
 const TopChartersCard: React.FC<CardProps> = ({ boatInfo }) => {
   return (
-    <div className='flex flex-col md:flex-row items-center bg-white rounded-[16px] shadow-lg p-4 gap-4 border-[1px] border-[#dedede] mt-5 custom-shadow'>
+    <div className='flex flex-col md:flex-row items-start bg-white rounded-[16px] shadow-lg p-5 gap-5 border-[1px] border-[#dedede] mt-5 custom-shadow hover:shadow-xl transition-shadow duration-300'>
       <Image
         src={boatInfo?.photos?.[0]?.url || placeholderImage}
         alt={boatInfo?.descriptions?.[0]?.listingTypeTitle ?? 'Boat Image'}
         height={100}
         width={100}
-        className='w-80 h-60 object-cover rounded-lg'
+        className='w-full md:w-48 lg:w-56 h-48 md:h-40 lg:h-44 object-cover rounded-lg flex-shrink-0'
       />
 
-      <div className='flex-1'>
-        <div className='grid grid-cols-7 gap-5 lg:gap-0 justify-between '>
-          <h3 className='col-span-4 text-xl line-clamp-1 md:text-2xl text-[#242424] font-bold truncate leading-normal'>
+      <div className='flex-1 min-w-0'>
+        <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3'>
+          <h3 className='text-lg md:text-xl text-[#242424] font-bold leading-tight line-clamp-2 flex-1'>
             {boatInfo?.descriptions?.[0]?.listingTypeTitle}
           </h3>
 
-          <div className='col-span-3 flex-1 flex flex-row flex-wrap md:flex-nowrap  justify-between items-center'>
-            <p className='text-[#9E9E9E] text-base font-normal leading-7 flex items-center gap-1 line-clamp-1'>
-              <IoLocationOutline className='text-[#FF9500] h-6 w-6 font-bold' />
-              <span className='line-clamp-1'>
+          <div className='flex flex-row items-center gap-3 flex-shrink-0'>
+            <p className='text-[#9E9E9E] text-sm font-normal flex items-center gap-1'>
+              <IoLocationOutline className='text-[#FF9500] h-5 w-5 flex-shrink-0' />
+              <span className='line-clamp-1 max-w-[100px]'>
                 {boatInfo?.meetingPoint?.[0]?.city}
               </span>
             </p>
 
-            <button className='bg-orange-400 text-white px-4 py-2 rounded-lg text-sm md:text-base font-satoshi hover:bg-[#0037ff] transition-colors duration-300 ease-in-out  md:w-44 '>
-              <Link href={`/search-charter/${boatInfo?.id}`}>
-                More information
-              </Link>
-            </button>
+            <Link href={`/search-charter/${boatInfo?.id}`}>
+              <button className='bg-orange-400 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-500 transition-colors duration-300 whitespace-nowrap'>
+                More info
+              </button>
+            </Link>
           </div>
         </div>
 
