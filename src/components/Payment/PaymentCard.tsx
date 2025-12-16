@@ -23,9 +23,10 @@ export default function PaymentCard({
   setSelectedPayment,
   selectedPayment,
 }: any) {
-  const tripDate = localStorage.getItem('date');
-  const numberOfGuests = localStorage.getItem('Guests');
-  const bookingType = localStorage.getItem('bookingType');
+  // Safe localStorage access for SSR
+  const tripDate = typeof window !== 'undefined' ? localStorage.getItem('date') : null;
+  const numberOfGuests = typeof window !== 'undefined' ? localStorage.getItem('Guests') : null;
+  const bookingType = typeof window !== 'undefined' ? localStorage.getItem('bookingType') : null;
 
   return (
     <div className='bg-[#F7F7F7] shadow-md w-full lg:w-[345px]'>

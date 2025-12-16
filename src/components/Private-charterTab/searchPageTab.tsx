@@ -14,11 +14,12 @@ const SearchTab = () => {
   const [queryParams, setQueryParams] = useState({});
 
   const buildQueryParams = (page: number): Record<string, string> => {
-    const city = localStorage.getItem('location');
-    const startDate = localStorage.getItem('StartDate');
-    const endDate = localStorage.getItem('date');
-    const bookingType = localStorage.getItem('bookingType');
-    const guests = localStorage.getItem('Guests');
+    // Safe localStorage access for SSR
+    const city = typeof window !== 'undefined' ? localStorage.getItem('location') : null;
+    const startDate = typeof window !== 'undefined' ? localStorage.getItem('StartDate') : null;
+    const endDate = typeof window !== 'undefined' ? localStorage.getItem('date') : null;
+    const bookingType = typeof window !== 'undefined' ? localStorage.getItem('bookingType') : null;
+    const guests = typeof window !== 'undefined' ? localStorage.getItem('Guests') : null;
 
     const params: Record<string, string> = {};
 

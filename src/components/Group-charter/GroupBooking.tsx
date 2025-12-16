@@ -27,8 +27,8 @@ export default function BookingSection() {
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
 
   const onSubmit = async (data: any) => {
-    const tripDate = localStorage.getItem("date");
-    const numberOfGuests = localStorage.getItem("Guests");
+    const tripDate = typeof window !== 'undefined' ? localStorage.getItem("date") : null;
+    const numberOfGuests = typeof window !== 'undefined' ? localStorage.getItem("Guests") : null;
     try {
       const groupBookingInfo = {
         boatId: boatID ?? "",
