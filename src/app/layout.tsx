@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 // import { Geist, Geist_Mono } from "next/font/google";
 import './globals.css';
 import ReduxProvider from '@/redux/provider/ReduxProvider';
@@ -14,14 +14,17 @@ import { Suspense } from 'react';
 //   subsets: ["latin"],
 // });
 
+// Viewport configuration (separate from metadata in Next.js 14+)
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export const metadata: Metadata = {
   title: 'Fishing-Tripper',
   description: 'Plan Your Perfect Day on the Water',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

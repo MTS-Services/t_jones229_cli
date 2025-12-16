@@ -7,12 +7,29 @@ import {
 import { auth } from '../firebase/firebaseConfig';
 import Cookies from 'js-cookie';
 
-// Providers
-const googleProvider = new GoogleAuthProvider();
-const facebookProvider = new FacebookAuthProvider();
+// Providers - create lazily to avoid SSR issues
+let googleProvider;
+let facebookProvider;
+
+const getGoogleProvider = () => {
+  if (!googleProvider) {
+    googleProvider = new GoogleAuthProvider();
+  }
+  return googleProvider;
+};
+
+const getFacebookProvider = () => {
+  if (!facebookProvider) {
+    facebookProvider = new FacebookAuthProvider();
+  }
+  return facebookProvider;
+};
 
 // 🔧 Helper to extract token + role
 const handleLogin = async (provider) => {
+  if (!auth) {
+    throw new Error('Firebase auth not initialized');
+  }
   const result = await signInWithPopup(auth, provider);
   const user = result.user;
 
@@ -42,10 +59,12 @@ const handleLogin = async (provider) => {
 };
 
 // Export auth functions
-export const signInWithGoogle = () => handleLogin(googleProvider);
-export const signInWithFacebook = () => handleLogin(facebookProvider);
+export const signInWithGoogle = () => handleLogin(getGoogleProvider());
+export const signInWithFacebook = () => handleLogin(getFacebookProvider());
 
 export const logOut = async () => {
-  await signOut(auth);
+  if (auth) {
+    await signOut(auth);
+  }
   Cookies.remove('accessToken');
 };

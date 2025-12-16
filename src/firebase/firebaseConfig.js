@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 // Your web app's Firebase configuration
@@ -14,6 +14,17 @@ const firebaseConfig = {
   measurementId: 'G-LCJSV6NW2S',
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// Initialize Firebase only on client side and only once
+let app;
+let auth;
+
+if (typeof window !== 'undefined') {
+  try {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+  } catch (error) {
+    console.error('Firebase initialization error:', error);
+  }
+}
+
+export { auth };

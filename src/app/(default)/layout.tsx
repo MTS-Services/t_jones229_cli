@@ -1,9 +1,12 @@
 "use client";
-import Footer from "@/components/Footer/Footer";
-import HomeNavbar from "@/components/Navber/HomeNavbar";
-import Navbar from "@/components/Navber/Navbar";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
+
+// Dynamic imports to prevent iOS Safari crashes
+const Footer = dynamic(() => import("@/components/Footer/Footer"), { ssr: false });
+const HomeNavbar = dynamic(() => import("@/components/Navber/HomeNavbar"), { ssr: false });
+const Navbar = dynamic(() => import("@/components/Navber/Navbar"), { ssr: false });
 
 export default function Layout({
   children,
@@ -11,11 +14,23 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#fff' }}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <>
       {pathname === "/" ? <HomeNavbar /> : <Navbar />}
-      {/* <HomeNavbar />
-      <Navbar /> */}
       <Suspense>{children}</Suspense>
       <Footer />
     </>
