@@ -15,10 +15,12 @@ export default function Page() {
   const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
-    setTripDate(localStorage.getItem("date"));
-    setNumberOfGuests(localStorage.getItem("Guests"));
-    setBookingType(localStorage.getItem("bookingType"));
-    setLocation(localStorage.getItem("location"));
+    if (typeof window !== 'undefined') {
+      setTripDate(localStorage.getItem("date"));
+      setNumberOfGuests(localStorage.getItem("Guests"));
+      setBookingType(localStorage.getItem("bookingType"));
+      setLocation(localStorage.getItem("location"));
+    }
   }, []);
 
   return (

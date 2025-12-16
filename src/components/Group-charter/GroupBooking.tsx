@@ -49,8 +49,10 @@ export default function BookingSection() {
 
       if (res?.data?.success) {
         toast.success(res?.data?.message || "Booking successful!");
-        localStorage.removeItem("numberOfGuests");
-        localStorage.removeItem("numberOfGuests");
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem("numberOfGuests");
+          localStorage.removeItem("numberOfGuests");
+        }
         router.push("/group-confirmation");
       } else {
         // Show error toast if success is false

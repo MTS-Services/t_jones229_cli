@@ -8,9 +8,11 @@ export default function GroupBooking() {
   const [numberOfGuests, setNumberOfGuests] = useState<string | null>(null);
 
   useEffect(() => {
-    setTripDate(localStorage.getItem("date"));
-    setLocation(localStorage.getItem("location"));
-    setNumberOfGuests(localStorage.getItem("Guests"));
+    if (typeof window !== 'undefined') {
+      setTripDate(localStorage.getItem("date"));
+      setLocation(localStorage.getItem("location"));
+      setNumberOfGuests(localStorage.getItem("Guests"));
+    }
   }, []);
 
   return (
