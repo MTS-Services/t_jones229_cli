@@ -35,7 +35,12 @@ export default function SearchBar() {
   const bookingTypeRef = useRef<HTMLDivElement>(null);
   const locationDropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data } = useGetBoatListByLocationQuery({});
+  const { data } = useGetBoatListByLocationQuery({}, {
+    pollingInterval: 0,
+    refetchOnMountOrArgChange: false,
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+  });
   const destinations = data?.data || [];
 
   const route = useRouter();

@@ -7,7 +7,12 @@ import Button from "../ReUsible/Button";
 import { useGetMeQuery } from "@/redux/api/authApi";
 
 export default function Hero() {
-  const { data } = useGetMeQuery({});
+  const { data } = useGetMeQuery({}, {
+    pollingInterval: 0,
+    refetchOnMountOrArgChange: false,
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+  });
 
   return (
     <main
