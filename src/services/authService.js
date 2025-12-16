@@ -1,11 +1,13 @@
+/** @format */
+
 import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithPopup,
   signOut,
-} from 'firebase/auth';
-import { auth } from '../firebase/firebaseConfig';
-import Cookies from 'js-cookie';
+} from "firebase/auth";
+import { auth } from "../firebase/firebaseConfig";
+import Cookies from "js-cookie";
 
 // Providers - create lazily to avoid SSR issues
 let googleProvider;
@@ -28,7 +30,7 @@ const getFacebookProvider = () => {
 // 🔧 Helper to extract token + role
 const handleLogin = async (provider) => {
   if (!auth) {
-    throw new Error('Firebase auth not initialized');
+    throw new Error("Firebase auth not initialized");
   }
   const result = await signInWithPopup(auth, provider);
   const user = result.user;
@@ -39,7 +41,7 @@ const handleLogin = async (provider) => {
   // console.log(first)
 
   const token = tokenResult.token;
-  const role = tokenResult.claims.role || 'USER';
+  const role = tokenResult.claims.role || "USER";
 
   // Save token to cookies
   // Cookies.set("token", token, { expires: 7 });
@@ -66,5 +68,5 @@ export const logOut = async () => {
   if (auth) {
     await signOut(auth);
   }
-  Cookies.remove('accessToken');
+  Cookies.remove("accessToken");
 };
