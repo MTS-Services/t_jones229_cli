@@ -28,6 +28,8 @@ class ErrorBoundary extends Component<Props, State> {
     // Log to external service if needed
     if (typeof window !== 'undefined') {
       // You can send to analytics/error tracking service here
+      // Prevent infinite reload loops by not auto-reloading
+      // This is especially critical on iOS Safari with API failures
     }
   }
 
@@ -55,8 +57,9 @@ class ErrorBoundary extends Component<Props, State> {
           <button
             onClick={() => {
               this.setState({ hasError: false, error: null });
+              // Navigate to home instead of reload to prevent infinite loops
               if (typeof window !== 'undefined') {
-                window.location.reload();
+                window.location.href = '/';
               }
             }}
             style={{
@@ -69,7 +72,7 @@ class ErrorBoundary extends Component<Props, State> {
               fontSize: '16px'
             }}
           >
-            Refresh Page
+            Go to Home
           </button>
         </div>
       );
