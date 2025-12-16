@@ -66,22 +66,19 @@ body {
 }
 
 .admindas-shadow {
-  box-shadow: 0 690px 193px 0 rgba(0, 0, 0, 0),
-    0 442px 177px 0 rgba(0, 0, 0, 0.01), 0 248px 149px 0 rgba(0, 0, 0, 0.05),
-    0 110px 110px 0 rgba(0, 0, 0, 0.09), 0 28px 61px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 28px 61px 0 rgba(0, 0, 0, 0.1),
+    0 110px 110px 0 rgba(0, 0, 0, 0.05);
 }
 
 .searchbarShadow {
-  filter: drop-shadow(0px 26px 58px rgba(0, 0, 0, 0.1))
-    drop-shadow(0px 105px 105px rgba(0, 0, 0, 0.09))
-    drop-shadow(0px 236px 142px rgba(0, 0, 0, 0.05))
-    drop-shadow(0px 420px 168px rgba(0, 0, 0, 0.01))
-    drop-shadow(0px 656px 184px rgba(0, 0, 0, 0));
+  box-shadow: 0px 26px 58px rgba(0, 0, 0, 0.1),
+    0px 105px 105px rgba(0, 0, 0, 0.09),
+    0px 236px 142px rgba(0, 0, 0, 0.05),
+    0px 420px 168px rgba(0, 0, 0, 0.01);
 }
 .feature-card {
-  box-shadow: 0px 254px 71px rgba(0, 0, 0, 0),
-    0px 163px 65px rgba(0, 0, 0, 0.01), 0px 92px 55px rgba(0, 0, 0, 0.05),
-    0px 41px 41px rgba(0, 0, 0, 0.09), 0px 10px 22px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 10px 22px rgba(0, 0, 0, 0.1),
+    0px 41px 41px rgba(0, 0, 0, 0.05);
 }
 /* styles.css or global.css */
 .custom-shadow {
