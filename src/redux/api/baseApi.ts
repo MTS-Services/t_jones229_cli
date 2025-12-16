@@ -5,7 +5,7 @@ import { RootState } from '../store/store';
 const baseApiHandler = () => {
   // Use environment variable for API URL, fallback to production URL
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || 'https://api.fishingtripper.com';
+    process.env.NEXT_PUBLIC_API_URL || 'https://fishing-server.mtscorporate.com';
   return `${baseUrl}/api/v1`;
 };
 
