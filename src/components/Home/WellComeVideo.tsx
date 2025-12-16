@@ -23,11 +23,15 @@ export default function WellComeVideo() {
             src={"/intro/introVideo.mp4"}
             height={200}
             width={500}
-            autoPlay
+            // Avoid autoplay on iOS to reduce crashes
+            // Safari may reload the page if GPU resources spike
             muted
             loop
             playsInline
+            preload="none"
+            poster="/intro/introPoster.jpg"
             className="rounded-xl"
+            controls
           ></video>
         </div>
       </div>
