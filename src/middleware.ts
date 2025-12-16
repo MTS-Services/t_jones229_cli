@@ -68,7 +68,6 @@ export function middleware(req: NextRequest) {
 
   try {
     const decoded = jwtDecode<DecodedToken>(token);
-    console.log(decoded);
     const role = decoded?.role;
     const pathname = req.nextUrl.pathname;
     const allowedRoutes = roleAccess[role as keyof typeof roleAccess] || [];
@@ -77,15 +76,16 @@ export function middleware(req: NextRequest) {
       pathname.startsWith(route)
     );
 
-    console.log(isAuthorized);
-
     if (!isAuthorized) {
       return NextResponse.redirect(new URL('/login', req.url));
     }
 
     return NextResponse.next();
   } catch (err) {
-    console.error('JWT verification failed:', err);
+    // Only log in development to avoid iOS Safari console issues
+    if (process.env.NODE_ENV === 'development') {
+      console.error('JWT verification failed:', err);
+    }
     return NextResponse.redirect(new URL('/login', req.url));
   }
 }

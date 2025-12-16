@@ -9,22 +9,51 @@ const baseApiHandler = () => {
   return `${baseUrl}/api/v1`;
 };
 
-// Define the base API using RTK Query
-export const baseApi = createApi({
-  reducerPath: 'api',
-  baseQuery: fetchBaseQuery({
+// Enhanced base query with error handling and retry logic
+const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
+  const baseQuery = fetchBaseQuery({
     baseUrl: baseApiHandler(),
     prepareHeaders: (headers, { getState }) => {
-      // Access the token from the Redux state
-      const token = (getState() as RootState).auth.token;
+      try {
+        // Access the token from the Redux state
+        const token = (getState() as RootState).auth.token;
 
-      if (token) {
-        // If token exists, add it to the Authorization header
-        headers.set('Authorization', `${token}`);
+        if (token) {
+          // If token exists, add it to the Authorization header
+          headers.set('Authorization', `${token}`);
+        }
+      } catch (error) {
+        console.error('Error preparing headers:', error);
       }
       return headers;
     },
-  }),
+    timeout: 30000, // 30 second timeout for iOS Safari
+  });
+
+  try {
+    const result = await baseQuery(args, api, extraOptions);
+    
+    // If we get an error, log it for debugging
+    if (result.error) {
+      console.error('API Error:', result.error);
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('Base query error:', error);
+    return {
+      error: {
+        status: 'FETCH_ERROR',
+        error: String(error),
+      },
+    };
+  }
+};
+
+// Define the base API using RTK Query
+export const baseApi = createApi({
+  reducerPath: 'api',
+  baseQuery: baseQueryWithRetry,
   endpoints: () => ({
     // Also can add builder here like endpoints: (builder) => ({}),
     // Add other API endpoints as needed

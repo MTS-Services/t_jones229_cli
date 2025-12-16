@@ -6,7 +6,7 @@ import authReducer from "../slices/authSlice";
 import paymentMethodReducer from "../slices/paymentMethodSlice";
 import imageUrlReducer from "../slices/uploadImageSlice";
 
-// SSR-compatible storage fallback
+// SSR-compatible storage fallback with iOS Safari fixes
 const createNoopStorage = () => {
   return {
     getItem(): Promise<null> {
@@ -21,15 +21,31 @@ const createNoopStorage = () => {
   };
 };
 
-const storage =
-  typeof window !== "undefined"
-    ? createWebStorage("local")
-    : createNoopStorage();
+// Enhanced storage wrapper with error handling for iOS Safari
+const createSafeStorage = () => {
+  if (typeof window === "undefined") {
+    return createNoopStorage();
+  }
+  
+  try {
+    // Test if localStorage is available and working
+    const testKey = "__redux_persist_test__";
+    window.localStorage.setItem(testKey, "test");
+    window.localStorage.removeItem(testKey);
+    return createWebStorage("local");
+  } catch (error) {
+    console.error("localStorage not available, using noop storage:", error);
+    return createNoopStorage();
+  }
+};
 
-// ✅ Persist configuration
+const storage = createSafeStorage();
+
+// ✅ Persist configuration with whitelists to reduce storage size
 const authPersistConfig = {
   key: "auth",
   storage,
+  whitelist: ["token", "user"], // Only persist essential auth data
 };
 
 const paymentPersistConfig = {
@@ -60,8 +76,13 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV !== "production",
 });
 
-// ✅ Persistor
-export const persistor = persistStore(store);
+// ✅ Persistor with error handling
+export const persistor = typeof window !== "undefined" 
+  ? persistStore(store, null, () => {
+      // Callback after rehydration
+      console.log("Redux persist rehydration complete");
+    })
+  : null;
 
 // ✅ Types
 export type AppStore = typeof store;
