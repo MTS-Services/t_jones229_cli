@@ -49,7 +49,7 @@ const SearchTab = () => {
 
   useEffect(() => {
     setQueryParams(buildQueryParams(currentPage));
-  }, [currentPage, key]);
+  }, [currentPage, key]); // key is included in the dependency array
 
   const { data, isLoading, refetch } = useGetAllBoatQuery(queryParams);
 

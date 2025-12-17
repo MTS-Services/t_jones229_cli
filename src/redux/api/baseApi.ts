@@ -33,14 +33,19 @@ const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
     
-    // If we get an error, log it for debugging
+    // If we get an error, log it for debugging with more details
     if (result.error) {
-      console.error('API Error:', result.error);
+      console.error('API Error:', {
+        status: result.error.status,
+        data: result.error.data,
+        error: result.error.error,
+        endpoint: typeof args === 'string' ? args : args.url,
+      });
     }
     
     return result;
   } catch (error) {
-    console.error('Base query error:', error);
+    console.error('Base query exception:', error);
     return {
       error: {
         status: 'FETCH_ERROR',
