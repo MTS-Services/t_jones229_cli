@@ -38,7 +38,6 @@ const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
       console.error('API Error:', {
         status: result.error.status,
         data: result.error.data,
-        error: result.error.error,
         endpoint: typeof args === 'string' ? args : args.url,
       });
     }
