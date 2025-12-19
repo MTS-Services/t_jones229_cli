@@ -8,7 +8,7 @@ export default function Page() {
   const [city, setCity] = useState<string | null>(null);
   const [guests, setGuests] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
-  const [queryParams, setQueryParams] = useState<Record<string, string>>({});
+  const [queryParams, setQueryParams] = useState<Record<string, string> | null>(null);
 
   // Safe access to localStorage
   useEffect(() => {
@@ -36,7 +36,9 @@ export default function Page() {
     setQueryParams(params);
   }, []);
 
-  const { data } = useGetAllBoatQuery(queryParams);
+  const { data } = useGetAllBoatQuery(queryParams || {}, {
+    skip: queryParams === null, // Skip the query until we have params from localStorage
+  });
 
   return (
     <div>
