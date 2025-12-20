@@ -35,7 +35,7 @@ export default function BookingSection() {
         tripId: tripId ?? "",
         tripDate: tripDate ?? "",
         amount: "full", // fixed
-        bookingType: "GROUP",
+        bookingType: false, // false = GROUP booking
         groupSize: parseInt(numberOfGuests ?? "0", 10),
         memberInfo: {
           firstName: data?.firstName,

@@ -130,14 +130,17 @@ export default function Page() {
         },
       };
 
-      const bookingInfo = {
+      // Determine if this is a GROUP booking (bookingType === false)
+      const isGroupBooking = bookingType
+        ? !(bookingType.toLowerCase() === "true" || bookingType === "1")
+        : false;
+
+      const bookingInfo: any = {
         boatId: boatID,
         tripId: filterTrip?.id,
         tripDate: tripDate,
         amount: selectedPayment,
-        bookingType: bookingType
-          ? bookingType.toLowerCase() === "true" || bookingType === "1"
-          : true,
+        bookingType: !isGroupBooking, // true = PRIVATE, false = GROUP
         groupSize: parseInt(numberOfGuests ?? "0", 10),
         // Send card details - backend will handle Stripe processing
         cardDetails: {
@@ -152,6 +155,16 @@ export default function Page() {
           },
         },
       };
+
+      // Add memberInfo for GROUP bookings (required by backend for groupMember.create)
+      if (isGroupBooking) {
+        bookingInfo.memberInfo = {
+          firstName: data?.firstName,
+          lastName: data?.lastName,
+          email: data?.email,
+          phoneNumber: data?.mobile,
+        };
+      }
 
       console.log('Booking info to send:', bookingInfo);
 
