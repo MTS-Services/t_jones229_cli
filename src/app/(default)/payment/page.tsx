@@ -135,6 +135,8 @@ export default function Page() {
         ? !(bookingType.toLowerCase() === "true" || bookingType === "1")
         : false;
 
+      console.log('isGroupBooking:', isGroupBooking, 'bookingType from storage:', bookingType);
+
       const bookingInfo: any = {
         boatId: boatID,
         tripId: filterTrip?.id,
@@ -158,6 +160,7 @@ export default function Page() {
 
       // Add memberInfo for GROUP bookings (required by backend for groupMember.create)
       if (isGroupBooking) {
+        console.log('Adding memberInfo for GROUP booking');
         bookingInfo.memberInfo = {
           firstName: data?.firstName,
           lastName: data?.lastName,
