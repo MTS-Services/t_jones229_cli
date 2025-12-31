@@ -1,50 +1,64 @@
-// src/api/baseApi.ts
+// src/redux/api/baseApi.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 
+// 1. Setup the Base URL
 const baseApiHandler = () => {
-  // Use environment variable for API URL, fallback to production URL
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || 'https://fishing-server.mtscorporate.com';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://fishing-server.mtscorporate.com';
   return `${baseUrl}/api/v1`;
 };
 
-// Enhanced base query with error handling and retry logic
+// 2. Custom Base Query with Fix for Empty 500 Errors
 const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
   const baseQuery = fetchBaseQuery({
     baseUrl: baseApiHandler(),
     prepareHeaders: (headers, { getState }) => {
       try {
-        // Access the token from the Redux state
         const token = (getState() as RootState).auth.token;
-
         if (token) {
-          // If token exists, add it to the Authorization header
-          headers.set('Authorization', `${token}`);
+          // Ensure correct Bearer format
+          const authHeader = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+          headers.set('Authorization', authHeader);
         }
       } catch (error) {
-        console.error('Error preparing headers:', error);
+        // Build headers silently
       }
       return headers;
     },
-    timeout: 30000, // 30 second timeout for iOS Safari
+    timeout: 30000,
   });
 
   try {
     const result = await baseQuery(args, api, extraOptions);
-    
-    // If we get an error, log it for debugging with more details
+
+    // --- FIX STARTS HERE ---
     if (result.error) {
-      console.error('API Error:', {
-        status: result.error.status,
-        data: result.error.data,
-        endpoint: typeof args === 'string' ? args : args.url,
-      });
+      const status = result.error.status;
+      const data = result.error.data;
+      const endpoint = typeof args === 'string' ? args : args.url;
+
+      // Check if the server sent empty data (common in 500 crashes)
+      const isServerCrash = status === 500;
+      const isEmptyResponse = !data || (typeof data === 'object' && Object.keys(data).length === 0);
+
+      if (isServerCrash && isEmptyResponse) {
+        // Instead of showing {}, we show a clear message
+        console.warn(`⚠️ Backend Server Error (500) at ${endpoint}`);
+        console.warn('The server crashed without sending an error message.');
+        console.warn('Action: Check your backend terminal logs.');
+      } else {
+        // Log normal errors
+        console.error('API Error:', {
+          status: status,
+          message: data,
+          endpoint: endpoint
+        });
+      }
     }
-    
+    // --- FIX ENDS HERE ---
+
     return result;
   } catch (error) {
-    console.error('Base query exception:', error);
     return {
       error: {
         status: 'FETCH_ERROR',
@@ -54,14 +68,11 @@ const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
   }
 };
 
-// Define the base API using RTK Query
+// 3. Define the API
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithRetry,
-  endpoints: () => ({
-    // Also can add builder here like endpoints: (builder) => ({}),
-    // Add other API endpoints as needed
-  }),
+  endpoints: () => ({}),
   tagTypes: [
     'auth',
     'boat',
