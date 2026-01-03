@@ -36,6 +36,7 @@ export default function Page() {
       password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
+      registerType: "EMAILPASS",
     };
 
     try {
