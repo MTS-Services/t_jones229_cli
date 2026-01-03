@@ -39,8 +39,11 @@ export default function Page() {
       registerType: "EMAILPASS",
     };
 
+    console.log("Submitting registration with data:", userInfo);
+
     try {
       const res = await registerFN(userInfo).unwrap();
+      console.log("Registration response:", res);
       if (res?.success) {
         toast.success(
           res?.message ||
@@ -51,9 +54,11 @@ export default function Page() {
         toast.error((res?.error as string) || "Registration failed");
       }
     } catch (error: any) {
+      console.error("Registration error:", error);
+      console.error("Error data:", error?.data);
       const errorMessage =
+        error?.data?.message || // RTK Query error structure
         error?.response?.data?.message ||
-        error?.data?.message || // in case it's RTK Query
         error?.message ||
         "Something went wrong";
       toast.error(errorMessage);
