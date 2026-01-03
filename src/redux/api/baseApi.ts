@@ -5,6 +5,7 @@ import { RootState } from '../store/store';
 // 1. Setup the Base URL
 const baseApiHandler = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://fishing-server.mtscorporate.com';
+  console.log('🔧 API Base URL:', `${baseUrl}/api/v1`);
   return `${baseUrl}/api/v1`;
 };
 
