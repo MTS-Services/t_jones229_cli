@@ -6,15 +6,28 @@ import { useFormContext } from 'react-hook-form';
 import PaymentDetailsForm from '../dashboard/userDashboard/PaymentDetailsForm';
 import { usePathname } from 'next/navigation';
 import { User, CreditCard } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function PaymentDetails() {
   const {
     register,
     formState: { errors },
+    setValue,
   } = useFormContext();
 
   const pathName = usePathname();
   const { data: userInfo, isLoading } = useGetMeQuery({});
+
+  // Auto-fill form with user data when it loads
+  useEffect(() => {
+    if (userInfo?.data) {
+      const user = userInfo.data;
+      if (user.firstName) setValue('firstName', user.firstName);
+      if (user.lastName) setValue('lastName', user.lastName);
+      if (user.email) setValue('email', user.email);
+      if (user.phoneNumber) setValue('mobile', user.phoneNumber);
+    }
+  }, [userInfo, setValue]);
 
   if (isLoading) {
     return <PaymentDetailsSkeleton />;
