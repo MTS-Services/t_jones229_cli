@@ -16,12 +16,17 @@ const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
     prepareHeaders: (headers, { getState }) => {
       try {
         const token = (getState() as RootState).auth.token;
+        console.log('📤 Token from Redux state:', token ? token.substring(0, 30) + '...' : 'NO TOKEN');
         if (token) {
           // Ensure correct Bearer format
           const authHeader = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
           headers.set('Authorization', authHeader);
+          console.log('📤 Authorization header set:', authHeader.substring(0, 35) + '...');
+        } else {
+          console.warn('⚠️ No token found in Redux state - user may not be logged in');
         }
       } catch (error) {
+        console.error('Error preparing headers:', error);
         // Build headers silently
       }
       return headers;
