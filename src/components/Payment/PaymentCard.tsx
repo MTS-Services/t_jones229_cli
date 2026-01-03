@@ -23,10 +23,17 @@ export default function PaymentCard({
   setSelectedPayment,
   selectedPayment,
 }: any) {
-  // Safe localStorage access for SSR
-  const tripDate = typeof window !== 'undefined' ? localStorage.getItem('date') : null;
-  const numberOfGuests = typeof window !== 'undefined' ? localStorage.getItem('Guests') : null;
-  const bookingType = typeof window !== 'undefined' ? localStorage.getItem('bookingType') : null;
+  // Use state to avoid hydration mismatch
+  const [tripDate, setTripDate] = useState<string | null>(null);
+  const [numberOfGuests, setNumberOfGuests] = useState<string | null>(null);
+  const [bookingType, setBookingType] = useState<string | null>(null);
+
+  // Load data from localStorage on client-side only
+  useEffect(() => {
+    setTripDate(localStorage.getItem('date'));
+    setNumberOfGuests(localStorage.getItem('Guests'));
+    setBookingType(localStorage.getItem('bookingType'));
+  }, []);
 
   return (
     <div className='bg-[#F7F7F7] shadow-md w-full lg:w-[345px]'>
