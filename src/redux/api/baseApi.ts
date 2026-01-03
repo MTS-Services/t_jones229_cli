@@ -47,8 +47,15 @@ const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
         console.warn(`⚠️ Backend Server Error (500) at ${endpoint}`);
         console.warn('The server crashed without sending an error message.');
         console.warn('Action: Check your backend terminal logs.');
+      } else if (isEmptyResponse) {
+        // Empty response but not 500 - likely network or CORS issue
+        console.error('API Error - Empty Response:', {
+          status: status,
+          endpoint: endpoint,
+          possibleCause: status === 'FETCH_ERROR' ? 'Network/CORS issue' : 'Server returned empty response'
+        });
       } else {
-        // Log normal errors
+        // Log normal errors with full details
         console.error('API Error:', {
           status: status,
           message: data,
@@ -60,6 +67,7 @@ const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
 
     return result;
   } catch (error) {
+    console.error('API Request Exception:', error);
     return {
       error: {
         status: 'FETCH_ERROR',
