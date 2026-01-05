@@ -187,13 +187,6 @@ export default function PaymentDetails() {
           </div>
         </div>
       </section>
-
-      {/* Payment Details Section */}
-      <Divider className='my-8' />
-
-      <section>
-        <PaymentDetailsForm paymentInfo={userInfo?.data?.paymentMethod} />
-      </section>
     </div>
   );
 }

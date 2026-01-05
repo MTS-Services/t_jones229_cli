@@ -13,8 +13,9 @@ import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setPaymentMethodId } from '@/redux/slices/paymentMethodSlice';
 
+// Use environment variable for Stripe key
 const stripePromise = loadStripe(
-  'pk_test_51R61J0CZ2kLTrYVYE9WQTKQfW3pfUXk24wvYy2ZnBiylVvfjMdCXhTPuDnFIzJhbAOG45ZC0EN45mqH5Kqsr4HPw005XK2Dm4F' as string // Replace with your Stripe publishable key
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 );
 
 const CheckoutForm = () => {
