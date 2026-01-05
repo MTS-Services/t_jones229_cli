@@ -7,12 +7,15 @@ import Button from "../ReUsible/Button";
 import { useGetMeQuery } from "@/redux/api/authApi";
 
 export default function Hero() {
-  const { data } = useGetMeQuery({}, {
-    pollingInterval: 0,
-    refetchOnMountOrArgChange: false,
-    refetchOnFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = useGetMeQuery(
+    {},
+    {
+      pollingInterval: 0,
+      refetchOnMountOrArgChange: false,
+      refetchOnFocus: false,
+      refetchOnReconnect: false,
+    }
+  );
 
   return (
     <main
@@ -32,7 +35,7 @@ export default function Hero() {
           charter.
         </p>
 
-        {data?.data && data?.data?.role !== "CAPTAIN" && (
+        {/* {data?.data && data?.data?.role !== "CAPTAIN" && (
           <Button
             link={"/boat-list"}
             // variant="primary"
@@ -47,7 +50,7 @@ export default function Hero() {
             />
             List your boat
           </Button>
-        )}
+        )} */}
       </div>
     </main>
   );

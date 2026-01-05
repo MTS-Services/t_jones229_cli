@@ -1,17 +1,19 @@
 import banner from "@/assets/banner.png";
-// import Button from "@/components/ReUsible/Button";
-// import Image from "next/image";
-// import board from "@/assets/boart.svg";
+import board from "@/assets/boart.svg";
+import Button from "../ReUsible/Button";
+import Image from "next/image";
 
 export default function BoatListHero() {
   return (
     <main
-      className="bg-cover bg-center bg-no-repeat pt-[150px] pb-[120px]"
-      style={{
-        backgroundImage: `url(${banner.src})`,
-      }}
+      className="relative bg-cover bg-center bg-no-repeat pt-[150px] pb-[120px]"
+      style={{ backgroundImage: `url(${banner.src})` }}
     >
-      <div className="container flex flex-col   text-start text-white px-5   lg:px-[135px]">
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/30"></div>
+      {/* bg-black/50 = black with 50% opacity. You can adjust to bg-black/30, bg-black/70 etc */}
+
+      <div className="relative container mx-auto flex flex-col justify-center items-center text-center text-white px-5 lg:px-[135px]">
         <h1 className="text-2xl md:text-[40px] font-bold shadow-lg leading-normal">
           Sign up today - First 6 months of membership free then $65 per month.
           Free cancellation anytime.
@@ -20,25 +22,22 @@ export default function BoatListHero() {
           Join thousands of charter captains and guides connecting with anglers
           worldwide.
         </p>
-        {/* 
-        <Button
-          link={"/boat-list-form/Information"}
-          variant="primary"
-          className="flex items-center gap-1 font-satoshi rounded-lg text-base font-bold w-44 mt-7"
-        >
-          <Image
-            className="flex-1 h-3 md:h-6 w-3 md:w-6 "
-            src={board}
-            alt=""
-            height={100}
-            width={100}
-          />
-          Get started
-        </Button> */}
-        {/* <p className="max-w-3xl text-base md:text-xl font-normal tracking-[-0.43px] mt-3">
-          6 months free trial then $65 a month | Cancel anytime | Unlimited trip
-          listings
-        </p> */}
+        <div className="flex items-center justify-center mt-7">
+          <Button
+            link={"/boat-list-form/Information"}
+            variant="primary"
+            className="flex items-center font-satoshi rounded-[14px] text-base font-bold mt-7 w-54 gap-2"
+          >
+            <Image
+              className="h-3 md:h-6 w-3 md:w-6"
+              src={board}
+              alt=""
+              height={100}
+              width={100}
+            />
+            Click here to get started!
+          </Button>
+        </div>
       </div>
     </main>
   );

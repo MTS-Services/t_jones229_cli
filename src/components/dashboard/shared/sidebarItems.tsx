@@ -40,6 +40,12 @@ export const sidebarItems: TSidebarItem[] = [
     roles: ["SUPERADMIN"],
   },
   {
+    key: "Check Your Trip",
+    icon: <TbSailboat />,
+    label: <Link href="/dashboard/check-your-trip">Check Your Trip</Link>,
+    roles: [userRole.captain],
+  },
+  {
     key: "Boat And Trip",
     icon: <TbSailboat />,
     label: <Link href="/dashboard/boat-trip">Boat And Trip</Link>,
