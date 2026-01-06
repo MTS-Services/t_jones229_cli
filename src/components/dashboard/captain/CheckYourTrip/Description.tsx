@@ -47,7 +47,7 @@ const DescriptionFormFields: React.FC = () => {
           Add directions to your meeting point
         </p>
 
-        <div className="max-w-4xl relative">
+        <div className="w-full relative">
           <textarea
             rows={6}
             maxLength={500}
