@@ -4,94 +4,89 @@ import { Divider } from "antd";
 import React from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 
+// 1. Input Fields Component
 const DescriptionFormFields: React.FC = () => {
   const { register, watch } = useFormContext();
 
-  return (
-    <div className="space-y-6 ">
+  // Watch values for character counting
+  const titleValue = watch("listingTypeTitle") || "";
+  const descValue = watch("listingTypeDescription") || "";
 
-      <div className=" min-h-screen">
-        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-6">
+  return (
+    <div className="">
+      {/* Listing Type Section */}
+      <section className="">
+        <h1 className="text-2xl font-semibold text-[#1A1A1A] mb-6">
           Listing Type
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl gap-4 pb-8">
-          {/* Listing Type */}
-          <div>
-            <label className="text-textSecondary text-base md:text-lg font-normal leading-8">
-              Title:
-            </label>
-            <input
-              type="text"
-              maxLength={51}
-              {...register("listingTypeTitle")}
-              className="w-full px-3 py-2 border border-gray-300"
-              placeholder="Add your listing title"
-            />
-
-            {watch("listingTypeTitle") ? (
-              <p
-                className={`text-sm ${
-                  watch("listingTypeTitle").length >= 50
-                    ? "text-red-500"
-                    : "text-gray-500"
-                }`}
-              >
-                {watch("listingTypeTitle").length < 50
-                  ? `${
-                      50 - watch("listingTypeTitle").length
-                    } characters remaining`
-                  : "Title must be at most 50 characters"}
-              </p>
-            ) : (
-              <p className="text-gray-500">50 characters remaining</p>
-            )}
-          </div>
+        <div className="max-w-lg">
+          <label className="block text-gray-600 text-base mb-2">Title:</label>
+          <input
+            type="text"
+            maxLength={50}
+            {...register("listingTypeTitle")}
+            className="w-full px-4 py-3 border border-gray-300 rounded-md outline-none focus:border-[#f2a93b] focus:ring-4 focus:ring-[#f2a93b]/10 transition-all duration-300 ease-in-out"
+            placeholder="Add your listing title"
+          />
+          <p className="text-gray-400 text-sm mt-1">
+            {50 - titleValue.length} characters remaining
+          </p>
         </div>
-        <Divider style={{ borderColor: "#d9d9d9" }} />
+      </section>
 
-        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-6">
-          Add your listing description
-        </h1>
-        <div className="max-w-4xl pb-8">
-          <div>
-            <label className="text-textSecondary text-base font-normal leading-8 mb-2">
-              Tell us about the charter services you offer.
-            </label>
-            <textarea
-              rows={5}
-              maxLength={501}
-              {...register("listingTypeDescription")}
-              className="w-full px-3 py-2 border border-gray-300"
-              placeholder="Provide some instructions here"
-            />
-            {watch("listingTypeDescription") ? (
-              <p
-                className={`text-sm ${
-                  watch("listingTypeDescription")?.length >= 500
-                    ? "text-red-500"
-                    : "text-gray-500"
-                }`}
-              >
-                {watch("listingTypeDescription")?.length <= 500
-                  ? `${
-                      500 - watch("listingTypeDescription")?.length
-                    } characters remaining`
-                  : "Description must be at most 500 characters"}
-              </p>
-            ) : (
-              <p className="text-gray-500">500 characters remaining</p>
-            )}
-          </div>
-        </div>
+      <div className="my-10">
+        <Divider style={{ borderColor: "#eeeeee" }} />
       </div>
 
-      <div className="px-14">
-        <Divider style={{ borderColor: "#d9d9d9" }} />
+      {/* Description Section */}
+      <section className="">
+        <h1 className="text-2xl font-semibold text-[#1A1A1A] mb-2">
+          Add your listing description
+        </h1>
+        <p className="text-gray-500 mb-6">
+          Add directions to your meeting point
+        </p>
+
+        <div className="max-w-4xl relative">
+          <textarea
+            rows={6}
+            maxLength={500}
+            {...register("listingTypeDescription")}
+            // className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-md outline-none focus:border-[#f2a93b] focus:ring-4 focus:ring-[#f2a93b]/10 transition-all duration-300 ease-in-out"
+            placeholder="Provide some instructions here"
+          />
+          <p className="text-gray-400 text-sm mt-1">
+            {500 - descValue.length} characters remaining
+          </p>
+        </div>
+      </section>
+
+      <div className="my-10">
+        <Divider style={{ borderColor: "#eeeeee" }} />
+      </div>
+
+      {/* Footer Navigation Buttons */}
+      <div className="flex items-center justify-between mt-12 pt-4">
+        <button
+          type="button"
+          className="flex items-center gap-2 border border-gray-300 text-gray-600 px-6 py-2 rounded-full hover:bg-gray-50 transition-all font-medium"
+        >
+          <span className="text-lg">‹</span> Back
+        </button>
+
+        <button
+          type="submit"
+          className="bg-[#F2A93B] hover:bg-[#e0962d] text-white px-10 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 shadow-sm"
+        >
+          Next <span className="text-lg">›</span>
+        </button>
       </div>
     </div>
   );
 };
 
+// 2. Main Wrapper Component
 const Description: React.FC = () => {
   const methods = useForm({
     defaultValues: {
@@ -100,9 +95,15 @@ const Description: React.FC = () => {
     },
   });
 
+  // Next button click korle ei function call hobe
+  const onHandleNext = (data: any) => {
+    console.log("Submitted Form Data:", data);
+    alert("Data check console: " + JSON.stringify(data));
+  };
+
   return (
     <FormProvider {...methods}>
-      <form>
+      <form onSubmit={methods.handleSubmit(onHandleNext)}>
         <DescriptionFormFields />
       </form>
     </FormProvider>

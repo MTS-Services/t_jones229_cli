@@ -358,7 +358,7 @@ const Sidebar = () => {
 
       {/* Desktop Sidebar */}
       <div
-        className="hidden lg:block lg:w-64 lg:h-screen lg:sticky lg:top-0 lg:left-0 lg:overflow-y-auto lg:flex-shrink-0"
+        className="hidden lg:block lg:w-64 h-screen lg:sticky lg:top-0 lg:left-0 lg:overflow-y-auto lg:flex-shrink-0"
         style={{ backgroundColor: "#0037FF" }}
       >
         {/* Logo Section */}
