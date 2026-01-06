@@ -6,15 +6,7 @@ export default function Terms() {
   const [agreed, setAgreed] = useState(true);
   return (
     <>
-      {/* Header */}
-      <div className="bg-[#F5F5F5] pt-16 md:pt-0 px-5 md:px-14  py-9">
-        <h1 className="text-3xl font-bold text-textPrimary leading-normal mb-2">
-          Trips
-        </h1>
-        <p className="text-base text-textPrimary font-normal leading-normal">
-          Here you can list variations to your trips
-        </p>
-      </div>
+
       <div className="px-5 md:px-14">
         {/* Card */}
         <div className="flex flex-col lg:flex-row gap-12  bg-white text-gray-800 mt-16">

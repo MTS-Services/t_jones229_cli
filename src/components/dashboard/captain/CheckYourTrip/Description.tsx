@@ -9,18 +9,8 @@ const DescriptionFormFields: React.FC = () => {
 
   return (
     <div className="space-y-6 ">
-      {/* Header */}
-      <div className="bg-[#F5F5F5] pt-16 md:pt-0 px-5 md:px-14 py-9">
-        <h1 className="text-3xl font-bold text-textPrimary leading-normal mb-2">
-          Description
-        </h1>
-        <p className="text-base text-textPrimary font-normal leading-normal">
-          Add a description on your listing page, customers will see this so
-          ensure to add as much information as possible.
-        </p>
-      </div>
 
-      <div className="py-12 px-5 md:px-14 min-h-screen">
+      <div className=" min-h-screen">
         <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-6">
           Listing Type
         </h1>

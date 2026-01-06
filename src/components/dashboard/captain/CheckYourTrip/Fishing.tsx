@@ -53,13 +53,9 @@ const FishingUI: React.FC = () => {
 
   return (
     <div className="bg-white">
-      {/* Header */}
-      <div className="bg-[#F5F5F5] pt-16 md:pt-0 px-5 md:px-14 py-9">
-        <h1 className="text-3xl font-bold text-textPrimary mb-2">Fishing</h1>
-      </div>
 
       {/* Targeted Species */}
-      <div className="py-12 px-5 md:px-14">
+      <div className="">
         <h1 className="text-xl md:text-3xl font-bold mb-2">Targeted Species</h1>
         <p className="text-[#878787] mb-4">
           Choose which species customers can target on your trip.

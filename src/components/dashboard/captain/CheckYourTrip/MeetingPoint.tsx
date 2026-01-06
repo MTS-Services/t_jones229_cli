@@ -9,19 +9,9 @@ const MeetingPoint: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-[#F5F5F5] pt-16 md:pt-0 px-5 md:px-14 py-9">
-        <h1 className="text-3xl font-bold text-textPrimary leading-normal mb-2">
-          Meeting Point
-        </h1>
-        <p className="text-base text-textPrimary font-normal leading-normal">
-          Upload high quality photos and videos to maximise conversion rates
-          with potential customers.
-        </p>
-      </div>
 
       {/* Form Fields */}
-      <div className="py-12 px-5 md:px-14 max-h-screen">
+      <div className=" max-h-screen">
         <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl gap-4">
           {/* Street address */}
           <div>
