@@ -133,7 +133,7 @@ const MeetingPoint: React.FC = () => {
   }
 
   return (
-    <div className="p-4 md:p-10">
+    <div className="">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           {/* Form Fields Grid */}

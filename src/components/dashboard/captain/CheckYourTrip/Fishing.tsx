@@ -181,7 +181,7 @@ const FishingUI: React.FC = () => {
   };
 
   return (
-    <div className="bg-white p-6 md:p-10 text-[#333]">
+    <div className="bg-white text-[#333]">
       {/* Targeted Species */}
       <section className="mb-6">
         <h1 className="text-xl font-bold mb-1">Targeted Species</h1>

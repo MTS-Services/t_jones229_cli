@@ -167,7 +167,7 @@ const Terms: React.FC = () => {
   return (
     // 3. Wrap everything inside FormProvider
     <FormProvider {...methods}>
-      <div className="px-5 md:px-14">
+      <div className="">
         {/* Card and Terms Section */}
 
         <div className="flex items-center justify-center">
