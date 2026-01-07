@@ -65,7 +65,6 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
   };
 
   const [uploadFileFN, { isLoading }] = useUploadFileMutation();
-  const formData = new FormData();
 
   const handleFiles = async (files: File[]) => {
     const validFiles = files.filter((file) => {
@@ -73,6 +72,12 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
       const isVideo = file.type.startsWith('video/');
       return isImage || isVideo;
     });
+
+    // Only proceed if there are valid files
+    if (validFiles.length === 0) {
+      console.log('No valid image/video files selected');
+      return;
+    }
 
     validFiles.forEach((file) => {
       const id = generateId();
@@ -89,11 +94,21 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
       setUploadedFiles((prev) => [...prev, newFile]);
     });
 
-    files.forEach((file) => {
+    // Create FormData inside the function to avoid stale data
+    const formData = new FormData();
+    validFiles.forEach((file) => {
       formData.append('images', file);
     });
+
+    // Debug: Log FormData contents
+    console.log('📤 Uploading files:', validFiles.length);
+    for (const [key, value] of formData.entries()) {
+      console.log(`  ${key}:`, value);
+    }
+    
     try {
       const res = await uploadFileFN(formData).unwrap();
+      console.log('✅ Upload response:', res);
       if (res?.success) {
         // const uploadedUrls = res?.data?.images || [];
         if (res?.success && Array.isArray(res?.data?.images)) {
@@ -106,8 +121,9 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
           setIsBoatImage(true);
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error('❌ Upload error:', error);
+      console.error('❌ Error details:', JSON.stringify(error, null, 2));
     }
   };
 

@@ -10,6 +10,7 @@ const FileUpload = baseApi.injectEndpoints({
         url: `/file/upload`,
         method: "POST",
         body: data,
+        // RTK Query will automatically detect FormData and not set Content-Type
       }),
       invalidatesTags: ["file"],
     }),

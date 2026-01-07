@@ -44,6 +44,11 @@ const FormSidebar = () => {
     return keys;
   }, [pathname, filteredItems]);
 
+  // Remove activePath from items before passing to Menu (prevents React DOM warning)
+  const menuItems = useMemo(() => {
+    return filteredItems.map(({ activePath, ...rest }) => rest);
+  }, [filteredItems]);
+
   // Sidebar content
   const SidebarContent = () => (
     <div className="bg-[#0037ff] h-full">
@@ -62,7 +67,7 @@ const FormSidebar = () => {
         style={{ backgroundColor: "transparent", color: "#ffffff" }}
         mode="inline"
         selectedKeys={activeKeys}
-        items={filteredItems}
+        items={menuItems}
         className="custom-sidebar-menu"
       />
     </div>

@@ -29,6 +29,8 @@ const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
         console.error('Error preparing headers:', error);
         // Build headers silently
       }
+      // Don't set Content-Type for FormData - let browser set it with boundary
+      // fetchBaseQuery handles this automatically, but ensure we don't override it
       return headers;
     },
     timeout: 30000,
