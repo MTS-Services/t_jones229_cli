@@ -13,6 +13,7 @@ import {
   TbCrown,
   TbLifebuoy,
 } from "react-icons/tb";
+import { MdChecklistRtl } from "react-icons/md";
 
 export const sidebarItems: TSidebarItem[] = [
   {
@@ -41,7 +42,7 @@ export const sidebarItems: TSidebarItem[] = [
   },
   {
     key: "Check Your Trip",
-    icon: <TbSailboat />,
+    icon: <MdChecklistRtl />,
     label: <Link href="/dashboard/check-your-trip">Check Your Trip</Link>,
     roles: [userRole.captain],
   },

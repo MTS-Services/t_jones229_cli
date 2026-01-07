@@ -11,7 +11,7 @@ import payPal from "@/assets/payment/payPal.svg";
 import { CreditCard } from "lucide-react";
 // import { CardElement } from "@stripe/react-stripe-js";
 
-export default function PaymentDetailsForm({ paymentInfo }: any) {
+export default function USAPaymentDetailsForm({ paymentInfo }: any) {
   const {
     register,
     formState: { errors },

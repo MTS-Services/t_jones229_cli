@@ -67,7 +67,7 @@ const DescriptionFormFields: React.FC = () => {
       </div>
 
       {/* Footer Navigation Buttons */}
-      <div className="flex items-center justify-between mt-12 pt-4">
+      {/* <div className="flex items-center justify-between mt-12 pt-4">
         <button
           type="button"
           className="flex items-center gap-2 border border-gray-300 text-gray-600 px-6 py-2 rounded-full hover:bg-gray-50 transition-all font-medium"
@@ -81,7 +81,7 @@ const DescriptionFormFields: React.FC = () => {
         >
           Next <span className="text-lg">›</span>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -182,7 +182,7 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
             />
             {errors.zipCode && (
               <p className="text-red-500 text-sm">
-                {String(errors.zipCode.message)}
+                {String(errors.zipCode.message)}s
               </p>
             )}
           </div>

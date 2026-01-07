@@ -12,6 +12,7 @@ const fishingLocationsOptions = [
   "Lake",
   "Harbor",
 ];
+
 const fishingTechniquesOptions = [
   "Trolling",
   "Jigging",

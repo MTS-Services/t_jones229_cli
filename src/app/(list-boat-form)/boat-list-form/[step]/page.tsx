@@ -56,7 +56,7 @@ export default function MultiStepFormStep() {
   const [isLicenceImage, setIsLicenceImage] = useState(false);
   const [isBoatImage, setIsBoatImage] = useState(false);
   const imageUrl = useSelector((state: RootState) => state.imageUrl.imageUrl);
-  const { data: userData } = useGetMeQuery('');
+  const { data: userData } = useGetMeQuery("");
   const userInfo = userData?.data?.paymentMethod;
 
   useEffect(() => {
@@ -75,11 +75,11 @@ export default function MultiStepFormStep() {
   const handleNext = async (data: any) => {
     const getValue = (key: any) => formData?.[key] ?? data?.[key];
     updateFormData(data);
-    
+
     // For Terms step, we'll send card details to backend which will create the payment method
     // using the secret key (more secure approach)
     let paymentMethodId = null;
-    
+
     // Check if we're on the Terms step (step 7) and this is a new boat
     if (stepIndex === 7 && !boatId && data?.cardNumber) {
       // Parse expiration date for validation
@@ -100,18 +100,20 @@ export default function MultiStepFormStep() {
       if (!data?.cardNumber || !exp_month || !exp_year || !data?.securityCode) {
         return toast.error("Please fill in all payment details");
       }
-      
+
       // Use a placeholder - backend will create actual payment method
       // For test cards, we use test tokens
-      const cardNumber = data?.cardNumber?.replace(/\s/g, '');
+      const cardNumber = data?.cardNumber?.replace(/\s/g, "");
       const testCardTokens: Record<string, string> = {
-        '4242424242424242': 'tok_visa',
-        '4000056655665556': 'tok_visa_debit',
-        '5555555555554444': 'tok_mastercard',
-        '378282246310005': 'tok_amex',
+        "4242424242424242": "tok_visa",
+        "4000056655665556": "tok_visa_debit",
+        "5555555555554444": "tok_mastercard",
+        "378282246310005": "tok_amex",
       };
-      
-      paymentMethodId = testCardTokens[cardNumber] || `card_${cardNumber.slice(-4)}_${Date.now()}`;
+
+      paymentMethodId =
+        testCardTokens[cardNumber] ||
+        `card_${cardNumber.slice(-4)}_${Date.now()}`;
     }
 
     // *************************************************
@@ -119,9 +121,7 @@ export default function MultiStepFormStep() {
       return toast.error("Upload at least one image");
     }
     if (stepIndex === 7 && !boatId && !paymentMethodId) {
-      return toast.error(
-        "Please enter valid payment details"
-      );
+      return toast.error("Please enter valid payment details");
     } else {
       if (stepIndex < stepTitles.length - 1) {
         router.push(
@@ -157,7 +157,8 @@ export default function MultiStepFormStep() {
             facilities: getValue("facilities") || [],
             gearAndCrew: getValue("gearAndCrew") || [],
             licenceImages: getValue("licenceImages") || [],
-            acceptSharedCharters: Boolean(getValue("acceptSharedCharters")) || false,
+            acceptSharedCharters:
+              Boolean(getValue("acceptSharedCharters")) || false,
 
             // empty value
             sharedBooking: Boolean(getValue("sharedBooking")) || false,

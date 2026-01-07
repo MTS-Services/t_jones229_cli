@@ -271,7 +271,7 @@ const PhotosVideos: React.FC = () => {
       </div>
 
       {/* Footer Buttons */}
-      <div className="flex items-start justify-between border-t pt-8">
+      {/* <div className="flex items-start justify-between border-t pt-8">
         <button
           onClick={handleBack}
           className="flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-100 transition-all font-medium"
@@ -285,7 +285,7 @@ const PhotosVideos: React.FC = () => {
         >
           Next <span className="text-xl">›</span>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
