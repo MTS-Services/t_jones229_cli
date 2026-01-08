@@ -2,11 +2,12 @@ import React from "react";
 
 import { cardData } from "@/constant/SearchDestinations";
 import SearchDestinationsCard from "./SearchDestinationsCard";
+import Container from "../common/Container";
 
 export default function SearchDestinations() {
   return (
-    <div className="container mx-auto py-20 px-5 xl:px-0">
-      <h1 className="text-[#242424] text-2xl font-bold my-6">
+    <Container className="">
+      <h1 className="text-[#242424] text-4xl font-bold mb-6">
         Search our destinations{" "}
       </h1>
 
@@ -15,6 +16,6 @@ export default function SearchDestinations() {
           <SearchDestinationsCard key={index} cardInfo={cardInfo} />
         ))}
       </div>
-    </div>
+    </Container>
   );
 }

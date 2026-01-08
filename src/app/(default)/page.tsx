@@ -35,11 +35,11 @@ export default function Home() {
       {/* <Suspense fallback={<div style={{ minHeight: "100px" }} />}>
         <SearchBar />
       </Suspense> */}
-      {/* <Suspense
+      <Suspense
         fallback={<div style={{ minHeight: "400px", background: "#1a1a1a" }} />}
       >
         <Hero />
-      </Suspense> */}
+      </Suspense>
       <WellComeVideo />
       <SearchDestinations />
       <Experience />

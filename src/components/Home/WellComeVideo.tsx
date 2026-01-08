@@ -1,15 +1,20 @@
 import React from "react";
 import bgImage from "@/assets/videoImage.png";
+import Container from "../common/Container";
 
 export default function WellComeVideo() {
   return (
-    <div className="container mx-auto mt-40 px-5 xl:px-0">
+    <Container className="">
       <div
+        // Changed z-[-1] to relative, and fixed rounded-[16px]
         style={{ backgroundImage: `url(${bgImage.src})` }}
-        className="relative z-[-1] px-5 md:pl-10 py-5 flex flex-col md:flex-row gap-5 justify-between rounded-[16] bg-cover bg-center"
+        className="relative px-5 md:pl-10 py-10 flex flex-col md:flex-row gap-8 justify-between items-center rounded-[16px] bg-cover bg-center overflow-hidden"
       >
-        <div>
-          <h1 className="text-xl md:text-[40px] font-normal leading-10 text-white">
+        {/* Optional: Dark Overlay to make text readable against the background image */}
+        <div className="absolute inset-0 bg-black/40 -z-10" />
+
+        <div className="relative z-10">
+          <h1 className="text-xl md:text-[40px] font-normal leading-tight text-white">
             Welcome to FishingTripper!
           </h1>
           <p className="max-w-2xl text-white text-base md:text-2xl font-light tracking-[-0.43px] mt-4">
@@ -18,23 +23,19 @@ export default function WellComeVideo() {
           </p>
         </div>
 
-        <div className="z-0">
+        <div className="relative z-10 w-full md:w-auto">
           <video
-            src={"/intro/introVideo.mp4"}
-            height={200}
-            width={500}
-            // Avoid autoplay on iOS to reduce crashes
-            // Safari may reload the page if GPU resources spike
+            src="/intro/introVideo.mp4"
+            poster="/intro/introPoster.jpg"
             muted
             loop
             playsInline
             preload="none"
-            poster="/intro/introPoster.jpg"
-            className="rounded-xl"
+            className="rounded-xl w-full md:max-w-[500px] shadow-2xl"
             controls
           ></video>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

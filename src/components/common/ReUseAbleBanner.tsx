@@ -15,15 +15,19 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
 }) => {
   return (
     <section
-      className="bg-cover bg-center bg-no-repeat pt-[150px] pb-[120px] h-[600px]"
+      // Added "flex items-center justify-center" to the parent section
+      className="relative flex items-center justify-center bg-cover bg-center bg-no-repeat h-[600px] w-full"
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
         backgroundColor: "#000",
       }}
     >
-      {/* Added mx-auto for horizontal centering and kept your flex-col items-center */}
-      <div className="container mx-auto flex flex-col items-center text-center text-white px-5 lg:px-[135px]">
-        <h1 className="text-2xl md:text-[40px] font-bold drop-shadow-md">
+      {/* Overlay for better text readability (optional but recommended) */}
+      <div className="absolute inset-0 bg-black/10" />
+
+      {/* Content wrapper */}
+      <div className="relative z-10 container mx-auto flex flex-col items-center text-center text-white px-5 lg:px-[135px]">
+        <h1 className="text-2xl md:text-[40px] font-bold drop-shadow-lg">
           {title}
         </h1>
         <p className="max-w-2xl text-base md:text-xl font-normal tracking-tight mt-3">
