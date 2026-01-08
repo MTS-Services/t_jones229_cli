@@ -91,45 +91,52 @@ export default function SearchDestinationsCard({
   };
 
   return (
-    // Removed max-w-[320px] to let the grid control the width
-    <div className="w-full cursor-pointer group" onClick={handleClick}>
-      {/* 1. Added 'relative' so the 'fill' image knows what to attach to.
-          2. Ensure height is defined (h-[320px]).
-      */}
+    // Added 'group' class here to trigger child animations on hover
+    <div className="group w-full cursor-pointer" onClick={handleClick}>
+      {/* Container for Image and Overlays */}
       <div className="relative overflow-hidden rounded-[16px] w-full h-[380px]">
+        {/* Main Background Image - Added scale effect on hover */}
         <Image
           src={cardInfo.image || placeholder}
           alt={cardInfo.title}
-          fill // This makes the image fill the parent div
+          fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 320px"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover"
           priority={false}
         />
-      </div>
 
-      <div className="mt-3 px-1">
-        <div className="flex justify-between items-start gap-2">
-          <h3 className="text-[16px] font-bold text-[#171717] truncate leading-tight">
-            {cardInfo.title}
-          </h3>
-          <div className="flex items-center gap-1 min-w-fit">
-            <Image
-              src={cardInfo.flag}
-              alt="flag"
-              height={24} // Smaller fixed size for flags is better
-              width={24}
-              className="w-6 h-6 object-contain"
-            />
-          </div>
+        {/* 1. Dark Overlay - Becomes visible on hover */}
+        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+
+        {/* 2. Flag Icon (Top Left) */}
+        <div className="absolute top-4 left-4 z-20 px-2 py-0.5 bg-gray-50 rounded-md">
+          <Image
+            src={cardInfo.flag}
+            alt="flag"
+            height={32}
+            width={32}
+            className="w-8 h-8 object-contain rounded-full shadow-md"
+          />
         </div>
 
-        <p className="text-[15px] text-[#474747] font-normal leading-tight mt-1">
-          {cardInfo.subTitle}
-        </p>
+        {/* 3. Text Content - Added sliding animation */}
+        <div className="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-20">
+          <div className="space-y-1.5 transform translate-x-[-20px] opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+            <p className="text-base text-gray-200 font-normal leading-tight mt-1">
+              {cardInfo.subTitle}
+            </p>
 
-        <p className="text-[15px] text-[#171717] mt-1 font-semibold">
-          {cardInfo.description}
-        </p>
+            <h3 className="text-xl font-semibold text-white truncate leading-tight">
+              {cardInfo.title}
+            </h3>
+
+            <p className="text-lg text-white mt-1 font-medium">
+              {cardInfo.description.length > 35
+                ? cardInfo.description.substring(0, 35) + "..."
+                : cardInfo.description}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

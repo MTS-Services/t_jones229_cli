@@ -12,7 +12,7 @@ export default function SearchDestinations() {
       </h1>
 
       <div className="grid grid-cols-1  md:grid-cols-3 grid-rows-1 gap-8 justify-center items-center">
-        {cardData.map((cardInfo, index) => (
+        {cardData.slice(0, 3).map((cardInfo, index) => (
           <SearchDestinationsCard key={index} cardInfo={cardInfo} />
         ))}
       </div>
