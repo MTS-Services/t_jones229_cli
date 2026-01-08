@@ -492,7 +492,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { logout } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
-import { Menu, X, LogOut, LayoutDashboard, ChevronDown, UserPlus, LogIn } from "lucide-react";
+import {
+  Menu,
+  X,
+  LogOut,
+  LayoutDashboard,
+  ChevronDown,
+  UserPlus,
+  LogIn,
+} from "lucide-react";
 import { logOut } from "@/services/authService";
 import SearchBar from "../Home/SearchBar";
 
@@ -555,11 +563,11 @@ export default function HomeNavbar() {
             : "bg-transparent py-4"
         }`}
       >
-        <nav className="container mx-auto px-4 flex items-center justify-between">
+        <nav className="container mx-auto xl:px-4 lg:px-3 px-2 py-2 flex items-center justify-between">
           {/* Logo Section */}
           <Link
             href="/"
-            className="w-14 h-14 lg:w-20 lg:h-20 transition-transform hover:scale-105 active:scale-95"
+            className="w-12 h-12 md:w-16 md:h-16 xl:w-20 xl:h-20 transition-transform hover:scale-105 active:scale-95"
           >
             <Image
               className="w-full h-full object-contain"
@@ -573,16 +581,16 @@ export default function HomeNavbar() {
           {/* DESKTOP MENU */}
           <div className="hidden lg:flex gap-4 items-center">
             {!user ? (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center xl:gap-3 lg:gap-1 gap-0.5">
                 <button
                   onClick={() => handleAuthAction("/login")}
-                  className="font-bold px-7 py-2.5 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 active:scale-95"
+                  className="font-bold lg:px-7 px-5 lg:py-2.5 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 active:scale-95"
                 >
                   Login
                 </button>
                 <button
                   onClick={() => handleAuthAction("/signup")}
-                  className="font-bold px-7 py-2.5 rounded-full border-2 border-[#105d9e] bg-[#105d9e] text-white hover:bg-white hover:text-[#105d9e] transition-all duration-300 shadow-md active:scale-95"
+                  className="font-bold lg:px-7 px-5 lg:py-2.5 py-2 rounded-full border-2 border-[#105d9e] bg-[#105d9e] text-white hover:bg-white hover:text-[#105d9e] transition-all duration-300 shadow-md active:scale-95"
                 >
                   Sign up
                 </button>
@@ -670,18 +678,17 @@ export default function HomeNavbar() {
             {menuOpen ? (
               <X size={28} className="text-black" />
             ) : (
-              <Menu
-                size={28}
-                className={scrolled ? "text-black" : "text-white"}
-              />
+              <Menu size={28} className={"text-black"} />
             )}
           </button>
         </nav>
 
-        {/* Search Bar */}
+        {/* Search Bar Section in HomeNavbar */}
         <div
-          className={`container mx-auto px-4 mt-2 transition-all duration-500 ${
-            scrolled ? "scale-95 opacity-90 -mt-16" : "scale-100 opacity-100"
+          className={`container mx-auto px-4 transition-all duration-500 ease-in-out ${
+            scrolled
+              ? "-mt-20 scale-90 opacity-100"
+              : "mt-20 lg:mt-0 scale-100 opacity-100"
           }`}
         >
           <SearchBar scrolled={scrolled} />
@@ -690,7 +697,9 @@ export default function HomeNavbar() {
         {/* MOBILE MENU */}
         <div
           className={`fixed inset-0 w-full bg-white transition-all duration-500 lg:hidden z-[998] ${
-            menuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+            menuOpen
+              ? "translate-y-0 opacity-100"
+              : "-translate-y-full opacity-0"
           }`}
         >
           <div className="flex flex-col gap-6 p-8 pt-28 text-black h-full">
@@ -702,7 +711,9 @@ export default function HomeNavbar() {
                   </div>
                   <div>
                     <p className="font-extrabold text-lg">{user?.name}</p>
-                    <p className="text-xs text-[#105d9e] font-bold uppercase">{user?.role}</p>
+                    <p className="text-xs text-[#105d9e] font-bold uppercase">
+                      {user?.role}
+                    </p>
                   </div>
                 </div>
                 <button
@@ -740,7 +751,7 @@ export default function HomeNavbar() {
       </header>
 
       {/* Dynamic Spacer to prevent content overlap */}
-      <div className="h-[140px] md:h-[180px] lg:h-[220px]"></div>
+      <div className="h-[140px] md:h-[220px] lg:h-[150px]"></div>
     </>
   );
 }
