@@ -8,7 +8,7 @@ interface CardInfo {
 
 export default function ExperienceCard({ cardInfo }: { cardInfo: CardInfo }) {
   return (
-    <div className="bg-white custom-dark-shadow rounded-[16px] p-6 flex flex-col hover:shadow-customShadow transition-shadow duration-300 ease-in-out">
+    <div className="bg-white rounded-[16px] p-6 flex flex-col">
       {/* Icon */}
       <div className="w-12 h-12 flex items-center justify-center bg-orange-500 rounded-full text-white">
         <Image

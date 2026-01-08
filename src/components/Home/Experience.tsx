@@ -6,7 +6,7 @@ import Container from "../common/Container";
 export default function Experience() {
   return (
     // FIXED: Added 'className' attribute name here
-    <div className="bg-[#0037FF]">
+    <div className="bg-[#0f5d9e]">
       <div className="px-5 lg:px-28 py-16">
         <div className="container mx-auto text-center">
           <p className="text-base font-bold leading-7 text-white">
