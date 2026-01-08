@@ -11,4 +11,10 @@ export const cardData = [
     description:
       "Join a group and enjoy an affordable fishing experience with other like-minded anglers.",
   },
+  {
+    icon: "/Experience/Thumb_Up.png",
+    title: "No customer fees",
+    description:
+      "There are no hidden fees or commissions when you book through FishingTripper",
+  },
 ];

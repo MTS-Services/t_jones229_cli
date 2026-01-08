@@ -416,7 +416,7 @@ const dropdownVariants: Variants = {
   },
 };
 
-export default function SearchBar() {
+export default function SearchBar({scrolled}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [selected, setSelected] = useState<any>(null);
@@ -723,7 +723,7 @@ export default function SearchBar() {
           <div className="p-2">
             <button
               onClick={handleSearch}
-              className="flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 bg-[#ff385c] hover:bg-[#d90b3e] text-white rounded-full transition-all shadow-md active:scale-90"
+              className="flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 bg-[#0f5e9e] hover:bg-[#0f6e9e] text-white rounded-full transition-all shadow-md active:scale-90"
             >
               <IoIosSearch className="text-2xl" />
             </button>
