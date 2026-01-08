@@ -3,7 +3,7 @@ import bgImage from "@/assets/videoImage.png";
 
 export default function WellComeVideo() {
   return (
-    <div className="container mx-auto mt-28 px-5 xl:px-0">
+    <div className="container mx-auto mt-40 px-5 xl:px-0">
       <div
         style={{ backgroundImage: `url(${bgImage.src})` }}
         className="relative z-[-1] px-5 md:pl-10 py-5 flex flex-col md:flex-row gap-5 justify-between rounded-[16] bg-cover bg-center"
