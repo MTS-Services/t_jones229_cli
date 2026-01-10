@@ -11,9 +11,13 @@ export default function SearchDestinations() {
         Search our destinations{" "}
       </h1>
 
-      <div className="grid grid-cols-1  md:grid-cols-3 grid-rows-1 gap-8 justify-center items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 grid-rows-1 lg:gap-8 md:gap-6.5 gap-5 justify-center items-center">
         {cardData.slice(0, 3).map((cardInfo, index) => (
-          <SearchDestinationsCard key={index} cardInfo={cardInfo} />
+          <SearchDestinationsCard
+            key={index}
+            cardInfo={cardInfo}
+            isLast={index === cardData.length - 1}
+          />
         ))}
       </div>
     </Container>

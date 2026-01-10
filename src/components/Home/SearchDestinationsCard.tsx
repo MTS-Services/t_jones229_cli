@@ -78,11 +78,15 @@ interface CardInfo {
   description: string;
 }
 
+interface ExperienceCardProps {
+  cardInfo: CardInfo;
+  isLast?: boolean;
+}
+
 export default function SearchDestinationsCard({
   cardInfo,
-}: {
-  cardInfo: CardInfo;
-}) {
+  isLast,
+}: ExperienceCardProps) {
   const router = useRouter();
 
   const handleClick = () => {
@@ -91,11 +95,17 @@ export default function SearchDestinationsCard({
   };
 
   return (
-    // Added 'group' class here to trigger child animations on hover
-    <div className="group w-full cursor-pointer" onClick={handleClick}>
+    <div
+      className={`group cursor-pointer ${
+        isLast
+          ? "w-full md:max-w-[352px] md:mx-auto md:col-span-2 lg:col-span-1 lg:max-w-full"
+          : "w-full"
+      }`}
+      onClick={handleClick}
+    >
       {/* Container for Image and Overlays */}
       <div className="relative overflow-hidden rounded-[16px] w-full h-[380px]">
-        {/* Main Background Image - Added scale effect on hover */}
+        {/* Main Background Image */}
         <Image
           src={cardInfo.image || placeholder}
           alt={cardInfo.title}
@@ -105,10 +115,10 @@ export default function SearchDestinationsCard({
           priority={false}
         />
 
-        {/* 1. Dark Overlay - Becomes visible on hover */}
+        {/* 1. Dark Overlay */}
         <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
-        {/* 2. Flag Icon (Top Left) */}
+        {/* 2. Flag Icon */}
         <div className="absolute top-4 left-4 z-20 px-2 py-0.5 bg-gray-50 rounded-md">
           <Image
             src={cardInfo.flag}
@@ -119,7 +129,7 @@ export default function SearchDestinationsCard({
           />
         </div>
 
-        {/* 3. Text Content - Added sliding animation */}
+        {/* 3. Text Content */}
         <div className="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-20">
           <div className="space-y-1.5 transform translate-x-[-20px] opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out">
             <p className="text-base text-gray-200 font-normal leading-tight mt-1">

@@ -1,11 +1,9 @@
 import { cardData } from "@/constant/ExperienceCard";
 import React from "react";
 import ExperienceCard from "./ExperienceCard";
-import Container from "../common/Container";
 
 export default function Experience() {
   return (
-    // FIXED: Added 'className' attribute name here
     <div className="bg-[#0f5d9e]">
       <div className="px-5 lg:px-28 py-16">
         <div className="container mx-auto text-center">
@@ -23,10 +21,14 @@ export default function Experience() {
             experience on the water.
           </p>
         </div>
-        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:mt-16 md:mt-12 mt-8 container mx-auto">
+        <div className="grid lg:gap-8 md:gap-6.5 gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:mt-16 md:mt-12 mt-8 container mx-auto">
           {/* Added a check to ensure cardData exists before mapping */}
           {cardData?.map((cardInfo, index) => (
-            <ExperienceCard key={index} cardInfo={cardInfo} />
+            <ExperienceCard
+              key={index}
+              cardInfo={cardInfo}
+              isLast={index === cardData.length - 1}
+            />
           ))}
         </div>
       </div>

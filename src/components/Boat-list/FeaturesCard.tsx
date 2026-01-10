@@ -116,7 +116,9 @@ export default function FeaturesCard() {
             // Added explicit widths to mimic the 1, 2, and 3 column layout
             className="bg-white rounded-md p-6 transition feature-card w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)]"
           >
-            <div className="text-blue-600 text-2xl mb-4">{feature.icon}</div>
+            <div className="text-[#105e9e] text-2xl mb-4 w-5 h-5">
+              {feature.icon}
+            </div>
             <h3 className="text-xl md:text-2xl font-normal leading-[52px] text-gray-900 mb-2">
               {feature.title}
             </h3>
