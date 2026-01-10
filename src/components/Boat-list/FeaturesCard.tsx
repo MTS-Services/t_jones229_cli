@@ -109,7 +109,7 @@ export default function FeaturesCard() {
   return (
     <Container className="flex items-center justify-center">
       {/* Changed from grid to flex with wrap and justify-center */}
-      <div className="flex flex-wrap justify-center gap-8 w-full">
+      <div className="flex flex-wrap justify-center lg:gap-8 md:gap-6.5 gap-5 w-full">
         {featuresData?.map((feature) => (
           <div
             key={feature.id}
