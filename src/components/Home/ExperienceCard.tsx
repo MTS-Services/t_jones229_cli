@@ -20,11 +20,11 @@ export default function ExperienceCard({ cardInfo }: { cardInfo: CardInfo }) {
         />
       </div>
       {/* Title */}
-      <h2 className="text-lg font-bold leading-8 text-[#242424] md:mt-4 mt-2">
+      <h2 className="text-xl md:text-2xl font-bold leading-8 text-[#242424] md:mt-4 mt-2">
         {cardInfo.title}
       </h2>
       {/* Description */}
-      <p className="text-[#242424] text-base font-normal">
+      <p className="text-[#242424] text-base md:text-lg font-normal">
         {cardInfo.description}
       </p>
     </div>

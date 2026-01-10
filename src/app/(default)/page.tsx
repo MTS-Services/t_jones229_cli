@@ -1,5 +1,9 @@
 "use client";
 
+import BoatLintFaq from "@/components/Boat-list/BoatLintFaq";
+import BoatListHero from "@/components/Boat-list/BoatListHero";
+import FeaturesCard from "@/components/Boat-list/FeaturesCard";
+import StepsSection from "@/components/Boat-list/StepsSection";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
@@ -43,6 +47,10 @@ export default function Home() {
       <WellComeVideo />
       <SearchDestinations />
       <Experience />
+      <FeaturesCard />
+      <BoatListHero />
+      <StepsSection />
+      <BoatLintFaq />
       {/* <TopCharters /> */}
     </div>
   );

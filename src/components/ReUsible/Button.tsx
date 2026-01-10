@@ -46,7 +46,7 @@ export default function Button({
   // Render Link if href is provided
   if (link) {
     return (
-      <Link href={link} target="_blank">
+      <Link href={link} target="">
         <span className={buttonClasses}>{children}</span>
       </Link>
     );
