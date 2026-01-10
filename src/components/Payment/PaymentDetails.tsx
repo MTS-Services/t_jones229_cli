@@ -38,7 +38,7 @@ export default function PaymentDetails() {
     (errors.firstName || errors.lastName || errors.email || errors.mobile);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="">
       {/* Header Section */}
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-4">
@@ -208,7 +208,10 @@ const Label: React.FC<{
   htmlFor: string;
   required?: boolean;
 }> = ({ children, htmlFor, required }) => (
-  <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700">
+  <label
+    htmlFor={htmlFor}
+    className="block text-sm font-medium text-gray-600 mb-1"
+  >
     {children}
     {required && <span className="text-red-500 ml-1">*</span>}
   </label>
@@ -221,12 +224,11 @@ const Input: React.FC<
 > = ({ error, className = "", ...props }) => (
   <input
     className={`
-      w-full px-4 py-3 rounded-lg border transition-all duration-200
-      focus:outline-none focus:ring-2 focus:ring-offset-1
+      w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] placeholder-gray-300
       ${
         error
           ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-          : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+          : "border-gray-300 focus:border-[#73bbf7] focus:ring-[#73bbf7]"
       }
       placeholder:text-gray-400
       ${className}

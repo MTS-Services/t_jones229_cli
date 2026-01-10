@@ -41,7 +41,6 @@
 //   );
 // }
 
-
 "use client";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
@@ -73,7 +72,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {pathname === "/" ? <HomeNavbar /> : <Navbar />}
+      {/* {pathname === "/" ? <HomeNavbar /> : <Navbar />} */}
+      <HomeNavbar />
       <Suspense fallback={null}>{children}</Suspense>
       <Footer />
     </>

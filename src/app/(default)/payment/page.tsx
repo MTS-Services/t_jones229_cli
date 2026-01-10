@@ -22,7 +22,7 @@ export default function Page() {
   const params = useSearchParams();
   const boatID = params.get("boatId");
   const tripId = params.get("tripId");
-  
+
   // Try to get values from URL params as fallback
   const dateFromUrl = params.get("date");
   const guestsFromUrl = params.get("guests");
@@ -33,13 +33,13 @@ export default function Page() {
       const storedDate = localStorage.getItem("date");
       const storedGuests = localStorage.getItem("Guests");
       const storedBookingType = localStorage.getItem("bookingType");
-      
-      console.log('LocalStorage values:', {
+
+      console.log("LocalStorage values:", {
         date: storedDate,
         guests: storedGuests,
-        bookingType: storedBookingType
+        bookingType: storedBookingType,
       });
-      
+
       // Use localStorage values or fallback to URL params
       setTripDate(storedDate || dateFromUrl);
       setNumberOfGuests(storedGuests || guestsFromUrl);
@@ -57,71 +57,82 @@ export default function Page() {
 
   const handleUpdate = async (data: any) => {
     try {
-      console.log('Form data received:', data);
-      console.log('Trip date:', tripDate);
-      console.log('Number of guests:', numberOfGuests);
-      console.log('Booking type:', bookingType);
-      console.log('Selected payment:', selectedPayment);
+      console.log("Form data received:", data);
+      console.log("Trip date:", tripDate);
+      console.log("Number of guests:", numberOfGuests);
+      console.log("Booking type:", bookingType);
+      console.log("Selected payment:", selectedPayment);
 
       // Validate required fields
       if (!data?.cardNumber || !data?.expireDate || !data?.securityCode) {
-        toast.error('Please fill in all card details');
+        toast.error("Please fill in all card details");
         return;
       }
 
       if (!tripDate) {
-        toast.error('Trip date is missing. Please go back and select a trip date.');
-        console.error('Missing trip date. Check if localStorage "date" is set or pass it via URL');
+        toast.error(
+          "Trip date is missing. Please go back and select a trip date."
+        );
+        console.error(
+          'Missing trip date. Check if localStorage "date" is set or pass it via URL'
+        );
         return;
       }
 
       if (!numberOfGuests || parseInt(numberOfGuests) < 1) {
-        toast.error('Number of guests is missing. Please go back and select number of guests.');
-        console.error('Missing or invalid number of guests. Check if localStorage "Guests" is set');
+        toast.error(
+          "Number of guests is missing. Please go back and select number of guests."
+        );
+        console.error(
+          'Missing or invalid number of guests. Check if localStorage "Guests" is set'
+        );
         return;
       }
 
       if (!boatID || !tripId) {
-        toast.error('Booking information is incomplete. Please start the booking process again.');
+        toast.error(
+          "Booking information is incomplete. Please start the booking process again."
+        );
         return;
       }
 
       const [exp_month, exp_year] = data.expireDate.split("/");
       if (!exp_month || !exp_year) {
-        toast.error('Invalid expiration date format. Use MM/YY');
+        toast.error("Invalid expiration date format. Use MM/YY");
         return;
       }
 
       // Convert country name to ISO 2-letter code for Stripe
       const getCountryCode = (country: string): string => {
         const countryMap: { [key: string]: string } = {
-          'united states': 'US',
-          'united stated': 'US',
-          'usa': 'US',
-          'us': 'US',
-          'canada': 'CA',
-          'uk': 'GB',
-          'united kingdom': 'GB',
-          'bangladesh': 'BD',
+          "united states": "US",
+          "united stated": "US",
+          usa: "US",
+          us: "US",
+          canada: "CA",
+          uk: "GB",
+          "united kingdom": "GB",
+          bangladesh: "BD",
         };
         const normalized = country?.toLowerCase().trim();
-        return countryMap[normalized] || 'US'; // Default to US if unknown
+        return countryMap[normalized] || "US"; // Default to US if unknown
       };
 
       // Send card details to backend - backend will handle Stripe tokenization server-side
-      console.log('Preparing card details for server-side processing...');
+      console.log("Preparing card details for server-side processing...");
 
       // Prepare booking info without Stripe payment method creation
       // The backend will handle Stripe payment using the secret key
       const fullPaymentInfo = {
         paymentMethod: {
-          paymentMethod: data?.paymentMethod || 'card',
+          paymentMethod: data?.paymentMethod || "card",
           cardNumber: data?.cardNumber?.slice(-4), // Only store last 4 digits for security
           expireDate: data?.expireDate,
-          securityCode: '***', // Don't store actual security code
-          nameOfCard: data?.nameOfCard || `${data?.firstName} ${data?.lastName}`,
-          bollingCountry: data?.bollingCountry || 'US',
-          zipCode: data?.zipCode || '',
+          securityCode: "***", // Don't store actual security code
+          nameOfCard:
+            data?.nameOfCard || `${data?.firstName} ${data?.lastName}`,
+          bollingCountry: data?.bollingCountry || "US",
+          zipCode: data?.zipCode || "",
         },
         user: {
           firstName: data?.firstName,
@@ -135,7 +146,12 @@ export default function Page() {
         ? !(bookingType.toLowerCase() === "true" || bookingType === "1")
         : false;
 
-      console.log('isGroupBooking:', isGroupBooking, 'bookingType from storage:', bookingType);
+      console.log(
+        "isGroupBooking:",
+        isGroupBooking,
+        "bookingType from storage:",
+        bookingType
+      );
 
       const bookingInfo: any = {
         boatId: boatID,
@@ -160,7 +176,7 @@ export default function Page() {
 
       // Add memberInfo for GROUP bookings (required by backend for groupMember.create)
       if (isGroupBooking) {
-        console.log('Adding memberInfo for GROUP booking');
+        console.log("Adding memberInfo for GROUP booking");
         bookingInfo.memberInfo = {
           firstName: data?.firstName,
           lastName: data?.lastName,
@@ -169,17 +185,20 @@ export default function Page() {
         };
       }
 
-      console.log('Booking info to send:', bookingInfo);
+      console.log("Booking info to send:", bookingInfo);
 
       const res = await bookingFN(bookingInfo);
-      console.log('Booking response:', res);
+      console.log("Booking response:", res);
 
       if (res?.data?.success) {
         // Try to update profile, but don't fail the whole flow if it doesn't work
         try {
           await updateProfileFN(fullPaymentInfo).unwrap();
         } catch (profileError) {
-          console.warn('Failed to update profile (non-critical):', profileError);
+          console.warn(
+            "Failed to update profile (non-critical):",
+            profileError
+          );
         }
 
         toast.success(res?.data?.message);
@@ -190,7 +209,7 @@ export default function Page() {
       } else {
         let errorMessage = "An error occurred during booking.";
         if (res?.error) {
-          console.error('Booking error:', res.error);
+          console.error("Booking error:", res.error);
           if ("data" in res.error && (res.error as any).data?.message) {
             errorMessage = (res.error as any).data.message;
           } else if ("message" in res.error) {
@@ -199,35 +218,38 @@ export default function Page() {
           }
           // Log full error details for debugging
           if ("data" in res.error && (res.error as any).data?.errorDetails) {
-            console.error('Error details:', (res.error as any).data.errorDetails);
+            console.error(
+              "Error details:",
+              (res.error as any).data.errorDetails
+            );
             if ((res.error as any).data.errorDetails.issues) {
               const issues = (res.error as any).data.errorDetails.issues;
-              console.error('Validation issues:', issues);
+              console.error("Validation issues:", issues);
               issues.forEach((issue: any, index: number) => {
                 console.error(`Issue ${index + 1}:`, {
                   path: issue.path,
                   message: issue.message,
                   code: issue.code,
-                  full: issue
+                  full: issue,
                 });
               });
             }
           }
         }
-        toast.error(errorMessage + ' Please try again.');
+        toast.error(errorMessage + " Please try again.");
       }
     } catch (error) {
-      console.error('Caught error:', error);
+      console.error("Caught error:", error);
       toast.error(error as string);
     }
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto lg:mt-10 md:mt-8 mt-6">
       <ToastContainer />
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleUpdate)} className="my-10">
-          <div className="flex flex-col lg:flex-row gap-5 items-center mx-2">
+          <div className="flex flex-col lg:flex-row lg:gap-10 md:gap-8 gap-6 xl:px-6 lg:px-5 md:px-4 px-3 mx-2">
             <PaymentDetails />
 
             <div>
