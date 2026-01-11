@@ -113,12 +113,15 @@ export default function FeaturesCard() {
         {featuresData?.map((feature) => (
           <div
             key={feature.id}
-            // Added explicit widths to mimic the 1, 2, and 3 column layout
-            className="bg-white rounded-md p-6 transition feature-card w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)]"
+            className="bg-white text-center rounded-md p-6 transition shadow-[0_6px_20px_rgb(0,0,0,0.08)] feature-card w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)]"
           >
-            <div className="text-[#105e9e] text-2xl mb-4 w-5 h-5">
-              {feature.icon}
+            {/* ICON CENTERED */}
+            <div className="mx-auto text-[#105e9e] mb-4 w-10 h-10 flex items-center justify-center">
+              <div className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
+                {feature.icon}
+              </div>
             </div>
+
             <h3 className="text-xl md:text-2xl font-normal leading-[52px] text-gray-900 mb-2">
               {feature.title}
             </h3>

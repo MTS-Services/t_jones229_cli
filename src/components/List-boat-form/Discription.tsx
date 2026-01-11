@@ -7,38 +7,27 @@ export default function Discription() {
 
   return (
     <div className="space-y-6 ">
-      {/* Header */}
-      <div className="bg-[#F5F5F5] pt-16 md:pt-0 px-5 md:px-14 py-9">
-        <h1 className="text-3xl font-bold text-textPrimary leading-normal mb-2">
-          Description
-        </h1>
-        <p className="text-base text-textPrimary font-normal leading-normal">
-          Add a description on your listing page, customers will see this so
-          ensure to add as much information as possible.
-        </p>
-      </div>
-
-      <div className="py-12 px-5 md:px-14 min-h-screen">
-        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-6">
+      <div className="">
+        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-4">
           Listing Type
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl gap-4 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl gap-4">
           {/* Listing Type */}
           <div>
-            <label className="text-textSecondary text-base md:text-lg font-normal leading-8">
+            <label className="block text-base font-medium text-gray-600 mb-2">
               Title:
             </label>
             <input
               type="text"
               maxLength={51}
               {...register("listingTypeTitle")}
-              className="w-full px-3 py-2 border border-gray-300"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
               placeholder="Add your listing title"
             />
 
             {watch("listingTypeTitle") ? (
               <p
-                className={`text-sm ${
+                className={`text-sm mt-2 ${
                   watch("listingTypeTitle").length >= 50
                     ? "text-red-500"
                     : "text-gray-500"
@@ -51,31 +40,31 @@ export default function Discription() {
                   : "Title must be at most 50 characters"}
               </p>
             ) : (
-              <p className="text-gray-500">50 characters remaining</p>
+              <p className="text-gray-500 mt-2">50 characters remaining</p>
             )}
           </div>
         </div>
         <Divider style={{ borderColor: "#d9d9d9" }}></Divider>
 
-        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-4">
           Add your listing description
         </h1>
         <div className=" max-w-4xl  pb-8">
           {/* Listing Type */}
           <div>
-            <label className="text-textSecondary text-base font-normal leading-8 mb-2">
+            <label className="block text-base font-medium text-gray-600 mb-2">
               Tell us about the charter services you offer.
             </label>
             <textarea
               rows={5}
               maxLength={501}
               {...register("listingTypeDescription")}
-              className="w-full px-3 py-2 border border-gray-300"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
               placeholder="Provide some instructions here"
             />
             {watch("listingTypeDescription") ? (
               <p
-                className={`text-sm ${
+                className={`text-sm mt-2 ${
                   watch("listingTypeDescription")?.length >= 500
                     ? "text-red-500"
                     : "text-gray-500"
@@ -88,14 +77,10 @@ export default function Discription() {
                   : "Discription must be at most 500 characters"}
               </p>
             ) : (
-              <p className="text-gray-500">500 haracters remaining</p>
+              <p className="text-gray-500 mt-2">500 haracters remaining</p>
             )}
           </div>
         </div>
-      </div>
-
-      <div className="px-14">
-        <Divider style={{ borderColor: "#d9d9d9" }}></Divider>
       </div>
     </div>
   );

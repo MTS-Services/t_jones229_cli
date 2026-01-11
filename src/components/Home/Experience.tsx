@@ -7,10 +7,10 @@ export default function Experience() {
     <div className="bg-[#0f5d9e]">
       <div className="px-5 lg:px-28 py-16">
         <div className="container mx-auto text-center">
-          <p className="text-base font-bold leading-7 text-white">
+          <p className="text-base font-bold text-white">
             WHY CHOOSE FISHING TRIPPER?
           </p>
-          <h1 className="mt-4 text-white text-xl md:text-4xl font-normal leading-10 mb-2">
+          <h1 className="md:my-4 my-3 text-white text-xl md:text-4xl font-normal leading-10">
             Experience Fishing Like Never Before
           </h1>
           <p className="text-base md:text-lg font-normal text-white leading-8 px-0 lg:px-32 font-satoshi">

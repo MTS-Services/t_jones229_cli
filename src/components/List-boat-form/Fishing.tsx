@@ -237,7 +237,7 @@ const priceInclusionsOptions = [
 ];
 
 export default function Fishing() {
-  const { register, setValue } = useFormContext(); // ✅ NOT NULL NOW
+  const { register, setValue } = useFormContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<string[]>([]);
 
@@ -259,11 +259,7 @@ export default function Fishing() {
 
   return (
     <div className="bg-white">
-      <div className="bg-[#F5F5F5] px-5 py-6">
-        <h1 className="text-3xl font-bold">Fishing</h1>
-      </div>
-
-      <div className="px-5 py-10">
+      <div className="">
         <h2 className="text-xl font-bold mb-2">Targeted Species</h2>
 
         <div className="max-w-md">
@@ -303,33 +299,35 @@ export default function Fishing() {
 
         <Divider />
 
-        <CheckboxGroup
-          title="Fishing Locations"
-          name="fishingLocation"
-          options={fishingLocationsOptions}
-          register={register}
-        />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <CheckboxGroup
+            title="Fishing Locations"
+            name="fishingLocation"
+            options={fishingLocationsOptions}
+            register={register}
+          />
 
-        <CheckboxGroup
-          title="Fishing Techniques"
-          name="fishingTechnique"
-          options={fishingTechniquesOptions}
-          register={register}
-        />
+          <CheckboxGroup
+            title="Fishing Techniques"
+            name="fishingTechnique"
+            options={fishingTechniquesOptions}
+            register={register}
+          />
 
-        <CheckboxGroup
-          title="Policies"
-          name="policies"
-          options={policiesOptions}
-          register={register}
-        />
+          <CheckboxGroup
+            title="Included in Price"
+            name="includedPrice"
+            options={priceInclusionsOptions}
+            register={register}
+          />
 
-        <CheckboxGroup
-          title="Included in Price"
-          name="includedPrice"
-          options={priceInclusionsOptions}
-          register={register}
-        />
+          <CheckboxGroup
+            title="Policies"
+            name="policies"
+            options={policiesOptions}
+            register={register}
+          />
+        </div>
       </div>
     </div>
   );

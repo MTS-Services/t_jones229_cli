@@ -25,7 +25,7 @@ export default function ExperienceCard({
       }`}
     >
       {/* Icon */}
-      <div className="w-12 h-12 flex items-center justify-center bg-orange-500 rounded-full text-white mb-4">
+      <div className="w-12 h-12 flex items-center justify-center bg-[#0f5d9e] rounded-full text-white mb-4">
         <Image
           src={cardInfo?.icon}
           alt="icon"

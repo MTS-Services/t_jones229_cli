@@ -1,46 +1,3 @@
-// import React from "react";
-// import Faq from "../DetailsPage/Faq";
-// import {
-//   AvailabilityItems,
-//   PricingItems,
-//   StartedItems,
-// } from "@/constant/BoatListFaq";
-
-// export default function BoatLintFaq() {
-//   return (
-//     <div className="bg-[#f5f5f5] py-20">
-//       <div className="container mx-auto px-5 xl:px-0">
-//         <h1 className="text-xl md:text-3xl lg:text-5xl text-[#242424] font-bold md:font-normal leading-[52px] ">
-//           Frequently asked questions
-//         </h1>
-
-//         <div className="py-10">
-//           <div>
-//             <h1 className=" text-base md:text-xl font-bold">Getting Started</h1>
-//             <Faq items={StartedItems} />
-//           </div>
-//         </div>
-//         <div className="py-10">
-//           <div>
-//             <h1 className="text-base md:text-xl font-bold">
-//               Pricing & Earnings
-//             </h1>
-//             <Faq items={PricingItems} />
-//           </div>
-//         </div>
-//         <div className="py-10">
-//           <div>
-//             <h1 className="text-base md:text-xl font-bold">
-//               Availability & Managing Trips
-//             </h1>
-//             <Faq items={AvailabilityItems} />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Container from "../common/Container";
@@ -139,9 +96,9 @@ const AccordionCard = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       // Changed mb-4 to mb-2 for that small, consistent gap you wanted
-      className={`group relative mb-4 overflow-hidden rounded-xl border-2 transition-all duration-300 ${
+      className={`group relative mb-4 overflow-hidden rounded-xl border transition-all duration-300 ${
         isOpen
-          ? "border-[#0f5d9e] bg-white shadow-sm"
+          ? "border-[#0f5d9e]  bg-white shadow-sm"
           : "border-transparent bg-gray-50 hover:bg-gray-100"
       }`}
     >
@@ -177,7 +134,9 @@ const AccordionCard = ({
           >
             <div className="px-5 pb-5">
               <div className="h-[1px] w-full bg-[#78b4e6]/30 mb-3" />
-              <p className="text-gray-500 leading-relaxed">{item.a}</p>
+              <p className="text-gray-500 text-base leading-relaxed">
+                {item.a}
+              </p>
             </div>
           </motion.div>
         )}
@@ -191,7 +150,7 @@ export default function PremiumFaq() {
 
   return (
     <Container className="">
-      <div className="mx-auto max-w-5xl">
+      <div className="">
         <header className="mb-8 text-left">
           <span className="text-[#0f5d9e] font-semibold tracking-widest uppercase md:text-base text-sm">
             Support
@@ -201,25 +160,29 @@ export default function PremiumFaq() {
           </h1>
         </header>
 
-        {FAQ_DATA.map((section, idx) => (
-          <div key={idx} className="mb-8">
-            <h2 className="my-4 text-lg font-black text-gray-700 flex items-center gap-4">
-              {section.category}
-              <div className="h-[2px] flex-grow bg-gray-200" />
-            </h2>
+        <div className="space-y-14">
+          {FAQ_DATA.map((section, idx) => (
+            <div key={idx} className="mb-8">
+              <h2 className="my-4 text-lg font-black text-gray-700 flex items-center gap-4">
+                {section.category}
+                <div className="h-[2px] flex-grow bg-gray-200" />
+              </h2>
 
-            <div>
-              {section.questions.map((item) => (
-                <AccordionCard
-                  key={item.id}
-                  item={item}
-                  isOpen={openId === item.id}
-                  onClick={() => setOpenId(openId === item.id ? null : item.id)}
-                />
-              ))}
+              <div className="space-y-6">
+                {section.questions.map((item) => (
+                  <AccordionCard
+                    key={item.id}
+                    item={item}
+                    isOpen={openId === item.id}
+                    onClick={() =>
+                      setOpenId(openId === item.id ? null : item.id)
+                    }
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </Container>
   );

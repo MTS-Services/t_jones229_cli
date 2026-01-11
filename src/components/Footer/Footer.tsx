@@ -11,9 +11,9 @@ import Image from "next/image";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="py-8 px-5 xl:px-0">
-      <div className="container mx-auto ">
-        <div className="flex flex-col md:flex-row gap-5 md:gap-[131px] justify-between items-start md:items-center border-t pt-[52px]">
+    <footer className="py-8 px-5 xl:px-0 bg-[#0f5e9d] text-white">
+      <div className="container mx-auto">
+        <div className="flex flex-col md:flex-row gap-5 md:gap-[131px] justify-between items-start md:items-center">
           {/* Left Section */}
           <div className="">
             <Image
@@ -25,31 +25,31 @@ const Footer: React.FC = () => {
             />
             {/* <h2 className="text-lg font-bold">Fishing Tripper</h2>   */}
 
-            <p className="text-[#757575] text-sm font-normal mt-6">
+            <p className="text-sm font-normal mt-6">
               I&apos;m surprised you had the courage to take the <br />{" "}
               responsibility yourself. Leave that to me.
             </p>
 
             <div className="flex gap-8 items-center my-10">
               <FaTwitter
-                className="text-[#171717] h-5 w-5 cursor-pointer hover:text-[#FF9500] transition-colors duration-300 ease-in-out"
+                className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
                 size={20}
               />
               <FaFacebookF
-                className="text-[#171717] h-5 w-5 cursor-pointer hover:text-[#FF9500] transition-colors duration-300 ease-in-out"
+                className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
                 size={20}
               />
 
               <FaInstagram
-                className="text-[#171717] h-5 w-5 cursor-pointer hover:text-[#FF9500] transition-colors duration-300 ease-in-out"
+                className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
                 size={20}
               />
               <FaTelegramPlane
-                className="text-[#171717] h-5 w-5 cursor-pointer hover:text-[#FF9500] transition-colors duration-300 ease-in-out"
+                className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
                 size={20}
               />
             </div>
-            <p className=" hidden md:block text-[#424242] text-sm font-normal mt-4 hover:text-[#FF9500] transition-colors duration-300 ease-in-out">
+            <p className=" hidden md:block text-sm font-normal mt-4 transition-colors duration-300 ease-in-out">
               Copyright ©2024. Fishing tripper.
             </p>
           </div>
@@ -58,12 +58,12 @@ const Footer: React.FC = () => {
 
           <div className="flex-1 flex flex-wrap gap-5 lg:flex-row lg:justify-between items-start lg:items-center md:placeholder:px-5 lg:px-0">
             <div>
-              <h3 className="text-base text-[#171717] font-bold">HEADING</h3>
+              <h3 className="text-base  font-bold">HEADING</h3>
               <ul className="mt-2 space-y-2">
                 <li>
                   <a
                     href="/contact-us"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     CONTACT US
                   </a>
@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="/faq"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     FAQ
                   </a>
@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #3
                   </a>
@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #4
                   </a>
@@ -95,7 +95,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #5
                   </a>
@@ -103,12 +103,12 @@ const Footer: React.FC = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-base text-[#171717] font-bold">HEADING</h3>
+              <h3 className="text-base  font-bold">HEADING</h3>
               <ul className="mt-2 space-y-2">
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #1
                   </a>
@@ -116,7 +116,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #2
                   </a>
@@ -124,7 +124,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #3
                   </a>
@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #4
                   </a>
@@ -140,7 +140,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #5
                   </a>
@@ -148,12 +148,12 @@ const Footer: React.FC = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-base text-[#171717] font-bold">HEADING</h3>
+              <h3 className="text-base  font-bold">HEADING</h3>
               <ul className="mt-2 space-y-2">
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #1
                   </a>
@@ -161,7 +161,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #2
                   </a>
@@ -169,7 +169,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #3
                   </a>
@@ -177,7 +177,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #4
                   </a>
@@ -185,7 +185,7 @@ const Footer: React.FC = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-base text-[#757575] hover:text-[#FF9500] hover:underline transition-colors duration-300 ease-in-out"
+                    className="text-base hover:underline transition-colors duration-300 ease-in-out"
                   >
                     Footer Link #5
                   </a>
@@ -193,7 +193,7 @@ const Footer: React.FC = () => {
               </ul>
             </div>
 
-            <p className="block md:hidden text-[#424242] text-sm font-normal mt-4 hover:text-[#FF9500] transition-colors duration-300 ease-in-out">
+            <p className="block md:hidden text-[#424242] text-sm font-normal mt-4 transition-colors duration-300 ease-in-out">
               Copyright ©2024. Fishing tripper.
             </p>
           </div>

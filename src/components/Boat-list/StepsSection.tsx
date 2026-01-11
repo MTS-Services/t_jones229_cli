@@ -94,7 +94,7 @@ export default function StepsSection() {
             return (
               <div
                 key={step.id}
-                className={`group relative bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:-translate-y-1 
+                className={`group relative bg-white p-8 rounded-xl shadow-sm transition-all duration-300 border border-slate-100
                 ${
                   isLast
                     ? "md:col-span-2 lg:col-span-1 md:w-[360px] md:mx-auto lg:max-w-full"
@@ -102,13 +102,13 @@ export default function StepsSection() {
                 }`}
               >
                 {/* Large Background Number */}
-                <span className="absolute top-4 right-6 lg:text-7xl md:text-6xl text-5xl font-black text-[#d0dfeb] group-hover:text-[#0f5d9e] transition-colors">
+                <span className="absolute top-4 right-6 lg:text-7xl md:text-6xl text-5xl font-black group-hover:text-[#d0dfeb] text-[#0f5d9e] transition-colors">
                   0{index + 1}
                 </span>
 
                 {/* Icon / Dot */}
-                <div className="relative z-10 w-14 h-14 bg-[#70b6f0] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#0f5d9e] transition-colors duration-300">
-                  <span className="text-black group-hover:text-white font-bold text-xl">
+                <div className="relative z-10 w-14 h-14 rounded-xl flex items-center justify-center mb-6 bg-[#0f5d9e] transition-colors duration-300">
+                  <span className="text-black text-white font-bold text-xl">
                     {step.id}
                   </span>
                 </div>

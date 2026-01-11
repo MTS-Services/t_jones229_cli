@@ -275,7 +275,7 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 mt-6">
         {/* Custom Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <label className="block text-sm font-medium text-gray-600 mb-2">
@@ -332,7 +332,7 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600 mb-2">
+          <label className="block text-sm font-medium text-gray-600 mb-1">
             Card Number
           </label>
           <input
@@ -426,9 +426,9 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
 
       <div className="lg:mt-8 md:mt-6 mt-4">
         <Link href={`/Key-booking-details`}>
-        <button className="bg-orange-400 text-white px-4 py-2 rounded-lg text-base font-normal hover:bg-orange-500 transition-colors duration-300 whitespace-nowrap">
-          Book now
-        </button>
+          <button className="bg-orange-400 text-white px-4 py-2 rounded-lg text-base font-normal hover:bg-orange-500 transition-colors duration-300 whitespace-nowrap">
+            Book now
+          </button>
         </Link>
       </div>
     </div>

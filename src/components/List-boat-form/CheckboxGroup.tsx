@@ -47,12 +47,12 @@ interface Props {
 const CheckboxGroup: React.FC<Props> = ({ title, name, options, register }) => {
   return (
     <div className="mb-6">
-      <h3 className="font-bold mb-3">{title}</h3>
+      <h3 className="font-bold text-lg mb-3">{title}</h3>
 
       {options.map((option) => (
         <label key={option} className="flex gap-2 items-center mb-2">
           <input type="checkbox" value={option} {...register(name)} />
-          <span className="text-gray-500">{option}</span>
+          <span className="text-gray-500 text-base">{option}</span>
         </label>
       ))}
     </div>

@@ -119,7 +119,7 @@ export default function SearchDestinationsCard({
         <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
         {/* 2. Flag Icon */}
-        <div className="absolute top-4 left-4 z-20 px-2 py-0.5 bg-gray-50 rounded-md">
+        <div className="absolute top-4 left-4 z-20">
           <Image
             src={cardInfo.flag}
             alt="flag"
