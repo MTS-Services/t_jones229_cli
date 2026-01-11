@@ -4,8 +4,7 @@ import { Divider, Skeleton } from "antd";
 import { useFormContext } from "react-hook-form";
 import { usePathname } from "next/navigation";
 import { User, CreditCard } from "lucide-react";
-import PaymentDetailsForm from "./PaymentDetailsForm";
-import USAPaymentDetailsForm from "./USAPaymentDetailsForm";
+import PaymentDetailsForm from "../../userDashboard/PaymentDetailsForm";
 
 // Define the shape of your form for TypeScript
 interface CheckoutFormData {
@@ -197,7 +196,6 @@ const USAPaymentSection: React.FC = () => {
 
       <section>
         {/* <PaymentDetailsForm paymentInfo={userInfo?.data?.paymentMethod} /> */}
-        <USAPaymentDetailsForm paymentInfo={userInfo?.data?.paymentMethod} />
       </section>
     </div>
   );

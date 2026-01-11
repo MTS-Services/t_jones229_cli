@@ -213,9 +213,10 @@ export default function EditTrip() {
       <div className="mb-4">
         <label className="block mb-1">Fishing Locations</label>
         <CheckboxGroup
+          title="" // ✅ Pass empty string or appropriate title
           name="fishingLocation"
           options={fishingLocationsOptions}
-          selectedValues={[]}
+          selectedValues={watch("fishingLocation") || []} // ✅ Use watch to get current values
           register={register}
         />
       </div>
@@ -224,13 +225,13 @@ export default function EditTrip() {
       <div className="mb-4">
         <label className="block mb-1">Fishing Techniques</label>
         <CheckboxGroup
+          title="" // ✅ Pass empty string or appropriate title
           name="fishingTechnique"
           options={fishingTechniquesOptions}
-          selectedValues={[]}
+          selectedValues={watch("fishingTechnique") || []} // ✅ Use watch to get current values
           register={register}
         />
       </div>
-
       {/* Submit */}
       <div className="mt-6">
         <button

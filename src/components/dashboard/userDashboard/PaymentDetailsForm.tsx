@@ -191,6 +191,9 @@
 //     </div>
 //   );
 // }
+// PaymentDetailsForm.tsx
+
+//
 
 "use client";
 import Image from "next/image";
@@ -203,9 +206,12 @@ import masteCard from "@/assets/payment/masteCard.svg";
 import mestero from "@/assets/payment/mestero.svg";
 import payPal from "@/assets/payment/payPal.svg";
 import { CreditCard, ChevronDown } from "lucide-react";
-import Link from "next/link";
 
-export default function PaymentDetailsForm({ paymentInfo }: any) {
+interface PaymentDetailsFormProps {
+  paymentInfo?: any;
+}
+
+function PaymentDetailsForm({ paymentInfo }: PaymentDetailsFormProps) {
   const {
     register,
     setValue,
@@ -213,11 +219,9 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
     formState: { errors },
   } = useFormContext();
 
-  // Custom Dropdown State
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Watch the value for the display
   const selectedMethod =
     watch("paymentMethod") || paymentInfo?.paymentMethod || "";
 
@@ -229,7 +233,6 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
     { id: "visa", label: "Visa" },
   ];
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -276,7 +279,6 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 mt-6">
-        {/* Custom Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <label className="block text-sm font-medium text-gray-600 mb-2">
             Choose payment method
@@ -317,7 +319,6 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
               ))}
             </div>
           )}
-          {/* Hidden input for React Hook Form */}
           <input
             type="hidden"
             {...register("paymentMethod", {
@@ -426,3 +427,5 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
     </div>
   );
 }
+
+export default PaymentDetailsForm;
