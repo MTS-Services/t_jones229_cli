@@ -1,39 +1,60 @@
-"use client"
+"use client";
 
-import { Clock, Users, DollarSign, TrendingUp, Anchor } from "lucide-react"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import type { CalendarResponse } from "@/types/calenderTypes"
+import { Clock, Users, DollarSign, TrendingUp, Anchor } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import type { CalendarResponse } from "@/types/calenderTypes";
 
 interface CalendarSidebarProps {
-  data: CalendarResponse["data"]
+  data: CalendarResponse["data"];
 }
 
 export function CalendarSidebar({ data }: CalendarSidebarProps) {
-
-
-  const totalBookings = data?.dailyServiceCounts?.reduce((sum, day) => sum + (day?.count ?? 0), 0)
+  const totalBookings = data?.dailyServiceCounts?.reduce(
+    (sum, day) => sum + (day?.count ?? 0),
+    0
+  );
   const totalRevenue = data?.dailyServiceCounts
     ?.flatMap((day) => day?.bookings ?? [])
-    ?.reduce((sum, booking) => sum + (booking?.payFirst ?? 0) + (booking?.payDue ?? 0), 0)
+    ?.reduce(
+      (sum, booking) => sum + (booking?.payFirst ?? 0) + (booking?.payDue ?? 0),
+      0
+    );
 
-  const avgBookingValue = totalBookings > 0 ? totalRevenue / totalBookings : 0
+  const avgBookingValue = totalBookings > 0 ? totalRevenue / totalBookings : 0;
 
   const uniqueUsers = new Set(
-    data?.dailyServiceCounts?.flatMap((day) => day?.bookings ?? [])?.map((booking) => booking?.user?.id),
-  )?.size
+    data?.dailyServiceCounts
+      ?.flatMap((day) => day?.bookings ?? [])
+      ?.map((booking) => booking?.user?.id)
+  )?.size;
 
   const timelineSections = [
-    { key: "today" as const, title: "Today", bookings: data?.timeline?.today ?? [], color: "bg-blue-500" },
-    { key: "tomorrow" as const, title: "Tomorrow", bookings: data?.timeline?.tomorrow ?? [], color: "bg-green-500" },
-    { key: "thisWeek" as const, title: "This Week", bookings: data?.timeline?.thisWeek ?? [], color: "bg-purple-500" },
+    {
+      key: "today" as const,
+      title: "Today",
+      bookings: data?.timeline?.today ?? [],
+      color: "bg-blue-500",
+    },
+    {
+      key: "tomorrow" as const,
+      title: "Tomorrow",
+      bookings: data?.timeline?.tomorrow ?? [],
+      color: "bg-green-500",
+    },
+    {
+      key: "thisWeek" as const,
+      title: "This Week",
+      bookings: data?.timeline?.thisWeek ?? [],
+      color: "bg-purple-500",
+    },
     {
       key: "thisMonth" as const,
       title: "This Month",
       bookings: data?.timeline?.thisMonth ?? [],
       color: "bg-orange-500",
     },
-  ]
+  ];
 
   return (
     <div className="h-full overflow-y-auto bg-gradient-to-b from-slate-50 to-white">
@@ -56,7 +77,9 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
                 </div>
                 <div>
                   <p className="text-xs text-blue-600 font-medium">Bookings</p>
-                  <p className="text-xl font-bold text-blue-900">{totalBookings}</p>
+                  <p className="text-xl font-bold text-blue-900">
+                    {totalBookings}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -69,8 +92,12 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
                   <Users className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-xs text-green-600 font-medium">Customers</p>
-                  <p className="text-xl font-bold text-green-900">{uniqueUsers}</p>
+                  <p className="text-xs text-green-600 font-medium">
+                    Customers
+                  </p>
+                  <p className="text-xl font-bold text-green-900">
+                    {uniqueUsers}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -84,7 +111,9 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
                 </div>
                 <div>
                   <p className="text-xs text-yellow-600 font-medium">Revenue</p>
-                  <p className="text-xl font-bold text-yellow-900">${totalRevenue?.toLocaleString()}</p>
+                  <p className="text-xl font-bold text-yellow-900">
+                    ${totalRevenue?.toLocaleString()}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -97,8 +126,12 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
                   <TrendingUp className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-xs text-purple-600 font-medium">Avg Value</p>
-                  <p className="text-xl font-bold text-purple-900">${Math.round(avgBookingValue)}</p>
+                  <p className="text-xs text-purple-600 font-medium">
+                    Avg Value
+                  </p>
+                  <p className="text-xl font-bold text-purple-900">
+                    ${Math.round(avgBookingValue)}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -110,11 +143,20 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
           {timelineSections.map((section) => (
             <Card key={section.key} className="border-0 shadow-sm">
               <CardHeader className="pb-2">
-                <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-between p-0 h-auto"
+                >
                   <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 ${section.color} rounded-full`}></div>
-                    <h3 className="font-semibold text-gray-900">{section.title}</h3>
-                    <span className="text-sm text-gray-500">({section.bookings?.length})</span>
+                    <div
+                      className={`w-3 h-3 ${section.color} rounded-full`}
+                    ></div>
+                    <h3 className="font-semibold text-gray-900">
+                      {section.title}
+                    </h3>
+                    <span className="text-sm text-gray-500">
+                      ({section.bookings?.length})
+                    </span>
                   </div>
                 </Button>
               </CardHeader>
@@ -124,44 +166,63 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
                   <div className="space-y-2">
                     {section.bookings?.length > 0 ? (
                       section.bookings?.slice(0, 3)?.map((booking) => (
-                        <div key={booking?.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div
+                          key={booking?.id}
+                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        >
                           <div className="flex items-center space-x-3">
                             <div
                               className={`w-2 h-2 rounded-full ${
                                 booking?.status === "CONFIRMED"
                                   ? "bg-green-500"
                                   : booking?.status === "PENDING"
-                                    ? "bg-yellow-500"
-                                    : "bg-red-500"
+                                  ? "bg-yellow-500"
+                                  : "bg-red-500"
                               }`}
                             ></div>
                             <div>
-                              <p className="text-sm font-medium text-gray-900">{booking?.bookingType} Booking</p>
+                              <p className="text-sm font-medium text-gray-900">
+                                {booking?.bookingType} Booking
+                              </p>
                               <p className="text-xs text-gray-500">
-                                ${(booking?.payFirst + booking?.payDue).toLocaleString()}
+                                $
+                                {(
+                                  booking?.payFirst + booking?.payDue
+                                ).toLocaleString()}
                               </p>
                             </div>
                           </div>
                           <div className="text-right">
                             <p className="text-sm font-medium text-gray-900">
-                              {new Date(booking?.tripDate).toLocaleTimeString("en-US", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false,
-                              })}
+                              {new Date(booking?.tripDate).toLocaleTimeString(
+                                "en-US",
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: false,
+                                }
+                              )}
                             </p>
-                            <p className="text-xs text-gray-500 capitalize">{booking?.status.toLowerCase()}</p>
+                            <p className="text-xs text-gray-500 capitalize">
+                              {booking?.status.toLowerCase()}
+                            </p>
                           </div>
                         </div>
                       ))
                     ) : (
                       <div className="text-center py-4">
                         <Clock className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-                        <p className="text-sm text-gray-500">No bookings scheduled</p>
+                        <p className="text-sm text-gray-500">
+                          No bookings scheduled
+                        </p>
                       </div>
                     )}
                     {section.bookings?.length > 3 && (
-                      <Button variant="ghost" size="sm" className="w-full text-xs">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-xs"
+                      >
                         View {section.bookings?.length - 3} more bookings
                       </Button>
                     )}
@@ -173,5 +234,5 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

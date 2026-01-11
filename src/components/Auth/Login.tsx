@@ -485,7 +485,11 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 export default function Login() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const route = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect");
@@ -514,11 +518,13 @@ export default function Login() {
         Cookies.set("currentUserRole", role);
 
         // ২. রিডাক্স আপডেট
-        dispatch(setUser({
-          user: userData,
-          token: userData?.accessToken,
-          isAuthenticated: true,
-        }));
+        dispatch(
+          setUser({
+            user: userData,
+            token: userData?.accessToken,
+            isAuthenticated: true,
+          })
+        );
 
         toast.success(res?.data?.message || "Login successful!");
 
@@ -539,7 +545,7 @@ export default function Login() {
   };
 
   const [registerFN] = useSignupMutation();
-  
+
   const handleLogin = async (providerFunc: any) => {
     try {
       const { user } = await providerFunc();
@@ -559,11 +565,13 @@ export default function Login() {
         Cookies.set("token", userData?.accessToken);
         Cookies.set("currentUserRole", role);
 
-        dispatch(setUser({
-          user: userData,
-          token: userData?.accessToken,
-          isAuthenticated: true,
-        }));
+        dispatch(
+          setUser({
+            user: userData,
+            token: userData?.accessToken,
+            isAuthenticated: true,
+          })
+        );
 
         const targetPath = getRedirectPath(role);
         route.push(targetPath);

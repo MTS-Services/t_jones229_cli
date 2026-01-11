@@ -9,7 +9,7 @@ export default function TripsList() {
   const boat = data?.data[0];
 
   return (
-    <section className="mx-auto px-[24px] py-10">
+    <section className="w-full mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6">Your Trips</h1>
       <div className="space-y-6">
         {isLoading ? (

@@ -149,7 +149,7 @@ export default function Information({ setIsLicenceImage }: InformationProps) {
     <div className="bg-white">
       {/* Listing Details */}
       <div className="my-8">
-        <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-4">
+        <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-2">
           Listing Details
         </h2>
 

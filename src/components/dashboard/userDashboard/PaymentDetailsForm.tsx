@@ -423,14 +423,6 @@ export default function PaymentDetailsForm({ paymentInfo }: any) {
           />
         </div>
       </div>
-
-      <div className="lg:mt-8 md:mt-6 mt-4">
-        <Link href={`/Key-booking-details`}>
-          <button className="bg-orange-400 text-white px-4 py-2 rounded-lg text-base font-normal hover:bg-orange-500 transition-colors duration-300 whitespace-nowrap">
-            Book now
-          </button>
-        </Link>
-      </div>
     </div>
   );
 }
