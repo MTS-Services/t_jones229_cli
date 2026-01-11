@@ -4,10 +4,12 @@ import TitleSection from "@/components/dashboard/captain/TiltleSection";
 
 export default function page() {
   return (
-    <div>
+    <div className="">
       <TitleSection />
-      <BootTips />
-      <TripsList />
+      <div className="flex-1 overflow-y-auto lg:px-10 md:px-8 px-6 py-6">
+        <BootTips />
+        <TripsList />
+      </div>
     </div>
   );
 }

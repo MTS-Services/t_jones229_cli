@@ -27,11 +27,11 @@ export default function Button({
     "px-3 py-3 text-base font-medium  focus:outline-none transition duration-200";
   const variantClasses = {
     primary:
-      "bg-[#FF9500] text-white text-base rounded-[23px] text-center  font-medium font-shatosi hover:bg-[#0037ff] transition-colors duration-300 ease-in-ou",
+      "bg-[#70b6f0] text-white text-base rounded-[23px] text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-ou",
     secondary:
-      "bg-[#FF9500] text-white text-base rounded-[10px] text-center  font-medium font-shatosi",
+      "bg-[#70b6f0] text-white text-base rounded-[10px] text-center  font-medium font-shatosi",
     outline:
-      "bg-[#FF9500]  text-teal-500 text-center text-md px-4 py-1 rounded-[4px]  hover:bg-teal-100",
+      "bg-[#70b6f0]  text-teal-500 text-center text-md px-4 py-1 rounded-[4px]  hover:bg-teal-100",
     ghost:
       "bg-black text-white text-xl rounded-[10px] flex item-center justify-center  font-medium font-shatosi",
   };
@@ -46,7 +46,7 @@ export default function Button({
   // Render Link if href is provided
   if (link) {
     return (
-      <Link href={link} target="_blank">
+      <Link href={link} target="">
         <span className={buttonClasses}>{children}</span>
       </Link>
     );

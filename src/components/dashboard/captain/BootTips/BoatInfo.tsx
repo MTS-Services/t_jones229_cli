@@ -1,11 +1,11 @@
 "use client";
 
-import { useGetMeQuery } from "@/redux/api/authApi";
 import { useGetMyBoatQuery, useUpdateBoatMutation } from "@/redux/api/boatApi";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 // Types
 type Boat = {
@@ -23,24 +23,50 @@ type FormValues = {
   guests?: number;
 };
 
+// --- Dropdown Data ---
+const boatTypes = [
+  { id: "30ft Sportfishing boat", label: "30ft Sportfishing boat" },
+  { id: "40ft Luxury Yacht", label: "40ft Luxury Yacht" },
+  { id: "25ft Center Console", label: "25ft Center Console" },
+  { id: "Speedboat", label: "Speedboat" },
+  { id: "Catamaran", label: "Catamaran" },
+];
+
+const listingCategories = [
+  { id: 2024, label: "Fishing Boat" },
+  { id: 2023, label: "Cruising Yacht" },
+  { id: 2022, label: "Party Boat" },
+  { id: 2021, label: "Sailing Vessel" },
+];
+
 export default function BoatInfo() {
   const { data, isLoading } = useGetMyBoatQuery({});
   const [updateBoat] = useUpdateBoatMutation();
   const boat: Boat | undefined = data?.data?.[0];
 
-  const { register, handleSubmit, reset } = useForm<FormValues>({
+  // Dropdown States
+  const [isBoatTypeOpen, setIsBoatTypeOpen] = useState(false);
+  const [isListingTypeOpen, setIsListingTypeOpen] = useState(false);
+  const boatTypeRef = useRef<HTMLDivElement>(null);
+  const listingTypeRef = useRef<HTMLDivElement>(null);
+
+  const { register, reset, setValue, watch } = useForm<FormValues>({
     defaultValues: {
-      description: "",
+      description: "30ft Sportfishing boat", // Set default value here
       manufacturer: "",
       modelYear: 0,
       guests: undefined,
     },
   });
 
+  const selectedBoatType = watch("description");
+  const selectedListingType = watch("modelYear");
+
+  // Sync data with form when API data arrives
   useEffect(() => {
     if (boat) {
       reset({
-        description: boat.description || "",
+        description: boat.description || "30ft Sportfishing boat",
         manufacturer: boat.manufacturer || "",
         modelYear: boat.modelYear || 0,
         guests: boat.guests || undefined,
@@ -48,21 +74,32 @@ export default function BoatInfo() {
     }
   }, [boat, reset]);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        boatTypeRef.current &&
+        !boatTypeRef.current.contains(event.target as Node)
+      ) {
+        setIsBoatTypeOpen(false);
+      }
+      if (
+        listingTypeRef.current &&
+        !listingTypeRef.current.contains(event.target as Node)
+      ) {
+        setIsListingTypeOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const inputStyles =
+    "w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all mt-2 bg-white text-left flex items-center justify-between";
+
   if (isLoading) {
     return (
-      <div className="px-[24px] pt-16 space-y-6 animate-pulse">
-        <div className="h-6 bg-gray-300 rounded w-1/3"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="h-10 bg-gray-200 rounded"></div>
-          <div className="h-10 bg-gray-200 rounded"></div>
-        </div>
-        <div className="h-6 bg-gray-300 rounded w-1/3 mt-6"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="h-10 bg-gray-200 rounded"></div>
-          <div className="h-10 bg-gray-200 rounded"></div>
-        </div>
-        <div className="h-10 bg-gray-300 rounded w-[247px] mt-6"></div>
-      </div>
+      <div className="p-10 animate-pulse bg-gray-100 rounded-xl h-96"></div>
     );
   }
 
@@ -71,29 +108,61 @@ export default function BoatInfo() {
       <form className="w-full mx-auto space-y-8">
         {/* Boat Info */}
         <div>
-          <h2 className="text-xl font-semibold mb-4">Boat Info</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-2">
+            Boat Info
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Boat Type */}
-            <div>
-              <label className="text-textSecondary text-base md:text-lg font-normal leading-8">
-                Boat Description
+            {/* Boat Type Dropdown */}
+            <div className="relative" ref={boatTypeRef}>
+              <label className="block text-base font-medium text-gray-600">
+                Boat type
               </label>
-              <textarea
-                {...register("description", {
-                  required: "Please enter short description",
-                })}
-                className="w-full px-3 py-2 border border-[#E0E0E0]"
-                placeholder="Write a short description of your boat"
-              />
+              <button
+                type="button"
+                onClick={() => setIsBoatTypeOpen(!isBoatTypeOpen)}
+                className={inputStyles}
+              >
+                <span
+                  className={
+                    selectedBoatType ? "text-gray-900" : "text-gray-300"
+                  }
+                >
+                  {selectedBoatType || "30ft Sportfishing boat"}
+                </span>
+                <ChevronDown
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${
+                    isBoatTypeOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {isBoatTypeOpen && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
+                  {boatTypes.map((type) => (
+                    <div
+                      key={type.id}
+                      className="px-4 py-3 hover:bg-blue-50 cursor-pointer text-gray-700 transition-colors border-b last:border-none border-gray-50"
+                      onClick={() => {
+                        setValue("description", type.id);
+                        setIsBoatTypeOpen(false);
+                      }}
+                    >
+                      {type.label}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Manufacturer */}
             <div>
-              <label className="block text-sm mb-1">Manufacturer</label>
+              <label className="block text-base font-medium text-gray-600 mb-2">
+                Manufacturer
+              </label>
               <input
                 type="text"
                 {...register("manufacturer")}
-                className="w-full border p-2 rounded"
+                className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 bg-white"
                 placeholder="e.g. Toyota"
               />
             </div>
@@ -102,28 +171,65 @@ export default function BoatInfo() {
 
         {/* Listing Info */}
         <div>
-          <h2 className="text-xl font-semibold mb-4">Listing Type</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-2">
+            Listing Type
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Listing Type */}
-            <div>
-              <label className="block text-sm mb-1">Model Year</label>
-              <input
-                type="number"
-                {...register("modelYear", {
-                  valueAsNumber: true,
-                })}
-                className="w-full px-3 py-2 border border-[#E0E0E0]"
-                placeholder="your boat model year, e.g. 2023"
-              />
+            {/* Listing Type Dropdown */}
+            <div className="relative" ref={listingTypeRef}>
+              <label className="block text-base font-medium text-gray-600">
+                What type of listing do you have
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsListingTypeOpen(!isListingTypeOpen)}
+                className={inputStyles}
+              >
+                <span
+                  className={
+                    selectedListingType ? "text-gray-900" : "text-gray-300"
+                  }
+                >
+                  {selectedListingType
+                    ? listingCategories.find(
+                        (l) => l.id === selectedListingType
+                      )?.label
+                    : "Choose boat"}
+                </span>
+                <ChevronDown
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${
+                    isListingTypeOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {isListingTypeOpen && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
+                  {listingCategories.map((list) => (
+                    <div
+                      key={list.id}
+                      className="px-4 py-3 hover:bg-blue-50 cursor-pointer text-gray-700 transition-colors border-b last:border-none border-gray-50"
+                      onClick={() => {
+                        setValue("modelYear", list.id);
+                        setIsListingTypeOpen(false);
+                      }}
+                    >
+                      {list.label}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Guests */}
             <div>
-              <label className="block text-sm mb-1">How many guests?</label>
+              <label className="block text-base font-medium text-gray-600 mb-2">
+                How many guests?
+              </label>
               <input
                 type="number"
                 {...register("guests", { valueAsNumber: true })}
-                className="w-full border p-2 rounded"
+                className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 bg-white"
                 placeholder="Enter number of guests"
                 min={1}
                 max={10}
@@ -132,27 +238,19 @@ export default function BoatInfo() {
           </div>
         </div>
 
-        {/* Submit */}
+        {/* Submit Link */}
         {boat && (
-          <Link href={`/boat-list-form/Information?id=${boat.id}`}>
-            <div className="flex items-center gap-2 justify-center w-full sm:w-[237px] h-[44px] rounded-lg px-4 py-2 bg-[#FF9500] text-white hover:opacity-90 transition mt-5">
-              Edit Boat Info
-              <svg
-                width="18"
-                height="24"
-                viewBox="0 0 18 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M11.0019 16.9997C10.7361 17.0012 10.4806 16.8969 10.2919 16.7097C9.89977 16.3208 9.89717 15.6876 10.2861 15.2955C10.288 15.2935 10.29 15.2916 10.2919 15.2897L13.6019 11.9997L10.4219 8.68969C10.0342 8.29965 10.0342 7.66973 10.4219 7.27968C10.8108 6.88756 11.444 6.88497 11.8361 7.27389C11.838 7.27581 11.84 7.27774 11.8419 7.27968L15.7019 11.2797C16.083 11.6685 16.083 12.2908 15.7019 12.6797L11.7019 16.6797C11.5206 16.8755 11.2686 16.9907 11.0019 16.9997Z"
-                  fill="white"
-                />
-              </svg>
-            </div>
-          </Link>
+          <div>
+            <Link
+              className="inline-block w-fit"
+              href={`/boat-list-form/Information?id=${boat.id}`}
+            >
+              <button className="flex items-center gap-1.5 justify-center w-full sm:w-[180px] h-[44px] rounded-lg px-4 py-2 bg-[#0f5e9e] text-white hover:opacity-90 transition mt-5 cursor-pointer">
+                Edit Boat Info
+                <MdOutlineKeyboardArrowRight className="w-5 h-5" />
+              </button>
+            </Link>
+          </div>
         )}
       </form>
     </div>

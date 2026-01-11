@@ -13,27 +13,30 @@ import imageUrl from "@/assets/Overlay.jpg";
 
 const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
   const route = useRouter();
-  const bookingType = typeof window !== 'undefined' ? localStorage.getItem("bookingType") : null;
+  const bookingType =
+    typeof window !== "undefined" ? localStorage.getItem("bookingType") : null;
 
   const handleclick = (id: number) => {
-    console.log(id)
-    console.log(bookingType)
-    
+    console.log(id);
+    console.log(bookingType);
+
     // Get date and guests from localStorage to pass as URL params
-    const date = typeof window !== 'undefined' ? localStorage.getItem("date") : null;
-    const guests = typeof window !== 'undefined' ? localStorage.getItem("Guests") : null;
-    
+    const date =
+      typeof window !== "undefined" ? localStorage.getItem("date") : null;
+    const guests =
+      typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
+
     // Build URL with all necessary parameters
     const params = new URLSearchParams({
-      type: bookingType || 'false',
+      type: bookingType || "false",
       boatId: boatId,
       tripId: id.toString(),
     });
-    
-    if (date) params.append('date', date);
-    if (guests) params.append('guests', guests);
-    if (bookingType) params.append('bookingType', bookingType);
-    
+
+    if (date) params.append("date", date);
+    if (guests) params.append("guests", guests);
+    if (bookingType) params.append("bookingType", bookingType);
+
     route.push(`/payment?${params.toString()}`);
   };
 

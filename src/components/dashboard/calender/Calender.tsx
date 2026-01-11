@@ -6,9 +6,8 @@ import { BoatBookingDashboardSkeleton } from "@/components/ui/BoatBookingDashboa
 export default function Calender() {
   const [getCalender, { data, isLoading }] = useLazyGetCalenderQuery();
 
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-screen bg-gray-50">
       {isLoading ? (
         <BoatBookingDashboardSkeleton />
       ) : (

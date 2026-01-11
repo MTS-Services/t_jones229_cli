@@ -8,7 +8,9 @@ export default function Page() {
   const [city, setCity] = useState<string | null>(null);
   const [guests, setGuests] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
-  const [queryParams, setQueryParams] = useState<Record<string, string> | null>(null);
+  const [queryParams, setQueryParams] = useState<Record<string, string> | null>(
+    null
+  );
 
   // Safe access to localStorage
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function Page() {
     if (location) params.city = location;
     if (startDateValue) params.startDate = startDateValue;
     if (dateValue) params.endDate = dateValue;
-    if (bookingType && bookingType !== 'undefined' && bookingType !== 'null') {
+    if (bookingType && bookingType !== "undefined" && bookingType !== "null") {
       params.sharedBooking = bookingType;
     }
     const guestsNum = guestsValue ? Number(guestsValue) : 0;
@@ -50,8 +52,7 @@ export default function Page() {
           </h1>
 
           <h1 className="text-lg md:text-2xl font-normal text-[#474747] leading-7 mt-2">
-            {data?.data?.meta?.total ?? 0}{" "}
-            Charters available
+            {data?.data?.meta?.total ?? 0} Charters available
           </h1>
         </div>
       </div>

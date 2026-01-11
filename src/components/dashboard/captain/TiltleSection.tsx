@@ -19,9 +19,16 @@ export default function TitleSection() {
   if (!content) return null;
 
   return (
-    <div className="bg-[#F5F5F5] border-b border-gray-300 py-6 pl-[24px] pt-20 lg:pt-0">
-      <h2 className="text-[32px] font-bold text-[#242424]">{content.title}</h2>
-      <p className="font-[500] text-[#242424] mt-1">{content.description}</p>
+    <div className="sticky top-0 z-50">
+      {/* Header */}
+      <div className="bg-[#d3d2d2] lg:px-10 md:px-8 px-6 lg:py-5 md:py-4 py-3">
+        <h1 className="md:text-3xl text-2xl font-bold text-gray-800 mb-2">
+          {content.title}
+        </h1>
+        <p className="text-base md:text-lg text-gray-600">
+          {content.description}
+        </p>
+      </div>
     </div>
   );
 }

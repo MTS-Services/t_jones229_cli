@@ -79,20 +79,13 @@ export default function BootTips() {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 pt-10">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Boat Information</h1>
-        <p className="text-gray-600 mt-2">
-          Manage your boat details and payment settings
-        </p>
-      </div>
-
+    <div className="">
       {/* Status indicators */}
       {userInfo?.data?.chargeEnable === true ? null : (
         <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-red-200">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-1">
             Payment Status
-          </h2>
+          </h1>
 
           {userInfo?.operation?.chargeEnable ? (
             <div className="flex items-center text-green-600">

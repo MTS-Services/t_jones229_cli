@@ -41,7 +41,7 @@ export default function CaptainMembership() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { data } = useGetMeQuery('');
+  const { data } = useGetMeQuery("");
   const [updateProfileFN, { isLoading }] = useUpdateProfileMutation({});
   const [defaultValues, setDefaultValues] = useState<FormValues | null>(null);
 
@@ -129,26 +129,23 @@ export default function CaptainMembership() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="p-4 md:p-8 space-y-6 max-w-6xl mt-10"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="p-4 md:p-8 space-y-4">
       <ToastContainer />
       <div className="flex items-center justify-between">
         <h2 className="text-xl md:text-3xl text-[#242424] font-bold">
           Payment details
         </h2>
-        <div className="flex gap-2 mt-2">
+        <div className="flex gap-2 mt-1">
           {[american, apple, mestero, masteCard, payPal, visa].map((src, i) => (
             <Image key={i} src={src} alt="payment" className="h-6 w-auto" />
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 gap-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
-            <label className="block text-base font-bold">
+            <label className="block text-base font-medium text-gray-600 mb-2">
               Choose payment method
             </label>
             <input
@@ -157,7 +154,7 @@ export default function CaptainMembership() {
                 required: "Enter payment method",
               })}
               placeholder="Mastercard"
-              className="w-full mt-2 border border-[#E0E0E0] px-4 py-2"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
             />
             {errors.paymentMethod && (
               <p className="text-red-500 text-sm">
@@ -166,13 +163,15 @@ export default function CaptainMembership() {
             )}
           </div>
           <div>
-            <label className="block text-base font-bold">Card Number</label>
+            <label className="block text-base font-medium text-gray-600 mb-2">
+              Card Number
+            </label>
             <input
               type="text"
               maxLength={16}
               {...register("cardNumber", { required: "Enter card number" })}
               placeholder="1234 1234 1234 1234"
-              className="w-full mt-2 border border-[#E0E0E0] px-4 py-2"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
             />
             {errors.cardNumber && (
               <p className="text-red-500 text-sm">
@@ -184,12 +183,14 @@ export default function CaptainMembership() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
-            <label className="block text-base font-bold">Expiration Date</label>
+            <label className="block text-base font-medium text-gray-600 mb-2">
+              Expiration Date
+            </label>
             <input
               type="text"
               {...register("expireDate", { required: "Enter expiry date" })}
               placeholder="MM/YY"
-              className="w-full mt-2 border border-[#E0E0E0] px-4 py-2"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
             />
             {errors.expireDate && (
               <p className="text-red-500 text-sm">
@@ -198,7 +199,7 @@ export default function CaptainMembership() {
             )}
           </div>
           <div>
-            <label className="block text-base font-bold">
+            <label className="block text-base font-medium text-gray-600 mb-2">
               Security Code (CVC)
             </label>
             <input
@@ -208,7 +209,7 @@ export default function CaptainMembership() {
                 required: "Enter security code",
               })}
               placeholder="CVC"
-              className="w-full mt-2 border border-[#E0E0E0] px-4 py-2"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
             />
             {errors.securityCode && (
               <p className="text-red-500 text-sm">
@@ -220,12 +221,14 @@ export default function CaptainMembership() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
-            <label className="block text-base font-bold">Name on card</label>
+            <label className="block text-base font-medium text-gray-600 mb-2">
+              Name on card
+            </label>
             <input
               type="text"
               {...register("nameOfCard", { required: "Enter card name" })}
               placeholder="Cardholder name"
-              className="w-full mt-2 border border-[#E0E0E0] px-4 py-2"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
             />
             {errors.nameOfCard && (
               <p className="text-red-500 text-sm">
@@ -234,12 +237,14 @@ export default function CaptainMembership() {
             )}
           </div>
           <div>
-            <label className="block text-base font-bold">Billing country</label>
+            <label className="block text-base font-medium text-gray-600 mb-2">
+              Billing country
+            </label>
             <input
               type="text"
               {...register("bollingCountry", { required: "Enter country" })}
               placeholder="E.g. United States"
-              className="w-full mt-2 border border-[#E0E0E0] px-4 py-2"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
             />
             {errors.bollingCountry && (
               <p className="text-red-500 text-sm">
@@ -251,12 +256,14 @@ export default function CaptainMembership() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
-            <label className="block text-base font-bold">ZIP/Postal code</label>
+            <label className="block text-base font-medium text-gray-600 mb-2">
+              ZIP/Postal code
+            </label>
             <input
               type="text"
               {...register("zipCode", { required: "Enter ZIP or Postal code" })}
               placeholder="ZIP/Postal code"
-              className="w-full mt-2 border border-[#E0E0E0] px-4 py-2"
+              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
             />
             {errors.zipCode && (
               <p className="text-red-500 text-sm">{errors.zipCode.message}</p>

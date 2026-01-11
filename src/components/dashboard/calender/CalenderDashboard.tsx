@@ -262,16 +262,16 @@ export function CalendarDashboard({
     : [];
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 shadow-sm">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Sidebar: h-full and overflow-y-auto makes only this column scrollable */}
+      <div className="h-full w-80 bg-white border-r border-gray-200 shadow-sm overflow-y-auto">
         <CalendarSidebar data={data} />
       </div>
 
-      {/* Main Calendar */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 p-6 shadow-sm">
+      {/* Main Calendar Area: flex-1 takes remaining width, h-full + overflow-hidden */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        {/* Header: Fixed at the top of the main area (no scroll) */}
+        <div className="bg-white border-b border-gray-200 p-6 shadow-sm flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
               <Button
@@ -324,8 +324,8 @@ export function CalendarDashboard({
           </div>
         </div>
 
-        {/* Calendar Grid */}
-        <div className="flex-1 p-6 overflow-auto">
+        {/* Scrollable Content Area: This part scrolls, but the Header stays pinned above it */}
+        <div className="flex-1 p-6 overflow-y-auto">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="grid grid-cols-7 gap-0">
               {/* Week day headers */}

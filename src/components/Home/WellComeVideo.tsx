@@ -1,40 +1,32 @@
 import React from "react";
 import bgImage from "@/assets/videoImage.png";
+import Container from "../common/Container";
+import banner from "@/assets/banner.png";
+
 
 export default function WellComeVideo() {
   return (
-    <div className="container mx-auto mt-28 px-5 xl:px-0">
+    <Container className="">
       <div
-        style={{ backgroundImage: `url(${bgImage.src})` }}
-        className="relative z-[-1] px-5 md:pl-10 py-5 flex flex-col md:flex-row gap-5 justify-between rounded-[16] bg-cover bg-center"
+        style={{ 
+          backgroundImage: `url(${banner.src})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center' 
+        }}
+        className="relative px-6 md:px-12 py-16 md:py-24 flex flex-col md:flex-row gap-8 justify-between items-center rounded-[20px] overflow-hidden min-h-[350px]"
       >
-        <div>
-          <h1 className="text-xl md:text-[40px] font-normal leading-10 text-white">
+        <div className="absolute inset-0 bg-black/50 z-0" />
+
+        <div className="relative z-10 text-left">
+          <h1 className="text-3xl md:text-[48px] font-bold leading-tight text-white">
             Welcome to FishingTripper!
           </h1>
-          <p className="max-w-2xl text-white text-base md:text-2xl font-light tracking-[-0.43px] mt-4">
+          <p className="max-w-2xl text-white/90 text-lg md:text-xl font-light mt-4 leading-relaxed">
             This video explains a bit more about what we offer and how to book a
             private or shared charter through our site.
           </p>
         </div>
-
-        <div className="z-0">
-          <video
-            src={"/intro/introVideo.mp4"}
-            height={200}
-            width={500}
-            // Avoid autoplay on iOS to reduce crashes
-            // Safari may reload the page if GPU resources spike
-            muted
-            loop
-            playsInline
-            preload="none"
-            poster="/intro/introPoster.jpg"
-            className="rounded-xl"
-            controls
-          ></video>
-        </div>
       </div>
-    </div>
+    </Container>
   );
 }

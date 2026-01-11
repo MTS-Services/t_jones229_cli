@@ -88,7 +88,7 @@ export default function Page() {
                     },
                   })}
                   placeholder="old password"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 <span
                   className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600"
@@ -124,7 +124,7 @@ export default function Page() {
                     },
                   })}
                   placeholder="new password"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 <span
                   className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600"
@@ -158,7 +158,7 @@ export default function Page() {
                       value === password || "Passwords do not match",
                   })}
                   placeholder="Confirm password"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 <span
                   className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600"

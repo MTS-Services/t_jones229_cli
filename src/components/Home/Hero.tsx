@@ -1,54 +1,33 @@
 "use client";
 
-import banner from "@/assets/banner.png";
-import Image from "next/image";
-import board from "@/assets/boart.svg";
-import Button from "../ReUsible/Button";
 import { useGetMeQuery } from "@/redux/api/authApi";
+import ReUseAbleBanner from "../common/ReUseAbleBanner";
 
 export default function Hero() {
-  const { data } = useGetMeQuery({}, {
-    pollingInterval: 0,
-    refetchOnMountOrArgChange: false,
-    refetchOnFocus: false,
-    refetchOnReconnect: false,
-  });
-
   return (
-    <main
-      className="bg-cover bg-center bg-no-repeat pt-[150px] pb-[120px]"
-      style={{
-        backgroundImage: `url(${banner.src})`,
-      }}
-    >
-      <div className="container flex flex-col items-center md:items-start text-center  lg:text-start text-white px-5   lg:px-[135px]">
-        <h1 className="text-2xl md:text-[40px] font-bold shadow-lg">
+    <div className="relative w-full h-[700px] flex items-center justify-center overflow-hidden bg-black">
+      {/* Background Video - Full Width and Full Height */}
+      <video
+        src="/intro/introVideo.mp4"
+        poster="/intro/introPoster.jpg"
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover" 
+      ></video>
+
+      <div className="absolute inset-0 bg-black/40 z-10" />
+
+      {/* Content wrapper */}
+      <div className="relative z-10 container mx-auto flex flex-col gap-6 items-center text-center text-white px-5 lg:px-[135px]">
+        <h1 className="text-3xl md:text-4xl lg:text-[50px] font-bold">
           Plan Your Perfect Day on the Water
         </h1>
-        <p className="max-w-2xl text-base md:text-xl font-normal tracking-[-0.43px] mt-3">
-          Discover top-rated fishing charters, expert captains, and
-          unforgettable adventures—customized just for you. Choose a private
-          boat for a personalized experience or join fellow anglers on a shared
-          charter.
+        <p className="max-w-2xl text-base md:text-xl font-normal tracking-tight">
+         Find the best fishing charters, expert captains, and unforgettable adventures—tailored to you. Join a group fishing charter or hire a private boat.
         </p>
-
-        {data?.data && data?.data?.role !== "CAPTAIN" && (
-          <Button
-            link={"/boat-list"}
-            // variant="primary"
-            className="flex items-center justify-center gap-3 font-satoshi text-base font-bold w-44 mt-5 rounded-lg"
-          >
-            <Image
-              className=" h-6 w-6 "
-              src={board}
-              alt="board icon"
-              height={100}
-              width={100}
-            />
-            List your boat
-          </Button>
-        )}
       </div>
-    </main>
+    </div>
   );
 }

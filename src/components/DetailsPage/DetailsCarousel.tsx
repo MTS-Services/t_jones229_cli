@@ -26,7 +26,7 @@ const DetailsCarousel = ({ product }: { product: productType }) => {
           el: ".product-pagination",
 
           clickable: true,
-          type: "bullets", // Add this line to render bullets
+          type: "bullets",
         }}
         navigation={{
           nextEl: ".product-prev",
@@ -37,13 +37,13 @@ const DetailsCarousel = ({ product }: { product: productType }) => {
         {product &&
           product?.map((image: any, index: number) => (
             <SwiperSlide key={index}>
-              <div className="">
+              <div className="relative h-[600px] w-full">
                 <Image
                   src={image?.url || placeholderImage}
-                  alt={"boat iamge."}
-                  width={300}
-                  height={300}
-                  className="w-full "
+                  alt="Boat image"
+                  fill
+                  className="object-cover"
+                  priority
                 />
               </div>
             </SwiperSlide>
@@ -52,12 +52,12 @@ const DetailsCarousel = ({ product }: { product: productType }) => {
 
       <div className="hidden md:block ">
         <div className="flex items-center gap-2">
-          <button className="absolute top-[50%] left-3  translate-x-[-50%] z-[2]">
-            <IoIosArrowBack className="text-[#fb923c] text-3xl product-next" />
+          <button className="absolute top-[50%] left-3  translate-x-[-50%] z-[2] lg:ml-6 md:lg-5 ml-4 ">
+            <IoIosArrowBack className="text-[#105d9e] text-3xl product-next" />
           </button>
-          <div className="absolute bottom-5 flex items-center justify-center z-[2] product-pagination "></div>{" "}
+          <div className="absolute bottom-5 flex items-center justify-center z-[2] product-pagination "></div>
           <button className="absolute top-[50%] right-3  translate-x-[-50%] z-[2]">
-            <IoIosArrowForward className="text-[#fb923c] text-2xl product-prev" />
+            <IoIosArrowForward className="text-[#105d9e] text-2xl product-prev" />
           </button>
         </div>
       </div>
