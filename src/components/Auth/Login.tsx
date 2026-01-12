@@ -586,7 +586,7 @@ export default function Login() {
       {/* Login Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="md:bg-white  md:p-10 rounded-lg md:shadow-lg"
+        className="md:bg-white  md:p-10 border border-[#0f5d9d] rounded-lg"
       >
         <div>
           <label

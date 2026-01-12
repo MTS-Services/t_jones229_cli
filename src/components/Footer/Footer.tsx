@@ -11,7 +11,7 @@ import Image from "next/image";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="py-8 px-5 xl:px-0 bg-[#0f5e9d] text-white">
+    <footer className="py-8 px-5 xl:px-0 bg-[#f7f7f7] text-[#757775]">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row gap-5 md:gap-[131px] justify-between items-start md:items-center">
           {/* Left Section */}
