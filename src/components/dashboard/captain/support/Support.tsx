@@ -151,10 +151,10 @@ export default function Support() {
 
           {/* Contact Info */}
           <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-8">
               Contact Information
             </h3>
-            <div className="space-y-6 flex-grow">
+            <div className="space-y-12 flex-grow">
               {/* Company Name */}
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">

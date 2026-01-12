@@ -58,7 +58,7 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
 
   return (
     <div className="">
-      <div className="p-4 space-y-4">
+      <div className="space-y-4">
         {/* Header */}
         <div className="text-center ">
           {/* <h2 className="text-2xl font-bold text-gray-900 mb-1">
@@ -148,7 +148,10 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
           {/* Timeline Sections - Takes 4 columns */}
           <div className="grid grid-cols-2 md:grid-cols-4 col-span-2 md:col-span-4 lg:col-span-6 xl:col-span-8 gap-4">
             {timelineSections.map((section) => (
-              <Card key={section.key} className="border-0 shadow-sm">
+              <Card
+                key={section.key}
+                className="border-0 shadow-sm bg-gray-100"
+              >
                 <CardHeader className="pb-2">
                   <Button
                     variant="ghost"
