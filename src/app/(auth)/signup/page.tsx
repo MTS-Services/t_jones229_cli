@@ -79,7 +79,7 @@ export default function Page() {
       };
 
       const res = await registerFN(loginInfo);
-      console.log(res)
+      console.log(res);
       if (res?.data?.success) {
         Cookies.set("token", res?.data?.data?.accessToken);
         Cookies.set("currentUserRole", res?.data?.data?.role);
@@ -100,8 +100,8 @@ export default function Page() {
   };
 
   return (
-    <div className="w-full min-h-screen relative bg-blue-600">
-      <div className="container mx-auto py-3 md:py-28 flex flex-col justify-center items-center text-white">
+    <div className="w-full min-h-screen relative bg-[#f7f7f7] lg:py-10 md:py-8 py-6">
+      <div className="container mx-auto flex flex-col justify-center items-center text-white">
         <Link href={"/"}>
           <Image
             src={logo2}
@@ -114,10 +114,10 @@ export default function Page() {
 
         <div className="text-center mx-auto">
           <div>
-            <h2 className="text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
+            <h2 className="text-black text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
               Register a new account
             </h2>
-            <p className="text-lg font-normal font-satoshi mb-6">
+            <p className="text-black text-lg font-normal font-satoshi mb-6">
               Already have an account?
               <Link href="/login" className="text-[#FF9500] cursor-pointer">
                 {" "}
@@ -129,7 +129,7 @@ export default function Page() {
           {/* Signup Form */}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="md:bg-white md:p-10 rounded-lg md:shadow-lg space-y-4"
+            className="md:bg-white  md:p-10 border border-[#0f5d9d] rounded-lg space-y-4"
           >
             {/* first  Name */}
             <div>
@@ -280,14 +280,14 @@ export default function Page() {
               type="submit"
               variant="secondary"
               disabled={isLoading}
-              className={`w-full font-bold ${
+              className={`bg-[#70b6f0] text-white text-base rounded-lg w-full text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-out ${
                 isLoading ? "cursor-not-allowed" : ""
               }`}
             >
               {isLoading ? <Loader /> : "Register"}
             </Button>
 
-            <h1 className="text-base font-normal text-white md:text-[#616161] pt-8 pb-4">
+            <h1 className="text-base font-normal text-white md:text-[#616161] py-2">
               Or continue with
             </h1>
 
