@@ -21,7 +21,7 @@ export default function TitleSection() {
   return (
     <div className="sticky top-0 z-50">
       {/* Header */}
-      <div className="bg-[#d3d2d2] lg:px-10 md:px-8 px-6 lg:py-5 md:py-4 py-3">
+      <div className="bg-[#f7f7f7] lg:px-10 md:px-8 px-6 lg:py-5 md:py-4 py-3">
         <h1 className="md:text-3xl text-2xl font-bold text-gray-800 mb-2">
           {content.title}
         </h1>

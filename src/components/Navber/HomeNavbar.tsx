@@ -40,7 +40,7 @@ export default function HomeNavbar() {
       // Logic for logged in users
       let path = "/dashboard";
       if (role === "ADMIN" || role === "SUPERADMIN") path = "/dashboard";
-      else if (role === "CAPTAIN") path = "/dashboard/boat-trip";
+      else if (role === "CAPTAIN") path = "/dashboard/check-your-trip";
       else if (role === "USER") path = "/dashboard/edit-user-details";
 
       router.push(path);
