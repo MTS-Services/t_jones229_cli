@@ -7,6 +7,15 @@ import { useForm, FormProvider } from "react-hook-form";
 import { BsSearch } from "react-icons/bs";
 import CheckboxGroupTwo from "./CheckboxGroupPropsTwo";
 
+// Define form data interface
+interface FishingFormData {
+  fishingSpecies: string[];
+  fishingLocation: string[];
+  fishingTechnique: string[];
+  policies: string[];
+  includedPrice: string[];
+}
+
 // Options
 const fishingTechniquesOptions = [
   "Light tackle",
@@ -36,8 +45,8 @@ const priceInclusionsOptions = [
 ];
 
 export default function Fishing() {
-  // 1. Initialize useForm
-  const methods = useForm({
+  // 1. Initialize useForm with proper typing
+  const methods = useForm<FishingFormData>({
     defaultValues: {
       fishingSpecies: [],
       fishingLocation: [],
@@ -47,13 +56,15 @@ export default function Fishing() {
     },
   });
 
-  // 2. Destructure methods directly (Don't use useFormContext here)
+  // 2. Destructure methods directly
   const { register, setValue, watch, handleSubmit } = methods;
 
   const [searchQuery, setSearchQuery] = useState("");
-  const fishingSpecies = watch("fishingSpecies") || [];
 
-  const onSubmit = (data: any) => {
+  // Watch fishingSpecies with proper typing
+  const fishingSpecies = watch("fishingSpecies");
+
+  const onSubmit = (data: FishingFormData) => {
     console.log("Collected Form Data:", data);
     alert("Form Submitted! Check Console.");
   };
@@ -64,7 +75,6 @@ export default function Fishing() {
       setSearchQuery("");
       return;
     }
-    // Correctly update the field using the methods from useForm
     setValue("fishingSpecies", [...fishingSpecies, trimmedQuery]);
     setSearchQuery("");
   };
@@ -128,7 +138,6 @@ export default function Fishing() {
 
             <Divider />
 
-            {/* Passing the register function directly from methods */}
             <CheckboxGroupTwo
               title="Fishing Locations"
               name="fishingLocation"

@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image";
 import dolphine from "@/assets/placeholder.webp";
 import clock from "@/assets/icon/clock.svg";
