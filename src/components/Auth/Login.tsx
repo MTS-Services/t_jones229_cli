@@ -665,7 +665,7 @@ export default function Login() {
           type="submit"
           variant="secondary"
           disabled={isLoading}
-          className={`w-full font-bold ${
+          className={`bg-[#70b6f0] text-white text-base rounded-lg w-full text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-out ${
             isLoading ? "cursor-not-allowed" : ""
           }`}
         >

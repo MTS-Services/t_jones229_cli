@@ -83,6 +83,31 @@ const FAQ_DATA: FAQSection[] = [
   },
 ];
 
+// Icons for accordion
+const MdOutlineKeyboardArrowDown = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+  </svg>
+);
+
+const MdOutlineKeyboardArrowUp = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
+  </svg>
+);
+
 const AccordionCard = ({
   item,
   isOpen,
@@ -97,10 +122,9 @@ const AccordionCard = ({
       layout
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      // Changed mb-4 to mb-2 for that small, consistent gap you wanted
       className={`group relative mb-4 overflow-hidden rounded-xl border transition-all duration-300 ${
         isOpen
-          ? "border-[#0f5d9e]  bg-white shadow-sm"
+          ? "border-[#0f5d9e] bg-white shadow-sm"
           : "border-transparent bg-gray-50 hover:bg-gray-100"
       }`}
     >
@@ -117,12 +141,15 @@ const AccordionCard = ({
         </span>
 
         <motion.div
-          animate={{ rotate: isOpen ? 135 : 0 }}
-          className={`flex h-8 w-8 items-center justify-center rounded-full ${
-            isOpen ? "bg-[#0f5d9e] text-white" : "bg-gray-200 text-gray-500"
-          }`}
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+          className={`flex h-8 w-8 items-center justify-center rounded-full `}
         >
-          <span className="text-xl font-light h-8 w-8 pl-1.5">+</span>
+          {isOpen ? (
+            <MdOutlineKeyboardArrowUp />
+          ) : (
+            <MdOutlineKeyboardArrowDown />
+          )}
         </motion.div>
       </button>
 
