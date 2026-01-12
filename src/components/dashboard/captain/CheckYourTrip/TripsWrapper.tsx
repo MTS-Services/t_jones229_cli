@@ -2,8 +2,10 @@
 
 import React from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import Trips from "./Trips"; // just import Trips
-import { TripsFormValues } from "./Trips"; // import type from Trips
+import Trips from "./Trips";
+
+// Define the form values type locally because `Trips.tsx` doesn't export it.
+type TripsFormValues = { trips: any[] };
 
 const TripsWrapper: React.FC = () => {
   const methods = useForm<TripsFormValues>({

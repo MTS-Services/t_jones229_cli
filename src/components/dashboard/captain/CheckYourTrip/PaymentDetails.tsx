@@ -6,7 +6,7 @@ import { useFormContext } from "react-hook-form";
 import { usePathname } from "next/navigation";
 import { User } from "lucide-react";
 import { useEffect } from "react";
-import PaymentDetailsForm from "./PaymentDetailsForm";
+import PaymentDetailsForm from "../../userDashboard/PaymentDetailsForm";
 
 export default function PaymentDetails() {
   const methods = useFormContext();
