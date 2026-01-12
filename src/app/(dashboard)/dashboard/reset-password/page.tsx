@@ -48,7 +48,7 @@ export default function Page() {
   };
 
   return (
-    <div className="w-full min-h-screen relative bg-blue-600">
+    <div className="w-full h-screen relative bg-[#ffffff]">
       <ToastContainer />
       <div className="container mx-auto py-28 flex flex-col justify-center items-center text-white">
         <Image
@@ -60,13 +60,13 @@ export default function Page() {
         />
 
         <div className="text-center mx-auto">
-          <h2 className="text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
+          <h2 className="text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px] mb-6">
             Change your password
           </h2>
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="md:bg-white md:p-10 rounded-lg md:shadow-lg space-y-4"
+            className="md:bg-white md:p-10 rounded-lg md:shadow-lg space-y-4 md:bg-white  md:p-10 border border-[#0f5d9d] rounded-lg"
           >
             {/* Old Password */}
             <div>
@@ -177,7 +177,7 @@ export default function Page() {
             <Button
               type="submit"
               variant="secondary"
-              className="w-full font-bold"
+              className="bg-[#70b6f0] text-white text-base rounded-lg w-full text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-out"
             >
               {isLoading ? <Loader /> : "Change Password"}
             </Button>
