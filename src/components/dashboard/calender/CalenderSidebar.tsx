@@ -64,7 +64,7 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
           {/* <h2 className="text-2xl font-bold text-gray-900 mb-1">
             {data?.filter?.monthName} {data?.filter?.year}
           </h2> */}
-          <p className="text-lg text-start text-gray-500">
+          <p className="text-lg font-normal text-start text-gray-500">
             Boat Booking Dashboard
           </p>
         </div>
