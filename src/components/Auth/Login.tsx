@@ -586,7 +586,7 @@ export default function Login() {
       {/* Login Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="md:bg-white  md:p-10 rounded-lg md:shadow-lg"
+        className="md:bg-white  md:p-10 border border-[#0f5d9d] rounded-lg"
       >
         <div>
           <label
@@ -665,7 +665,7 @@ export default function Login() {
           type="submit"
           variant="secondary"
           disabled={isLoading}
-          className={`w-full font-bold ${
+          className={`bg-[#70b6f0] text-white text-base rounded-lg w-full text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-out ${
             isLoading ? "cursor-not-allowed" : ""
           }`}
         >
