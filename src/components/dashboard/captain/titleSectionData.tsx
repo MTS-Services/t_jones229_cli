@@ -23,7 +23,12 @@ export const titleSectionData = [
   {
     path: "/dashboard/user-management",
     title: "User Management",
-    description: "Manage and moderate customer and captain accounts.",
+    description: "Manage and moderate customer accounts.",
+  },
+  {
+    path: "/dashboard/captain-management",
+    title: "Captain Management",
+    description: "Manage and moderate user accounts.",
   },
   {
     path: "/dashboard/all-customer",
@@ -37,7 +42,7 @@ export const titleSectionData = [
     description:
       "Here you can see all of the customers signed up to Fishing Tripper",
   },
-    {
+  {
     path: "/dashboard/membership",
     title: "Membership",
     description: "Manage membership details.",

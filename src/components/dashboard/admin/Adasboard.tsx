@@ -36,7 +36,7 @@ export default function Adashboard() {
   const barChartData = [
     { name: "Upcoming", value: tripMetrics.PENDING || 0, color: "#FF9500" },
     { name: "Ongoing", value: tripMetrics.ONGOING || 0, color: "#007AFF" },
-    { name: "Completed", value: tripMetrics.COMPLETE || 0, color: "#34C759" },
+    { name: "Completed", value: tripMetrics.COMPLETED || 0, color: "#34C759" },
     { name: "Cancelled", value: tripMetrics.CANCELLED || 0, color: "#FF3B30" },
     { name: "Confirmed", value: tripMetrics.CONFIRMED || 0, color: "#5856D6" },
   ];
