@@ -122,11 +122,6 @@ export default function StepsSection() {
                     {step.description}
                   </p>
                 </div>
-
-                {/* Connector - Note: logic changed to only show if not last AND not centered item */}
-                {index !== stepsData.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 border-t-2 border-dashed border-slate-200 z-0" />
-                )}
               </div>
             );
           })}

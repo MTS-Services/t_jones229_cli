@@ -48,7 +48,7 @@ export function CalendarDashboard({
   const [currentMonth, setCurrentMonth] = useState(
     data?.filter?.month !== undefined
       ? data.filter.month - 1 // API is 1-based
-      : today.getMonth() // Default: today's month
+      : today.getMonth() // Default: today’s month
   );
 
   const [currentYear, setCurrentYear] = useState(
@@ -142,7 +142,7 @@ export function CalendarDashboard({
       days.push(
         <div
           key={`empty-${i}`}
-          className="h-20 border border-gray-100 bg-gray-50/50"
+          className="h-28 border border-gray-100 bg-gray-50/50"
         ></div>
       );
     }
@@ -160,34 +160,32 @@ export function CalendarDashboard({
       days.push(
         <div
           key={day}
-          className={`h-20 border border-gray-100 p-1.5 cursor-pointer transition-all duration-200 hover:shadow-sm hover:border-blue-300 ${
+          className={`h-28 border border-gray-100 p-2 cursor-pointer transition-all duration-200 hover:shadow-md hover:border-blue-300 ${
             isToday ? "bg-blue-50 border-blue-300 shadow-sm" : "bg-white"
-          } ${isSelected ? "ring-1 ring-blue-500 bg-blue-50" : ""} ${
+          } ${isSelected ? "ring-2 ring-blue-500 bg-blue-50" : ""} ${
             hasBookings ? "hover:bg-blue-50" : "hover:bg-gray-50"
           }`}
           onClick={() => setSelectedDate(dateStr)}
         >
           <div
-            className={`flex items-center justify-between mb-1 ${
+            className={`flex items-center justify-between mb-2 ${
               isToday ? "text-blue-700 font-semibold" : "text-gray-900"
             }`}
           >
-            <span className="text-xs font-medium">{day}</span>
+            <span className="text-sm font-medium">{day}</span>
             {hasBookings && (
               <div className="flex items-center space-x-1">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                <span className="text-[10px] text-gray-500">
-                  {bookings.length}
-                </span>
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="text-xs text-gray-500">{bookings.length}</span>
               </div>
             )}
           </div>
 
-          <div className="space-y-0.5">
+          <div className="space-y-1">
             {bookings.slice(0, 2).map((booking) => (
               <div
                 key={booking?.id}
-                className={`text-[10px] px-1.5 py-0.5 rounded text-white truncate shadow-sm ${getStatusColor(
+                className={`text-xs px-2 py-1 rounded-md text-white truncate shadow-sm ${getStatusColor(
                   booking?.status
                 )}`}
                 title={`${booking?.boat?.trips?.[0]?.tripName} - ${booking?.user?.firstName} ${booking?.user?.lastName}`}
@@ -196,7 +194,7 @@ export function CalendarDashboard({
               </div>
             ))}
             {bookings.length > 2 && (
-              <div className="text-[10px] text-gray-500 px-1 py-0.5 bg-gray-100 rounded">
+              <div className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded-md">
                 +{bookings.length - 2} more
               </div>
             )}
@@ -264,79 +262,77 @@ export function CalendarDashboard({
     : [];
 
   return (
-    <div className="flex-1 lg:px-10 md:px-8 px-6 py-6">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Sidebar: h-full and overflow-y-auto makes only this column scrollable */}
-      <div className="">
+      <div className="h-full w-80 bg-white border-r border-gray-200 shadow-sm overflow-y-auto">
         <CalendarSidebar data={data} />
       </div>
 
       {/* Main Calendar Area: flex-1 takes remaining width, h-full + overflow-hidden */}
-      <div className="flex-1 flex flex-col h-full">
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Header: Fixed at the top of the main area (no scroll) */}
-        <div className="py-6">
-          <div className="bg-gray-100 rounded-lg border-b border-gray-200 p-4 shadow-sm flex-shrink-0">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-3">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => navigateMonth("prev")}
-                  className="bg-gray-50 hover:bg-blue-50 hover:border-blue-300 h-8 w-8"
-                >
-                  <ChevronLeft className="h-3 w-3" />
-                </Button>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {months[currentMonth]} {currentYear}
-                </h1>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => navigateMonth("next")}
-                  className="hover:bg-blue-50 bg-white hover:bg-blue-50 hover:border-blue-300 h-8 w-8"
-                >
-                  <ChevronRight className="h-3 w-3" />
-                </Button>
-              </div>
+        <div className="bg-white border-b border-gray-200 p-6 shadow-sm flex-shrink-0">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navigateMonth("prev")}
+                className="hover:bg-blue-50 hover:border-blue-300"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {months[currentMonth]} {currentYear}
+              </h1>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navigateMonth("next")}
+                className="hover:bg-blue-50 hover:border-blue-300"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
 
-              <div className="flex bg-white items-center space-x-2">
-                <Select
-                  value={months[currentMonth]}
-                  onValueChange={handleMonthSelect}
-                >
-                  <SelectTrigger className="w-32 h-8 text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {months.map((month) => (
-                      <SelectItem key={month} value={month} className="text-sm">
-                        {month}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <div className="flex items-center space-x-3">
+              <Select
+                value={months[currentMonth]}
+                onValueChange={handleMonthSelect}
+              >
+                <SelectTrigger className="w-36">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {months.map((month) => (
+                    <SelectItem key={month} value={month}>
+                      {month}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-                <Button
-                  variant="outline"
-                  className="hover:bg-blue-50 h-8 text-sm px-3"
-                  onClick={goToToday}
-                >
-                  <CalendarIcon className="h-3 w-3 mr-1" />
-                  Today
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                className="hover:bg-blue-50"
+                onClick={goToToday}
+              >
+                <CalendarIcon className="h-4 w-4 mr-2" />
+                Today
+              </Button>
             </div>
           </div>
         </div>
 
         {/* Scrollable Content Area: This part scrolls, but the Header stays pinned above it */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="flex-1 p-6 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="grid grid-cols-7 gap-0">
               {/* Week day headers */}
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 p-2 text-center text-xs font-semibold text-gray-700"
+                  className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 p-4 text-center text-sm font-semibold text-gray-700"
                 >
                   {day}
                 </div>
@@ -349,10 +345,10 @@ export function CalendarDashboard({
 
           {/* Selected Date Details */}
           {selectedDate && selectedBookings.length > 0 && (
-            <Card className="mt-4 shadow border-0">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 py-3">
-                <CardTitle className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <CalendarIcon className="h-4 w-4 text-blue-600" />
+            <Card className="mt-6 shadow-lg border-0">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
+                <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <CalendarIcon className="h-5 w-5 text-blue-600" />
                   Bookings for{" "}
                   {new Date(selectedDate).toLocaleDateString("en-US", {
                     weekday: "long",
@@ -360,14 +356,14 @@ export function CalendarDashboard({
                     month: "long",
                     day: "numeric",
                   })}
-                  <span className="ml-2 text-xs font-normal text-gray-600">
+                  <span className="ml-2 text-sm font-normal text-gray-600">
                     ({selectedBookings.length} booking
                     {selectedBookings.length !== 1 ? "s" : ""})
                   </span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-4">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <CardContent className="p-6">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {selectedBookings.map((booking) => (
                     <BookingCard key={booking?.id} booking={booking} />
                   ))}
@@ -378,13 +374,13 @@ export function CalendarDashboard({
 
           {/* No bookings message */}
           {selectedDate && selectedBookings.length === 0 && (
-            <Card className="mt-4 shadow border-0">
-              <CardContent className="p-6 text-center">
-                <CalendarIcon className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-                <h3 className="text-md font-semibold text-gray-900 mb-1">
+            <Card className="mt-6 shadow-lg border-0">
+              <CardContent className="p-8 text-center">
+                <CalendarIcon className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   No Bookings
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-gray-500">
                   No bookings found for{" "}
                   {new Date(selectedDate).toLocaleDateString("en-US", {
                     weekday: "long",

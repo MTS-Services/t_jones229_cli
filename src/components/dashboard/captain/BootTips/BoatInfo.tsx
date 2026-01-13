@@ -105,7 +105,7 @@ export default function BoatInfo() {
 
   return (
     <div className=" ">
-      <form className="w-full mx-auto space-y-8">
+      <form className="w-full mx-auto space-y-6">
         {/* Boat Info */}
         <div>
           <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-2">
@@ -243,9 +243,9 @@ export default function BoatInfo() {
           <div>
             <Link
               className="inline-block w-fit"
-              href={`/boat-list-form/Information?id=${boat.id}`}
+              href={`/dashboard/check-your-trip?id=${boat.id}`}
             >
-              <button className="flex items-center gap-1.5 justify-center w-full sm:w-[180px] h-[44px] rounded-lg px-4 py-2 bg-[#0f5e9e] text-white hover:opacity-90 transition mt-5 cursor-pointer">
+              <button className="bg-[#FF9500] flex items-center gap-4 text-white text-base rounded-lg py-3 px-5 text-center  font-medium font-shatosi hover:bg-[#E08500] transition-colors duration-300 ease-in-ou">
                 Edit Boat Info
                 <MdOutlineKeyboardArrowRight className="w-5 h-5" />
               </button>

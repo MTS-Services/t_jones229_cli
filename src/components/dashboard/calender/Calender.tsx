@@ -7,7 +7,7 @@ export default function Calender() {
   const [getCalender, { data, isLoading }] = useLazyGetCalenderQuery();
 
   return (
-    <div className="h-screen bg-gray-50">
+    <div className="h-screen bg-white">
       {isLoading ? (
         <BoatBookingDashboardSkeleton />
       ) : (

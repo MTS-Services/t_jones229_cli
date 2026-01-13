@@ -499,7 +499,7 @@ export default function Login() {
   // --- হেল্পার ফাংশন: রোল অনুযায়ী পাথ বের করা ---
   const getRedirectPath = (role: string) => {
     if (role === "ADMIN" || role === "SUPERADMIN") return "/dashboard";
-    if (role === "CAPTAIN") return "/dashboard/boat-trip";
+    if (role === "CAPTAIN") return "/dashboard/check-your-trip";
     if (role === "USER") return "/dashboard/edit-user-details";
     return "/"; // Default
   };

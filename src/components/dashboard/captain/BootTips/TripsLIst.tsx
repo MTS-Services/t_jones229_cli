@@ -16,7 +16,7 @@ export default function TripsList() {
           Array.from({ length: 2 }).map((_, index) => (
             <div
               key={index}
-              className="flex flex-col md:flex-row bg-white md:h-[260px] h-[460px] rounded-xl shadow p-4 gap-4 animate-pulse"
+              className="flex flex-col md:flex-row bg-white md:h-[260px] h-[460px] rounded-xl border p-4 gap-4 animate-pulse"
             >
               <div className="w-full h-[239px] bg-gray-200 rounded-lg"></div>
               <div className="w-full flex flex-col justify-center space-y-4">
