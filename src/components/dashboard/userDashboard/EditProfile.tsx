@@ -83,7 +83,7 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-6 w-full">
+    <div className="p-4 md:p-8 w-full">
       <ToastContainer />
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -92,7 +92,7 @@ export default function EditProfile() {
               Your details
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 my-6">
               <div>
                 <label className="block text-base font-medium text-gray-600 mb-2">
                   First name*
@@ -179,7 +179,7 @@ export default function EditProfile() {
           <button
             type="submit"
             disabled={isLoading}
-            className="bg-[#ffaa33] text-white px-4 py-2 rounded-xl flex justify-center items-center gap-2 hover:bg-[#0037ff] transition disabled:opacity-50"
+            className="bg-[#FF9500] flex items-center gap-4 text-white text-base rounded-lg py-3 px-5 text-center  font-medium font-shatosi hover:bg-[#E08500] transition-colors duration-300 ease-in-ou"
           >
             {isLoading ? "Loading..." : "Save Changes"}
             <MdKeyboardArrowRight className="size-5" />
