@@ -365,9 +365,9 @@ export default function MultiStepFormContent() {
     <div className="h-screen flex flex-col overflow-hidden bg-white">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <div className="flex-none z-50">
+      <div className="flex-none z-50 border-b border-gray-300">
         {/* Header */}
-        <div className="bg-[#d3d2d2] lg:px-10 md:px-8 px-6 lg:py-5 md:py-4 py-3">
+        <div className="bg-[#f7f7f7] lg:px-10 md:px-8 px-6 lg:py-5 md:py-4 py-3">
           <h1 className="md:text-3xl text-2xl font-bold text-gray-800 mb-2">
             {currentHeading?.title}
           </h1>
@@ -377,7 +377,7 @@ export default function MultiStepFormContent() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="border-b bg-gray-100 border-gray-300 lg:px-10 md:px-8 px-6">
+        <div className="border-b border-gray-200 bg-gray-100 lg:px-10 md:px-8 px-6">
           <div className="flex overflow-x-auto scrollbar-hide">
             {tabs.map((tab, index) => {
               const isActive = currentStep === index;

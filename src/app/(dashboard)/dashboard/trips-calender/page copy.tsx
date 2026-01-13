@@ -1,4 +1,4 @@
-import UpcomingTrips from "@/components/dashboard/captain/mannag-booking/MannageBooking";
+import Calender from "@/components/dashboard/calender/Calender";
 import TitleSection from "@/components/dashboard/captain/TiltleSection";
 import React from "react";
 
@@ -6,7 +6,7 @@ export default function page() {
   return (
     <div>
       <TitleSection />
-      <UpcomingTrips />
+      <Calender />
     </div>
   );
 }

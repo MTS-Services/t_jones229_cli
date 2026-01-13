@@ -359,7 +359,7 @@ const Sidebar = () => {
       {/* Desktop Sidebar */}
       <div
         className="hidden lg:block lg:w-64 h-screen lg:sticky lg:top-0 lg:left-0 lg:overflow-y-auto lg:flex-shrink-0"
-        style={{ backgroundColor: "#0f5e9e" }}
+        style={{ backgroundColor: "#f7f7f7" }}
       >
         {/* Logo Section */}
         <div className="h-36 ">
@@ -395,11 +395,11 @@ const Sidebar = () => {
                 key={item.key}
                 href={href}
                 className={`
-                  flex items-center px-6 py-3 text-white transition-all duration-200 border-l-4
+                  flex items-center px-6 py-3 mb-0.5 text-black transition-all duration-200 border-l-4
                   ${
                     isActive
                       ? "bg-[#035292] border-[#FF9500] text-white font-medium"
-                      : "border-transparent hover:bg-[#035292] hover:border-[#035292]"
+                      : "border-transparent hover:bg-[#035292] hover:text-white hover:border-[#035292]"
                   }
                 `}
               >

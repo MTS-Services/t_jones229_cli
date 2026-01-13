@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import dolphine from "@/assets/placeholder.webp";
@@ -91,7 +91,7 @@ export default function TripCard({ trip, image, guest, location }: TripProps) {
               <p className="font-bold text-gray-800">Price: {trip?.price}</p>
             </div>
           </div>
-          <p className="text-sm text-[#878787] mt-2 line-clamp-2">
+          <p className="text-base text-[#878787] mt-2 line-clamp-2">
             {trip?.description}
           </p>
         </div>
@@ -139,14 +139,14 @@ export default function TripCard({ trip, image, guest, location }: TripProps) {
           <div className="flex md:flex-col xl:flex-row items-center md:gap-5 gap-3">
             <Link
               href={`/dashboard/edit-trip?id=${trip?.id}`}
-              className="flex items-center gap-2 justify-center md:w-40 w-36 h-[40px] rounded-lg px-4 py-2 bg-[#FF9500] text-white hover:opacity-90 transition"
+              className="bg-[#FF9500] flex items-center gap-4 text-white text-base rounded-lg py-3 px-5 text-center  font-medium font-shatosi hover:bg-[#E08500] transition-colors duration-300 ease-in-ou"
             >
               Edit Trip
               <MdOutlineKeyboardArrowRight className="w-6 h-6" />
             </Link>
             <button
               onClick={() => handleDelete(trip?.id)}
-              className="flex items-center gap-2 justify-center md:w-40 w-36 h-[40px] rounded-lg px-4 py-2 bg-[#FF9500] text-white hover:opacity-90 transition"
+              className="bg-[#FF9500] flex items-center gap-4 text-white text-base rounded-lg py-3 px-5 text-center  font-medium font-shatosi hover:bg-[#E08500] transition-colors duration-300 ease-in-ou"
             >
               Delete Trip
               <MdOutlineKeyboardArrowRight className="w-6 h-6" />
