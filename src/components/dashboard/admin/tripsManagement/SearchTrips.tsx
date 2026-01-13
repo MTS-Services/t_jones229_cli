@@ -25,8 +25,8 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
   };
 
   return (
-    <div className="bg-gray-100 p-6">
-      <div className=" max-w-6xl">
+    <div className="px-4 md:px-8 pt-4 md:pt-8">
+      <div className="w-full">
         <h1 className="text-2xl font-medium text-gray-900 mb-6">
           Search trips
         </h1>
@@ -43,7 +43,7 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
               value={filters.searchTerm}
               onChange={handleChange}
               placeholder="Search by trip name, customer or captain name"
-              className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all placeholder-gray-400 bg-white"
             />
           </div>
 
@@ -53,7 +53,7 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
               name="date"
               value={filters.date}
               onChange={handleChange}
-              className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2.5 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-w-[120px]"
+              className="appearance-none w-full md:w-[140px] p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all placeholder-gray-400 bg-white"
             >
               <option value="">Date</option>
               <option value="today">Today</option>
@@ -84,7 +84,7 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
               name="city"
               value={filters.city}
               onChange={handleChange}
-              className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2.5 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-w-[120px]"
+              className="appearance-none w-full md:w-[140px] p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all placeholder-gray-400 bg-white"
             >
               <option value="">Location</option>
               <option value="Alice">Alice</option>
@@ -113,7 +113,7 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
               name="status"
               value={filters.status}
               onChange={handleChange}
-              className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2.5 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-w-[120px]"
+              className="appearance-none w-full md:w-[140px] p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all placeholder-gray-400 bg-white"
             >
               <option value="">Status</option>
               <option value="PENDING">Pending</option>
@@ -140,7 +140,7 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
           {/* Search Button */}
           <button
             onClick={handleSearch}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors duration-200"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-[15px] rounded-md text-sm font-medium flex items-center gap-2 transition-colors duration-200"
           >
             Search
             <Search className="h-4 w-4" />

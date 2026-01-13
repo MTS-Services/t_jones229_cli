@@ -10,7 +10,7 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 11;
+  const itemsPerPage = 10;
 
   const users = data?.user || [];
   const totalPages = Math.ceil(users.length / itemsPerPage);
@@ -35,8 +35,7 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
   }
 
   return (
-    <div className="p-6">
-
+    <div className="p-4 md:p-8">
       <div className="overflow-x-auto bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
         <table className="min-w-full border-collapse">
           <thead className="bg-gray-100">

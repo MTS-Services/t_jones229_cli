@@ -1,7 +1,6 @@
 "use client";
 
 import DashboardCard from "./AdashboardCard";
-import AdashboardCard from "./AdashboardCard";
 import { useDashboardQuery } from "@/redux/api/dashboardApi";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -16,6 +15,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+
 import {
   FaCheckCircle,
   FaTimesCircle,
@@ -24,6 +24,18 @@ import {
   FaClipboardList,
   FaMoneyBillWave,
 } from "react-icons/fa";
+
+// Define interface for CustomTooltip props
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    value: number;
+    name: string;
+    color: string;
+    payload?: any;
+  }>;
+  label?: string;
+}
 
 export default function Adashboard() {
   const { data, isLoading } = useDashboardQuery({});
@@ -44,26 +56,30 @@ export default function Adashboard() {
   const totalTrips = barChartData.reduce((sum, item) => sum + item.value, 0);
 
   // Custom tooltip for bar chart
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-          <p className="font-semibold text-gray-800">{label}</p>
-          <p className="text-gray-600">
-            Trips:{" "}
-            <span className="font-bold text-gray-900">{payload[0].value}</span>
-          </p>
-          <p className="text-sm text-gray-500">
-            {totalTrips > 0
-              ? ((payload[0].value / totalTrips) * 100).toFixed(1)
-              : 0}
-            % of total
-          </p>
-        </div>
-      );
+  const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+    if (!active || !payload?.length) {
+      return null;
     }
-    return null;
+
+    const rawValue = payload[0]?.value;
+    const value = typeof rawValue === "number" ? rawValue : 0;
+
+    if (!Number.isFinite(value)) {
+      return null;
+    }
+
+    const percentage =
+      totalTrips > 0 ? ((value / totalTrips) * 100).toFixed(1) : "0.0";
+
+    return (
+      <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
+        <p className="font-semibold text-gray-800">{label}</p>
+        <p className="text-gray-600">
+          Trips: <span className="font-bold text-gray-900">{value}</span>
+        </p>
+        <p className="text-sm text-gray-500">{percentage}% of total</p>
+      </div>
+    );
   };
 
   const renderCard = (
@@ -88,7 +104,7 @@ export default function Adashboard() {
 
       <div className="grid xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-4">
         {renderCard(
-          AdashboardCard,
+          DashboardCard,
           "UPCOMING TRIPS:",
           tripMetrics.PENDING ?? 0,
           <LuCalendarDays className="text-[#FF9500]" size={28} />,

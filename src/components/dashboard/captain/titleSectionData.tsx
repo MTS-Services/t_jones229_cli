@@ -54,6 +54,12 @@ export const titleSectionData = [
     description:
       "Complete the account set up below before you list your boat, we will then review and verify your listing.",
   },
+  {
+    path: "/dashboard/reset-password",
+    title: "Reset Password",
+    description:
+      "Enter your email address below, and we’ll send you a secure link to reset your password. Make sure to create a strong, unique password to keep your account safe.",
+  },
 
   {
     path: "/dashboard/your-trips",

@@ -4,28 +4,40 @@ import { useState } from "react";
 import { TSkeleton } from "../TSkelton";
 import PaginationButton from "./PaginationButton";
 
-const DUMMY_CAPTAINS = Array.from({ length: 50 }).map((_, i) => ({
-  id: i + 1,
-  fullName: `Captain ${i + 1}`,
-  email: `captain${i + 1}@example.com`,
-  phoneNumber: `+88017000000${i}`,
-  totalTrips: Math.floor(Math.random() * 20),
-}));
-
-export default function CaptainManagement() {
+export default function CaptainManagement({ data = [], isLoading }: any) {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 11;
-  const isLoading = false;
+  const itemsPerPage = 10;
 
-  const totalItems = DUMMY_CAPTAINS.length;
+  // Debug: Log the received data
+  console.log("Received data in component:", data);
+  console.log("Data type:", typeof data);
+  console.log("Is array?", Array.isArray(data));
+  
+  // Handle different data structures
+  let captainsData = [];
+  
+  if (data) {
+    if (Array.isArray(data)) {
+      // If data is already an array
+      captainsData = data;
+    } else if (data.captain && Array.isArray(data.captain)) {
+      // If data is an object with captain property
+      captainsData = data.captain;
+    } else if (data.data?.captain && Array.isArray(data.data.captain)) {
+      // If data is nested with data.captain
+      captainsData = data.data.captain;
+    }
+  }
+  
+  console.log("Processed captainsData:", captainsData);
+  console.log("captainsData length:", captainsData.length);
+
+  const totalItems = captainsData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentCaptains = DUMMY_CAPTAINS.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const currentCaptains = captainsData.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -41,9 +53,10 @@ export default function CaptainManagement() {
     );
   }
 
+  // Add a debug message in UI
   return (
-    <div className="p-6">
-
+    <div className="p-4 md:p-8">
+      
       <div className="overflow-x-auto bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
         <table className="w-full border-collapse">
           <thead className="bg-gray-100">
@@ -74,35 +87,38 @@ export default function CaptainManagement() {
                 </td>
               </tr>
             ) : (
-              currentCaptains.map((captain: any) => (
-                <tr
-                  key={captain.id}
-                  className="hover:bg-white transition bg-white/50"
-                >
-                  <td className="px-6 py-4 text-base font-medium text-gray-900">
-                    {captain?.fullName}
-                  </td>
-                  <td className="px-6 py-4 text-base">
-                    <a
-                      href={
-                        captain.email?.includes("@")
-                          ? `mailto:${captain.email}`
-                          : `https://${captain.email}`
-                      }
-                      className="text-blue-600 hover:underline break-all"
-                    >
-                      {captain.email}
-                    </a>
-                  </td>
-                  <td className="px-6 py-4 text-base text-gray-700">
-                    {captain.phoneNumber || "N/A"}
-                  </td>
-                  <td className="px-6 py-4 text-base text-gray-700">
-                    {captain.totalTrips ?? 0} trip
-                    {(captain.totalTrips ?? 0) !== 1 ? "s" : ""}
-                  </td>
-                </tr>
-              ))
+              currentCaptains.map((captain: any, index: number) => {
+                console.log(`Captain ${index}:`, captain);
+                return (
+                  <tr
+                    key={captain.id || captain._id || index}
+                    className="hover:bg-white transition bg-white/50"
+                  >
+                    <td className="px-6 py-4 text-base font-medium text-gray-900">
+                      {captain?.fullName || captain?.name || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 text-base">
+                      <a
+                        href={
+                          captain.email?.includes("@")
+                            ? `mailto:${captain.email}`
+                            : `https://${captain.email}`
+                        }
+                        className="text-blue-600 hover:underline break-all"
+                      >
+                        {captain.email || "N/A"}
+                      </a>
+                    </td>
+                    <td className="px-6 py-4 text-base text-gray-700">
+                      {captain.phoneNumber || captain.phone || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 text-base text-gray-700">
+                      {captain.totalTrips ?? captain.trips ?? 0} trip
+                      {(captain.totalTrips ?? captain.trips ?? 0) !== 1 ? "s" : ""}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
