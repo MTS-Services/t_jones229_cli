@@ -1,14 +1,51 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { TSkeleton } from "../TSkelton";
+import PaginationButton from "./PaginationButton";
 
 export default function CaptainManagement({ data = [], isLoading }: any) {
-  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Debug: Log the received data
+  console.log("Received data in component:", data);
+  console.log("Data type:", typeof data);
+  console.log("Is array?", Array.isArray(data));
+  
+  // Handle different data structures
+  let captainsData = [];
+  
+  if (data) {
+    if (Array.isArray(data)) {
+      // If data is already an array
+      captainsData = data;
+    } else if (data.captain && Array.isArray(data.captain)) {
+      // If data is an object with captain property
+      captainsData = data.captain;
+    } else if (data.data?.captain && Array.isArray(data.data.captain)) {
+      // If data is nested with data.captain
+      captainsData = data.data.captain;
+    }
+  }
+  
+  console.log("Processed captainsData:", captainsData);
+  console.log("captainsData length:", captainsData.length);
+
+  const totalItems = captainsData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCaptains = captainsData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (isLoading) {
     return (
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-100 p-6">
         {Array.from({ length: 10 }).map((_, i) => (
           <TSkeleton key={i} />
         ))}
@@ -16,85 +53,82 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
     );
   }
 
+  // Add a debug message in UI
   return (
-    <div className="pt-5 bg-gray-50 p-6">
-      <div className="mx-auto">
-        {/* Header */}
-        <h1 className="text-2xl font-medium text-gray-900 mb-8">
-          Captain Management
-        </h1>
+    <div className="p-4 md:p-8">
+      
+      <div className="overflow-x-auto bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
+        <table className="w-full border-collapse">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                Email
+              </th>
+              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                Phone
+              </th>
+              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                Trips
+              </th>
+            </tr>
+          </thead>
 
-        {/* Captain List */}
-        <div className="bg-white rounded-lg shadow-sm">
-          <div className="divide-y divide-gray-100">
-            {data?.captain?.length === 0 ? (
-              <div className="p-4 text-gray-500 text-sm">
-                No captains found.
-              </div>
-            ) : (
-              data?.captain?.map((captain: any) => (
-                <div
-                  key={captain.id}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors"
+          <tbody className="divide-y divide-gray-100">
+            {currentCaptains.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="px-6 py-4 text-base text-gray-500 text-center"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-900">
-                      {captain?.fullName}
-                    </div>
-                  </div>
-
-                  <div className="flex-1 min-w-0 px-4">
-                    <a
-                      href={
-                        captain.email.includes("@")
-                          ? `mailto:${captain.email}`
-                          : `https://${captain.email}`
-                      }
-                      className="text-sm text-blue-600 hover:text-blue-800 underline"
-                    >
-                      {captain.email}
-                    </a>
-                  </div>
-
-                  <div className="flex-1 min-w-0 px-4">
-                    <div className="text-sm text-gray-900">
-                      {captain.phoneNumber || "N/A"}
-                    </div>
-                  </div>
-
-                  <div className="flex-shrink-0">
-                    <div className="text-sm text-gray-900">
-                      {captain.totalTrips ?? 0} trip
-                      {captain.totalTrips > 1 ? "s" : ""}
-                    </div>
-                  </div>
-                </div>
-              ))
+                  No captains found
+                </td>
+              </tr>
+            ) : (
+              currentCaptains.map((captain: any, index: number) => {
+                console.log(`Captain ${index}:`, captain);
+                return (
+                  <tr
+                    key={captain.id || captain._id || index}
+                    className="hover:bg-white transition bg-white/50"
+                  >
+                    <td className="px-6 py-4 text-base font-medium text-gray-900">
+                      {captain?.fullName || captain?.name || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 text-base">
+                      <a
+                        href={
+                          captain.email?.includes("@")
+                            ? `mailto:${captain.email}`
+                            : `https://${captain.email}`
+                        }
+                        className="text-blue-600 hover:underline break-all"
+                      >
+                        {captain.email || "N/A"}
+                      </a>
+                    </td>
+                    <td className="px-6 py-4 text-base text-gray-700">
+                      {captain.phoneNumber || captain.phone || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 text-base text-gray-700">
+                      {captain.totalTrips ?? captain.trips ?? 0} trip
+                      {(captain.totalTrips ?? captain.trips ?? 0) !== 1 ? "s" : ""}
+                    </td>
+                  </tr>
+                );
+              })
             )}
-          </div>
-        </div>
+          </tbody>
+        </table>
 
-        {/* See All Button */}
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={() => router.push("/dashboard/all-captain")}
-            className="bg-orange-400 hover:bg-orange-500 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
-          >
-            See all
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
+        <div className="flex items-center justify-center py-4 border-t border-gray-100 bg-white">
+          <PaginationButton
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>

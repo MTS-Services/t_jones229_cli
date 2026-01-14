@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ConfigProvider, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import Recommended from "./Recommended";
@@ -11,52 +11,61 @@ import { Pagination } from "../dashboard/admin/button/Pagination";
 const SearchTab = () => {
   const [key, setKey] = useState<string>("1");
   const [currentPage, setCurrentPage] = useState(1);
-  const [queryParams, setQueryParams] = useState({});
+  const [queryParams, setQueryParams] = useState<Record<string, string>>({});
 
-  const buildQueryParams = (page: number): Record<string, string> => {
-    // Safe localStorage access for SSR
-    const city =
-      typeof window !== "undefined" ? localStorage.getItem("location") : null;
-    const startDate =
-      typeof window !== "undefined" ? localStorage.getItem("StartDate") : null;
-    const endDate =
-      typeof window !== "undefined" ? localStorage.getItem("date") : null;
-    const bookingType =
-      typeof window !== "undefined"
-        ? localStorage.getItem("bookingType")
-        : null;
-    const guests =
-      typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
+  const buildQueryParams = useCallback(
+    (page: number): Record<string, string> => {
+      // Safe localStorage access for SSR
+      const city =
+        typeof window !== "undefined" ? localStorage.getItem("location") : null;
+      const startDate =
+        typeof window !== "undefined"
+          ? localStorage.getItem("StartDate")
+          : null;
+      const endDate =
+        typeof window !== "undefined" ? localStorage.getItem("date") : null;
+      const bookingType =
+        typeof window !== "undefined"
+          ? localStorage.getItem("bookingType")
+          : null;
+      const guests =
+        typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
 
-    const params: Record<string, string> = {};
+      const params: Record<string, string> = {};
 
-    if (city) params.city = city;
-    if (startDate) params.startDate = startDate;
-    if (endDate) params.endDate = endDate;
-    // if (bookingType) params.sharedBooking = bookingType;
-    if (bookingType && bookingType !== "undefined" && bookingType !== "null") {
-      params.sharedBooking = bookingType;
-    }
-    // if (bookingType) params.sharedBooking = bookingType;
-    // if (guests) params.guests = guests;
-    const guestsNum = guests ? Number(guests) : 0;
-    if (guestsNum > 0) params.guests = guestsNum.toString();
+      if (city) params.city = city;
+      if (startDate) params.startDate = startDate;
+      if (endDate) params.endDate = endDate;
+      // if (bookingType) params.sharedBooking = bookingType;
+      if (
+        bookingType &&
+        bookingType !== "undefined" &&
+        bookingType !== "null"
+      ) {
+        params.sharedBooking = bookingType;
+      }
+      // if (bookingType) params.sharedBooking = bookingType;
+      // if (guests) params.guests = guests;
+      const guestsNum = guests ? Number(guests) : 0;
+      if (guestsNum > 0) params.guests = guestsNum.toString();
 
-    // h_t_l=true
-    // l_t_h=true
-    // params.h_t_l = "true";
-    if (key === "2") params.h_t_l = "true";
-    if (key === "3") params.l_t_h = "true";
+      // h_t_l=true
+      // l_t_h=true
+      // params.h_t_l = "true";
+      if (key === "2") params.h_t_l = "true";
+      if (key === "3") params.l_t_h = "true";
 
-    params.page = page.toString();
-    params.limit = "10";
+      params.page = page.toString();
+      params.limit = "10";
 
-    return params;
-  };
+      return params;
+    },
+    [key]
+  );
 
   useEffect(() => {
     setQueryParams(buildQueryParams(currentPage));
-  }, [currentPage, key]); // key is included in the dependency array
+  }, [currentPage, buildQueryParams]);
 
   const { data, isLoading, refetch } = useGetAllBoatQuery(queryParams);
 

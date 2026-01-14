@@ -9,6 +9,7 @@ import { useSendOtpMutation } from "@/redux/api/authApi";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "@/components/ui/Loader";
 // import { useRouter } from "next/navigation";
+import TitleSection from "@/components/dashboard/captain/TiltleSection";
 
 export default function Page() {
   const {
@@ -48,140 +49,133 @@ export default function Page() {
   };
 
   return (
-    <div className="w-full h-screen relative bg-[#ffffff]">
-      <ToastContainer />
-      <div className="container mx-auto py-28 flex flex-col justify-center items-center text-white">
-        <Image
-          src={logo2}
-          alt="logo"
-          height={100}
-          width={100}
-          className="h-28 w-52"
-        />
+    <div className="h-screen w-full">
+      <TitleSection />
+      <div className=" relative bg-[#ffffff] flex flex-col justify-center items-center">
+        <ToastContainer />
 
-        <div className="text-center mx-auto">
-          <h2 className="text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px] mb-6">
-            Change your password
-          </h2>
+        <div className="container mx-auto px-4 py-10 flex flex-col justify-center items-center">
+          <div className="w-full max-w-[500px] text-center">
+            <h2 className="text-black text-2xl md:text-4xl font-bold leading-tight mb-8">
+              Change your password
+            </h2>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="md:bg-white md:p-10 rounded-lg md:shadow-lg space-y-4 md:bg-white  md:p-10 border border-[#0f5d9d] rounded-lg"
-          >
-            {/* Old Password */}
-            <div>
-              <label
-                htmlFor="oldPassword"
-                className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
-              >
-                Old Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="oldPassword"
-                  {...register("oldPassword", {
-                    required: "Old password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Old password must be at least 6 characters",
-                    },
-                  })}
-                  placeholder="old password"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <span
-                  className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </span>
-              </div>
-              {errors.oldPassword && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.oldPassword.message as string}
-                </p>
-              )}
-            </div>
-
-            {/* New Password */}
-            <div>
-              <label
-                htmlFor="newPassword"
-                className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
-              >
-                New Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="newPassword"
-                  {...register("newPassword", {
-                    required: "New password is required",
-                    minLength: {
-                      value: 6,
-                      message: "New password must be at least 6 characters",
-                    },
-                  })}
-                  placeholder="new password"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <span
-                  className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </span>
-              </div>
-              {errors.newPassword && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.newPassword.message as string}
-                </p>
-              )}
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
-              >
-                Confirm your password
-              </label>
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="confirmPassword"
-                  {...register("confirmPassword", {
-                    required: "Confirm password is required",
-                    validate: (value) =>
-                      value === password || "Passwords do not match",
-                  })}
-                  placeholder="Confirm password"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <span
-                  className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? "Hide" : "Show"}
-                </span>
-              </div>
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.confirmPassword.message as string}
-                </p>
-              )}
-            </div>
-
-            <Button
-              type="submit"
-              variant="secondary"
-              className="bg-[#70b6f0] text-white text-base rounded-lg w-full text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-out"
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="bg-white p-6 md:p-10 border border-[#0f5d9d] rounded-xl shadow-lg space-y-6"
             >
-              {isLoading ? <Loader /> : "Change Password"}
-            </Button>
-          </form>
+              {/* Old Password */}
+              <div className="text-left">
+                <label
+                  htmlFor="oldPassword"
+                  className="text-base font-bold text-[#171717] block mb-1"
+                >
+                  Old Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="oldPassword"
+                    {...register("oldPassword", {
+                      required: "Old password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Old password must be at least 6 characters",
+                      },
+                    })}
+                    placeholder="old password"
+                    className="w-full border text-[#4b4b4b] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                  <span
+                    className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600 font-medium"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </span>
+                </div>
+                {errors.oldPassword && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.oldPassword.message as string}
+                  </p>
+                )}
+              </div>
+
+              {/* New Password */}
+              <div className="text-left">
+                <label
+                  htmlFor="newPassword"
+                  className="text-base font-bold text-[#171717] block mb-1"
+                >
+                  New Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="newPassword"
+                    {...register("newPassword", {
+                      required: "New password is required",
+                      minLength: {
+                        value: 6,
+                        message: "New password must be at least 6 characters",
+                      },
+                    })}
+                    placeholder="new password"
+                    className="w-full border text-[#4b4b4b] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                  <span className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600 font-medium">
+                    {/* Note: Logic usually shares the same toggle for simplicity or separate ones */}
+                  </span>
+                </div>
+                {errors.newPassword && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.newPassword.message as string}
+                  </p>
+                )}
+              </div>
+
+              {/* Confirm Password */}
+              <div className="text-left">
+                <label
+                  htmlFor="confirmPassword"
+                  className="text-base font-bold text-[#171717] block mb-1"
+                >
+                  Confirm your password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirmPassword"
+                    {...register("confirmPassword", {
+                      required: "Confirm password is required",
+                      validate: (value) =>
+                        value === watch("newPassword") ||
+                        "Passwords do not match",
+                    })}
+                    placeholder="Confirm password"
+                    className="w-full border text-[#4b4b4b] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                  <span
+                    className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600 font-medium"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? "Hide" : "Show"}
+                  </span>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.confirmPassword.message as string}
+                  </p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                className="bg-[#105e9e] hover:bg-[#0d4d82] text-white text-base py-3 rounded-lg w-full font-medium transition-all duration-300"
+              >
+                {isLoading ? <Loader /> : "Change Password"}
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

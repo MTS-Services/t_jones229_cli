@@ -21,12 +21,24 @@ type TripProps = {
     tripName: string;
     fishingLocation: string[];
   };
-  image?: string; // optional image URL
+  image?: string;
   guest: number;
   location?: string;
+  pagination?: {
+    // Add this to type definition
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+  };
 };
 
-export default function TripCard({ trip, image, guest, location }: TripProps) {
+export default function TripCard({
+  trip,
+  image,
+  guest,
+  location,
+  pagination,
+}: TripProps) {
   const hasValidImage = image && image.startsWith("http");
 
   const [deleteTrip] = useDeleteTripMutation();
@@ -153,6 +165,33 @@ export default function TripCard({ trip, image, guest, location }: TripProps) {
             </button>
           </div>
         </div>
+
+        {/* Pagination Controls (only render if pagination prop exists) */}
+        {pagination && (
+          <div className="flex justify-center items-center mt-6 pt-4 border-t gap-4">
+            <button
+              onClick={() =>
+                pagination.onPageChange(pagination.currentPage - 1)
+              }
+              disabled={pagination.currentPage === 1}
+              className="px-4 py-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50"
+            >
+              Previous
+            </button>
+            <span className="text-gray-700">
+              Page {pagination.currentPage} of {pagination.totalPages}
+            </span>
+            <button
+              onClick={() =>
+                pagination.onPageChange(pagination.currentPage + 1)
+              }
+              disabled={pagination.currentPage === pagination.totalPages}
+              className="px-4 py-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
