@@ -26,9 +26,9 @@ const content = [
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
   const router = useRouter();
 
-  // Replace this with your actual auth logic (e.g., const { user } = useAuth())
   const isLoggedIn = false;
 
   const handleNavigation = () => {
@@ -37,15 +37,17 @@ export default function Hero() {
     if (isLoggedIn) {
       router.push(targetPath);
     } else {
-      // We pass the targetPath as a 'callback' or 'redirect' query parameter
-      // so the login page knows where to send the user after they log in.
       router.push(`/login?redirect=${encodeURIComponent(targetPath)}`);
     }
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % content.length);
+      setIsVisible(false);
+      setTimeout(() => {
+        setIndex((prev) => (prev + 1) % content.length);
+        setIsVisible(true);
+      }, 500);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -67,40 +69,79 @@ export default function Hero() {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40 z-10" />
+      <div className="absolute inset-0 bg-black/50 z-10" />
 
       {/* Animated Content */}
-      <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-8 z-20 animate-float transition-all duration-700 text-white">
-        <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-6 drop-shadow-xl leading-tight max-w-3xl mx-auto break-words text-shadow-2xs text-shadow-sky-300 ${item.colorClass}`}>
-          {item.line1}
-          <br />
+      <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-8 z-20">
+        {/* Heading with fade animation */}
+        <h1
+          className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-6 drop-shadow-xl leading-tight max-w-4xl mx-auto break-words text-white transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+        >
           <span
-            className={`text-transparent bg-clip-text bg-gradient-to-b  `}
-          ></span>
+            className={`bg-gradient-to-r ${item.colorClass} bg-clip-text text-transparent`}
+          >
+            {item.line1}
+          </span>
         </h1>
 
-        <p className="max-w-xl text-slate-200 text-lg md:text-xl mb-10 font-light leading-relaxed">
+        {/* Description with fade animation */}
+        <p
+          className={`max-w-xl text-slate-200 text-lg md:text-xl mb-10 font-light leading-relaxed transition-all duration-700 delay-100 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+        >
           {item.desc}
         </p>
 
+        {/* Button with fade animation - only when btn exists */}
         {item.btn && (
-          <Button
-            onClick={handleNavigation} // Use onClick instead of 'link' prop
-            variant="primary"
-            className="flex items-center font-satoshi rounded-[14px] text-base font-bold md:mt-3 mt-2 gap-2"
+          <div
+            className={`transition-all duration-700 delay-200 ${
+              isVisible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-4 scale-95"
+            }`}
           >
-            {item.icon && (
-              <Image
-                className="h-3 md:h-6 w-3 md:w-6"
-                src={item.icon}
-                alt="icon"
-                width={24}
-                height={24}
-              />
-            )}
-            {item.btn}
-          </Button>
+            <Button
+              onClick={handleNavigation}
+              variant="primary"
+              className="flex items-center font-satoshi rounded-[14px] text-base font-bold md:mt-3 mt-2 gap-2 hover:scale-105 active:scale-95 transition-transform duration-300"
+            >
+              {item.icon && (
+                <Image
+                  className="h-3 md:h-6 w-3 md:w-6 transition-transform duration-300 group-hover:rotate-12"
+                  src={item.icon}
+                  alt="icon"
+                  width={24}
+                  height={24}
+                />
+              )}
+              {item.btn}
+            </Button>
+          </div>
         )}
+
+        {/* Optional: Navigation dots (if you want to keep them) */}
+        <div className="flex space-x-2 mt-8">
+          {content.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setIsVisible(false);
+                setTimeout(() => {
+                  setIndex(i);
+                  setIsVisible(true);
+                }, 500);
+              }}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                i === index ? "bg-white w-6" : "bg-white/50 hover:bg-white/80"
+              }`}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
