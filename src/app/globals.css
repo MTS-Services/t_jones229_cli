@@ -185,3 +185,46 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes ken-burns {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+.animate-bg {
+  animation: ken-burns 20s ease-out infinite alternate;
+}
+
+@keyframes boat-float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: boat-float 4s ease-in-out infinite;
+}
+
+.water-shimmer {
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255,255,255,.1) 40%,
+    rgba(255,255,255,.2) 45%,
+    rgba(255,255,255,.1) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-wave 6s linear infinite;
+  position: absolute;
+  inset: 0;
+}
+
+@keyframes shimmer-wave {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+
+
+
+
