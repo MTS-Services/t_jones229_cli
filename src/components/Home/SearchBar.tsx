@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar } from "antd"; // সরাসরি ক্যালেন্ডার প্যানেল ব্যবহার করা হয়েছে
+import { Calendar } from "antd";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -28,7 +28,14 @@ const dropdownVariants: Variants = {
   },
 };
 
-export default function SearchBar({ scrolled }: { scrolled: boolean }) {
+// Added onActiveChange to props definition
+export default function SearchBar({
+  scrolled,
+  onActiveChange,
+}: {
+  scrolled: boolean;
+  onActiveChange?: (isActive: boolean) => void;
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [selected, setSelected] = useState<any>(null);
@@ -55,7 +62,7 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
     },
   ];
 
-  const isExpanded = activeTab !== null || !scrolled;
+  const isExpanded = !scrolled || activeTab !== null;
 
   const handleSearch = () => {
     const formattedDate = selectedDate ? selectedDate.format("YYYY-MM-DD") : "";
@@ -69,6 +76,13 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
       selected?.value === true ? "/group-charter?type=GROUP" : "/search-charter"
     );
   };
+
+  // Signal the parent Navbar when a tab becomes active/inactive
+  useEffect(() => {
+    if (onActiveChange) {
+      onActiveChange(activeTab !== null);
+    }
+  }, [activeTab, onActiveChange]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -95,19 +109,18 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
       ref={containerRef}
     >
       <div
-        className={`relative flex flex-col lg:flex-row items-center bg-white rounded-2xl md:rounded-full shadow-2xl transition-all duration-500 border-2 ${
+        className={`relative flex flex-col lg:flex-row items-center bg-white  border border-gray-200 rounded-2xl md:rounded-full shadow-2xl transition-all duration-500 border-2 ${
           activeTab ? "border-gray-200" : "border-white"
         } ${isExpanded ? "py-0" : "py-1"}`}
       >
         <div className="flex flex-col md:flex-row w-full items-center justify-between">
-          {/* 1. WHERE */}
           <div
             onClick={() => setActiveTab("where")}
             className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 
             ${
-              !isExpanded
-                ? "px-3 py-1.5 items-center flex-[0.8]"
-                : "px-6 py-3 flex-1"
+              isExpanded
+                ? "px-6 py-3 flex-1"
+                : "px-3 py-1.5 items-center flex-[0.8]"
             } 
             ${
               activeTab === "where"
@@ -117,7 +130,7 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
           >
             <h1
               className={`font-extrabold text-black transition-all ${
-                !isExpanded ? "text-[13px]" : "text-[15px]"
+                isExpanded ? "text-[15px]" : "text-[13px]"
               }`}
             >
               Where
@@ -126,7 +139,7 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
               <input
                 autoFocus={activeTab === "where"}
                 type="text"
-                placeholder="Search"
+                placeholder="Search destinations"
                 value={location}
                 onChange={(e) => {
                   setLocation(e.target.value);
@@ -150,36 +163,44 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
                   animate="visible"
                   exit="exit"
                   className="absolute top-[115%] left-0 w-[300px] bg-white shadow-2xl rounded-[24px] p-6 z-50 border border-gray-100"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <h2 className="text-sm font-bold text-gray-400 mb-4 px-2 uppercase tracking-tight">
                     Destinations
                   </h2>
                   <div className="max-h-60 overflow-y-auto custom-scrollbar">
-                    {filteredDestinations.map((dest: any) => (
-                      <div
-                        key={dest.city}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setLocation(dest.city);
-                          setActiveTab(null);
-                        }}
-                        className="flex items-center gap-4 py-3 px-3 rounded-xl hover:bg-gray-100 transition-colors"
-                      >
-                        <div className="size-8 relative flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
-                          <Image
-                            src={flag}
-                            alt="flag"
-                            fill
-                            className="object-cover"
-                          />
+                    {filteredDestinations.length > 0 ? (
+                      filteredDestinations.map((dest: any) => (
+                        <div
+                          key={dest.city}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLocation(dest.city);
+                            setSearchTerm(dest.city);
+                            setActiveTab(null);
+                          }}
+                          className="flex items-center gap-4 py-3 px-3 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer"
+                        >
+                          <div className="size-8 relative flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
+                            <Image
+                              src={flag}
+                              alt="flag"
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-black">
+                              {dest.city}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-semibold text-black">
-                            {dest.city}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <p className="text-center text-gray-400 py-4">
+                        No destinations found
+                      </p>
+                    )}
                   </div>
                 </motion.div>
               )}
@@ -187,19 +208,18 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
           </div>
 
           <div
-            className={`hidden lg:block w-[1px] bg-gray-200 ${
-              !isExpanded ? "h-4" : "h-8"
+            className={`hidden lg:block w-[1px] bg-gray-200 transition-all ${
+              isExpanded ? "h-8" : "h-4"
             }`}
           ></div>
 
-          {/* 2. DATE (Clean Dropdown, No Hidden Inputs) */}
           <div
             onClick={() => setActiveTab("when")}
             className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 
             ${
-              !isExpanded
-                ? "px-2 py-1.5 items-center flex-[0.6]"
-                : "px-6 py-3 flex-1"
+              isExpanded
+                ? "px-6 py-3 flex-1"
+                : "px-2 py-1.5 items-center flex-[0.6]"
             } 
             ${
               activeTab === "when"
@@ -209,14 +229,22 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
           >
             <h1
               className={`font-extrabold text-black transition-all ${
-                !isExpanded ? "text-[13px]" : "text-[15px]"
+                isExpanded ? "text-[15px]" : "text-[13px]"
               }`}
             >
               When
             </h1>
-            <span className="text-[12px] text-[#858585] mt-0.5">
-              {selectedDate ? selectedDate.format("MMM DD") : "Add date"}
-            </span>
+            {isExpanded ? (
+              <span className="text-[12px] text-[#858585] mt-0.5">
+                {selectedDate ? selectedDate.format("MMM DD") : "Add date"}
+              </span>
+            ) : (
+              selectedDate && (
+                <span className="text-[10px] text-blue-600 font-bold truncate max-w-[60px]">
+                  {selectedDate.format("MMM DD")}
+                </span>
+              )
+            )}
 
             <AnimatePresence>
               {activeTab === "when" && (
@@ -228,7 +256,6 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
                   className="absolute top-[115%] left-0 z-50 bg-white shadow-2xl rounded-3xl p-4 border border-gray-100 overflow-hidden"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* Ant Design Calendar as a standalone panel */}
                   <div className="w-[300px]">
                     <Calendar
                       fullscreen={false}
@@ -244,19 +271,18 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
           </div>
 
           <div
-            className={`hidden lg:block w-[1px] bg-gray-200 ${
-              !isExpanded ? "h-4" : "h-8"
+            className={`hidden lg:block w-[1px] bg-gray-200 transition-all ${
+              isExpanded ? "h-8" : "h-4"
             }`}
           ></div>
 
-          {/* 3. WHO */}
           <div
             onClick={() => setActiveTab("who")}
             className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 
             ${
-              !isExpanded
-                ? "px-2 py-1.5 items-center flex-[0.5]"
-                : "px-6 py-3 flex-1"
+              isExpanded
+                ? "px-6 py-3 flex-1"
+                : "px-2 py-1.5 items-center flex-[0.5]"
             } 
             ${
               activeTab === "who"
@@ -266,14 +292,22 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
           >
             <h1
               className={`font-extrabold text-black transition-all ${
-                !isExpanded ? "text-[13px]" : "text-[15px]"
+                isExpanded ? "text-[15px]" : "text-[13px]"
               }`}
             >
               Who
             </h1>
-            <span className="text-[12px] text-[#858585] mt-0.5">
-              {guests > 0 ? `${guests} Guests` : "Add guests"}
-            </span>
+            {isExpanded ? (
+              <span className="text-[12px] text-[#858585] mt-0.5">
+                {guests > 0 ? `${guests} Guests` : "Add guests"}
+              </span>
+            ) : (
+              guests > 0 && (
+                <span className="text-[10px] text-blue-600 font-bold truncate max-w-[60px]">
+                  {guests} Guests
+                </span>
+              )
+            )}
 
             <AnimatePresence>
               {activeTab === "who" && (
@@ -289,15 +323,21 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
                     <span className="text-lg font-bold">Guests</span>
                     <div className="flex items-center gap-3">
                       <CiCircleMinus
-                        onClick={() => guests > 0 && setGuests(guests - 1)}
-                        className="text-3xl text-gray-400 hover:text-blue-500 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          guests > 0 && setGuests(guests - 1);
+                        }}
+                        className="text-3xl text-gray-400 hover:text-blue-500 cursor-pointer transition-colors"
                       />
                       <span className="text-lg font-medium w-4 text-center">
                         {guests}
                       </span>
                       <GoPlusCircle
-                        onClick={() => setGuests(guests + 1)}
-                        className="text-3xl text-gray-400 hover:text-blue-500 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setGuests(guests + 1);
+                        }}
+                        className="text-3xl text-gray-400 hover:text-blue-500 cursor-pointer transition-colors"
                       />
                     </div>
                   </div>
@@ -307,19 +347,18 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
           </div>
 
           <div
-            className={`hidden lg:block w-[1px] bg-gray-200 ${
-              !isExpanded ? "h-4" : "h-8"
+            className={`hidden lg:block w-[1px] bg-gray-200 transition-all ${
+              isExpanded ? "h-8" : "h-4"
             }`}
           ></div>
 
-          {/* 4. TYPE */}
           <div
             onClick={() => setActiveTab("type")}
             className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 
             ${
-              !isExpanded
-                ? "px-2 py-1.5 items-center flex-[0.6]"
-                : "px-6 py-3 flex-1"
+              isExpanded
+                ? "px-6 py-3 flex-1"
+                : "px-2 py-1.5 items-center flex-[0.6]"
             } 
             ${
               activeTab === "type"
@@ -329,14 +368,22 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
           >
             <h1
               className={`font-extrabold text-black transition-all ${
-                !isExpanded ? "text-[13px]" : "text-[15px]"
+                isExpanded ? "text-[15px]" : "text-[13px]"
               }`}
             >
               Type
             </h1>
-            <p className="text-[12px] text-[#858585] truncate mt-0.5">
-              {selected ? selected.title : "Select"}
-            </p>
+            {isExpanded ? (
+              <p className="text-[12px] text-[#858585] truncate mt-0.5">
+                {selected ? selected.title : "Select type"}
+              </p>
+            ) : (
+              selected && (
+                <span className="text-[10px] text-blue-600 font-bold truncate max-w-[60px]">
+                  {selected.title}
+                </span>
+              )
+            )}
 
             <AnimatePresence>
               {activeTab === "type" && (
@@ -346,6 +393,7 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
                   animate="visible"
                   exit="exit"
                   className="absolute top-[115%] right-0 w-80 bg-white shadow-2xl rounded-2xl p-4 z-50 border border-gray-100"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <div className="space-y-2">
                     {bookingTypes.map((type, index) => (
@@ -376,16 +424,15 @@ export default function SearchBar({ scrolled }: { scrolled: boolean }) {
             </AnimatePresence>
           </div>
 
-          {/* SEARCH BUTTON */}
           <div className="p-1.5">
             <button
               onClick={handleSearch}
               className={`flex items-center justify-center bg-[#105d9e] hover:bg-[#0c4a7e] text-white rounded-full transition-all shadow-md active:scale-90 ${
-                !isExpanded ? "w-8 h-8" : "w-12 h-12 lg:w-14 lg:h-14"
+                isExpanded ? "w-24 h-12 lg:w-28 lg:h-14" : "w-8 h-8"
               }`}
             >
               <IoIosSearch
-                className={`${!isExpanded ? "text-lg" : "text-2xl"}`}
+                className={`${isExpanded ? "text-2xl w-6 h-6" : "text-lg"}`}
               />
             </button>
           </div>

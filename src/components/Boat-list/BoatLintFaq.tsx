@@ -181,8 +181,8 @@ export default function PremiumFaq() {
     <Container className="">
       <div className="">
         <header className="mb-8 text-left">
-          <span className="text-[#0f5d9e] font-semibold tracking-widest uppercase md:text-base text-sm">
-            Support
+          <span className="md:text-base text-sm font-medium text-black">
+            We welcome any feedback or suggestions from our captains...
           </span>
           <h1 className="lg:text-4xl md:text-3xl text-2xl font-black text-gray-900 mt-1">
             Frequently Asked <span className="text-[#0f5d9e]">Questions.</span>
