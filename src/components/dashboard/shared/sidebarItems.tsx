@@ -41,6 +41,12 @@ export const sidebarItems: TSidebarItem[] = [
     roles: ["SUPERADMIN"],
   },
   {
+    key: "Captain Management",
+    icon: <TbUsers />,
+    label: <Link href="/dashboard/captain-management">Captain Management</Link>,
+    roles: ["SUPERADMIN"],
+  },
+  {
     key: "Check Your Trip",
     icon: <MdChecklistRtl />,
     label: <Link href="/dashboard/check-your-trip">Check Your Trip</Link>,

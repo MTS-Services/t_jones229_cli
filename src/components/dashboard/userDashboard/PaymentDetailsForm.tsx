@@ -278,7 +278,7 @@ function PaymentDetailsForm({ paymentInfo }: PaymentDetailsFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 mt-3">
         <div className="relative" ref={dropdownRef}>
           <label className="block text-sm font-medium text-gray-600 mb-2">
             Choose payment method

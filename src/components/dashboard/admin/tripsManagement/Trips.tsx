@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import CancelTripsModal from "../../modal/CancelTripModal";
-import { Pagination } from "../button/Pagination";
+import { Pagination } from "../button/Pagination"; // If you want to use this, keep it, otherwise remove
 import StatusButton from "../button/StatusButton";
+import PaginationButton from "../userManagment/PaginationButton";
 
 interface TripProps {
   data: any[];
@@ -16,7 +17,8 @@ interface TripProps {
   };
   loading: boolean;
   onPageChange: (page: number) => void;
-  pages: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 export default function Trips({
@@ -24,7 +26,8 @@ export default function Trips({
   meta,
   loading,
   onPageChange,
-  pages,
+  totalPages,
+  currentPage,
 }: TripProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
@@ -32,20 +35,20 @@ export default function Trips({
   const closeModal = () => setIsModalOpen(false);
 
   const getStatusButtonProps = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "upcomming":
-        return { color: "##42DF3A", className: "text-white" }; // Green
+        return { color: "#42DF3A", className: "text-white" }; // Fixed double ##
       case "pending":
-        return { color: "#FDA831", className: "text-white" }; // Orange
+        return { color: "#FDA831", className: "text-white" };
       case "cancel":
-        return { color: "#FF0000", className: "text-white" }; // Red
+        return { color: "#FF0000", className: "text-white" };
       default:
-        return { color: "#8C8C8C", className: "text-white" }; // Gray
+        return { color: "#8C8C8C", className: "text-white" };
     }
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen p-6">
+    <div className="p-4 md:p-8">
       <div className="bg-white shadow rounded-lg overflow-hidden">
         <div className="px-6 py-4 border-b">
           <h1 className="text-xl font-semibold">All trips</h1>
@@ -101,7 +104,6 @@ export default function Trips({
                       <td className="px-6 py-4">
                         {booking.boat?.description?.[0]?.listingTypeTitle}
                       </td>
-
                       <td className="px-6 py-4">
                         <div
                           onClick={() => {
@@ -123,20 +125,20 @@ export default function Trips({
               </tbody>
             </table>
 
+            {/* Main Pagination UI */}
+            <div className="flex items-center justify-center py-4 border-t border-gray-100 bg-white">
+              <PaginationButton
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={onPageChange}
+              />
+            </div>
+
             <CancelTripsModal
               isOpen={isModalOpen}
               id={bookingId as string}
               onClose={closeModal}
             />
-
-            {/* Pagination */}
-            {meta && meta.totalPage > 1 && (
-              <Pagination
-                currentPage={pages}
-                totalPages={meta.totalPage}
-                onPageChange={onPageChange}
-              />
-            )}
           </>
         )}
       </div>

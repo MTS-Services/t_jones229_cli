@@ -1,18 +1,22 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 
 interface PaginationProps {
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
-export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+export function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
   // Always show first 5 pages, then ellipsis, then last page
-  const showEllipsis = totalPages > 6
-  const lastPageToShow = showEllipsis ? 5 : totalPages
+  const showEllipsis = totalPages > 6;
+  const lastPageToShow = showEllipsis ? 5 : totalPages;
 
   return (
     <div className="flex items-center justify-end py-4 gap-1 mt-6">
@@ -69,5 +73,5 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         <ChevronRight className="h-4 w-4" />
       </Button>
     </div>
-  )
+  );
 }

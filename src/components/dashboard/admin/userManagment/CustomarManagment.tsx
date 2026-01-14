@@ -1,13 +1,32 @@
 "use client";
+
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TSkeleton } from "../TSkelton";
+import { FaArrowRight } from "react-icons/fa";
+import PaginationButton from "./PaginationButton";
 
 export default function CustomerManagement({ data = [], isLoading }: any) {
   const router = useRouter();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const users = data?.user || [];
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentUsers = users.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   if (isLoading) {
     return (
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-100 p-6">
         {Array.from({ length: 10 }).map((_, i) => (
           <TSkeleton key={i} />
         ))}
@@ -16,88 +35,82 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
   }
 
   return (
-    <div className="bg-gray-50 p-6">
-      <div className="mx-auto">
-        {/* Header */}
-        <h1 className="text-2xl font-medium text-gray-900 mb-8">
-          Customer Management
-        </h1>
+    <div className="p-4 md:p-8">
+      <div className="overflow-x-auto bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                Email
+              </th>
+              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                Phone
+              </th>
+              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                Trips
+              </th>
+            </tr>
+          </thead>
 
-        {/* Scrollable Container */}
-        <div className="overflow-x-auto">
-          {/* Customer List */}
-          <div className="min-w-[700px] bg-white rounded-lg shadow-sm">
-            <div className="divide-y divide-gray-100">
-              {data?.length === 0 ? (
-                <div className="p-4 text-gray-500 text-sm">
-                  No customers found.
-                </div>
-              ) : (
-                data?.user?.map((customer: any) => (
-                  <div
-                    key={customer.id}
-                    className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900 whitespace-nowrap">
-                        {customer?.fullName}
-                      </div>
-                    </div>
+          <tbody className="divide-y divide-gray-100">
+            {currentUsers.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="px-6 py-4 text-base text-gray-500 text-center bg-white"
+                >
+                  No user found
+                </td>
+              </tr>
+            ) : (
+              currentUsers.map((customer: any) => (
+                <tr
+                  key={customer.id}
+                  className="hover:bg-white transition bg-white/50"
+                >
+                  <td className="px-6 py-4 text-base font-medium text-gray-900">
+                    {customer?.fullName}
+                  </td>
 
-                    <div className="flex-1 min-w-0 px-4">
-                      <a
-                        href={
-                          customer.email.includes("@")
-                            ? `mailto:${customer.email}`
-                            : `https://${customer.email}`
-                        }
-                        className="text-sm text-blue-600 hover:text-blue-800 underline break-all"
-                      >
-                        {customer.email}
-                      </a>
-                    </div>
+                  <td className="px-6 py-4 text-base">
+                    <a
+                      href={
+                        customer.email?.includes("@")
+                          ? `mailto:${customer.email}`
+                          : `https://${customer.email}`
+                      }
+                      className="text-blue-600 hover:underline break-all"
+                    >
+                      {customer.email}
+                    </a>
+                  </td>
 
-                    <div className="flex-1 min-w-0 px-4">
-                      <div className="text-sm text-gray-900 whitespace-nowrap">
-                        {customer.phoneNumber || "N/A"}
-                      </div>
-                    </div>
+                  <td className="px-6 py-4 text-base text-gray-700">
+                    {customer.phoneNumber || "N/A"}
+                  </td>
 
-                    <div className="flex-shrink-0">
-                      <div className="text-sm text-gray-900 whitespace-nowrap">
-                        {customer.totalTrips ?? 0} trip
-                        {customer.totalTrips > 1 ? "s" : ""}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+                  <td className="px-6 py-4 text-base text-gray-700">
+                    {customer.totalTrips ?? 0} trip
+                    {(customer.totalTrips ?? 0) !== 1 ? "s" : ""}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+
+        {users.length > itemsPerPage && (
+          <div className="flex items-center justify-center py-4 border-t border-gray-100 bg-white">
+            <PaginationButton
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
-        </div>
-
-        {/* See All Button */}
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={() => router.push("/dashboard/all-customer")}
-            className="bg-orange-400 hover:bg-orange-500 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
-          >
-            See all
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );
