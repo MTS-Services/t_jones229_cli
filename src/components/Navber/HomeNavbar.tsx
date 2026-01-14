@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import logo from "@/assets/logo.svg";
 import logo2 from "@/assets/logo2.svg";
@@ -99,10 +99,10 @@ export default function HomeNavbar() {
                   Login
                 </button>
                 <button
-                  onClick={() => handleAuthAction("/signup")}
+                  onClick={() => handleAuthAction("/boat-list")}
                   className="font-bold lg:px-7 px-5 lg:py-2.5 py-2 rounded-full border-2 border-[#105d9e] bg-[#105d9e] text-white hover:bg-white hover:text-[#105d9e] transition-all duration-300 shadow-md active:scale-95"
                 >
-                  Sign up
+                  List your boat
                 </button>
               </div>
             ) : (
@@ -237,18 +237,11 @@ export default function HomeNavbar() {
               </>
             ) : (
               <div className="flex flex-col gap-4 mt-10">
-                <button
-                  onClick={() => handleAuthAction("/login")}
-                  className="flex items-center justify-center gap-3 bg-white border-2 border-black text-black py-4 rounded-2xl font-bold text-xl active:scale-95 transition-transform"
-                >
-                  <LogIn size={20} /> Login
-                </button>
-                <button
-                  onClick={() => handleAuthAction("/signup")}
-                  className="flex items-center justify-center gap-3 bg-[#105d9e] text-white py-4 rounded-2xl font-bold text-xl shadow-lg active:scale-95 transition-transform"
-                >
-                  <UserPlus size={20} /> Create Account
-                </button>
+                <Link href="/boat-list" className="">
+                  <button className="flex items-center justify-center gap-3 bg-[#105d9e] text-white py-4 rounded-2xl font-bold text-xl shadow-lg active:scale-95 transition-transform">
+                    List your boat
+                  </button>
+                </Link>
               </div>
             )}
           </div>
