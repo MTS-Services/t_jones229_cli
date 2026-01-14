@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import logo from "@/assets/logo.svg";
@@ -27,17 +27,16 @@ export default function HomeNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(false); // FIXED: Added missing state
 
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // Unified Auth Action: Handles Dashboard redirection or Login/Signup navigation
   const handleAuthAction = (targetPath?: string) => {
     const role = user?.role || Cookies.get("currentUserRole");
 
     if (role) {
-      // Logic for logged in users
       let path = "/dashboard";
       if (role === "ADMIN" || role === "SUPERADMIN") path = "/dashboard";
       else if (role === "CAPTAIN") path = "/dashboard/check-your-trip";
@@ -45,7 +44,6 @@ export default function HomeNavbar() {
 
       router.push(path);
     } else {
-      // Logic for guests: navigate to Login or Register
       router.push(targetPath || "/login");
     }
     setProfileDropdown(false);
@@ -75,14 +73,9 @@ export default function HomeNavbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 ${
-          scrolled || menuOpen
-            ? "bg-white/95 backdrop-blur-md shadow-md py-2"
-            : "bg-transparent py-4"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 bg-white xl:pb-4 lg:pb-3 md:pb-2 lg:pt-1`}
       >
-        <nav className="container mx-auto xl:px-4 lg:px-3 px-2 py-2 flex items-center justify-between">
-          {/* Logo Section */}
+        <nav className="container mx-auto xl:px-4 lg:px-3 px-2 lg:py-2 pt-1 pb-2 flex items-center justify-between">
           <Link
             href="/"
             className="w-12 h-12 md:w-16 md:h-16 xl:w-20 xl:h-20 transition-transform hover:scale-105 active:scale-95"
@@ -96,7 +89,6 @@ export default function HomeNavbar() {
             />
           </Link>
 
-          {/* DESKTOP MENU */}
           <div className="hidden lg:flex gap-4 items-center">
             {!user ? (
               <div className="flex items-center xl:gap-3 lg:gap-1 gap-0.5">
@@ -114,16 +106,12 @@ export default function HomeNavbar() {
                 </button>
               </div>
             ) : (
-              /* Desktop Profile Hover */
               <div
                 className="relative group"
                 onMouseEnter={() => setProfileDropdown(true)}
                 onMouseLeave={() => setProfileDropdown(false)}
               >
-                <button
-                  // onClick={() => handleAuthAction()}
-                  className="flex items-center gap-2 border-2 border-[#105d9e] rounded-full p-0.5 hover:shadow-xl transition-all duration-300 bg-white"
-                >
+                <button className="flex items-center gap-2 border-2 border-[#105d9e] rounded-full p-0.5 hover:shadow-xl transition-all duration-300 bg-white">
                   {user?.image ? (
                     <Image
                       src={user.image}
@@ -145,7 +133,6 @@ export default function HomeNavbar() {
                   />
                 </button>
 
-                {/* Dropdown Menu */}
                 <div
                   className={`absolute right-0 pt-3 w-64 z-[1000] transition-all duration-300 ease-out origin-top-right ${
                     profileDropdown
@@ -188,7 +175,6 @@ export default function HomeNavbar() {
             )}
           </div>
 
-          {/* Mobile Toggle Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="lg:hidden z-[1001] p-2 hover:bg-black/5 rounded-full transition-colors"
@@ -201,18 +187,19 @@ export default function HomeNavbar() {
           </button>
         </nav>
 
-        {/* Search Bar Section in HomeNavbar */}
         <div
           className={`container mx-auto px-4 transition-all duration-500 ease-in-out ${
-            scrolled
-              ? "-mt-20 scale-90 opacity-100"
-              : "mt-20 lg:mt-0 scale-100 opacity-100"
+            scrolled && !isSearchActive
+              ? "xl:-mt-[76px] lg:-mt-16 md:-mt-[63px] -mt-[75px] scale-90 opacity-100"
+              : "xl:-mb-10 lg:-mb-16 md:-mb-[60px] -mb-[50px] scale-100 opacity-100"
           }`}
         >
-          <SearchBar scrolled={scrolled} />
+          <SearchBar
+            scrolled={scrolled}
+            onActiveChange={(isActive) => setIsSearchActive(isActive)}
+          />
         </div>
 
-        {/* MOBILE MENU */}
         <div
           className={`fixed inset-0 w-full bg-white transition-all duration-500 lg:hidden z-[998] ${
             menuOpen
@@ -268,8 +255,7 @@ export default function HomeNavbar() {
         </div>
       </header>
 
-      {/* Dynamic Spacer to prevent content overlap */}
-      <div className="h-[140px] md:h-[220px] lg:h-[150px]"></div>
+      <div className="h-[100px] md:h-[115px] lg:h-[120px] xl:h-[135px]"></div>
     </>
   );
 }
