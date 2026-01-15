@@ -72,8 +72,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* {pathname === "/" ? <HomeNavbar /> : <Navbar />} */}
-      <HomeNavbar />
+      {pathname === "/" ? <HomeNavbar /> : <Navbar />}
+
       <Suspense fallback={null}>{children}</Suspense>
       <Footer />
     </>

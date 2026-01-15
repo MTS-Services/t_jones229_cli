@@ -119,24 +119,6 @@ const CaptainsInfoPage = () => {
           </div>
         </div>
       </div>
-
-      {/* CTA Button */}
-      <div className="text-center">
-        <Button
-          disabled={!selectedPlan}
-          className={` ${selectedPlan ? "" : ""}`}
-        >
-          {selectedPlan
-            ? "Start Your Free 6-Month Trial"
-            : "Select a Plan to Continue"}
-        </Button>
-
-        {selectedPlan && (
-          <p className="text-gray-600 mt-4">
-            No credit card required • Cancel anytime
-          </p>
-        )}
-      </div>
     </div>
   );
 };
