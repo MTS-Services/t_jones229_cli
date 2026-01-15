@@ -7,7 +7,6 @@ export default function ListYourBoat() {
     <div className="">
       <ReUseAbleBanner
         title="Join FishingTripper’s global network of Charter Captains and Guides"
-        description="Reach thousands of anglers worldwide — list your boat today!"
         backgroundImage={banner.src}
         boardImage={board.src}
         button={true}
