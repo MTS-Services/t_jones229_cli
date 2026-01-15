@@ -13,7 +13,7 @@ interface TopChartersCardProps {
 
 const TopChartersCard: React.FC<TopChartersCardProps> = ({ boatInfo }) => {
   return (
-    <Link href={`/search-charter/${boatInfo.id}`} className="block">
+    <Link href={`/search-charter/${boatInfo.id}`} className="block mt-[66px]">
       <div className="group relative w-full h-[420px] rounded-2xl overflow-hidden bg-slate-900 shadow-xl cursor-pointer">
         {/* Background Image */}
         <div className="absolute inset-0 w-full h-full">
