@@ -185,7 +185,9 @@ export default function PremiumFaq() {
       <div className="">
         <header className="mb-8 text-left">
           <p className="md:text-base text-sm font-medium text-black">
-            We welcome any feedback or suggestions from our captains...
+            "We welcome any feedback or suggestions from our captains. Please
+            contact us at anytime to discuss your thoughts or any issues you're
+            facing."
           </p>
           <h1 className="lg:text-4xl md:text-3xl text-2xl font-black text-gray-900 mt-1">
             Frequently Asked <span className="text-[#0f5d9e]">Questions.</span>
