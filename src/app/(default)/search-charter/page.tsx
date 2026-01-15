@@ -98,8 +98,8 @@ export default function Page() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Sticky Header Section */}
-      <div className="bg-white sticky top-20 z-30 pb-4">
-        <div className="pt-[25px] container mx-auto px-5 md:px-0 ">
+      <div className="bg-white sticky top-20 z-30 pb-4 px-3 lg:px-3">
+        <div className="pt-[25px] container mx-auto">
           <div className="px-5 md:px-0">
             <h1 className="text-lg md:text-xl font-semibold text-[#242424] leading-9">
               {countData?.data?.meta?.total ?? 0} Charters available
@@ -115,7 +115,7 @@ export default function Page() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-grow py-4">
+      <div className="flex-grow py-4 px-3 lg:px-3">
         <div className="container mx-auto">
           <div className="flex flex-col xl:flex-row gap-6 items-start">
             {/* Left side - Boat listings */}
