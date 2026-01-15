@@ -62,6 +62,7 @@ export default function SearchBar({
     },
   ];
 
+  // Keep expanded by default, compact only when scrolled AND no active tab
   const isExpanded = !scrolled || activeTab !== null;
 
   const handleSearch = () => {
@@ -109,9 +110,13 @@ export default function SearchBar({
       ref={containerRef}
     >
       <div
-        className={`relative flex flex-col lg:flex-row items-center bg-white  border border-gray-200 rounded-2xl md:rounded-full shadow-2xl transition-all duration-500 border-2 ${
-          activeTab ? "border-gray-200" : "border-white"
-        } ${isExpanded ? "py-0" : "py-1"}`}
+        className={`relative flex flex-col lg:flex-row items-center bg-white rounded-2xl md:rounded-full transition-all duration-500 border-2 shadow-sm ${
+          activeTab
+            ? "border-gray-100"
+            : scrolled
+            ? "border-gray-100"
+            : "border-gray-100"
+        } ${isExpanded ? "py-0" : "py-0"}`}
       >
         <div className="flex flex-col md:flex-row w-full items-center justify-between">
           <div
@@ -120,7 +125,7 @@ export default function SearchBar({
             ${
               isExpanded
                 ? "px-6 py-3 flex-1"
-                : "px-3 py-1.5 items-center flex-[0.8]"
+                : "px-3 py-2.5 items-center flex-[0.8]"
             } 
             ${
               activeTab === "where"

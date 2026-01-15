@@ -3,11 +3,13 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Container from "../common/Container";
+// 1. Import icons from react-icons
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 interface FAQItem {
   id: number;
-  q: string;
-  a: string;
+  question: string;
+  answer: string;
 }
 
 interface FAQSection {
@@ -17,96 +19,100 @@ interface FAQSection {
 
 const FAQ_DATA: FAQSection[] = [
   {
-    category: "Getting Started",
+    category: "Payments & Pricing",
     questions: [
       {
         id: 1,
-        q: "How do I list my boat?",
-        a: "Follow the 'List Your Boat' prompt on the dashboard to enter your boat details and upload photos.",
+        question: "How do I get paid?",
+        answer:
+          "Payments are processed securely via Stripe and sent directly to your Account.",
       },
       {
         id: 2,
-        q: "Does it cost anything to list my boat?",
-        a: "No! You get a 6-month free trial with unlimited trip listings. After that, it's a flat £50/month with no hidden fees or commissions.",
+        question: "Can I set my own prices?",
+        answer:
+          "Yes! You have full control over pricing and can adjust it at any time.",
       },
       {
         id: 3,
-        q: "What happens after I submit my listing?",
-        a: "Our team reviews the listing for quality and safety. Once approved, it goes live immediately.",
+        question:
+          "What impacts where my listing ranks amongst the other listings in my area?",
+        answer:
+          "Our site ranks listings in price order. The search results display can be adjusted by the customer to rank results either lowest price first or highest price first.",
       },
     ],
   },
   {
-    category: "Pricing & Earnings",
+    category: "Bookings & Calendar",
     questions: [
       {
         id: 4,
-        q: "How do I get paid?",
-        a: "Payments are processed securely via Stripe and sent directly to your bank account.",
+        question: "How do I avoid double bookings?",
+        answer:
+          "Once your listing has been verified, you will have access to the dashboard page. From there you can view and manage your calendar. If you receive a booking from outside of FishingTripper you can block the day off in your calendar so that you don't get double booked.",
       },
       {
         id: 5,
-        q: "Can I set my own prices?",
-        a: "Yes! You have full control over pricing for both private bookings (full boat rental) and group bookings (per seat pricing).",
+        question: "How do I choose when I work?",
+        answer:
+          "When you create your listing you select which days your trips are available. This will then be visible on your calendar which you can access and manage through your dashboard.",
       },
       {
         id: 6,
-        q: "Are there any hidden fees?",
-        a: "No, we believe in transparency. There are no commission fees or hidden costs beyond the monthly subscription.",
+        question: "How do I know when I have received a booking?",
+        answer:
+          "We will email you when you have been booked. The booking will also be visible on your calendar on the dashboard page.",
       },
       {
         id: 7,
-        q: "What happens if a customer cancels?",
-        a: "Our cancellation policy protects hosts. You can choose the level of protection that works best for your business.",
+        question: "How do I contact customers once they have booked a trip?",
+        answer:
+          "Once a booking is confirmed, you will have access to the customers contact mobile number and email address. They will also have your contact information.",
       },
     ],
   },
   {
-    category: "Availability & Managing Trips",
+    category: "Cancellations & Refunds",
     questions: [
       {
         id: 8,
-        q: "Can I block out certain dates when I'm unavailable?",
-        a: "Yes, our calendar system allows you to manage your availability in real-time.",
+        question: "What happens if the customer cancels?",
+        answer:
+          "We have a range of cancellation policy options that you can choose from during the sign up process. Choose the level of protection that suits you best. This will be visible to customers and must be accepted when they book.",
       },
       {
         id: 9,
-        q: "Can I limit the number of passengers on my boat?",
-        a: "Yes! You have full control over pricing for both private bookings (full boat rental) and group bookings (per seat pricing).",
+        question: "What happens if a trip is cancelled due to bad weather?",
+        answer:
+          "You're in full control of weather cancellations. Even if the cancellation is last minute, the customer will receive a full refund and we won't charge you commission for that trip.",
       },
       {
         id: 10,
-        q: "Can I change my pricing or availability later?",
-        a: "Absolutely. You can update your listing details, prices, and calendar at any time from your dashboard.",
+        question:
+          "What happens if a trip is cancelled part way through due to weather or unforeseen circumstances?",
+        answer:
+          "In this case, the customer will be refunded for the amount of the trip that they missed. For example if the trip was supposed to be 4 hours long and you had to return to dock after two hours due to weather, they will be refunded for the 2 hours that were missed.",
+      },
+    ],
+  },
+  {
+    category: "Trip Customization",
+    questions: [
+      {
+        id: 11,
+        question: "Can I limit the number of anglers on my boat?",
+        answer:
+          "Yes you can set your angler capacity during the listing process and amend it at any time.",
+      },
+      {
+        id: 12,
+        question: "How do Shared Trips work?",
+        answer:
+          "When you create your listing, you can choose whether to accept Shared Trips. If enabled, your charter can be booked by individual anglers who are grouped together to split the cost of the trip. FishingTripper handles the grouping, booking, and payments, so there's no extra admin for you. You'll simply see multiple anglers on the same trip instead of a single private group, with all participant details provided in advance.",
       },
     ],
   },
 ];
-
-// Icons for accordion
-const MdOutlineKeyboardArrowDown = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-  </svg>
-);
-
-const MdOutlineKeyboardArrowUp = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
-  </svg>
-);
 
 const AccordionCard = ({
   item,
@@ -137,19 +143,16 @@ const AccordionCard = ({
             isOpen ? "text-[#0f5d9e]" : "text-gray-800"
           }`}
         >
-          {item.q}
+          {item.question}
         </span>
 
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
-          className={`flex h-8 w-8 items-center justify-center rounded-full `}
+          className="flex h-8 w-8 items-center justify-center rounded-full"
         >
-          {isOpen ? (
-            <MdOutlineKeyboardArrowUp />
-          ) : (
-            <MdOutlineKeyboardArrowDown />
-          )}
+          {/* 2. Replaced custom SVG with React Icon component */}
+          <MdKeyboardArrowDown size={24} />
         </motion.div>
       </button>
 
@@ -164,7 +167,7 @@ const AccordionCard = ({
             <div className="px-5 pb-5">
               <div className="h-[1px] w-full bg-[#78b4e6]/30 mb-3" />
               <p className="text-gray-500 text-base leading-relaxed">
-                {item.a}
+                {item.answer}
               </p>
             </div>
           </motion.div>
@@ -181,9 +184,11 @@ export default function PremiumFaq() {
     <Container className="">
       <div className="">
         <header className="mb-8 text-left">
-          <span className="md:text-base text-sm font-medium text-black">
-            We welcome any feedback or suggestions from our captains...
-          </span>
+          <p className="md:text-base text-sm font-medium text-black">
+            "We welcome any feedback or suggestions from our captains. Please
+            contact us at anytime to discuss your thoughts or any issues you're
+            facing."
+          </p>
           <h1 className="lg:text-4xl md:text-3xl text-2xl font-black text-gray-900 mt-1">
             Frequently Asked <span className="text-[#0f5d9e]">Questions.</span>
           </h1>

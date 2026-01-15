@@ -6,8 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface BannerProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   button?: boolean;
   buttonTitle?: string;
   boardImage?: string;
@@ -51,10 +51,10 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
 
       <div className="relative z-10 container mx-auto flex flex-col gap-6 items-center text-center text-white px-5 lg:px-[135px]">
         <h1 className="text-3xl md:text-4xl lg:text-[50px] font-bold leading-tight">
-          {title}
+          {title ? title : ""}
         </h1>
         <p className="max-w-2xl text-base md:text-xl font-normal tracking-tight">
-          {description}
+          {description ? description : ""}
         </p>
 
         {button && (
