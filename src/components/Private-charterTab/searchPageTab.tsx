@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import InteractiveMap from "../List-boat-form/GoogleMap";
 import { useGetAllBoatQuery } from "@/redux/api/boatApi";
 import { Pagination } from "../dashboard/admin/button/Pagination";
-import TabListUI from "./TabListUI"; // TabListUI ইম্পোর্ট
-import TabContent from "./TabContent"; // TabContent ইম্পোর্ট
+import TabListUI from "./TabListUI";
+import TabContent from "./TabContent";
 
 interface SearchTabProps {
   activeKey?: string;
@@ -62,7 +62,7 @@ const SearchTab = ({ activeKey = "1", onTabChange }: SearchTabProps) => {
 
       return params;
     },
-    [key]
+    [key],
   );
 
   useEffect(() => {
