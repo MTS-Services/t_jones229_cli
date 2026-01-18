@@ -271,7 +271,7 @@ export default function Page() {
                 tripInfo={trip}
                 boatId={id}
                 image={boatInfo?.photos?.[0]?.url}
-                boatInfo={boatInfo} // Pass boatInfo for fallback data
+                // REMOVED boatInfo prop to fix TypeScript error
               />
             ))}
           </div>
