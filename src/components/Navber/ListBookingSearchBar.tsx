@@ -71,7 +71,9 @@ export default function ListBookingSearchBar({
     localStorage.setItem("Guests", guests.toString());
 
     router.push(
-      selected?.value === true ? "/group-charter?type=GROUP" : "/search-charter"
+      selected?.value === true
+        ? "/group-charter?type=GROUP"
+        : "/search-charter",
     );
   };
 
@@ -93,7 +95,7 @@ export default function ListBookingSearchBar({
   }, []);
 
   const filteredDestinations = destinations.filter((d: any) =>
-    d.city.toLowerCase().includes(searchTerm.toLowerCase())
+    d.city.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -103,7 +105,7 @@ export default function ListBookingSearchBar({
           {/* WHERE SECTION */}
           <div
             onClick={() => setActiveTab("where")}
-            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-full transition-all duration-300 px-2 py-1.5 flex-1 ${
+            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-full transition-all duration-300 px-2 py-2.5 flex-1 ${
               activeTab === "where"
                 ? "bg-white shadow-md z-20"
                 : "hover:bg-gray-50"
@@ -167,7 +169,7 @@ export default function ListBookingSearchBar({
           {/* WHEN SECTION */}
           <div
             onClick={() => setActiveTab("when")}
-            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-full transition-all duration-300 px-2 py-1.5 flex-1 ${
+            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-full transition-all duration-300 px-2 py-2.5 flex-1 ${
               activeTab === "when"
                 ? "bg-white shadow-md z-20"
                 : "hover:bg-gray-50"
@@ -207,7 +209,7 @@ export default function ListBookingSearchBar({
           {/* WHO SECTION */}
           <div
             onClick={() => setActiveTab("who")}
-            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-full transition-all duration-300 px-2 py-1.5 flex-1 ${
+            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-full transition-all duration-300 px-2 py-2.5 flex-1 ${
               activeTab === "who"
                 ? "bg-white shadow-md z-20"
                 : "hover:bg-gray-50"
@@ -254,7 +256,7 @@ export default function ListBookingSearchBar({
           {/* TYPE SECTION */}
           <div
             onClick={() => setActiveTab("type")}
-            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-full transition-all duration-300 px-2 py-1.5 flex-1 ${
+            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-full transition-all duration-300 px-2 py-2.5 flex-1 ${
               activeTab === "type"
                 ? "bg-white shadow-md z-20"
                 : "hover:bg-gray-50"

@@ -1,4 +1,5 @@
 "use client";
+
 // src/pages/UserManag.tsx
 import React from "react";
 import CustomerManagement from "./CustomarManagment";

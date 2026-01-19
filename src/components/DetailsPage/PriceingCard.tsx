@@ -42,13 +42,15 @@ const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
 
   return (
     <div className="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg p-4 gap-4 border mt-5">
-      <Image
-        src={image || imageUrl}
-        alt="trip image"
-        height={100}
-        width={100}
-        className="w-80 h-60  rounded-lg"
-      />
+      <div className="relative w-80 h-60 rounded-2xl overflow-hidden">
+        <Image
+          src={image || imageUrl}
+          alt="trip image"
+          fill
+          className="rounded-2xl object-cover"
+          sizes="320px"
+        />
+      </div>
 
       <div className="flex-1">
         <div className="flex flex-col lg:flex-row gap-5 lg:gap-0 justify-between ">

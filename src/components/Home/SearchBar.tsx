@@ -74,7 +74,9 @@ export default function SearchBar({
     localStorage.setItem("Guests", guests.toString());
 
     route.push(
-      selected?.value === true ? "/group-charter?type=GROUP" : "/search-charter"
+      selected?.value === true
+        ? "/group-charter?type=GROUP"
+        : "/search-charter",
     );
   };
 
@@ -99,7 +101,7 @@ export default function SearchBar({
   }, []);
 
   const filteredDestinations = destinations.filter((d: any) =>
-    d.city.toLowerCase().includes(searchTerm.toLowerCase())
+    d.city.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -114,8 +116,8 @@ export default function SearchBar({
           activeTab
             ? "border-gray-100"
             : scrolled
-            ? "border-gray-100"
-            : "border-gray-100"
+              ? "border-gray-100"
+              : "border-gray-100"
         } ${isExpanded ? "py-0" : "py-0"}`}
       >
         <div className="flex flex-col md:flex-row w-full items-center justify-between">

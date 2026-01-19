@@ -37,12 +37,12 @@ const DetailsCarousel = ({ product }: { product: productType }) => {
         {product &&
           product?.map((image: any, index: number) => (
             <SwiperSlide key={index}>
-              <div className="relative h-[600px] w-full">
+              <div className="relative h-[600px] w-full ">
                 <Image
                   src={image?.url || placeholderImage}
                   alt="Boat image"
                   fill
-                  className="object-cover"
+                  className="object-cover rounded-lg"
                   priority
                 />
               </div>
