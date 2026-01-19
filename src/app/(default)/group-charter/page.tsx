@@ -41,33 +41,30 @@ export default function GroupBooking() {
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
 
   const onSubmit = async (data: any) => {
-    // --- Console Log Form Data ---
-    console.log("Form Data Captured:", data);
+    // সাবমিট করা ডাটা কনসোলে দেখানোর জন্য
+    console.log("--- Input Form Data ---", data);
 
     const groupBookingInfo = {
-      boatId: boatID ?? "",
-      tripId: tripId ?? "",
-      tripDate: tripDate ?? "",
-      amount: "full",
-      bookingType: false,
+      where: location ?? "",
+      date: tripDate ?? "",
       groupSize: parseInt(numberOfGuests ?? "0", 10),
+      bookingType: false,
       memberInfo: {
         firstName: data?.firstName,
         lastName: data?.lastName,
         email: data?.email,
         phoneNumber: data?.phoneNumber,
         fishingType: data?.fishingType,
-        targetSpecies: data?.targetSpecies, // Optional field
+        targetSpecies: data?.targetSpecies,
         details: data?.details,
       },
     };
 
-    // --- Console Log Final Payload ---
-    console.log("Sending to API:", groupBookingInfo);
+    console.log("--- Final Object to Server ---", groupBookingInfo);
 
     try {
       const res = await bookingFN(groupBookingInfo);
-      console.log("Server Response:", res);
+      console.log("--- Server Response ---", res);
 
       if (res?.data?.success) {
         toast.success(res?.data?.message || "Booking successful!");
@@ -81,7 +78,7 @@ export default function GroupBooking() {
         toast.error(res?.data?.message || "Booking failed.");
       }
     } catch (error) {
-      console.error("Submission Error:", error);
+      console.error("Error submitting booking:", error);
       toast.error("Something went wrong.");
     }
   };
@@ -99,16 +96,68 @@ export default function GroupBooking() {
       </div>
 
       <div className="container mx-auto flex flex-col gap-10 xl:px-4 lg:px-3 px-2 py-10">
-        {/* ... (Instruction steps and video section remain the same) ... */}
+        {/* --- HOW IT WORKS SECTION --- */}
+        <h2 className="text-xl md:text-4xl font-bold text-textSecondary mb-2">
+          How it works:
+        </h2>
+
+        <div className="grid lg:grid-cols-2 gap-8 items-start">
+          <div>
+            <ol className="list-decimal space-y-4 pl-6 text-black font-normal text-sm md:text-base leading-normal tracking-tight font-sans">
+              <li>Create a free account or sign in to your profile.</li>
+              <li>
+                Confirm your contact information and add some details about the
+                type of fishing you would like to do i.e. Offshore/Inshore and
+                species you&apos;d like to target.
+              </li>
+              <li>
+                Your information will be added to our database and we&apos;ll
+                team you up with other anglers looking to do the same type of
+                fishing as you, on your specified date(s).
+              </li>
+              <li>
+                We&apos;ll contact charter captains and guides in the area with
+                availability and pair you up for a trip.
+              </li>
+              <li>
+                An email will be sent to you with details of the proposed trip
+                with a payment link to confirm the booking. Payments will be
+                refunded if the trip does not go ahead.
+              </li>
+            </ol>
+          </div>
+
+          <div className="relative">
+            <div className="aspect-video bg-gray-300 rounded-lg flex items-center justify-center">
+              <Button
+                size="lg"
+                className="rounded-full w-16 h-16 bg-green-600 hover:bg-green-700"
+              >
+                <Play className="w-6 h-6 ml-1" fill="white" />
+              </Button>
+            </div>
+          </div>
+        </div>
+        {/* --- END HOW IT WORKS SECTION --- */}
 
         <div className="bg-slate-50 rounded-lg p-5 md:p-8">
           <h2 className="text-xl md:text-3xl font-bold text-textSecondary mb-2">
             Enter your details
           </h2>
+          <p className="text-sm md:text-base text-textSecondary mb-2">
+            We will take your contact details, and reach out to captains in the
+            area...
+          </p>
+
+          <div className="">
+            <h1 className="text-lg md:text-xl font-bold text-[#242424] leading-9">
+              {location ?? "Location not set"} / {tripDate ?? "Date not set"} /{" "}
+              {numberOfGuests ?? "Guests not set"} people
+            </h1>
+          </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-8">
             <div className="grid md:grid-cols-2 gap-4">
-              {/* First Name */}
               <div className="space-y-2">
                 <label className="text-base text-start font-medium text-[#171717] block mb-1">
                   First name*
@@ -117,7 +166,11 @@ export default function GroupBooking() {
                   {...register("firstName", {
                     required: "First name is required",
                   })}
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${errors.firstName ? "border-red-500" : "border-gray-300 text-[#9E9E9E]"}`}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                    errors.firstName
+                      ? "border-red-500"
+                      : "border-gray-300 text-[#9E9E9E]"
+                  }`}
                   placeholder="Enter your first name"
                 />
                 {errors.firstName && (
@@ -126,8 +179,6 @@ export default function GroupBooking() {
                   </p>
                 )}
               </div>
-
-              {/* Last Name */}
               <div className="space-y-2">
                 <label className="text-base text-start font-medium text-[#171717] block mb-1">
                   Last name*
@@ -136,7 +187,11 @@ export default function GroupBooking() {
                   {...register("lastName", {
                     required: "Last name is required",
                   })}
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${errors.lastName ? "border-red-500" : "border-gray-300 text-[#9E9E9E]"}`}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                    errors.lastName
+                      ? "border-red-500"
+                      : "border-gray-300 text-[#9E9E9E]"
+                  }`}
                   placeholder="Enter your last name"
                 />
                 {errors.lastName && (
@@ -148,7 +203,6 @@ export default function GroupBooking() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              {/* Email */}
               <div className="space-y-2">
                 <label className="text-base text-start font-medium text-[#171717] block mb-1">
                   Email address*
@@ -161,7 +215,11 @@ export default function GroupBooking() {
                       message: "Invalid email address",
                     },
                   })}
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${errors.email ? "border-red-500" : "border-gray-300 text-[#9E9E9E]"}`}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                    errors.email
+                      ? "border-red-500"
+                      : "border-gray-300 text-[#9E9E9E]"
+                  }`}
                   placeholder="Enter your email"
                 />
                 {errors.email && (
@@ -170,8 +228,6 @@ export default function GroupBooking() {
                   </p>
                 )}
               </div>
-
-              {/* Phone */}
               <div className="space-y-2">
                 <label className="text-base text-start font-medium text-[#171717] block mb-1">
                   Mobile number*
@@ -180,7 +236,11 @@ export default function GroupBooking() {
                   {...register("phoneNumber", {
                     required: "Phone number is required",
                   })}
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${errors.phoneNumber ? "border-red-500" : "border-gray-300 text-[#9E9E9E]"}`}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                    errors.phoneNumber
+                      ? "border-red-500"
+                      : "border-gray-300 text-[#9E9E9E]"
+                  }`}
                   placeholder="Enter your phone number"
                 />
                 {errors.phoneNumber && (
@@ -192,7 +252,6 @@ export default function GroupBooking() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              {/* Fishing Type */}
               <div className="space-y-2">
                 <label className="text-base text-start font-medium text-[#171717] block mb-1">
                   Fishing Type*
@@ -209,7 +268,11 @@ export default function GroupBooking() {
                       setIsDropdownOpen(false);
                       trigger("fishingType");
                     }}
-                    className={`w-full border rounded-md p-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white ${errors.fishingType ? "border-red-500" : "border-gray-300 text-[#9E9E9E]"}`}
+                    className={`w-full border rounded-md p-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white ${
+                      errors.fishingType
+                        ? "border-red-500"
+                        : "border-gray-300 text-[#9E9E9E]"
+                    }`}
                   >
                     <option value="">Select Option</option>
                     <option value="Offshore">Offshore</option>
@@ -228,7 +291,7 @@ export default function GroupBooking() {
                 )}
               </div>
 
-              {/* Target Species (OPTIONAL) */}
+              {/* Target Species - Now Optional */}
               <div className="space-y-1">
                 <label className="text-base text-start font-medium text-[#171717] block mb-1">
                   Target Species
@@ -236,12 +299,11 @@ export default function GroupBooking() {
                 <input
                   {...register("targetSpecies")}
                   className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 border-gray-300 text-[#9E9E9E]"
-                  placeholder="What fish would you like to catch? (Optional)"
+                  placeholder="What fish would you like to catch?"
                 />
               </div>
             </div>
 
-            {/* Details */}
             <div className="space-y-1">
               <label className="text-base text-start font-medium text-[#171717] block mb-1">
                 Details
@@ -253,7 +315,6 @@ export default function GroupBooking() {
               />
             </div>
 
-            {/* Consent & Submit */}
             <div className="flex items-start space-x-3">
               <input
                 id="marketing"
@@ -273,7 +334,11 @@ export default function GroupBooking() {
             <button
               type="submit"
               disabled={!marketingConsent}
-              className={`px-6 py-2 rounded-md font-medium text-white w-48 ${marketingConsent ? "bg-orange-400 hover:bg-orange-500" : "bg-orange-200 cursor-not-allowed"}`}
+              className={`px-6 py-2 rounded-md font-medium text-white w-48 ${
+                marketingConsent
+                  ? "bg-orange-400 hover:bg-orange-500"
+                  : "bg-orange-200 cursor-not-allowed"
+              }`}
             >
               {isLoading ? <Loader /> : "Submit Details"}
             </button>
