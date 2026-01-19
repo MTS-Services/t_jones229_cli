@@ -74,7 +74,7 @@ export default function Page() {
 
       return params;
     },
-    [activeKey]
+    [activeKey],
   );
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export default function Page() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Sticky Header Section */}
-      <div className="bg-white sticky top-20 z-30 pb-4 px-3 lg:px-3">
+      <div className="bg-white sticky top-20 z-30 pb-4 px-3 lg:px-3 mb-[66px]">
         <div className="pt-[25px] container mx-auto">
           <div className="px-5 md:px-0">
             <h1 className="text-lg md:text-xl font-semibold text-[#242424] leading-9">

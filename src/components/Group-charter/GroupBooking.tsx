@@ -27,8 +27,10 @@ export default function BookingSection() {
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
 
   const onSubmit = async (data: any) => {
-    const tripDate = typeof window !== 'undefined' ? localStorage.getItem("date") : null;
-    const numberOfGuests = typeof window !== 'undefined' ? localStorage.getItem("Guests") : null;
+    const tripDate =
+      typeof window !== "undefined" ? localStorage.getItem("date") : null;
+    const numberOfGuests =
+      typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
     try {
       const groupBookingInfo = {
         boatId: boatID ?? "",
@@ -49,7 +51,7 @@ export default function BookingSection() {
 
       if (res?.data?.success) {
         toast.success(res?.data?.message || "Booking successful!");
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           localStorage.removeItem("numberOfGuests");
           localStorage.removeItem("numberOfGuests");
         }
@@ -66,13 +68,14 @@ export default function BookingSection() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-12">
-      <ToastContainer />
+    <div className="container mx-auto flex flex-col gap-10 xl:px-4 lg:px-3 px-2 py-10">
+      {/* <ToastContainer /> */}
       {/* How it works section */}
 
-      <h2 className="text-xl md:text-4xl font-bold text-textSecondary mb-6">
+      <h2 className="text-xl md:text-4xl font-bold text-textSecondary mb-2">
         How it works:
       </h2>
+
       <div className="grid lg:grid-cols-2 gap-8 items-start">
         <div>
           <ol className="list-disc space-y-4 pl-6 text-black font-normal text-sm md:text-base leading-normal tracking-tight font-sans">

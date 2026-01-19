@@ -496,12 +496,21 @@ export default function Login() {
   const [loginFn, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
 
-  // --- হেল্পার ফাংশন: রোল অনুযায়ী পাথ বের করা ---
+  // --- Helper function: Get path based on role ---
   const getRedirectPath = (role: string) => {
     if (role === "ADMIN" || role === "SUPERADMIN") return "/dashboard";
     if (role === "CAPTAIN") return "/dashboard/check-your-trip";
     if (role === "USER") return "/dashboard/edit-user-details";
     return "/"; // Default
+  };
+
+  // --- Role-based toast messages ---
+  const getRoleBasedToastMessage = (role: string) => {
+    if (role === "ADMIN") return "Admin login successful!";
+    if (role === "SUPERADMIN") return "Super Admin login successful!";
+    if (role === "CAPTAIN") return "Captain login successful!";
+    if (role === "USER") return "User login successful!";
+    return "Login successful!"; // Default
   };
 
   const onSubmit = async (data: any) => {
@@ -513,22 +522,24 @@ export default function Login() {
         const userData = res?.data?.data;
         const role = userData?.role;
 
-        // ১. কুকি সেট করা
+        // 1. Set cookies
         Cookies.set("token", userData?.accessToken);
         Cookies.set("currentUserRole", role);
 
-        // ২. রিডাক্স আপডেট
+        // 2. Update redux store
         dispatch(
           setUser({
             user: userData,
             token: userData?.accessToken,
             isAuthenticated: true,
-          })
+          }),
         );
 
-        toast.success(res?.data?.message || "Login successful!");
+        // Show role-based toast message
+        const toastMessage = getRoleBasedToastMessage(role);
+        toast.success(toastMessage);
 
-        // ৩. ডাইনামিক রিডাইরেক্ট (প্রধান সমাধান)
+        // 3. Dynamic redirect
         if (redirectUrl) {
           route.push(redirectUrl);
         } else {
@@ -536,11 +547,10 @@ export default function Login() {
           route.push(targetPath);
         }
       } else {
-        // ... (আপনার আগের এরর হ্যান্ডলিং কোড)
-        toast.error("Login failed");
+        toast.error("Login failed. Please try again.");
       }
     } catch (error: any) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -570,7 +580,7 @@ export default function Login() {
             user: userData,
             token: userData?.accessToken,
             isAuthenticated: true,
-          })
+          }),
         );
 
         const targetPath = getRedirectPath(role);

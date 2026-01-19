@@ -37,7 +37,7 @@ export default function Page() {
       // route.push("/dashboard/reset-password/send-otp");
       if (res?.data?.success) {
         toast.success(
-          `${res?.data?.message}. Please check your email and reset your password!`
+          `${res?.data?.message}. Please check your email and reset your password!`,
         );
       } else {
         toast.error("Password change failed.");

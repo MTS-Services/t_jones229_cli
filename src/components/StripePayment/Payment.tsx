@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import React, { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
   CardElement,
   useStripe,
   useElements,
-} from '@stripe/react-stripe-js';
-import { usePathname } from 'next/navigation';
-import { ToastContainer } from 'react-toastify';
-import { useDispatch } from 'react-redux';
-import { setPaymentMethodId } from '@/redux/slices/paymentMethodSlice';
+} from "@stripe/react-stripe-js";
+import { usePathname } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setPaymentMethodId } from "@/redux/slices/paymentMethodSlice";
 
 // Use environment variable for Stripe key
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
 );
 
 const CheckoutForm = () => {
@@ -42,7 +42,7 @@ const CheckoutForm = () => {
 
     const cardElement = elements.getElement(CardElement);
     const { paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
+      type: "card",
       card: cardElement!,
     });
 
@@ -53,34 +53,34 @@ const CheckoutForm = () => {
   };
 
   return (
-    <div className='mx-auto p-6 bg-gray-50 shadow-lg rounded-lg'>
+    <div className="mx-auto p-6 bg-gray-50 shadow-lg rounded-lg">
       <ToastContainer />
-      <div className='space-y-4'>
-        <div className='p-2 border rounded flex items-center gap-2'>
+      <div className="space-y-4">
+        <div className="p-2 border rounded flex items-center gap-2">
           <CardElement
             options={{ hidePostalCode: true }}
-            className='w-full p-1'
+            className="w-full p-1"
             onChange={handleChange}
           />
         </div>
 
         <button
-          type='button'
+          type="button"
           onClick={handleSubmit}
           disabled={!stripe || loading || !isCardComplete}
           className={`w-full mt-4 p-2 rounded-lg text-white ${
             !stripe || loading || !isCardComplete
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-500 hover:bg-blue-600'
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
           }`}
         >
-          {path === '/payment'
+          {path === "/payment"
             ? loading
-              ? 'Processing...'
-              : 'Add Payment details'
+              ? "Processing..."
+              : "Add Payment details"
             : loading
-            ? 'Processing...'
-            : 'Pay Now'}
+              ? "Processing..."
+              : "Pay Now"}
         </button>
       </div>
     </div>

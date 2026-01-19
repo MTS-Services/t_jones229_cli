@@ -20,20 +20,15 @@ export default function AllCaptain() {
   const captains = data?.data?.data || [];
   const totalPages = data?.data?.meta?.totalPage || 1;
 
-
-
   const handlePageChange = (newPage: number) => {
     if (newPage !== page) {
       setPage(newPage);
     }
   };
-  return (
-    <div className="pt-5 bg-gray-50 p-6">
-      <div className="mx-auto">
-        <h1 className="text-2xl font-medium text-gray-900 mb-8">
-          Captain Management
-        </h1>
 
+  return (
+    <div className="p-4 md:p-8">
+      <div className="overflow-x-auto bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
         <div className="bg-white rounded-lg shadow-sm">
           {isLoading ? (
             <div className="divide-y divide-gray-100">
@@ -45,60 +40,81 @@ export default function AllCaptain() {
             <div className="p-6 text-gray-500">No captains found.</div>
           ) : (
             <>
-              {captains?.captain?.map((captain: any) => (
-                <div
-                  key={captain.id}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-900">
-                      {captain?.fullName}
-                    </div>
-                  </div>
-
-                  <div className="flex-1 min-w-0 px-4">
-                    <a
-                      href={
-                        captain.email.includes("@")
-                          ? `mailto:${captain.email}`
-                          : `https://${captain.email}`
-                      }
-                      className="text-sm text-blue-600 hover:text-blue-800 underline"
+              {/* Added border-b border-gray-200 here to fix the last border issue */}
+              <table className="min-w-full divide-y divide-gray-200 border-b border-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                      Email
+                    </th>
+                    <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                      Phone
+                    </th>
+                    <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                      Trips
+                    </th>
+                    <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-100">
+                  {captains?.captain?.map((captain: any) => (
+                    <tr
+                      key={captain.id}
+                      className="hover:bg-gray-50 transition-colors"
                     >
-                      {captain.email}
-                    </a>
-                  </div>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {captain?.fullName}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <a
+                          href={
+                            captain.email.includes("@")
+                              ? `mailto:${captain.email}`
+                              : `https://${captain.email}`
+                          }
+                          className="text-sm text-blue-600 hover:text-blue-800 underline"
+                        >
+                          {captain.email}
+                        </a>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {captain.phoneNumber || "N/A"}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {captain.totalTrips ?? 0} trip
+                          {captain.totalTrips >= 2 ? "s" : ""}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <button
+                          onClick={() =>
+                            router.push(`/dashboard/all-captain/${captain.id}`)
+                          }
+                          className={`flex flex-row items-center justify-center h-[28px] px-2 py-1 gap-1 rounded-[4px] text-white text-xs
+                            ${captain.status === "APPROVE" ? "bg-green-600" : "bg-[#FF9500]"}`}
+                        >
+                          {captain.status === "APPROVE"
+                            ? "Approved"
+                            : "Pending Approval"}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-                  <div className="flex-1 min-w-0 px-4">
-                    <div className="text-sm text-gray-900">
-                      {captain.phoneNumber || "N/A"}
-                    </div>
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="text-sm text-gray-900">
-                      {captain.totalTrips ?? 0} trip
-                      {captain.totalTrips >= 2 ? "s" : ""}
-                    </div>
-                  </div>
-
-                  <div className="flex-1">
-                    <button
-                      onClick={() =>
-                        router.push(`/dashboard/all-captain/${captain.id}`)
-                      }
-                      className={`flex flex-row items-center justify-center h-[28px] px-2 py-1 gap-1 rounded-[4px] text-white
-          ${captain.status === "APPROVE" ? "bg-green-600" : "bg-[#FF9500]"}`}
-                    >
-                      {captain.status === "APPROVE"
-                        ? "Approved"
-                        : "Pending Approval"}
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              <div className="py-4">
+              {/* Pagination Section */}
+              <div className="flex items-center justify-center pb-4 bg-white">
                 <Pagination
                   currentPage={page}
                   totalPages={totalPages}
