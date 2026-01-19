@@ -3,7 +3,7 @@ import React from "react";
 
 export default function page() {
   return (
-    <div className="py-16">
+    <div className="mt-36 h-[85vh] xl:px-6 lg:px-5 md:px-4 px-3">
       <div className="container mx-auto px-7 pt-8 pb-24 bg-[#f0f6ff] rounded-lg">
         <h1 className="font-sk-modernist text-black text-xl md:text-[40px] font-extrabold leading-normal md:leading-[60px] tracking-tight mb-6 ">
           You have been added to the waitlist and we&apos;ll <br /> be in touch

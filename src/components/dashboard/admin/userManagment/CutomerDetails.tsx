@@ -54,7 +54,7 @@ export default function CustomerDetails() {
         id={userId as string}
         onClose={closeModal}
       />
-      <div className="mx-auto p-6 bg-white pt-20 xl:pt-6">
+      <div className="p-4 md:p-8">
         {/* Header Section */}
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-gray-900 mb-1">
@@ -186,10 +186,10 @@ export default function CustomerDetails() {
                             trip.status === "PENDING"
                               ? "bg-yellow-100 text-yellow-800"
                               : trip.status === "COMPLETE"
-                              ? "bg-gray-100 text-gray-800"
-                              : trip.status === "CANCELLED"
-                              ? "bg-orange-100 text-orange-800"
-                              : "bg-green-100 text-green-800"
+                                ? "bg-gray-100 text-gray-800"
+                                : trip.status === "CANCELLED"
+                                  ? "bg-orange-100 text-orange-800"
+                                  : "bg-green-100 text-green-800"
                           }`}
                         >
                           {trip.status}
