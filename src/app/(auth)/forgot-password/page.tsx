@@ -32,37 +32,36 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen w-full">
+    <div className="flex flex-col md:flex-row h-screen w-full">
       <ToastContainer />
       {/* Left Section */}
-      <div className="w-full md:w-1/2 relative h-screen bg-blue-600 pb-5 flex flex-col justify-center items-start text-white px-5 md:px-10">
-        <div className="xl:translate-x-56">
-          <Link href={"/"}>
-            <Image
-              src={logo2}
-              alt="logo"
-              height={100}
-              width={100}
-              className="h-28 w-52"
-            />
-          </Link>
-        </div>
+      <div className="w-full md:w-1/2 relative h-screen bg-[#0e5d9d] pb-5 flex flex-col justify-center items-center text-white px-5 md:px-10">
+        {/* Logo */}
+        <Link href={"/"} className="mb-5">
+          <Image
+            src={logo2}
+            alt="logo"
+            height={100}
+            width={100}
+            className="h-28 w-52 mx-auto"
+          />
+        </Link>
 
-        <div className="text-start w max-w-3xl mx-auto">
-          <div>
-            <h2 className="text-2xl md:text-4xl font-bold leading-[52px] mb-2">
-              Forgot Password!
-            </h2>
-            <p className="text-lg leading-7 font-normal mb-6">
-              Enter a valid email address. <br />
-              After submission, check your email to set a new password.
-            </p>
-          </div>
+        {/* Content */}
+        <div className="w-full max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl md:text-4xl font-bold leading-[52px] mb-2">
+            Forgot Password!
+          </h2>
+
+          <p className="text-lg leading-7 font-normal mb-6">
+            Enter a valid email address. <br />
+            After submission, check your email to set a new password.
+          </p>
 
           {/* Form */}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg mt-10"
+            className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg mx-auto mt-10 text-left"
           >
             <label
               htmlFor="email"
@@ -70,6 +69,7 @@ const ForgotPassword = () => {
             >
               Email Address
             </label>
+
             <input
               type="email"
               id="email"
@@ -83,6 +83,7 @@ const ForgotPassword = () => {
               })}
               className="w-full border text-textPrimary border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
+
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.email.message as string}

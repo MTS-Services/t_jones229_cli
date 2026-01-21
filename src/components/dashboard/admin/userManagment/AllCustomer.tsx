@@ -1,107 +1,132 @@
 "use client";
 
-import { Eye } from "lucide-react";
-import Link from "next/link";
-import { useAllUserQuery } from "@/redux/api/authApi";
 import { useState } from "react";
-import { Pagination } from "../button/Pagination";
+import Link from "next/link";
+import { Eye } from "lucide-react";
+import { useAllUserQuery } from "@/redux/api/authApi";
 import { TSkeleton } from "../TSkelton";
+import PaginationButton from "./PaginationButton";
 
 export default function AllCustomer() {
   const [page, setPage] = useState(1);
   const limit = 10;
 
+  // RTK Query call
   const { data, isLoading } = useAllUserQuery({
     roles: ["USER"],
     limit,
     page,
   });
 
-  const customers = data?.data?.data || [];
+  const customers = data?.data?.data?.user || [];
   const totalPages = data?.data?.meta?.totalPage || 1;
 
   const handlePageChange = (newPage: number) => {
     if (newPage !== page) {
       setPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="divide-y divide-gray-100 p-6 bg-white">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <TSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="pt-5 bg-gray-50 p-6">
-      <div className="mx-auto">
-        <h1 className="text-2xl font-medium text-gray-900 mb-8">
-          Customer Management
-        </h1>
+    <div className="p-4 md:p-8">
+      <div className="w-full mx-auto">
+        <div className="overflow-x-auto bg-white border border-gray-100 rounded-lg shadow-sm">
+          <table className="w-full border-collapse">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                  Customer Name
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                  Email Address
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                  Phone Number
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                  Total Trips
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                  Action
+                </th>
+              </tr>
+            </thead>
 
-        {/* Scrollable wrapper */}
-        <div className="overflow-x-auto">
-          <div className="min-w-[800px] bg-white rounded-lg shadow-sm">
-            {isLoading ? (
-              <div className="divide-y divide-gray-100">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <TSkeleton key={i} />
-                ))}
-              </div>
-            ) : customers?.user?.length === 0 ? (
-              <div className="p-6 text-gray-500">No customers found.</div>
-            ) : (
-              <>
-                <div className="divide-y divide-gray-100">
-                  {customers?.user?.map((customer: any) => (
-                    <div
-                      key={customer.id}
-                      className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-gray-900 whitespace-nowrap">
-                          {customer.fullName || "Unknown"}
-                        </div>
-                      </div>
+            <tbody className="divide-y divide-gray-100">
+              {customers.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-gray-500 bg-white"
+                  >
+                    No customers found in the database.
+                  </td>
+                </tr>
+              ) : (
+                customers.map((customer: any) => (
+                  <tr
+                    key={customer.id}
+                    className="hover:bg-blue-50/30 transition-colors bg-white"
+                  >
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                      {customer.fullName || "Unknown"}
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <a
+                        href={
+                          customer.email?.includes("@")
+                            ? `mailto:${customer.email}`
+                            : "#"
+                        }
+                        className="text-blue-600 hover:text-blue-800 hover:underline transition-colors break-all"
+                      >
+                        {customer.email}
+                      </a>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                      {customer.phoneNumber || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                      <span className="bg-gray-100 px-2 py-1 rounded-md">
+                        {customer._count?.booking ?? 0} Trip
+                        {(customer._count?.booking ?? 0) !== 1 ? "s" : ""}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 pl-10 text-sm">
+                      <Link
+                        href={`/dashboard/all-customer/${customer.id}`}
+                        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium group"
+                      >
+                        <Eye
+                          size={18}
+                          className="group-hover:scale-110 transition-transform"
+                        />
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
 
-                      <div className="flex-1 min-w-0 px-4">
-                        <a
-                          href={
-                            customer.email.includes("@")
-                              ? `mailto:${customer.email}`
-                              : `https://${customer.email}`
-                          }
-                          className="text-sm text-blue-600 hover:text-blue-800 underline break-all"
-                        >
-                          {customer.email}
-                        </a>
-                      </div>
-
-                      <div className="flex-1 min-w-0 px-4">
-                        <div className="text-sm text-gray-900 whitespace-nowrap">
-                          {customer.phoneNumber || "N/A"}
-                        </div>
-                      </div>
-
-                      <div className="flex-1">
-                        <div className="text-sm text-gray-900 whitespace-nowrap">
-                          {customer._count?.booking ?? 0} trip
-                          {customer._count?.booking === 1 ? "" : "s"}
-                        </div>
-                      </div>
-
-                      <div className="flex-1">
-                        <Link href={`/dashboard/all-customer/${customer.id}`}>
-                          <Eye className="text-gray-600 hover:text-gray-900 cursor-pointer" />
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="py-4">
-                  <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
-              </>
-            )}
+          {/* Pagination Section */}
+          <div className="flex items-center justify-center py-6 border-t border-gray-100 bg-white">
+            <PaginationButton
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
