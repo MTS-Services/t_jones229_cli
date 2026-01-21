@@ -6,12 +6,15 @@ import { MdAnchor } from "react-icons/md";
 import { IoFishOutline } from "react-icons/io5";
 import Link from "next/link";
 import { BoatInfo } from "@/types/boat";
+import Loader from "../ui/Loader";
 
-interface TopChartersCardProps {
-  boatInfo: BoatInfo;
+interface RecommendedProps {
+  currentItems: any[];
+  isLoading: boolean;
 }
 
-const TopChartersCard: React.FC<TopChartersCardProps> = ({ boatInfo }) => {
+// This is your card component
+const PricingCardCopy: React.FC<{ boatInfo: BoatInfo }> = ({ boatInfo }) => {
   return (
     <Link href={`/search-charter/${boatInfo.id}`} className="block">
       <div className="group relative w-full h-[420px] rounded-2xl overflow-hidden bg-slate-900 shadow-xl cursor-pointer">
@@ -63,7 +66,7 @@ const TopChartersCard: React.FC<TopChartersCardProps> = ({ boatInfo }) => {
 
               <div className="flex flex-wrap gap-2">
                 {boatInfo?.fishing?.[0]?.species
-                  ?.slice(0, 3)
+                  ?.slice(0, 3) // Show only first 3 species
                   .map((specie, i) => (
                     <div
                       key={i}
@@ -86,4 +89,24 @@ const TopChartersCard: React.FC<TopChartersCardProps> = ({ boatInfo }) => {
   );
 };
 
-export default TopChartersCard;
+// This is your main component
+export default function PricingCardTwo({
+  currentItems,
+  isLoading,
+}: RecommendedProps) {
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  return (
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {currentItems && currentItems?.length > 0
+          ? currentItems?.map((card: any) => (
+              <PricingCardCopy key={card.id} boatInfo={card} />
+            ))
+          : "No data available"}
+      </div>
+    </div>
+  );
+}

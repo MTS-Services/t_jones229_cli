@@ -13,6 +13,8 @@ import ApprovePageButton from "../button/ApprovePageButton";
 import Image from "next/image";
 import DeleteUserModal from "../../modal/DeleteUserModal";
 import { toast } from "react-toastify";
+import TitleSection from "@/components/dashboard/captain/TiltleSection";
+
 
 export default function CaptainApproval() {
   const router = useRouter();
@@ -98,8 +100,9 @@ export default function CaptainApproval() {
         id={userId as string}
         onClose={closeModal}
       />
-      <div className="m-4">
-        <div className="mt-2 w-full z-20 p-6 bg-white rounded-lg shadow-md">
+       <TitleSection />
+      <div className="p-4 md:p-8">
+        <div className="w-full z-20 p-6 bg-white border border-gray-100 rounded-lg shadow-md">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div>

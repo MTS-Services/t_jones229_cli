@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import UpcomingTrips from "./UpcomingTrips";
 import PostTrips from "./PostTrips";

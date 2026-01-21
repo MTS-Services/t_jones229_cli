@@ -196,6 +196,7 @@
 //
 
 "use client";
+
 import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -342,7 +343,7 @@ function PaymentDetailsForm({ paymentInfo }: PaymentDetailsFormProps) {
             placeholder="1234 1234 1234 1234"
             className={inputStyles.replace(
               "flex items-center justify-between",
-              ""
+              "",
             )}
             {...register("cardNumber", { required: "Enter card number" })}
           />
@@ -365,7 +366,7 @@ function PaymentDetailsForm({ paymentInfo }: PaymentDetailsFormProps) {
             placeholder="MM/YY"
             className={inputStyles.replace(
               "flex items-center justify-between",
-              ""
+              "",
             )}
             {...register("expireDate", {
               required: "Required",
@@ -387,7 +388,7 @@ function PaymentDetailsForm({ paymentInfo }: PaymentDetailsFormProps) {
             placeholder="CVC"
             className={inputStyles.replace(
               "flex items-center justify-between",
-              ""
+              "",
             )}
             {...register("securityCode", { required: "Required" })}
           />
@@ -404,7 +405,7 @@ function PaymentDetailsForm({ paymentInfo }: PaymentDetailsFormProps) {
             placeholder="Cardholder name"
             className={inputStyles.replace(
               "flex items-center justify-between",
-              ""
+              "",
             )}
             {...register("nameOfCard", { required: "Required" })}
           />
@@ -418,7 +419,7 @@ function PaymentDetailsForm({ paymentInfo }: PaymentDetailsFormProps) {
             placeholder="E.g. United States"
             className={inputStyles.replace(
               "flex items-center justify-between",
-              ""
+              "",
             )}
             {...register("bollingCountry", { required: "Required" })}
           />

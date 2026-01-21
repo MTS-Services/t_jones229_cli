@@ -196,7 +196,7 @@ export default function Page() {
 
   return (
     <Container className="">
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-5 lg:mt-30 md:mt-28 mt-24 mt-20">
         <div className="col-span-1 order-1">
           <DetailsCarousel product={boatInfo?.photos} />
         </div>
@@ -210,7 +210,7 @@ export default function Page() {
             </p>
           </div>
 
-          <div className="border-y border-[#D9D9D9] mt-6 py-6">
+          <div className="border-y border-[#D9D9D9] mt-4 py-4">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-3 justify-between">
               <div className="flex items-center gap-4">
                 <Image
@@ -265,15 +265,15 @@ export default function Page() {
           </h1>
 
           <div className="w-full">
-            {boatInfo &&
-              boatInfo?.trips?.map((card: any) => (
-                <PricingCard
-                  key={card.id}
-                  tripInfo={card}
-                  boatId={id}
-                  image={boatInfo?.photos?.[0]?.url}
-                />
-              ))}
+            {boatInfo.trips.map((trip: any) => (
+              <PricingCard
+                key={trip.id}
+                tripInfo={trip}
+                boatId={id}
+                image={boatInfo?.photos?.[0]?.url}
+                // REMOVED boatInfo prop to fix TypeScript error
+              />
+            ))}
           </div>
         </div>
 
@@ -334,7 +334,7 @@ export default function Page() {
 
         {/* <div className="w-full space-y-4">
           {boatInfo?.trips?.map((card: any) => (
-            <PricingCard
+            <PricingCardCaptain
               key={card.id}
               tripInfo={card}
               boatId={id}
