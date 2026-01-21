@@ -9,11 +9,14 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
+  // Note: setSelectedCustomer and showModal are defined but not used in the JSX below.
+  // I kept them so your logic remains intact if you plan to add a modal later.
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
 
   const itemsPerPage = 10;
 
+  // Safely access captains array
   const captains = data?.captain || [];
   const totalPages = Math.ceil(captains.length / itemsPerPage);
 
@@ -25,16 +28,6 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleViewDetails = (customer: any) => {
-    setSelectedCustomer(customer);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedCustomer(null);
   };
 
   if (isLoading) {
@@ -65,9 +58,6 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
               <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
                 Trips
               </th>
-              <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
-                Action
-              </th>
             </tr>
           </thead>
 
@@ -75,33 +65,33 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
             {currentCaptains.length === 0 ? (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={4} // Adjusted to 4 to match your header columns
                   className="px-6 py-4 text-base text-gray-500 text-center bg-white"
                 >
                   No captains found
                 </td>
               </tr>
             ) : (
-              currentCaptains.map((captain: any) => (
+              currentCaptains.map((captain: any, index: number) => (
                 <tr
-                  key={captain.id}
+                  key={captain.id || index}
                   className="hover:bg-white transition bg-white/50"
                 >
                   <td className="px-6 py-4 text-base font-medium text-gray-900">
-                    {captain?.fullName}
+                    {captain?.fullName || "Unknown"}
                   </td>
 
                   <td className="px-6 py-4 text-base">
-                    <a
-                      href={
-                        captain.email?.includes("@")
-                          ? `mailto:${captain.email}`
-                          : `https://${captain.email}`
-                      }
-                      className="text-sm text-blue-600 hover:text-blue-800 underline"
-                    >
-                      {captain.email}
-                    </a>
+                    {captain.email ? (
+                      <a
+                        href={`mailto:${captain.email}`}
+                        className="text-sm text-blue-600 hover:text-blue-800 underline"
+                      >
+                        {captain.email}
+                      </a>
+                    ) : (
+                      <span className="text-sm text-gray-400">No Email</span>
+                    )}
                   </td>
 
                   <td className="px-6 py-4 text-base text-gray-700">
@@ -112,56 +102,47 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                     {captain.totalTrips ?? 0} trip
                     {captain.totalTrips !== 1 ? "s" : ""}
                   </td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => handleViewDetails(captain)}
-                      className="text-sm text-blue-600 hover:text-blue-800"
-                    >
-                      View Details
-                    </button>
-                  </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
 
-        <div className="">
-            {/* See All Button */}
-            <div className="flex justify-end my-4">
-              <button
-                onClick={() => router.push("/dashboard/all-captain")}
-                className="bg-orange-400 hover:bg-orange-500 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+        <div className="bg-white">
+          {/* See All Button */}
+          <div className="flex justify-end p-4">
+            <button
+              onClick={() => router.push("/dashboard/all-captain")}
+              className="bg-orange-400 hover:bg-orange-500 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+            >
+              See all
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                See all
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <div>
-              {captains.length > itemsPerPage && (
-                <div className="flex items-center justify-center pb-4 border-t border-gray-100 bg-white">
-                  <PaginationButton
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
-              )}
-            </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
           </div>
+
+          {/* Pagination Section */}
+          {captains.length > itemsPerPage && (
+            <div className="flex items-center justify-center pb-4 border-t border-gray-100">
+              <PaginationButton
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

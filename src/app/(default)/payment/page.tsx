@@ -343,7 +343,7 @@ export default function Page() {
   };
 
   return (
-    <div className="container mx-auto lg:mt-10 md:mt-8 mt-6">
+    <div className="container mx-auto lg:mt-30 md:mt-28 mt-24 mt-20 xl:px-6 lg:px-5 md:px-4 px-3">
       <ToastContainer />
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleUpdate)} className="my-10">

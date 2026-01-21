@@ -17,7 +17,8 @@ export default function AllCaptain() {
     page,
   });
 
-  const captains = data?.data?.data || [];
+  // Safe access to data
+  const captainsList = data?.data?.data?.captain || [];
   const totalPages = data?.data?.meta?.totalPage || 1;
 
   const handlePageChange = (newPage: number) => {
@@ -36,11 +37,10 @@ export default function AllCaptain() {
                 <TSkeleton key={i} />
               ))}
             </div>
-          ) : captains?.captain?.length === 0 ? (
+          ) : captainsList.length === 0 ? (
             <div className="p-6 text-gray-500">No captains found.</div>
           ) : (
             <>
-              {/* Added border-b border-gray-200 here to fix the last border issue */}
               <table className="min-w-full divide-y divide-gray-200 border-b border-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
@@ -53,16 +53,16 @@ export default function AllCaptain() {
                     <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
                       Phone
                     </th>
-                    <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                    <th className="px-6 py-3 text-center text-base font-semibold text-gray-700">
                       Trips
                     </th>
-                    <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                    <th className="px-6 py-3 text-right text-base font-semibold text-gray-700">
                       Action
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-100">
-                  {captains?.captain?.map((captain: any) => (
+                  {captainsList.map((captain: any) => (
                     <tr
                       key={captain.id}
                       className="hover:bg-gray-50 transition-colors"
@@ -75,13 +75,13 @@ export default function AllCaptain() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <a
                           href={
-                            captain.email.includes("@")
+                            captain?.email?.includes("@")
                               ? `mailto:${captain.email}`
-                              : `https://${captain.email}`
+                              : "#"
                           }
                           className="text-sm text-blue-600 hover:text-blue-800 underline"
                         >
-                          {captain.email}
+                          {captain?.email}
                         </a>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -89,19 +89,22 @@ export default function AllCaptain() {
                           {captain.phoneNumber || "N/A"}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 text-center whitespace-nowrap">
                         <div className="text-sm text-gray-900">
                           {captain.totalTrips ?? 0} trip
-                          {captain.totalTrips >= 2 ? "s" : ""}
+                          {(captain.totalTrips || 0) !== 1 ? "s" : ""}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 flex items-center justify-end text-end whitespace-nowrap">
                         <button
                           onClick={() =>
                             router.push(`/dashboard/all-captain/${captain.id}`)
                           }
-                          className={`flex flex-row items-center justify-center h-[28px] px-2 py-1 gap-1 rounded-[4px] text-white text-xs
-                            ${captain.status === "APPROVE" ? "bg-green-600" : "bg-[#FF9500]"}`}
+                          className={`flex flex-row items-center justify-center h-[28px] px-2 py-1 gap-1 rounded-[4px] text-white text-xs ${
+                            captain.status === "APPROVE"
+                              ? "bg-green-600"
+                              : "bg-[#FF9500]"
+                          }`}
                         >
                           {captain.status === "APPROVE"
                             ? "Approved"
@@ -113,7 +116,6 @@ export default function AllCaptain() {
                 </tbody>
               </table>
 
-              {/* Pagination Section */}
               <div className="flex items-center justify-center pb-4 bg-white">
                 <Pagination
                   currentPage={page}

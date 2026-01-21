@@ -9,12 +9,15 @@ import { useForm } from "react-hook-form";
 import { useCreateBookingMutation } from "@/redux/api/bookingApi";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "@/components/ui/Loader";
+import { useSelector } from "react-redux";
 
 export default function GroupBooking() {
   const [tripDate, setTripDate] = useState<string | null>(null);
   const [location, setLocation] = useState<string | null>(null);
   const [numberOfGuests, setNumberOfGuests] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const { user } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -40,10 +43,15 @@ export default function GroupBooking() {
 
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
 
-  const onSubmit = async (data: any) => {
-    // সাবমিট করা ডাটা কনসোলে দেখানোর জন্য
-    console.log("--- Input Form Data ---", data);
+const onSubmit = async (data: any) => {
+    if (!user) {
+      toast.warn("Please login to submit your details");
+      const returnUrl = "/group-charter?type=GROUP";
+      router.push(`/login?redirect=${encodeURIComponent(returnUrl)}`);
+      return;
+    }
 
+    // ১. এখানে আমরা অবজেক্টটি তৈরি করছি যা সার্ভারে পাঠানো হবে
     const groupBookingInfo = {
       where: location ?? "",
       date: tripDate ?? "",
@@ -60,19 +68,19 @@ export default function GroupBooking() {
       },
     };
 
-    console.log("--- Final Object to Server ---", groupBookingInfo);
+    // ২. কনসোলে ডেটা এবং এন্ডপয়েন্ট কল দেখার জন্য নিচের লাইনটি যোগ করুন
+    console.log("--- Sending Booking Request ---");
+    console.log("Payload:", groupBookingInfo);
 
     try {
       const res = await bookingFN(groupBookingInfo);
+      
+      // ৩. রেসপন্স দেখার জন্য
       console.log("--- Server Response ---", res);
 
       if (res?.data?.success) {
         toast.success(res?.data?.message || "Booking successful!");
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("date");
-          localStorage.removeItem("location");
-          localStorage.removeItem("Guests");
-        }
+        // ... বাকি কোড
         router.push("/group-confirmation");
       } else {
         toast.error(res?.data?.message || "Booking failed.");
@@ -96,7 +104,6 @@ export default function GroupBooking() {
       </div>
 
       <div className="container mx-auto flex flex-col gap-10 xl:px-4 lg:px-3 px-2 py-10">
-        {/* --- HOW IT WORKS SECTION --- */}
         <h2 className="text-xl md:text-4xl font-bold text-textSecondary mb-2">
           How it works:
         </h2>
@@ -108,21 +115,17 @@ export default function GroupBooking() {
               <li>
                 Confirm your contact information and add some details about the
                 type of fishing you would like to do i.e. Offshore/Inshore and
-                species you&apos;d like to target.
+                species you'd like to target.
               </li>
               <li>
-                Your information will be added to our database and we&apos;ll
-                team you up with other anglers looking to do the same type of
-                fishing as you, on your specified date(s).
+                Your information will be added to our database and we'll team
+                you up with other anglers looking to do the same type of fishing
+                as you, on your specified date(s).
               </li>
               <li>
-                We&apos;ll contact charter captains and guides in the area with
-                availability and pair you up for a trip.
-              </li>
-              <li>
-                An email will be sent to you with details of the proposed trip
-                with a payment link to confirm the booking. Payments will be
-                refunded if the trip does not go ahead.
+                5. An email will be sent to you with details of the proposed
+                trip with a payment link to confirm the booking. Payments will
+                be refunded if the trip does not go ahead.
               </li>
             </ol>
           </div>
@@ -138,7 +141,6 @@ export default function GroupBooking() {
             </div>
           </div>
         </div>
-        {/* --- END HOW IT WORKS SECTION --- */}
 
         <div className="bg-slate-50 rounded-lg p-5 md:p-8">
           <h2 className="text-xl md:text-3xl font-bold text-textSecondary mb-2">
@@ -290,8 +292,6 @@ export default function GroupBooking() {
                   </p>
                 )}
               </div>
-
-              {/* Target Species - Now Optional */}
               <div className="space-y-1">
                 <label className="text-base text-start font-medium text-[#171717] block mb-1">
                   Target Species
