@@ -37,7 +37,7 @@ export default function PaymentMap({ location }: PaymentMapProps) {
       iconRetinaUrl:
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
       iconUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
       shadowUrl:
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     });
@@ -45,12 +45,10 @@ export default function PaymentMap({ location }: PaymentMapProps) {
 
   // Get coordinates from location
   const getCoordinates = (): [number, number] => {
-    // If latitude/longitude provided, use them
     if (location?.latitude && location?.longitude) {
       return [location.latitude, location.longitude];
     }
 
-    // Try to match city name
     if (location?.city) {
       const cityLower = location.city.toLowerCase();
       for (const [city, coords] of Object.entries(cityCoordinates)) {
@@ -60,7 +58,6 @@ export default function PaymentMap({ location }: PaymentMapProps) {
       }
     }
 
-    // Default to Tampa (since that's in the screenshot)
     return [27.9506, -82.4572];
   };
 
@@ -76,8 +73,7 @@ export default function PaymentMap({ location }: PaymentMapProps) {
   const coordinates = getCoordinates();
 
   return (
-    <div className="w-full h-64">
-      {" "}
+    <div className="w-full h-64 relative isolate z-0">
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
@@ -85,6 +81,7 @@ export default function PaymentMap({ location }: PaymentMapProps) {
       <MapContainer
         center={coordinates}
         zoom={11}
+        className="h-full w-full !z-0"
         style={{ height: "100%", width: "100%" }}
         scrollWheelZoom={true}
         dragging={true}

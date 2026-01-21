@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js';
+import React, { useState, useEffect } from "react";
+import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import {
   Elements,
   CardNumberElement,
@@ -9,36 +9,36 @@ import {
   CardCvcElement,
   useStripe,
   useElements,
-} from '@stripe/react-stripe-js';
-import { CreditCard, Lock } from 'lucide-react';
-import Image from 'next/image';
-import visa from '@/assets/payment/visa.svg';
-import american from '@/assets/payment/american.svg';
-import apple from '@/assets/payment/apple.svg';
-import masteCard from '@/assets/payment/masteCard.svg';
-import mestero from '@/assets/payment/mestero.svg';
-import payPal from '@/assets/payment/payPal.svg';
+} from "@stripe/react-stripe-js";
+import { CreditCard, Lock } from "lucide-react";
+import Image from "next/image";
+import visa from "@/assets/payment/visa.svg";
+import american from "@/assets/payment/american.svg";
+import apple from "@/assets/payment/apple.svg";
+import masteCard from "@/assets/payment/masteCard.svg";
+import mestero from "@/assets/payment/mestero.svg";
+import payPal from "@/assets/payment/payPal.svg";
 
 // Initialize Stripe with the publishable key from environment
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
 );
 
 // Card element styles to match the existing form design
 const cardElementOptions = {
   style: {
     base: {
-      fontSize: '16px',
-      color: '#424770',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      '::placeholder': {
-        color: '#aab7c4',
+      fontSize: "16px",
+      color: "#424770",
+      fontFamily: "system-ui, -apple-system, sans-serif",
+      "::placeholder": {
+        color: "#aab7c4",
       },
-      padding: '12px',
+      padding: "12px",
     },
     invalid: {
-      color: '#9e2146',
-      iconColor: '#9e2146',
+      color: "#9e2146",
+      iconColor: "#9e2146",
     },
   },
 };
@@ -75,7 +75,8 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
   });
   const [cardError, setCardError] = useState<string | null>(null);
 
-  const isCardComplete = cardComplete.cardNumber && cardComplete.cardExpiry && cardComplete.cardCvc;
+  const isCardComplete =
+    cardComplete.cardNumber && cardComplete.cardExpiry && cardComplete.cardCvc;
 
   const handleCardChange = (elementType: string) => (event: any) => {
     setCardComplete((prev) => ({
@@ -93,12 +94,12 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
   useEffect(() => {
     const handleCreatePayment = async () => {
       if (!stripe || !elements) {
-        onError('Stripe not loaded');
+        onError("Stripe not loaded");
         return;
       }
 
       if (!isCardComplete) {
-        onError('Please complete all card fields');
+        onError("Please complete all card fields");
         return;
       }
 
@@ -107,11 +108,11 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
       try {
         const cardNumberElement = elements.getElement(CardNumberElement);
         if (!cardNumberElement) {
-          throw new Error('Card element not found');
+          throw new Error("Card element not found");
         }
 
         const { error, paymentMethod } = await stripe.createPaymentMethod({
-          type: 'card',
+          type: "card",
           card: cardNumberElement,
           billing_details: {
             name: billingDetails.name,
@@ -126,22 +127,33 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
         }
 
         if (paymentMethod) {
-          console.log('✅ Payment method created:', paymentMethod.id);
+          console.log("✅ Payment method created:", paymentMethod.id);
           onPaymentMethodCreated(paymentMethod.id);
         }
       } catch (err: any) {
-        console.error('❌ Payment method creation failed:', err);
-        onError(err.message || 'Failed to create payment method');
+        console.error("❌ Payment method creation failed:", err);
+        onError(err.message || "Failed to create payment method");
         setIsProcessing(false);
       }
     };
 
     // Listen for custom event to trigger payment method creation
-    window.addEventListener('createStripePaymentMethod', handleCreatePayment);
+    window.addEventListener("createStripePaymentMethod", handleCreatePayment);
     return () => {
-      window.removeEventListener('createStripePaymentMethod', handleCreatePayment);
+      window.removeEventListener(
+        "createStripePaymentMethod",
+        handleCreatePayment,
+      );
     };
-  }, [stripe, elements, isCardComplete, billingDetails, onPaymentMethodCreated, onError, setIsProcessing]);
+  }, [
+    stripe,
+    elements,
+    isCardComplete,
+    billingDetails,
+    onPaymentMethodCreated,
+    onError,
+    setIsProcessing,
+  ]);
 
   return (
     <div className="space-y-4">
@@ -151,7 +163,7 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
         <div className="border border-[#E0E0E0] rounded-md px-4 py-3 bg-white focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
           <CardNumberElement
             options={cardElementOptions}
-            onChange={handleCardChange('cardNumber')}
+            onChange={handleCardChange("cardNumber")}
           />
         </div>
       </div>
@@ -159,20 +171,24 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
       {/* Expiry and CVC */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-base font-bold mb-2">Expiration Date</label>
+          <label className="block text-base font-bold mb-2">
+            Expiration Date
+          </label>
           <div className="border border-[#E0E0E0] rounded-md px-4 py-3 bg-white focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
             <CardExpiryElement
               options={cardElementOptions}
-              onChange={handleCardChange('cardExpiry')}
+              onChange={handleCardChange("cardExpiry")}
             />
           </div>
         </div>
         <div>
-          <label className="block text-base font-bold mb-2">Security Code (CVC)</label>
+          <label className="block text-base font-bold mb-2">
+            Security Code (CVC)
+          </label>
           <div className="border border-[#E0E0E0] rounded-md px-4 py-3 bg-white focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
             <CardCvcElement
               options={cardElementOptions}
-              onChange={handleCardChange('cardCvc')}
+              onChange={handleCardChange("cardCvc")}
             />
           </div>
         </div>
@@ -214,42 +230,13 @@ const StripePaymentForm: React.FC<StripePaymentFormProps> = (props) => {
   const elementsOptions: StripeElementsOptions = {
     fonts: [
       {
-        cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap',
+        cssSrc:
+          "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap",
       },
     ],
   };
 
-  return (
-    <div className="mb-5">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-green-50 rounded-lg">
-            <CreditCard className="w-6 h-6 text-green-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              Payment Information
-            </h3>
-            <p className="text-gray-500 text-sm">
-              Securely add your payment method for booking
-            </p>
-          </div>
-        </div>
-
-        <div className="flex justify-start md:justify-end gap-2 mt-4 md:mt-0">
-          {[american, apple, mestero, masteCard, payPal, visa].map((src, i) => (
-            <Image key={i} src={src} alt="payment" className="h-6" />
-          ))}
-        </div>
-      </div>
-
-      {/* Stripe Elements Form */}
-      <Elements stripe={stripePromise} options={elementsOptions}>
-        <StripeCardForm {...props} />
-      </Elements>
-    </div>
-  );
+  return <div className="mb-5">{/* Header */}</div>;
 };
 
 export default StripePaymentForm;

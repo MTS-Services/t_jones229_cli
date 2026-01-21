@@ -196,7 +196,7 @@ export default function Page() {
 
   return (
     <Container className="">
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-5 lg:mt-30 md:mt-28 mt-24 mt-20">
         <div className="col-span-1 order-1">
           <DetailsCarousel product={boatInfo?.photos} />
         </div>

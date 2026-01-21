@@ -43,17 +43,15 @@ export default function GroupBooking() {
 
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
 
-  const onSubmit = async (data: any) => {
+const onSubmit = async (data: any) => {
     if (!user) {
       toast.warn("Please login to submit your details");
-
       const returnUrl = "/group-charter?type=GROUP";
       router.push(`/login?redirect=${encodeURIComponent(returnUrl)}`);
       return;
     }
 
-    console.log("--- Input Form Data ---", data);
-
+    // ১. এখানে আমরা অবজেক্টটি তৈরি করছি যা সার্ভারে পাঠানো হবে
     const groupBookingInfo = {
       where: location ?? "",
       date: tripDate ?? "",
@@ -70,15 +68,19 @@ export default function GroupBooking() {
       },
     };
 
+    // ২. কনসোলে ডেটা এবং এন্ডপয়েন্ট কল দেখার জন্য নিচের লাইনটি যোগ করুন
+    console.log("--- Sending Booking Request ---");
+    console.log("Payload:", groupBookingInfo);
+
     try {
       const res = await bookingFN(groupBookingInfo);
+      
+      // ৩. রেসপন্স দেখার জন্য
+      console.log("--- Server Response ---", res);
+
       if (res?.data?.success) {
         toast.success(res?.data?.message || "Booking successful!");
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("date");
-          localStorage.removeItem("location");
-          localStorage.removeItem("Guests");
-        }
+        // ... বাকি কোড
         router.push("/group-confirmation");
       } else {
         toast.error(res?.data?.message || "Booking failed.");

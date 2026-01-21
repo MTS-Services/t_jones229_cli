@@ -12,6 +12,7 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
+  const [waitlistStatus, setWaitlistStatus] = useState<string>("none");
 
   const itemsPerPage = 10;
 
@@ -29,21 +30,26 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
 
   const handleViewDetails = (customer: any) => {
     setSelectedCustomer(customer);
+    setWaitlistStatus(customer?.waitlistStatus || "none");
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedCustomer(null);
+    setWaitlistStatus("none");
   };
 
-  // Helper functions for the buttons in the modal
-  const handleEditCustomer = (customer: any) => {
-    console.log("Edit customer:", customer);
-  };
-
-  const handleSendMessage = (customer: any) => {
-    console.log("Send message to:", customer);
+  const handleWaitlistToggle = () => {
+    if (waitlistStatus === "none" || waitlistStatus === "pending") {
+      setWaitlistStatus("active");
+      console.log("User added to active waitlist:", selectedCustomer);
+      // API call here: updateUserWaitlistStatus(selectedCustomer.id, "active")
+    } else {
+      setWaitlistStatus("pending");
+      console.log("User moved to pending waitlist:", selectedCustomer);
+      // API call here: updateUserWaitlistStatus(selectedCustomer.id, "pending")
+    }
   };
 
   if (isLoading) {
@@ -283,11 +289,30 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
                       <h4 className="font-semibold text-gray-900">
                         System Status
                       </h4>
-                      <div className="mt-2 flex items-center">
-                        <span className="flex h-3 w-3 rounded-full bg-green-500 mr-2"></span>
-                        <p className="text-sm font-medium text-gray-700">
-                          Account Verified & Active
-                        </p>
+                      <div className="mt-2 space-y-2">
+                        <div className="flex items-center">
+                          <span className="flex h-3 w-3 rounded-full bg-green-500 mr-2"></span>
+                          <p className="text-sm font-medium text-gray-700">
+                            Account Verified & Active
+                          </p>
+                        </div>
+                        <div className="flex items-center">
+                          <span
+                            className={`flex h-3 w-3 rounded-full mr-2 ${
+                              waitlistStatus === "active"
+                                ? "bg-green-500"
+                                : waitlistStatus === "pending"
+                                  ? "bg-yellow-500"
+                                  : "bg-gray-300"
+                            }`}
+                          ></span>
+                          <p className="text-sm font-medium text-gray-700">
+                            Waitlist Status:{" "}
+                            <span className="capitalize font-semibold">
+                              {waitlistStatus}
+                            </span>
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -318,20 +343,71 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
               </div>
             </div>
 
-            {/* Footer Actions */}
-            <div className="p-4 bg-gray-50 border-t flex flex-col gap-2 sm:flex-row sm:justify-end">
-              <button
-                onClick={() => handleSendMessage(selectedCustomer)}
-                className="px-4 py-2 text-blue-600 font-medium hover:bg-blue-50 rounded-lg transition"
-              >
-                Send Message
-              </button>
-              <button
-                onClick={() => handleEditCustomer(selectedCustomer)}
-                className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 shadow-md transition"
-              >
-                Edit Profile
-              </button>
+            <div className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 border-t flex justify-center">
+              <div className="w-full max-w-md">
+                <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                      Waitlist Management
+                    </h4>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                        waitlistStatus === "active"
+                          ? "bg-green-100 text-green-700"
+                          : waitlistStatus === "pending"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {waitlistStatus}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleWaitlistToggle}
+                    className={`w-full py-3 px-6 font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-2 ${
+                      waitlistStatus === "active"
+                        ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600"
+                        : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600"
+                    }`}
+                  >
+                    {waitlistStatus === "active" ? (
+                      <>
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        Move to Pending
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        Activate Waitlist
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
