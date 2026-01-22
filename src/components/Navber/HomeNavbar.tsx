@@ -76,17 +76,14 @@ export default function HomeNavbar() {
         className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 bg-white xl:pb-4 lg:pb-3 md:pb-2`}
       >
         <nav className="container mx-auto xl:px-4 lg:px-3 px-2 lg:py-2 pt-1 pb-2 flex items-center justify-between">
-          <Link
-            href="/"
-            className="w-12 h-12 md:w-16 md:h-16 xl:w-20 xl:h-20"
-          >
+          <Link href="/" className="w-12 h-12 md:w-16 md:h-16 xl:w-20 xl:h-20">
             <Image
-            src={logo2}
-            alt="Logo"
-            height={70}
-            width={70}
-            className="object-contain"
-          />
+              src={logo2}
+              alt="Logo"
+              height={70}
+              width={70}
+              className="object-contain"
+            />
           </Link>
 
           <div className="hidden lg:flex gap-4 items-center">
@@ -190,8 +187,8 @@ export default function HomeNavbar() {
         <div
           className={`container mx-auto px-4 transition-all duration-500 ease-in-out ${
             scrolled && !isSearchActive
-              ? "xl:-mt-[76px] lg:-mt-16 md:-mt-[63px] -mt-[75px] scale-90 opacity-100 max-w-2xl"
-              : "xl:-mb-10 lg:-mb-16 md:-mb-[60px] -mb-[50px] scale-100 opacity-100"
+              ? "xl:-mt-[76px] lg:-mt-16 md:-mt-[63px] -mt-[55px] scale-90 opacity-100 max-w-2xl"
+              : "xl:-mb-10 lg:-mb-16 md:-mb-[60px] -mb-[55px] scale-100 opacity-100"
           }`}
         >
           <SearchBar
@@ -248,7 +245,7 @@ export default function HomeNavbar() {
         </div>
       </header>
 
-      <div className="h-[100px] md:h-[115px] lg:h-[120px] xl:h-[135px]"></div>
+      <div className="h-[105px] md:h-[115px] lg:h-[120px] xl:h-[135px]"></div>
     </>
   );
 }
