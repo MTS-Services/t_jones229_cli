@@ -28,17 +28,17 @@ export default function BookingSection() {
 
   const onSubmit = async (data: any) => {
     console.log("Form data submitted:", data);
-    
+
     const tripDate =
       typeof window !== "undefined" ? localStorage.getItem("date") : null;
     const numberOfGuests =
       typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
-    
+
     try {
       const groupBookingInfo = {
         boatId: boatID || null,
-        tripId: tripId || null, 
-        tripDate: tripDate || new Date().toISOString().split('T')[0],
+        tripId: tripId || null,
+        tripDate: tripDate || new Date().toISOString().split("T")[0],
         amount: "full",
         bookingType: false, // false = GROUP booking
         groupSize: parseInt(numberOfGuests ?? "1", 10),
@@ -49,14 +49,17 @@ export default function BookingSection() {
           phoneNumber: data?.phoneNumber || "",
           fishingType: data?.fishingType || "Offshore",
           targetSpecies: data?.targetSpecies || "",
-          details: data?.details || ""
+          details: data?.details || "",
         },
-        where: typeof window !== "undefined" ? localStorage.getItem("location") : null,
-        date: tripDate
+        where:
+          typeof window !== "undefined"
+            ? localStorage.getItem("location")
+            : null,
+        date: tripDate,
       };
 
       console.log("Sending group booking info:", groupBookingInfo);
-      
+
       const res = await bookingFN(groupBookingInfo);
       console.log("Booking response:", res);
 
@@ -70,7 +73,18 @@ export default function BookingSection() {
         router.push("/group-confirmation");
       } else if (res?.error) {
         // Handle RTK Query error structure
-        const errorMessage = res.error?.data?.message || res.error?.message || "Booking failed. Please try again.";
+        let errorMessage = "Booking failed. Please try again.";
+
+        if (
+          "data" in res.error &&
+          typeof res.error.data === "object" &&
+          res.error.data !== null
+        ) {
+          errorMessage = (res.error.data as any)?.message || errorMessage;
+        } else if ("message" in res.error) {
+          errorMessage = res.error.message || errorMessage;
+        }
+
         console.error("Booking error:", res.error);
         toast.error(errorMessage);
       } else {

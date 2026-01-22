@@ -4,7 +4,7 @@ import ReUseAbleBanner from "../common/ReUseAbleBanner";
 
 export default function BoatListHero() {
   return (
-    <div className="!max-w-7xl mx-auto !rounded-2xl my-16">
+    <div className="!container mx-auto xl:px-6 lg:px-5 md:px-4 px-3 lg:my-24 md:my-20 my-16 !rounded-2xl">
       <ReUseAbleBanner
         title="List your business on FishingTripper – Connect with anglers from around the world."
         description="Join thousands of charter captains and guides connecting with anglers worldwide."
