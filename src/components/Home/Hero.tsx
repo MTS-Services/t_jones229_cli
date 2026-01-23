@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Button from "../ReUsible/Button";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const content = [
@@ -16,23 +14,11 @@ const content = [
 export default function Hero() {
   const [index] = useState(0);
   const router = useRouter();
-
-  const isLoggedIn = false;
-
-  const handleNavigation = () => {
-    const targetPath = "/dashboard/check-your-trip";
-
-    if (isLoggedIn) {
-      router.push(targetPath);
-    } else {
-      router.push(`/login?redirect=${encodeURIComponent(targetPath)}`);
-    }
-  };
-
   const item = content[index];
 
   return (
-    <div className="relative w-full h-[700px] overflow-hidden bg-black">
+    /* FIXED: Adjusted height for mobile (h-[500px]) vs desktop (md:h-[700px]) */
+    <div className="relative w-full h-[500px] md:h-[700px] lg:h-[800px] overflow-hidden bg-black">
       {/* Background Video */}
       <video
         src="/intro/introVideo.mp4"
@@ -41,21 +27,22 @@ export default function Hero() {
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-contain md:object-cover"
+        /* FIXED: Changed to object-cover so it fills the screen on mobile without black bars */
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/50 z-10" />
 
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-8 z-20">
+      <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 md:px-8 z-20">
         {/* Heading */}
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight max-w-4xl mx-auto text-white">
-          <span className={``}>{item.line1}</span>
+        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight max-w-4xl mx-auto text-white">
+          {item.line1}
         </h1>
 
         {/* Description */}
-        <p className="max-w-xl text-white text-base md:text-lg mb-10 font-light leading-relaxed">
+        <p className="max-w-md md:max-w-xl text-white text-sm sm:text-base md:text-lg mb-8 font-light leading-relaxed">
           {item.desc}
         </p>
       </div>

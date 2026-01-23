@@ -5,7 +5,7 @@ import ExperienceCard from "./ExperienceCard";
 export default function Experience() {
   return (
     <div className="bg-[#0f5d9e]">
-      <div className="px-5 lg:px-28 py-16">
+      <div className="px-5 lg:px-28 py-16 container mx-auto xl:px-6 lg:px-5 md:px-4 px-3">
         <div className="container mx-auto text-center">
           <p className="text-base font-bold text-white">
             WHY CHOOSE FISHING TRIPPER?

@@ -4,6 +4,7 @@ import React from "react";
 import Button from "../ReUsible/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface BannerProps {
   title?: string;
@@ -12,6 +13,8 @@ interface BannerProps {
   buttonTitle?: string;
   boardImage?: string;
   backgroundImage?: string;
+  backgroundImageClassName?: string;
+  className?: string;
 }
 
 const ReUseAbleBanner: React.FC<BannerProps> = ({
@@ -21,6 +24,8 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
   button,
   boardImage,
   buttonTitle,
+  backgroundImageClassName,
+  className,
 }) => {
   const router = useRouter();
 
@@ -41,13 +46,15 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
 
   return (
     <section
-      className="relative flex items-center justify-center bg-cover bg-center bg-no-repeat h-[500px] w-full"
+      className={`${backgroundImageClassName} relative flex items-center justify-center bg-cover bg-center bg-no-repeat h-[500px] w-full ${backgroundImageClassName} `}
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
         backgroundColor: "#000",
       }}
     >
-      <div className="absolute inset-0 bg-black/20" />
+      <div
+        className={`absolute inset-0 bg-black/30 rounded-2xl ${className}`}
+      />
 
       <div className="relative z-10 container mx-auto flex flex-col gap-6 items-center text-center text-white px-5 lg:px-[135px]">
         <h1 className="text-3xl md:text-4xl lg:text-[50px] font-bold leading-tight">
@@ -58,22 +65,23 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
         </p>
 
         {button && (
-          <Button
-            onClick={handleNavigation} // Use onClick instead of 'link' prop
-            variant="primary"
-            className="flex items-center font-satoshi rounded-[14px] text-base font-bold md:mt-3 mt-2 gap-2"
-          >
-            {boardImage && (
-              <Image
-                className="h-3 md:h-6 w-3 md:w-6"
-                src={boardImage}
-                alt="icon"
-                width={24}
-                height={24}
-              />
-            )}
-            {buttonTitle}
-          </Button>
+          <Link href={"/boat-list"}>
+            <Button
+              variant="primary"
+              className="flex items-center font-satoshi rounded-[14px] text-base font-bold md:mt-3 mt-2 gap-2"
+            >
+              {boardImage && (
+                <Image
+                  className="h-3 md:h-6 w-3 md:w-6"
+                  src={boardImage}
+                  alt="icon"
+                  width={24}
+                  height={24}
+                />
+              )}
+              {buttonTitle}
+            </Button>
+          </Link>
         )}
       </div>
     </section>

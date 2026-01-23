@@ -43,12 +43,8 @@ export default function GroupBooking() {
 
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
 
-const onSubmit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log("=== Form submission started ===");
-    console.log("Raw form data:", data);
-    console.log("User state:", user);
-    console.log("URL params - boatID:", boatID, "tripId:", tripId);
-    console.log("localStorage - location:", location, "tripDate:", tripDate, "numberOfGuests:", numberOfGuests);
 
     if (!user) {
       toast.warn("Please login to submit your details");
@@ -58,26 +54,22 @@ const onSubmit = async (data: any) => {
     }
 
     // Validate required fields
-    console.log("Form data received:", data);
-    if (!data.firstName?.trim() || !data.lastName?.trim() || !data.email?.trim() || !data.phoneNumber?.trim()) {
+    if (
+      !data.firstName?.trim() ||
+      !data.lastName?.trim() ||
+      !data.email?.trim() ||
+      !data.phoneNumber?.trim()
+    ) {
       toast.error("Please fill in all required fields");
-      console.log("Validation failed:", {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phoneNumber: data.phoneNumber
-      });
       return;
     }
 
-    // Create the payload for group booking inquiry
     const groupBookingInfo = {
-      // For group booking inquiries without specific boat/trip
       boatId: boatID || null,
       tripId: tripId || null,
-      tripDate: tripDate || new Date().toISOString().split('T')[0],
+      tripDate: tripDate || new Date().toISOString().split("T")[0],
       amount: "full",
-      bookingType: false, // false = GROUP booking
+      bookingType: false,
       groupSize: parseInt(numberOfGuests ?? "1", 10) || 1,
       memberInfo: {
         firstName: data.firstName?.trim() || "",
@@ -86,24 +78,21 @@ const onSubmit = async (data: any) => {
         phoneNumber: data.phoneNumber?.trim() || "",
         fishingType: data.fishingType || null,
         targetSpecies: data.targetSpecies?.trim() || null,
-        details: data.details?.trim() || `Group charter inquiry for ${location || "unspecified location"} on ${tripDate || "flexible date"}`
+        details:
+          data.details?.trim() ||
+          `Group charter inquiry for ${location || "unspecified location"} on ${tripDate || "flexible date"}`,
       },
       where: location || "Location not specified",
-      date: tripDate || new Date().toISOString().split('T')[0]
+      date: tripDate || new Date().toISOString().split("T")[0],
     };
 
-    // ২. কনসোলে ডেটা এবং এন্ডপয়েন্ট কল দেখার জন্য নিচের লাইনটি যোগ করুন
-    console.log("--- Sending Booking Request ---");
-    console.log("Payload:", groupBookingInfo);
-
     try {
-      const res = await bookingFN(groupBookingInfo);
-      
-      // ৩. রেসপন্স দেখার জন্য
-      console.log("--- Server Response ---", res);
+      const res: any = await bookingFN(groupBookingInfo);
 
       if (res?.data?.success) {
-        toast.success(res?.data?.message || "Group booking inquiry submitted successfully!");
+        toast.success(
+          res?.data?.message || "Group booking inquiry submitted successfully!",
+        );
         if (typeof window !== "undefined") {
           localStorage.removeItem("date");
           localStorage.removeItem("location");
@@ -111,7 +100,13 @@ const onSubmit = async (data: any) => {
         }
         router.push("/group-confirmation");
       } else if (res?.error) {
-        const errorMessage = res.error?.data?.message || res.error?.message || "Booking submission failed";
+        // FIXED: Using type casting to access .data.message without TS errors
+        const errorData = res.error as any;
+        const errorMessage =
+          errorData?.data?.message ||
+          errorData?.message ||
+          "Booking submission failed";
+
         console.error("Booking error:", res.error);
         toast.error(errorMessage);
       } else {
@@ -126,7 +121,7 @@ const onSubmit = async (data: any) => {
   return (
     <div className="mt-20">
       <ToastContainer />
-      <div className="bg-[#F5F5F5] pt-[41px] pb-[31px]">
+      <div className="pt-[35px] pb-[10px]">
         <div className="container mx-auto xl:px-4 lg:px-3 px-2">
           <h1 className="text-xl md:text-2xl font-bold text-[#242424] leading-9">
             {location ?? "Location not set"} / {tripDate ?? "Date not set"} /{" "}
@@ -182,13 +177,6 @@ const onSubmit = async (data: any) => {
             We will take your contact details, and reach out to captains in the
             area...
           </p>
-
-          <div className="">
-            <h1 className="text-lg md:text-xl font-bold text-[#242424] leading-9">
-              {location ?? "Location not set"} / {tripDate ?? "Date not set"} /{" "}
-              {numberOfGuests ?? "Guests not set"} people
-            </h1>
-          </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-8">
             <div className="grid md:grid-cols-2 gap-4">
@@ -296,7 +284,8 @@ const onSubmit = async (data: any) => {
                     onFocus={() => setIsDropdownOpen(true)}
                     onBlur={() => setIsDropdownOpen(false)}
                     onChange={(e) => {
-                      register("fishingType").onChange(e);
+                      const onChangeHandler = register("fishingType").onChange;
+                      onChangeHandler(e);
                       setIsDropdownOpen(false);
                       trigger("fishingType");
                     }}
@@ -318,11 +307,6 @@ const onSubmit = async (data: any) => {
                     <IoIosArrowDown className="text-gray-500" size={18} />
                   </div>
                 </div>
-                {errors.fishingType && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.fishingType.message as string}
-                  </p>
-                )}
               </div>
               <div className="space-y-1">
                 <label className="text-base text-start font-medium text-[#171717] block mb-1">
