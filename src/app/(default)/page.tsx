@@ -26,7 +26,7 @@ const SearchDestinations = dynamic(
   () => import("@/components/Home/SearchDestinations"),
   {
     ssr: false,
-  }
+  },
 );
 
 const Experience = dynamic(() => import("@/components/Home/Experience"), {
@@ -47,10 +47,10 @@ export default function Home() {
       <WellComeVideo />
       <SearchDestinations />
       <Experience />
-      <FeaturesCard />
+      {/* <FeaturesCard /> */}
       <BoatListHero />
-      <StepsSection />
-      <BoatLintFaq />
+      {/* <StepsSection /> */}
+      {/* <BoatLintFaq /> */}
       {/* <TopCharters /> */}
     </div>
   );

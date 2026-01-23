@@ -10,7 +10,10 @@ export default function page() {
   return (
     <div>
       <ListYourBoat />
+      <FeaturesCard />
+      <StepsSection />
       <CaptainsInfoPage />
+      <BoatLintFaq />
     </div>
   );
 }
