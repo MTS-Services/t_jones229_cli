@@ -27,42 +27,71 @@ export default function BookingSection() {
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
 
   const onSubmit = async (data: any) => {
+    console.log("Form data submitted:", data);
+
     const tripDate =
       typeof window !== "undefined" ? localStorage.getItem("date") : null;
     const numberOfGuests =
       typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
+
     try {
       const groupBookingInfo = {
-        boatId: boatID ?? "",
-        tripId: tripId ?? "",
-        tripDate: tripDate ?? "",
-        amount: "full", // fixed
+        boatId: boatID || null,
+        tripId: tripId || null,
+        tripDate: tripDate || new Date().toISOString().split("T")[0],
+        amount: "full",
         bookingType: false, // false = GROUP booking
-        groupSize: parseInt(numberOfGuests ?? "0", 10),
+        groupSize: parseInt(numberOfGuests ?? "1", 10),
         memberInfo: {
-          firstName: data?.firstName,
-          lastName: data?.lastName,
-          email: data?.email,
-          phoneNumber: data?.phoneNumber,
+          firstName: data?.firstName || "",
+          lastName: data?.lastName || "",
+          email: data?.email || "",
+          phoneNumber: data?.phoneNumber || "",
+          fishingType: data?.fishingType || "Offshore",
+          targetSpecies: data?.targetSpecies || "",
+          details: data?.details || "",
         },
+        where:
+          typeof window !== "undefined"
+            ? localStorage.getItem("location")
+            : null,
+        date: tripDate,
       };
 
+      console.log("Sending group booking info:", groupBookingInfo);
+
       const res = await bookingFN(groupBookingInfo);
+      console.log("Booking response:", res);
 
       if (res?.data?.success) {
         toast.success(res?.data?.message || "Booking successful!");
         if (typeof window !== "undefined") {
           localStorage.removeItem("numberOfGuests");
-          localStorage.removeItem("numberOfGuests");
+          localStorage.removeItem("Guests");
+          localStorage.removeItem("date");
         }
         router.push("/group-confirmation");
+      } else if (res?.error) {
+        // Handle RTK Query error structure
+        let errorMessage = "Booking failed. Please try again.";
+
+        if (
+          "data" in res.error &&
+          typeof res.error.data === "object" &&
+          res.error.data !== null
+        ) {
+          errorMessage = (res.error.data as any)?.message || errorMessage;
+        } else if ("message" in res.error) {
+          errorMessage = res.error.message || errorMessage;
+        }
+
+        console.error("Booking error:", res.error);
+        toast.error(errorMessage);
       } else {
-        // Show error toast if success is false
-        toast.error(res?.data?.message || "Booking failed. Please try again.");
+        toast.error("Booking failed. Please try again.");
       }
     } catch (error) {
-      // Handle network or unexpected errors
-      console.error(error);
+      console.error("Network error:", error);
       toast.error("Something went wrong. Please try again later.");
     }
   };
@@ -192,6 +221,75 @@ export default function BookingSection() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
+              {/* Fishing Type */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="fishingType"
+                  className="text-base text-start font-bold text-[#171717] block mb-1"
+                >
+                  Fishing type*
+                </label>
+                <select
+                  id="fishingType"
+                  {...register("fishingType", {
+                    required: "Fishing type is required",
+                  })}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400
+              ${
+                errors.fishingType
+                  ? "border-red-500"
+                  : "border-gray-300 text-[#9E9E9E]"
+              }`}
+                >
+                  <option value="">Select fishing type</option>
+                  <option value="Offshore">Offshore</option>
+                  <option value="Inshore">Inshore</option>
+                  <option value="Nearshore">Nearshore</option>
+                  <option value="Freshwater">Freshwater</option>
+                </select>
+                {errors.fishingType && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.fishingType.message as string}
+                  </p>
+                )}
+              </div>
+
+              {/* Target Species */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="targetSpecies"
+                  className="text-base text-start font-bold text-[#171717] block mb-1"
+                >
+                  Target Species
+                </label>
+                <input
+                  id="targetSpecies"
+                  type="text"
+                  placeholder="e.g., Redfish, Grouper, etc."
+                  {...register("targetSpecies")}
+                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-[#9E9E9E]"
+                />
+              </div>
+            </div>
+
+            {/* Details */}
+            <div className="space-y-2">
+              <label
+                htmlFor="details"
+                className="text-base text-start font-bold text-[#171717] block mb-1"
+              >
+                Details
+              </label>
+              <textarea
+                id="details"
+                placeholder="Any additional details about your fishing preferences"
+                {...register("details")}
+                rows={3}
+                className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-[#9E9E9E] resize-none"
+              />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
               {/* Email */}
               <div className="space-y-2">
                 <label
@@ -238,7 +336,7 @@ export default function BookingSection() {
                   type="tel"
                   placeholder="Enter your phone number"
                   {...register("phoneNumber", {
-                    required: "phone number is required",
+                    required: "Phone number is required",
                   })}
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400
               ${
