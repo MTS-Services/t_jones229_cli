@@ -260,7 +260,7 @@ const PaymentDetailsSkeleton = () => (
       ))}
     </div>
 
-    <Divider className="my-8" />
+    <div className="my-8 border-t border-gray-200" />
 
     <div className="space-y-6">
       <div className="flex items-center gap-3">
