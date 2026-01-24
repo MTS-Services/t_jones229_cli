@@ -142,7 +142,38 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
         });
 
         if (error) {
-          throw new Error(error.message);
+          // Handle specific Stripe error types
+          let errorMessage = error.message;
+          
+          // Map Stripe error codes to user-friendly messages
+          switch (error.code) {
+            case 'card_declined':
+              errorMessage = "Your card was declined. Please check your card details or try a different card.";
+              break;
+            case 'insufficient_funds':
+              errorMessage = "Your card has insufficient funds. Please use a different card or add funds to your account.";
+              break;
+            case 'expired_card':
+              errorMessage = "Your card has expired. Please use a different card.";
+              break;
+            case 'incorrect_cvc':
+              errorMessage = "The security code (CVC) is incorrect. Please check and try again.";
+              break;
+            case 'incorrect_number':
+              errorMessage = "The card number is incorrect. Please check and try again.";
+              break;
+            case 'invalid_expiry_year':
+            case 'invalid_expiry_month':
+              errorMessage = "The expiration date is invalid. Please check and try again.";
+              break;
+            case 'processing_error':
+              errorMessage = "An error occurred while processing your card. Please try again.";
+              break;
+            default:
+              errorMessage = error.message || "Payment processing failed. Please try again.";
+          }
+          
+          throw new Error(errorMessage);
         }
 
         if (paymentMethod) {
