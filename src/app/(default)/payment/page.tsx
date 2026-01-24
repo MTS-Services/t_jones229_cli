@@ -109,6 +109,7 @@ export default function Page() {
   const [selectedPayment, setSelectedPayment] = useState("full");
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentMethodId, setPaymentMethodId] = useState<string | null>(null);
+  const [isCardComplete, setIsCardComplete] = useState(false);
 
   // ✅ Store localStorage values safely in state
   const [tripDate, setTripDate] = useState<string | null>(null);
@@ -348,17 +349,17 @@ export default function Page() {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleUpdate)} className="my-10">
           <div className="flex flex-col lg:flex-row gap-5 items-start mx-2">
-            <div className="flex-1">
+            <div className="flex-1 w-full">
               <PaymentDetails />
 
               {/* Stripe Payment Form */}
-              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <Divider className="my-8" />
+              <div className="w-full mt-8">
                 <StripePaymentForm
                   onPaymentMethodCreated={handlePaymentMethodCreated}
                   onError={handlePaymentError}
                   isProcessing={isProcessingPayment}
                   setIsProcessing={setIsProcessingPayment}
+                  onCardComplete={setIsCardComplete}
                   billingDetails={billingDetails}
                 />
               </div>
@@ -372,6 +373,7 @@ export default function Page() {
                 isLoading={isLoading || isProcessingPayment}
                 setSelectedPayment={setSelectedPayment}
                 selectedPayment={selectedPayment}
+                isCardComplete={isCardComplete}
               />
             </div>
           </div>
