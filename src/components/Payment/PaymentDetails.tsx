@@ -1,13 +1,11 @@
 "use client";
 
 import { useGetMeQuery } from "@/redux/api/authApi";
-import { Divider, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import { useFormContext } from "react-hook-form";
-import PaymentDetailsForm from "../dashboard/userDashboard/PaymentDetailsForm";
 import { usePathname } from "next/navigation";
-import { User, CreditCard } from "lucide-react";
+import { User } from "lucide-react";
 import { useEffect } from "react";
-import { Separator } from "../ui/separator";
 
 export default function PaymentDetails() {
   const {
@@ -187,12 +185,6 @@ export default function PaymentDetails() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Payment Information Section */}
-      <Divider className="my-10" />
-      <section className="">
-        <PaymentDetailsForm paymentInfo={userInfo?.data?.paymentMethod} />
       </section>
     </div>
   );

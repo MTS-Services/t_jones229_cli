@@ -120,6 +120,22 @@ export default function MultiStepFormContent() {
     }
   }, [formData, imageUrl]);
 
+  // Listen for payment method creation success
+  useEffect(() => {
+    const handlePaymentMethodReady = () => {
+      // Re-submit the form after payment method is created
+      const currentData = getValues();
+      if (currentData.paymentMethodId) {
+        handleSubmit(submitFinalForm)(currentData);
+      }
+    };
+
+    window.addEventListener("paymentMethodCreated", handlePaymentMethodReady);
+    return () => {
+      window.removeEventListener("paymentMethodCreated", handlePaymentMethodReady);
+    };
+  }, [getValues, handleSubmit]);
+
   const handleTabNavigation = (index: number) => {
     if (boatId || index <= currentStep) {
       const currentData = getValues();
@@ -152,58 +168,27 @@ export default function MultiStepFormContent() {
       // Helper function to get value from formData or current data
       const getValue = (key: string) => formData?.[key] ?? data?.[key];
 
-      // Generate Payment Method ID for new boats
-      let paymentMethodId = null;
+      // Get Payment Method ID from form data (set by StripePaymentForm)
+      const paymentMethodId = data?.paymentMethodId || getValue("paymentMethodId");
 
+      // Validate payment method for new boats
       if (!boatId && currentStep === 7) {
-        // Parse expiration date
-        let exp_month = "";
-        let exp_year = "";
-
-        if (data?.expireDate) {
-          const [month, year] = data.expireDate.split("/");
-          exp_month = month?.trim() || "";
-          let yearValue = year?.trim() || "";
-          if (yearValue.length === 2) {
-            yearValue = "20" + yearValue;
-          }
-          exp_year = yearValue;
+        if (!paymentMethodId) {
+          // Trigger Stripe payment method creation
+          window.dispatchEvent(new Event("createStripePaymentMethod"));
+          return; // Wait for payment method creation to complete
         }
 
-        // Validate payment details
-        if (
-          !data?.cardNumber ||
-          !exp_month ||
-          !exp_year ||
-          !data?.securityCode
-        ) {
-          return toast.error("Please fill in all payment details");
+        // Validate personal details
+        if (!data?.firstName || !data?.lastName || !data?.email || !data?.mobile) {
+          return toast.error("Please fill in all required personal details");
         }
-
-        // Test card tokens for Stripe
-        const cardNumber = data.cardNumber.replace(/\s/g, "");
-        const testCardTokens: Record<string, string> = {
-          "4242424242424242": "tok_visa",
-          "4000056655665556": "tok_visa_debit",
-          "5555555555554444": "tok_mastercard",
-          "378282246310005": "tok_amex",
-        };
-
-        paymentMethodId =
-          testCardTokens[cardNumber] ||
-          `card_${cardNumber.slice(-4)}_${Date.now()}`;
       }
 
       // Prepare payment info for profile update
       const fullPaymentInfo = {
         paymentMethod: {
-          paymentMethod: data?.paymentMethod || "card",
-          cardNumber: data?.cardNumber || "",
-          expireDate: data?.expireDate || "",
-          securityCode: data?.securityCode || "",
-          nameOfCard: data?.nameOfCard || "",
-          bollingCountry: data?.bollingCountry || "",
-          zipCode: data?.zipCode || "",
+          paymentMethod: "card",
         },
         user: {
           firstName: data?.firstName || getValue("firstName"),
@@ -264,13 +249,6 @@ export default function MultiStepFormContent() {
         })),
         ...(!boatId && {
           terms: {
-            paymentMethod: data?.paymentMethod || "card",
-            cardNumber: data?.cardNumber || "",
-            expireDate: data?.expireDate || "",
-            securityCode: data?.securityCode || "",
-            nameOfCard: data?.nameOfCard || "",
-            bollingCountry: data?.bollingCountry || "",
-            zipCode: data?.zipCode || "",
             paymentMethodId: paymentMethodId || "",
           },
         }),

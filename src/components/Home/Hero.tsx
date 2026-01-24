@@ -26,8 +26,13 @@ export default function Hero() {
         muted
         loop
         playsInline
+        webkit-playsinline="true"
+        preload="auto"
+        disablePictureInPicture
+        controlsList="nodownload nofullscreen noremoteplayback"
         /* FIXED: Changed to object-cover so it fills the screen on mobile without black bars */
         className="absolute inset-0 w-full h-full object-cover"
+        style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
       />
 
       {/* Overlay */}
