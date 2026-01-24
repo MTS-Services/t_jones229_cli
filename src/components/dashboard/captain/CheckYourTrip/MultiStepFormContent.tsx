@@ -134,6 +134,7 @@ export default function MultiStepFormContent() {
     return () => {
       window.removeEventListener("paymentMethodCreated", handlePaymentMethodReady);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getValues, handleSubmit]);
 
   const handleTabNavigation = (index: number) => {
