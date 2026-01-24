@@ -203,9 +203,10 @@ export default function CaptainApproval() {
                                 key={video.id}
                                 controls
                                 playsInline
-                                webkit-playsinline="true"
                                 preload="metadata"
                                 className="rounded-md w-full h-[300px] mt-2"
+                                // @ts-ignore - webkit attribute for iOS
+                                webkitPlaysinline="true"
                               >
                                 <source src={video.url} type="video/mp4" />
                                 Your browser does not support the video tag.

@@ -379,8 +379,9 @@ export default function Information({ setIsLicenceImage }: InformationProps) {
                           className="w-full h-full object-cover"
                           muted
                           playsInline
-                          webkit-playsinline="true"
                           preload="metadata"
+                          // @ts-ignore - webkit attribute for iOS
+                          webkitPlaysinline="true"
                         />
                         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
                           <Play className="h-8 w-8 text-white" />
