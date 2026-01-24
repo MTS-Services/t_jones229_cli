@@ -202,6 +202,9 @@ export default function CaptainApproval() {
                               <video
                                 key={video.id}
                                 controls
+                                playsInline
+                                webkit-playsinline="true"
+                                preload="metadata"
                                 className="rounded-md w-full h-[300px] mt-2"
                               >
                                 <source src={video.url} type="video/mp4" />

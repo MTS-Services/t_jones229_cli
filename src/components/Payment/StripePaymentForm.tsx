@@ -179,6 +179,8 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
         if (paymentMethod) {
           console.log("✅ Payment method created:", paymentMethod.id);
           onPaymentMethodCreated(paymentMethod.id);
+          // Dispatch event to notify parent form
+          window.dispatchEvent(new Event("paymentMethodCreated"));
         }
       } catch (err: any) {
         console.error("❌ Payment method creation failed:", err);

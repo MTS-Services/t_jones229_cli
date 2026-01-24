@@ -1,9 +1,37 @@
+"use client";
+
 import { CheckCircle } from "lucide-react";
 import { useState } from "react";
 import PaymentDetails from "../Payment/PaymentDetails";
+import StripePaymentForm from "../Payment/StripePaymentForm";
+import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store/store";
 
 export default function Terms() {
   const [agreed, setAgreed] = useState(true);
+  const [paymentError, setPaymentError] = useState<string>("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isCardComplete, setIsCardComplete] = useState(false);
+
+  const { setValue, watch } = useFormContext();
+  const firstName = watch("firstName") || "";
+  const lastName = watch("lastName") || "";
+  const email = watch("email") || "";
+  const mobile = watch("mobile") || "";
+
+  // Store payment method ID when created
+  const handlePaymentMethodCreated = (paymentMethodId: string) => {
+    console.log("✅ Payment method created:", paymentMethodId);
+    setValue("paymentMethodId", paymentMethodId);
+    setPaymentError("");
+  };
+
+  const handlePaymentError = (error: string) => {
+    console.error("❌ Payment error:", error);
+    setPaymentError(error);
+  };
+
   return (
     <>
       <div className="px-5 md:px-14">
@@ -77,6 +105,32 @@ export default function Terms() {
         {/* payment  */}
         <div className="max-w-4xl py-16">
           <PaymentDetails />
+
+          {/* Stripe Payment Form */}
+          <div className="mt-8">
+            <StripePaymentForm
+              onPaymentMethodCreated={handlePaymentMethodCreated}
+              onError={handlePaymentError}
+              isProcessing={isProcessing}
+              setIsProcessing={setIsProcessing}
+              onCardComplete={setIsCardComplete}
+              billingDetails={{
+                name: `${firstName} ${lastName}`.trim() || "Cardholder",
+                email: email || "",
+                phone: mobile || "",
+              }}
+            />
+          </div>
+
+          {/* Payment Error Display */}
+          {paymentError && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm font-medium flex items-center gap-2">
+                <span>⚠️</span>
+                {paymentError}
+              </p>
+            </div>
+          )}
 
           {/* i agree  */}
           <div className="flex items-start gap-3 mt-6">
