@@ -22,25 +22,33 @@ import payPal from "@/assets/payment/payPal.svg";
 // Initialize Stripe with the publishable key from environment
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
-);
+).then((stripe) => {
+  if (!stripe) {
+    console.error("❌ Stripe failed to load");
+  } else {
+    console.log("✅ Stripe loaded successfully");
+  }
+  return stripe;
+});
 
 // Card element styles to match the existing form design
 const cardElementOptions = {
   style: {
     base: {
       fontSize: "16px",
-      color: "#424770",
-      fontFamily: "system-ui, -apple-system, sans-serif",
+      color: "#1a1a1a",
+      fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       "::placeholder": {
-        color: "#aab7c4",
+        color: "#a0a0a0",
       },
-      padding: "12px",
+      lineHeight: "44px",
     },
     invalid: {
       color: "#9e2146",
       iconColor: "#9e2146",
     },
   },
+  placeholder: "1234 1234 1234 1234",
 };
 
 interface StripeCardFormProps {
@@ -48,6 +56,7 @@ interface StripeCardFormProps {
   onError: (error: string) => void;
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
+  onCardComplete?: (isComplete: boolean) => void;
   billingDetails: {
     name: string;
     email: string;
@@ -64,6 +73,7 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
   onError,
   isProcessing,
   setIsProcessing,
+  onCardComplete,
   billingDetails,
 }) => {
   const stripe = useStripe();
@@ -75,14 +85,28 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
   });
   const [cardError, setCardError] = useState<string | null>(null);
 
+  // Debug logging
+  React.useEffect(() => {
+    console.log("🔍 Stripe instance:", stripe ? "Loaded" : "Not loaded");
+    console.log("🔍 Elements instance:", elements ? "Loaded" : "Not loaded");
+  }, [stripe, elements]);
+
   const isCardComplete =
     cardComplete.cardNumber && cardComplete.cardExpiry && cardComplete.cardCvc;
 
   const handleCardChange = (elementType: string) => (event: any) => {
-    setCardComplete((prev) => ({
-      ...prev,
-      [elementType]: event.complete,
-    }));
+    setCardComplete((prev) => {
+      const updated = {
+        ...prev,
+        [elementType]: event.complete,
+      };
+      // Notify parent of completion status
+      const allComplete = updated.cardNumber && updated.cardExpiry && updated.cardCvc;
+      if (onCardComplete) {
+        onCardComplete(allComplete);
+      }
+      return updated;
+    });
     if (event.error) {
       setCardError(event.error.message);
     } else {
@@ -94,12 +118,7 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
   useEffect(() => {
     const handleCreatePayment = async () => {
       if (!stripe || !elements) {
-        onError("Stripe not loaded");
-        return;
-      }
-
-      if (!isCardComplete) {
-        onError("Please complete all card fields");
+        onError("Stripe not loaded. Please refresh the page.");
         return;
       }
 
@@ -156,11 +175,17 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
   ]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
+      <h3 className="text-xl font-bold text-gray-900 mb-6">Payment Information</h3>
+      
       {/* Card Number */}
-      <div>
-        <label className="block text-base font-bold mb-2">Card Number</label>
-        <div className="border border-[#E0E0E0] rounded-md px-4 py-3 bg-white focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+      <div className="w-full">
+        <label className="block text-base font-semibold text-gray-900 mb-3">
+          Card Number
+        </label>
+        <div 
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
+        >
           <CardNumberElement
             options={cardElementOptions}
             onChange={handleCardChange("cardNumber")}
@@ -169,25 +194,35 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
       </div>
 
       {/* Expiry and CVC */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-base font-bold mb-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div className="w-full">
+          <label className="block text-base font-semibold text-gray-900 mb-3">
             Expiration Date
           </label>
-          <div className="border border-[#E0E0E0] rounded-md px-4 py-3 bg-white focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+          <div 
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
+          >
             <CardExpiryElement
-              options={cardElementOptions}
+              options={{
+                ...cardElementOptions,
+                placeholder: "MM / YY",
+              }}
               onChange={handleCardChange("cardExpiry")}
             />
           </div>
         </div>
-        <div>
-          <label className="block text-base font-bold mb-2">
+        <div className="w-full">
+          <label className="block text-base font-semibold text-gray-900 mb-3">
             Security Code (CVC)
           </label>
-          <div className="border border-[#E0E0E0] rounded-md px-4 py-3 bg-white focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+          <div 
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
+          >
             <CardCvcElement
-              options={cardElementOptions}
+              options={{
+                ...cardElementOptions,
+                placeholder: "CVC",
+              }}
               onChange={handleCardChange("cardCvc")}
             />
           </div>
@@ -196,13 +231,13 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
 
       {/* Error Display */}
       {cardError && (
-        <div className="text-red-500 text-sm flex items-center gap-2">
+        <div className="text-red-600 text-sm flex items-center gap-2 bg-red-50 border border-red-200 p-3 rounded-md">
           <span>⚠️</span> {cardError}
         </div>
       )}
 
       {/* Security Notice */}
-      <div className="flex items-center gap-2 text-gray-500 text-sm mt-4">
+      <div className="flex items-center gap-2 text-gray-500 text-sm pt-2">
         <Lock className="w-4 h-4" />
         <span>Your payment information is encrypted and secure</span>
       </div>
@@ -215,6 +250,7 @@ interface StripePaymentFormProps {
   onError: (error: string) => void;
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
+  onCardComplete?: (isComplete: boolean) => void;
   billingDetails: {
     name: string;
     email: string;

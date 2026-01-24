@@ -22,6 +22,7 @@ export default function PaymentCard({
   isLoading,
   setSelectedPayment,
   selectedPayment,
+  isCardComplete = false,
 }: any) {
   // Use state to avoid hydration mismatch
   const [tripDate, setTripDate] = useState<string | null>(null);
@@ -168,7 +169,7 @@ export default function PaymentCard({
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full text-black font-medium py-3 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed`}
+              className={`w-full text-black font-medium py-3 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
             >
               {isLoading ? "Processing..." : "Continue"}
             </button>
