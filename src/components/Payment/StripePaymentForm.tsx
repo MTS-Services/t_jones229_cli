@@ -236,7 +236,11 @@ const StripePaymentForm: React.FC<StripePaymentFormProps> = (props) => {
     ],
   };
 
-  return <div className="mb-5">{/* Header */}</div>;
+  return (
+    <Elements stripe={stripePromise} options={elementsOptions}>
+      <StripeCardForm {...props} />
+    </Elements>
+  );
 };
 
 export default StripePaymentForm;
