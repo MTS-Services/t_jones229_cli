@@ -126,7 +126,7 @@ export default function MultiStepFormContent() {
       // Re-submit the form after payment method is created
       const currentData = getValues();
       if (currentData.paymentMethodId) {
-        handleSubmit(submitFinalForm)(currentData);
+        submitFinalForm(currentData);
       }
     };
 
@@ -135,7 +135,7 @@ export default function MultiStepFormContent() {
       window.removeEventListener("paymentMethodCreated", handlePaymentMethodReady);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getValues, handleSubmit]);
+  }, [getValues]);
 
   const handleTabNavigation = (index: number) => {
     if (boatId || index <= currentStep) {
