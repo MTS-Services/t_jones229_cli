@@ -9,7 +9,7 @@ import {
 import { auth } from "../firebase/firebaseConfig";
 import Cookies from "js-cookie";
 
-// Providers - create lazily to avoid SSR issues
+// Providers - create lazily to avoid SSR issues a
 let googleProvider;
 let facebookProvider;
 

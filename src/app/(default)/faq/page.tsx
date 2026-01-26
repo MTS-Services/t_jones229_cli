@@ -36,14 +36,10 @@ export default function Page() {
   
   return (
     <div>
-      <div className="bg-[#F5F5F5] py-9 px-5 xl:px-0">
+      <div className=" py-9 px-5 xl:px-0">
         <div className="container mx-auto lg:px-0">
-          <h1 className="text-xl md:text-2xl text-[#242424] font-bold leading-9">
-            Frequently asked questions
-          </h1>
-          <h1 className="text-base md:text-2xl text-[#474747] font-normal leading-7">
-            If the error persists, contact us below.
-          </h1>
+          
+          
         </div>
       </div>
 
@@ -116,7 +112,7 @@ export default function Page() {
             <Faq items={items} />
           </div>
         </div>
-        <div className="mt-10">
+        <div className="my-12">
           <div>
             <h1 className="text-xl font-bold">Group booking</h1>
             <Faq items={items} />

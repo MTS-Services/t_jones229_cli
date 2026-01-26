@@ -71,17 +71,16 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[999] bg-white border-b border-gray-100 shadow-sm">
-      <nav className="container mx-auto px-4 h-20 flex items-center justify-between gap-4">
+      <nav className="container mx-auto px-4 h-20  flex items-center justify-between gap-4">
         {/* LOGO */}
-        <Link href="/" className="flex-shrink-0">
-          <Image
-            src={logo2}
-            alt="Logo"
-            height={70}
-            width={70}
-            className="object-contain"
-          />
-        </Link>
+         <Link href="/" className="w-12 h-12 md:w-16 md:h-16 xl:w-24 xl:h-24">
+            <Image
+              src={logo2}
+              alt="Logo"
+             
+              className="object-cover w-full h-full"
+            />
+          </Link>
 
         {/* SEARCH BAR */}
         <div className="block flex-1 max-w-2xl">

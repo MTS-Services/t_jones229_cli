@@ -38,11 +38,7 @@ export default function Page() {
 
   return (
     <div className="">
-      <div className="bg-[#F5F5F5]">
-        <h1 className="container mx-auto text-xl md:text-2xl text-[#242424] font-bold leading-9 py-10 px-5 lg:px-0">
-          Contact us
-        </h1>
-      </div>
+      
 
       <div className="container mx-auto mt-10 md:mt-24 px-5 lg:px-0">
         <h1 className="text-2xl md:text-[40px] text-[#242424] font-bold">
@@ -82,7 +78,7 @@ export default function Page() {
             error={errors.description}
           />
 
-          <Button className="mt-3 md:mt-10" variant="secondary" type="submit">
+          <Button className="mt-3 md:mt-10 mb-3 md:mb-10" variant="secondary" type="submit">
             Send Message
           </Button>
         </form>
