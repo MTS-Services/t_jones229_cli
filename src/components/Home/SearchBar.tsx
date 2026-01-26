@@ -9,6 +9,7 @@ import { IoIosSearch } from "react-icons/io";
 import { GoPlusCircle } from "react-icons/go";
 import { CiCircleMinus } from "react-icons/ci";
 import { IoCloseOutline } from "react-icons/io5";
+import { MdOutlineClose } from "react-icons/md";
 import { useGetBoatListByLocationQuery } from "@/redux/api/boatApi";
 import Image from "next/image";
 import flag from "@/assets/flag.png";
@@ -84,6 +85,24 @@ export default function SearchBar({
         : "/search-charter",
     );
   };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setActiveTab(null);
+      }
+    }
+    
+    // Only add event listener when there's an active dropdown
+    if (activeTab) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [activeTab]);
 
   useEffect(() => {
     setMounted(true);
@@ -383,7 +402,7 @@ export default function SearchBar({
               ) : (
                 location && (
                   <span className="text-[10px] text-blue-600 font-bold truncate max-w-[60px]">
-                    {location}
+                    {location} 
                   </span>
                 )
               )}
@@ -398,9 +417,12 @@ export default function SearchBar({
                     className="absolute top-[115%] left-0 w-[300px] bg-white shadow-2xl rounded-[24px] p-6 z-50 border border-gray-100"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <h2 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-tight">
-                      Destinations
-                    </h2>
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-sm font-bold text-gray-400 uppercase tracking-tight">
+                        Destinations
+                      </h2>
+                 
+                    </div>
                     <div className="max-h-60 overflow-y-auto custom-scrollbar">
                       {filteredDestinations.map((dest: any, idx: number) => (
                         <div
@@ -410,7 +432,7 @@ export default function SearchBar({
                             setSearchTerm(dest.city);
                             setActiveTab(null);
                           }}
-                          className="flex items-center gap-4 py-3 px-3 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer"
+                          className="flex items-center gap-4 py-3 px-3 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer group"
                         >
                           <div className="size-8 relative bg-gray-100 rounded-md overflow-hidden">
                             <Image
@@ -420,9 +442,22 @@ export default function SearchBar({
                               className="object-cover"
                             />
                           </div>
-                          <p className="font-semibold text-black">
+                          <p className="font-semibold text-black flex-1">
                             {dest.city}
                           </p>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Clear search to show all destinations
+                              setSearchTerm("");
+                              setLocation("");
+                            }}
+                            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded-full transition-all"
+                          >
+                            {(searchTerm || location) && (
+                              <MdOutlineClose className="text-gray-400 hover:text-gray-600 text-sm" />
+                            )}
+                          </button>
                         </div>
                       ))}
                     </div>
