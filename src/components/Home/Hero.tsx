@@ -21,7 +21,7 @@ export default function Hero() {
     <div className="relative w-full h-[500px] md:h-[700px] lg:h-[800px] overflow-hidden bg-black">
       {/* Background Video */}
       <video
-        src="/intro/introVideo.mp4"
+        src="/intro/introVideo.webm"
         autoPlay
         muted
         loop
