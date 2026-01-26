@@ -26,13 +26,18 @@ export default function Hero() {
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         disablePictureInPicture
         controlsList="nodownload nofullscreen noremoteplayback"
-        /* FIXED: Changed to object-cover so it fills the screen on mobile without black bars */
-        className="absolute inset-0 w-full h-full object-cover"
-        // @ts-ignore - webkit attribute for iOS compatibility
-        webkitPlaysinline="true"
+        className="absolute inset-0 w-full h-full object-cover transform translate-z-0"
+        onLoadStart={(e) => {
+          const video = e.currentTarget;
+          video.muted = true;
+          video.play().catch(() => {
+            // Fallback for when autoplay fails
+            console.log('Video autoplay failed');
+          });
+        }}
       />
 
       {/* Overlay */}

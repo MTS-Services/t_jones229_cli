@@ -4,6 +4,7 @@ import {
   FaFacebookF,
   FaInstagram,
   FaTelegramPlane,
+  FaYoutube,
 } from "react-icons/fa";
 
 import logo from "@/assets/logo2.svg";
@@ -44,10 +45,10 @@ responsibility yourself. Leave that to me.
 
 
                  <div className="flex gap-8 items-center ">
-              <FaTwitter
+              {/* <FaTwitter
                 className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
                 size={20}
-              />
+              /> */}
               <FaFacebookF
                 className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
                 size={20}
@@ -57,7 +58,7 @@ responsibility yourself. Leave that to me.
                 className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
                 size={20}
               />
-              <FaTelegramPlane
+              <FaYoutube
                 className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
                 size={20}
               />
@@ -73,9 +74,9 @@ responsibility yourself. Leave that to me.
                         <ul className="space-y-4 text-sm">
                             <li><a href="/contact-us"  className="hover:text-indigo-400 transition hover:underline">CONTACT US</a></li>
                             <li><a   href="/faq" className="hover:text-indigo-400 transition hover:underline">FAQ</a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition hover:underline">Footer Link #3</a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition hover:underline">Footer Link #4</a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition hover:underline">Footer Link #5</a></li>
+                            <li className="hover:text-indigo-400 transition hover:underline">Footer Link #3</li>
+                            <li className="hover:text-indigo-400 transition hover:underline">Footer Link #4</li>
+                            <li className="hover:text-indigo-400 transition hover:underline">Footer Link #5</li>
                         </ul>
                     </div>
  
@@ -83,11 +84,11 @@ responsibility yourself. Leave that to me.
                     <div>
                         <h3 className="text-white font-semibold mb-6">HEADING</h3>
                         <ul className="space-y-4 text-sm">
-                        <li><a href="#" className="hover:text-indigo-400 transition      hover:underline">Footer Link #1 </a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #2</a> </li>
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #3</a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #4</a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #5</a></li>
+                        <li className="hover:text-indigo-400 transition      hover:underline">Footer Link #1 </li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #2 </li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #3</li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #4</li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #5</li>
                         </ul>
                     </div>
  
@@ -95,11 +96,11 @@ responsibility yourself. Leave that to me.
                     <div>
                         <h3 className="text-white font-semibold mb-6">HEADING</h3>
                         <ul className="space-y-4 text-sm">
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #1 </a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #2</a> </li>
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #3</a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #4</a></li>
-                            <li><a href="#" className="hover:text-indigo-400 transition  hover:underline">Footer Link #5</a></li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #1</li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #2 </li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #3</li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #4</li>
+                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #5</li>
                         </ul>  
                     </div>
                 </div>
