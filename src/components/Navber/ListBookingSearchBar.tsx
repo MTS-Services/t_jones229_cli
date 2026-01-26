@@ -216,7 +216,7 @@ export default function ListBookingSearchBar({
             }`}
           >
             <h1 className="font-extrabold text-black text-[12px] md:text-[13px]">
-              Who
+              Whon
             </h1>
             {guests > 0 && (
               <span className="text-[10px] text-blue-600 font-bold">
