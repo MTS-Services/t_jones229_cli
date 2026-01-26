@@ -76,13 +76,12 @@ export default function HomeNavbar() {
         className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 bg-white xl:pb-4 lg:pb-3 md:pb-2`}
       >
         <nav className="container mx-auto xl:px-4 lg:px-3 px-2 lg:py-2 pt-1 pb-2 flex items-center justify-between">
-          <Link href="/" className="w-12 h-12 md:w-16 md:h-16 xl:w-20 xl:h-20">
+          <Link href="/" className="w-12 h-12 md:w-16 md:h-16 xl:w-24 xl:h-24">
             <Image
-              src={logo2}
+              src={logo}
               alt="Logo"
-              height={70}
-              width={70}
-              className="object-contain"
+             
+              className="object-cover w-full h-full"
             />
           </Link>
 
