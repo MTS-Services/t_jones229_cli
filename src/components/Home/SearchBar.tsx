@@ -474,9 +474,17 @@ export default function SearchBar({
               className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "when" ? "bg-white shadow-xl z-20" : "hover:bg-gray-100"}`}
             >
               <h1 className="font-extrabold text-black">When</h1>
-              <span className="text-[12px] text-[#858585]">
-                {selectedDate ? selectedDate.format("MMM DD") : "Add date"}
-              </span>
+              {isExpanded ? (
+                <span className="text-[12px] text-[#858585]">
+                  {selectedDate ? selectedDate.format("MMM DD") : "Add date"}
+                </span>
+              ) : (
+                selectedDate && (
+                  <span className="text-[10px] text-blue-600 font-bold">
+                    {selectedDate.format("MMM DD")}
+                  </span>
+                )
+              )}
               <AnimatePresence>
                 {activeTab === "when" && (
                   <motion.div
@@ -484,6 +492,8 @@ export default function SearchBar({
                     initial="hidden"
                     animate="visible"
                     exit="exit"
+
+
                     className="absolute top-[115%] left-0 z-50 bg-white shadow-2xl rounded-3xl p-4 border border-gray-100"
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -507,9 +517,17 @@ export default function SearchBar({
               className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.5]"} ${activeTab === "who" ? "bg-white shadow-xl z-20" : "hover:bg-gray-100"}`}
             >
               <h1 className="font-extrabold text-black">Who</h1>
-              <span className="text-[12px] text-[#858585]">
-                {guests > 0 ? `${guests} Guests` : "Add guests"}
-              </span>
+              {isExpanded ? (
+                <span className="text-[12px] text-[#858585]">
+                  {guests > 0 ? `${guests} Guests` : "Add guests"}
+                </span>
+              ) : (
+                guests > 0 && (
+                  <span className="text-[10px] text-blue-600 font-bold">
+                    {guests} Guests
+                  </span>
+                )
+              )}
               <AnimatePresence>
                 {activeTab === "who" && (
                   <motion.div
@@ -545,9 +563,17 @@ export default function SearchBar({
               className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "type" ? "bg-white shadow-xl z-20" : "hover:bg-gray-100"}`}
             >
               <h1 className="font-extrabold text-black">Type</h1>
-              <p className="text-[12px] text-[#858585] truncate">
-                {selected ? selected.title : "Select type"}
-              </p>
+              {isExpanded ? (
+                <p className="text-[12px] text-[#858585] truncate">
+                  {selected ? selected.title : "Select type"}
+                </p>
+              ) : (
+                selected && (
+                  <p className="text-[10px] text-blue-600 font-bold truncate max-w-[80px]">
+                    {selected.title}
+                  </p>
+                )
+              )}
               <AnimatePresence>
                 {activeTab === "type" && (
                   <motion.div

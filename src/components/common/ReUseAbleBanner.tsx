@@ -6,6 +6,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+
+
+
+
 interface BannerProps {
   title?: string;
   description?: string;
@@ -15,6 +19,7 @@ interface BannerProps {
   backgroundImage?: string;
   backgroundImageClassName?: string;
   className?: string;
+  pathLink?: string;
 }
 
 const ReUseAbleBanner: React.FC<BannerProps> = ({
@@ -26,23 +31,11 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
   buttonTitle,
   backgroundImageClassName,
   className,
+  pathLink,
 }) => {
   const router = useRouter();
 
-  // Replace this with your actual auth logic (e.g., const { user } = useAuth())
-  const isLoggedIn = false;
-
-  const handleNavigation = () => {
-    const targetPath = "/dashboard/check-your-trip";
-
-    if (isLoggedIn) {
-      router.push(targetPath);
-    } else {
-      // We pass the targetPath as a 'callback' or 'redirect' query parameter
-      // so the login page knows where to send the user after they log in.
-      router.push(`/login?redirect=${encodeURIComponent(targetPath)}`);
-    }
-  };
+ 
 
   return (
     <section
@@ -64,8 +57,8 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
           {description ? description : ""}
         </p>
 
-        {button && (
-          <Link href={"/boat-list"}>
+        {button && pathLink && (
+          <Link href={pathLink}>
             <Button
               variant="primary"
               className="flex items-center font-satoshi rounded-[14px] text-base font-bold md:mt-3 mt-2 gap-2"
@@ -79,6 +72,7 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
                   height={24}
                 />
               )}
+              
               {buttonTitle}
             </Button>
           </Link>

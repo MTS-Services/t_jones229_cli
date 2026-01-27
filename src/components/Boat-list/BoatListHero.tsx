@@ -11,6 +11,7 @@ export default function BoatListHero() {
         backgroundImageClassName="!rounded-2xl"
         className={"!bg-black/20"}
         boardImage={board.src}
+        pathLink="/boat-list"
         button={true}
         buttonTitle="Click here to get started!"
       />
