@@ -70,6 +70,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // Hide navbar and footer for list-your-boat page
+  const hideLayout = pathname === "/list-your-boat";
+
+  if (hideLayout) {
+    return <Suspense fallback={null}>{children}</Suspense>;
+  }
+
   return (
     <>
       {pathname === "/" ? <HomeNavbar /> : <Navbar />}

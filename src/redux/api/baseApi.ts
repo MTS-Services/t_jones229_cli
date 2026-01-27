@@ -6,11 +6,11 @@ import { RootState } from "../store/store";
 const baseApiHandler = () => {
   const baseUrl =
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://fishing-server.mtscorporate.com";
+    "https://api.fishingtripper.com";
   console.log("🔧 API Base URL:", `${baseUrl}/api/v1`);
   return `${baseUrl}/api/v1`;
 };
-
+    
 // 2. Custom Base Query with Fix for Empty 500 Errors
 const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
   const baseQuery = fetchBaseQuery({
