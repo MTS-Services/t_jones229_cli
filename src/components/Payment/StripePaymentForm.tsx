@@ -262,7 +262,24 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
   }, [
     stripe,
     elements,
-    isCardComplete,{`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
+    isCardComplete,
+    billingDetails,
+    onPaymentMethodCreated,
+    onError,
+    setIsProcessing,
+  ]);
+
+  return (
+    <div className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
+      <h3 className="text-xl font-bold text-gray-900 mb-6">Payment Information</h3>
+      
+      {/* Card Number */}
+      <div className="w-full">
+        <label className="block text-base font-semibold text-gray-900 mb-3">
+          Card Number
+        </label>
+        <div 
+          className={`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
             fieldErrors.cardNumber 
               ? 'border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500' 
               : 'border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500'
@@ -278,24 +295,16 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
             <span>⚠️</span> {fieldErrors.cardNumber}
           </p>
         )}
-  return (
-    <div className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
-      <h3 className="text-xl font-bold text-gray-900 mb-6">Payment Information</h3>
-      
-      {/* Card Number */}
-      <div className="w-full">
-        <label className="block text-base font-semibold text-gray-900 mb-3">
-          Card Number
-        </label>
-        <div 
-          className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
-        >
-          <CardNumberElement
-            options={cardElementOptions}
-            onChange={handleCardChange("cardNumber")}
-          />
-        </div>
-      </div>{`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
+      </div>
+
+      {/* Expiry and CVC */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div className="w-full">
+          <label className="block text-base font-semibold text-gray-900 mb-3">
+            Expiration Date
+          </label>
+          <div 
+            className={`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
               fieldErrors.cardExpiry 
                 ? 'border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500' 
                 : 'border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500'
@@ -338,16 +347,7 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
             <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
               <span>⚠️</span> {fieldErrors.cardCvc}
             </p>
-          )}sName="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
-          >
-            <CardCvcElement
-              options={{
-                ...cardElementOptions,
-                placeholder: "CVC",
-              }}
-              onChange={handleCardChange("cardCvc")}
-            />
-          </div>
+          )}
         </div>
       </div>
 
