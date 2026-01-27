@@ -395,11 +395,11 @@ const Sidebar = () => {
                 key={item.key}
                 href={href}
                 className={`
-                  flex items-center px-6 py-3 mb-0.5 text-black transition-all duration-200 border-l-4
+                  flex items-center px-6 py-3 mb-0.5 text-black transition-all duration-200
                   ${
                     isActive
-                      ? "bg-[#035292] border-[#FF9500] text-white font-medium"
-                      : "border-transparent hover:bg-[#035292] hover:text-white hover:border-[#035292]"
+                      ? "bg-[#035292] text-white font-medium"
+                      : "hover:bg-[#035292] hover:text-white"
                   }
                 `}
               >
