@@ -84,6 +84,11 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
     cardCvc: false,
   });
   const [cardError, setCardError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<{
+    cardNumber?: string;
+    cardExpiry?: string;
+    cardCvc?: string;
+  }>({});
 
   // Debug logging
   React.useEffect(() => {
@@ -107,10 +112,27 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
       }
       return updated;
     });
+    
+    // Handle field-specific errors
     if (event.error) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        [elementType]: event.error.message,
+      }));
       setCardError(event.error.message);
     } else {
-      setCardError(null);
+      setFieldErrors((prev) => ({
+        ...prev,
+        [elementType]: undefined,
+      }));
+      // Clear global error if all fields are valid
+      const hasErrors = Object.values({
+        ...fieldErrors,
+        [elementType]: undefined,
+      }).some(err => err !== undefined);
+      if (!hasErrors) {
+        setCardError(null);
+      }
     }
   };
 
@@ -122,6 +144,12 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
         return;
       }
 
+      // Validate card completeness before processing
+      if (!isCardComplete) {
+        onError("Please complete all card fields before submitting.");
+        return;
+      }
+
       setIsProcessing(true);
 
       try {
@@ -130,6 +158,40 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
           throw new Error("Card element not found");
         }
 
+        // Validate card before creating payment method
+        const cardValidation = await stripe.createToken(cardNumberElement);
+        
+        if (cardValidation.error) {
+          let errorMessage = cardValidation.error.message;
+          
+          // Enhanced validation error messages
+          switch (cardValidation.error.code) {
+            case 'expired_card':
+              errorMessage = "Your card has expired. Please use a valid card.";
+              break;
+            case 'incorrect_number':
+              errorMessage = "The card number is invalid. Please check and try again.";
+              break;
+            case 'invalid_expiry_month':
+            case 'invalid_expiry_year':
+            case 'invalid_expiry_year_past':
+              errorMessage = "The expiration date is invalid or expired. Please check and try again.";
+              break;
+            case 'incorrect_cvc':
+            case 'invalid_cvc':
+              errorMessage = "The security code (CVC) is invalid. Please check and try again.";
+              break;
+            case 'card_declined':
+              errorMessage = "Your card was declined. Please try a different card.";
+              break;
+            default:
+              errorMessage = cardValidation.error.message || "Invalid card details. Please check and try again.";
+          }
+          
+          throw new Error(errorMessage);
+        }
+
+        // Card is valid, now create payment method
         const { error, paymentMethod } = await stripe.createPaymentMethod({
           type: "card",
           card: cardNumberElement,
@@ -217,13 +279,22 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
           Card Number
         </label>
         <div 
-          className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
+          className={`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
+            fieldErrors.cardNumber 
+              ? 'border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500' 
+              : 'border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500'
+          }`}
         >
           <CardNumberElement
             options={cardElementOptions}
             onChange={handleCardChange("cardNumber")}
           />
         </div>
+        {fieldErrors.cardNumber && (
+          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+            <span>⚠️</span> {fieldErrors.cardNumber}
+          </p>
+        )}
       </div>
 
       {/* Expiry and CVC */}
@@ -233,7 +304,11 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
             Expiration Date
           </label>
           <div 
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
+            className={`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
+              fieldErrors.cardExpiry 
+                ? 'border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500' 
+                : 'border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500'
+            }`}
           >
             <CardExpiryElement
               options={{
@@ -243,13 +318,22 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
               onChange={handleCardChange("cardExpiry")}
             />
           </div>
+          {fieldErrors.cardExpiry && (
+            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+              <span>⚠️</span> {fieldErrors.cardExpiry}
+            </p>
+          )}
         </div>
         <div className="w-full">
           <label className="block text-base font-semibold text-gray-900 mb-3">
             Security Code (CVC)
           </label>
           <div 
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
+            className={`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
+              fieldErrors.cardCvc 
+                ? 'border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500' 
+                : 'border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500'
+            }`}
           >
             <CardCvcElement
               options={{
@@ -259,6 +343,11 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
               onChange={handleCardChange("cardCvc")}
             />
           </div>
+          {fieldErrors.cardCvc && (
+            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+              <span>⚠️</span> {fieldErrors.cardCvc}
+            </p>
+          )}
         </div>
       </div>
 
