@@ -68,30 +68,28 @@ export default function HomeNavbar() {
   };
 
   if (!mounted)
-    return <div className="h-[120px] lg:h-[180px] bg-transparent"></div>;
+    return <div className=" bg-transparent"></div>;
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 bg-white xl:pb-4 lg:pb-3 md:pb-2 ${
-          scrolled ? "h-[140px]" : "h-[120px]"
+        className={`fixed top-0 left-0 right-0 z-[999]   transition-all duration-500 bg-white  ${
+          scrolled ? "h-[102px]" : "h-[163px]"
         }`}
       >
-        <nav className="container mx-auto xl:px-4 lg:px-3 px-2 lg:py-2 pt-1 pb-2 flex items-center justify-between">
-<Link href="/">
-  <div className="transition-all duration-300 origin-center">
-    <Image
-      src={logo}
-      alt="Logo"
-      width={scrolled ? 125 : 100}
-      height={scrolled ? 125 : 100}
-      className="object-contain"
-      priority={true} 
-    />
-  </div>
-</Link>
-
-
+        <nav className="container mx-auto  xl:px-4 lg:px-3 px-2  flex items-center justify-between">
+          <Link href="/">
+            <div className="transition-all duration-700 ease-in-out origin-center transform hover:scale-105">
+              <Image
+                src={logo}
+                alt="Logo"
+                width={scrolled ? 100 : 125}
+                height={scrolled ? 100 : 125}
+                className="object-contain transition-all duration-700 ease-in-out"
+                priority={true}
+              />
+            </div>
+          </Link>
 
           <div className="hidden lg:flex gap-4 items-center">
             {!user ? (
@@ -192,7 +190,7 @@ export default function HomeNavbar() {
         </nav>
 
         <div
-          className={`container mx-auto px-4 transition-all duration-500 ease-in-out ${
+          className={`container mx-auto px-4 transition-all duration-700 ease-in-out ${
             scrolled && !isSearchActive
               ? "xl:-mt-[76px] lg:-mt-16 md:-mt-[63px] -mt-[55px] scale-90 opacity-100 max-w-2xl"
               : "xl:-mb-10 lg:-mb-16 md:-mb-[60px] -mb-[55px] scale-100 opacity-100"
