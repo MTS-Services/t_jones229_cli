@@ -20,16 +20,22 @@ const userBooking = baseApi.injectEndpoints({
         city?: string;
         status?: string;
         searchTerm?: string;
+        sortBy?: string;
+        sortOrder?: string;
       }) => {
         const queryParams = new URLSearchParams();
 
         if (params.limit) queryParams.append("limit", params.limit.toString());
         if (params.page) queryParams.append("page", params.page.toString());
-        if (params.date) queryParams.append("date", params.date);
-        if (params.city) queryParams.append("city", params.city);
-        if (params.status) queryParams.append("status", params.status);
-        if (params.searchTerm)
+        if (params.date && params.date.trim()) queryParams.append("date", params.date);
+        if (params.city && params.city.trim()) queryParams.append("city", params.city);
+        if (params.status && params.status.trim()) queryParams.append("status", params.status);
+        if (params.searchTerm && params.searchTerm.trim())
           queryParams.append("searchTerm", params.searchTerm);
+        if (params.sortBy && params.sortBy.trim())
+          queryParams.append("sortBy", params.sortBy);
+        if (params.sortOrder && params.sortOrder.trim())
+          queryParams.append("sortOrder", params.sortOrder);
 
         return {
           url: `/booking?${queryParams.toString()}`,
@@ -37,6 +43,7 @@ const userBooking = baseApi.injectEndpoints({
         };
       },
       providesTags: ["userBooking"],
+      keepUnusedDataFor: 0,
     }),
 
     updateChargeEnabled: build.mutation({
