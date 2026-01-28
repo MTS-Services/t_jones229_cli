@@ -13,6 +13,6 @@ export default function Calender() {
       ) : (
         <CalendarDashboard calenderHandler={getCalender} data={data?.data} />
       )}
-    </div>
+    </div >
   );
 }

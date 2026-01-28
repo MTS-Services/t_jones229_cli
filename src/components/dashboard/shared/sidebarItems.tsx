@@ -20,7 +20,7 @@ export const sidebarItems: TSidebarItem[] = [
     key: "Dashboard",
     icon: <TbLayoutDashboard />,
     label: <Link href="/dashboard">Dashboard</Link>,
-    roles: ["SUPERADMIN"],
+    roles: ["SUPERADMIN","ADMIN"],
   },
   {
     key: "Edit your details",
@@ -38,13 +38,13 @@ export const sidebarItems: TSidebarItem[] = [
     key: "User Management",
     icon: <TbUsers />,
     label: <Link href="/dashboard/user-management">User Management</Link>,
-    roles: ["SUPERADMIN"],
+    roles: ["SUPERADMIN" ,"ADMIN"],
   },
   {
     key: "Captain Management",
     icon: <TbUsers />,
     label: <Link href="/dashboard/captain-management">Captain Management</Link>,
-    roles: ["SUPERADMIN"],
+    roles: ["SUPERADMIN","ADMIN"],
   },
   {
     key: "Check Your Trip",
@@ -74,8 +74,16 @@ export const sidebarItems: TSidebarItem[] = [
     key: "Trips Management",
     icon: <TbRoute />,
     label: <Link href="/dashboard/trips-managment">Trips Management</Link>,
-    roles: [userRole.fishingTripper],
+    roles: [userRole.fishingTripper,"ADMIN"],
   },
+  
+  {
+    key: "Booking Management",
+    icon: <TbRoute />,
+    label: <Link href="/dashboard/booking-managment">Booking Management</Link>,
+    roles: [userRole.fishingTripper,"ADMIN"],
+  },
+
   {
     key: "Membership",
     icon: <TbCrown />,
@@ -93,6 +101,6 @@ export const sidebarItems: TSidebarItem[] = [
     key: "Reset Password",
     icon: <RxReset />,
     label: <Link href="/dashboard/reset-password">Change Password</Link>,
-    roles: [userRole.captain, userRole.user, userRole.fishingTripper],
+    roles: [userRole.captain, userRole.user, userRole.fishingTripper,"ADMIN"],
   },
 ];

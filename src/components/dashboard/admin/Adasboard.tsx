@@ -42,7 +42,7 @@ export default function Adashboard() {
 
   const tripMetrics = data?.data?.tripMetrics || {};
   const userMetrics = data?.data?.userMetrics || {};
-  const listingRequest = data?.data?.listingRequest || 0;
+  const listingRequest = data?.data?.listingRequest || {};
 
   // Prepare data for bar chart
   const barChartData = [
@@ -146,7 +146,7 @@ export default function Adashboard() {
         {renderCard(
           DashboardCard,
           "REFUND REQUESTS:",
-          0,
+          listingRequest ?? 0,
           <FaMoneyBillWave className="text-[#FF9500]" size={28} />,
           "/dashboard/user-management"
         )}
