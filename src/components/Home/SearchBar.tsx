@@ -16,18 +16,18 @@ import flag from "@/assets/flag.png";
 import dayjs, { Dayjs } from "dayjs";
 
 const dropdownVariants: Variants = {
-  hidden: { opacity: 0, y: 15, scale: 0.98 },
+  hidden: { opacity: 0, y: 15, scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.3, ease: "easeOut" },
+    transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
   },
   exit: {
     opacity: 0,
     y: 10,
-    scale: 0.98,
-    transition: { duration: 0.2, ease: "easeIn" },
+    scale: 0.95,
+    transition: { duration: 0.3, ease: [0.4, 0, 1, 1] },
   },
 };
 
@@ -131,7 +131,7 @@ export default function SearchBar({
       <div className="md:hidden w-full px-4 pb-2 px-10">
         <div
           onClick={() => setIsMobileModalOpen(true)}
-          className={`w-full flex items-center gap-3 bg-white rounded-full shadow-lg border border-gray-200 ${scrolled ? "px-3 py-1" : "px-5 py-3"}`}
+          className={`w-full flex items-center gap-3 bg-white rounded-full shadow-lg border border-gray-200 ${scrolled ? "px-3 py-0" : "px-5 py-0"}`}
         >
           <IoIosSearch className="text-2xl text-gray-700" />
           <div className="flex-1">
@@ -370,17 +370,17 @@ export default function SearchBar({
 
       {/* --- Desktop Search Bar (Keep your original UI) --- */}
       <div
-        className={`hidden md:block w-full mx-auto px-4 transition-all duration-500 ease-in-out ${isExpanded ? "max-w-5xl" : "max-w-xl"}`}
+        className={`hidden md:block w-full mx-auto px-4 transition-all duration-700 ease-in-out ${isExpanded ? "max-w-5xl" : "max-w-xl"}`}
         ref={containerRef}
       >
         <div
-          className={`relative flex flex-col lg:flex-row items-center bg-white rounded-full transition-all duration-500 border-2 shadow-sm ${activeTab ? "border-gray-100" : "border-gray-100"}`}
+          className={`relative flex flex-col lg:flex-row items-center bg-white rounded-full transition-all duration-700 ease-in-out border-2 shadow-sm ${activeTab ? "border-gray-100 shadow-xl" : "border-gray-100"}`}
         >
           <div className="flex flex-row w-full items-center justify-between">
             {/* Desktop Where */}
             <div
               onClick={() => setActiveTab("where")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 ${isExpanded ? "px-6 py-3 flex-1" : "px-3 py-2.5 items-center flex-[0.8]"} ${activeTab === "where" ? "bg-white shadow-xl z-20" : "hover:bg-gray-100"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-3 py-2.5 items-center flex-[0.8]"} ${activeTab === "where" ? "bg-white shadow-xl z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
             >
               <h1
                 className={`font-extrabold text-black ${isExpanded ? "text-[15px]" : "text-[13px]"}`}
@@ -471,7 +471,7 @@ export default function SearchBar({
             {/* Desktop When */}
             <div
               onClick={() => setActiveTab("when")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "when" ? "bg-white shadow-xl z-20" : "hover:bg-gray-100"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "when" ? "bg-white shadow-xl z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
             >
               <h1 className="font-extrabold text-black">When</h1>
               {isExpanded ? (
@@ -514,7 +514,7 @@ export default function SearchBar({
             {/* Desktop Who */}
             <div
               onClick={() => setActiveTab("who")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.5]"} ${activeTab === "who" ? "bg-white shadow-xl z-20" : "hover:bg-gray-100"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.5]"} ${activeTab === "who" ? "bg-white shadow-xl z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
             >
               <h1 className="font-extrabold text-black">Who</h1>
               {isExpanded ? (
@@ -560,7 +560,7 @@ export default function SearchBar({
             {/* Desktop Type */}
             <div
               onClick={() => setActiveTab("type")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-300 ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "type" ? "bg-white shadow-xl z-20" : "hover:bg-gray-100"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "type" ? "bg-white shadow-xl z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
             >
               <h1 className="font-extrabold text-black">Type</h1>
               {isExpanded ? (
@@ -612,10 +612,10 @@ export default function SearchBar({
             <div className="p-1.5">
               <button
                 onClick={handleSearch}
-                className={`flex items-center justify-center bg-[#105d9e] hover:bg-[#0c4a7e] text-white rounded-full transition-all shadow-md active:scale-90 ${isExpanded ? "w-24 h-12 lg:w-28 lg:h-14" : "w-10 h-10"}`}
+                className={`flex items-center justify-center bg-[#105d9e] hover:bg-[#0c4a7e] text-white rounded-full transition-all duration-500 ease-in-out shadow-md hover:shadow-xl active:scale-90 ${isExpanded ? "w-24 h-12 lg:w-28 lg:h-14" : "w-10 h-10"}`}
               >
                 <IoIosSearch
-                  className={`${isExpanded ? "text-2xl w-6 h-6" : "text-lg"}`}
+                  className={`transition-all duration-500 ease-in-out ${isExpanded ? "text-2xl w-6 h-6" : "text-lg"}`}
                 />
               </button>
             </div>

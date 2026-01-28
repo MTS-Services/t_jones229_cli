@@ -93,6 +93,7 @@ export default function MultiStepFormContent() {
   const { handleSubmit, setValue, getValues } = methods;
 
   const [currentStep, setCurrentStep] = useState(0);
+  const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set([0])); // Track unlocked steps
   const [isLicenceImage, setIsLicenceImage] = useState(false);
   const [isBoatImage, setIsBoatImage] = useState(false);
   const imageUrl = useSelector((state: RootState) => state.imageUrl.imageUrl);
@@ -138,16 +139,24 @@ export default function MultiStepFormContent() {
   }, [getValues]);
 
   const handleTabNavigation = (index: number) => {
-    if (boatId || index <= currentStep) {
+    // For edit mode (boatId exists), allow navigation to any step
+    // For create mode, only allow navigation to visited steps
+    const canNavigate = boatId || visitedSteps.has(index);
+    
+    if (canNavigate) {
+      // Save current form data before navigating
       const currentData = getValues();
       updateFormData(currentData);
+      
+      // Navigate to the selected step
       setCurrentStep(index);
     } else {
-      toast.warn("Please complete the current step first.");
+      toast.warn("Please complete the current step first by clicking Next.");
     }
   };
 
   const handleNext = async (data: any) => {
+    // Save form data
     updateFormData(data);
 
     // Image validation for Photos & Videos step
@@ -158,7 +167,13 @@ export default function MultiStepFormContent() {
     const lastStep = boatId ? 6 : 7;
 
     if (currentStep < lastStep) {
-      setCurrentStep(currentStep + 1);
+      const nextStep = currentStep + 1;
+      
+      // Unlock the next step by adding to visitedSteps
+      setVisitedSteps((prev) => new Set([...prev, nextStep]));
+      
+      // Navigate to next step
+      setCurrentStep(nextStep);
     } else {
       await submitFinalForm(data);
     }
@@ -360,7 +375,8 @@ export default function MultiStepFormContent() {
           <div className="flex overflow-x-auto scrollbar-hide">
             {tabs.map((tab, index) => {
               const isActive = currentStep === index;
-              const isDisabled = !boatId && index > currentStep;
+              // Disable tab if not visited (unless in edit mode with boatId)
+              const isDisabled = !boatId && !visitedSteps.has(index);
 
               return (
                 <button
