@@ -72,9 +72,9 @@ responsibility yourself. Leave that to me.
                     <div>
                         <h3 className="text-white font-semibold mb-6">HEADING</h3>
                         <ul className="space-y-4 text-sm">
+                            <li><a href="/about-us" className="hover:text-indigo-400 transition hover:underline">ABOUT US</a></li>
                             <li><a href="/contact-us"  className="hover:text-indigo-400 transition hover:underline">CONTACT US</a></li>
                             <li><a   href="/faq" className="hover:text-indigo-400 transition hover:underline">FAQ</a></li>
-                            <li className="hover:text-indigo-400 transition hover:underline">Footer Link #3</li>
                             <li className="hover:text-indigo-400 transition hover:underline">Footer Link #4</li>
                             <li className="hover:text-indigo-400 transition hover:underline">Footer Link #5</li>
                         </ul>

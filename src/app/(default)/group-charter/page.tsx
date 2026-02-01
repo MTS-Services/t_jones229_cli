@@ -298,7 +298,7 @@ export default function GroupBooking() {
                     <option value="">Select Option</option>
                     <option value="Inshore">Inshore</option>
                     <option value="Offshore">Offshore</option>
-                    <option value="Nearshore">Nearshore</option>
+                    <option value="Nearshore">Fly Fishing</option>
                     <option value="Freshwater">Freshwater</option>
                   </select>
                   <div

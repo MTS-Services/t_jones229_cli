@@ -38,6 +38,9 @@ const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
     if (bookingType) params.append("bookingType", bookingType);
 
     route.push(`/payment?${params.toString()}`);
+
+
+    
   };
 
   return (
