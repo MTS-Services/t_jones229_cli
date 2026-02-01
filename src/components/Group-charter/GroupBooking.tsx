@@ -26,75 +26,162 @@ export default function BookingSection() {
   // const router = useRouter();
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
 
-  const onSubmit = async (data: any) => {
-    console.log("Form data submitted:", data);
+  // const onSubmit = async (data: any) => {
+  //   console.log("Form data submitted:", data);
 
-    const tripDate =
-      typeof window !== "undefined" ? localStorage.getItem("date") : null;
-    const numberOfGuests =
-      typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
+  //   const tripDate =
+  //     typeof window !== "undefined" ? localStorage.getItem("date") : null;
+  //   const numberOfGuests =
+  //     typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
 
-    try {
-      const groupBookingInfo = {
-        boatId: boatID || null,
-        tripId: tripId || null,
-        tripDate: tripDate || new Date().toISOString().split("T")[0],
-        amount: "full",
-        bookingType: false, // false = GROUP booking
-        groupSize: parseInt(numberOfGuests ?? "1", 10),
-        memberInfo: {
-          firstName: data?.firstName || "",
-          lastName: data?.lastName || "",
-          email: data?.email || "",
-          phoneNumber: data?.phoneNumber || "",
-          fishingType: data?.fishingType || "Offshore",
-          targetSpecies: data?.targetSpecies || "",
-          details: data?.details || "",
-        },
-        where:
-          typeof window !== "undefined"
-            ? localStorage.getItem("location")
-            : null,
-        date: tripDate,
-      };
+  //   try {
+  //     const groupBookingInfo = {
+  //       boatId: boatID || null,
+  //       tripId: tripId || null,
+  //       tripDate: tripDate || new Date().toISOString().split("T")[0],
+  //       amount: "full",
+  //       bookingType: false, // false = GROUP booking
+  //       groupSize: parseInt(numberOfGuests ?? "1", 10),
+  //       memberInfo: {
+  //         firstName: data?.firstName || "",
+  //         lastName: data?.lastName || "",
+  //         email: data?.email || "",
+  //         phoneNumber: data?.phoneNumber || "",
+  //         fishingType: data?.fishingType || "Offshore",
+  //         targetSpecies: data?.targetSpecies || "",
+  //         details: data?.details || "",
+  //       },
+  //       where:
+  //         typeof window !== "undefined"
+  //           ? localStorage.getItem("location")
+  //           : null,
+  //       date: tripDate,
+  //     };
 
-      console.log("Sending group booking info:", groupBookingInfo);
+  //     console.log("Sending group booking info:", groupBookingInfo);
 
-      const res = await bookingFN(groupBookingInfo);
-      console.log("Booking response:", res);
+  //     const res = await bookingFN(groupBookingInfo);
+  //     console.log("Booking response:", res);
 
-      if (res?.data?.success) {
-        toast.success(res?.data?.message || "Booking successful!");
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("numberOfGuests");
-          localStorage.removeItem("Guests");
-          localStorage.removeItem("date");
-        }
-        router.push("/group-confirmation");
-      } else if (res?.error) {
-        // Handle RTK Query error structure
-        let errorMessage = "Booking failed. Please try again.";
+  //     if (res?.data?.success) {
+  //       toast.success(res?.data?.message || "Booking successful!");
+  //       if (typeof window !== "undefined") {
+  //         localStorage.removeItem("numberOfGuests");
+  //         localStorage.removeItem("Guests");
+  //         localStorage.removeItem("date");
+  //       }
+  //       router.push("/group-confirmation");
+  //     } else if (res?.error) {
+  //       // Handle RTK Query error structure
+  //       let errorMessage = "Booking failed. Please try again.";
 
-        if (
-          "data" in res.error &&
-          typeof res.error.data === "object" &&
-          res.error.data !== null
-        ) {
-          errorMessage = (res.error.data as any)?.message || errorMessage;
-        } else if ("message" in res.error) {
-          errorMessage = res.error.message || errorMessage;
-        }
+  //       if (
+  //         "data" in res.error &&
+  //         typeof res.error.data === "object" &&
+  //         res.error.data !== null
+  //       ) {
+  //         errorMessage = (res.error.data as any)?.message || errorMessage;
+  //       } else if ("message" in res.error) {
+  //         errorMessage = res.error.message || errorMessage;
+  //       }
 
-        console.error("Booking error:", res.error);
-        toast.error(errorMessage);
-      } else {
-        toast.error("Booking failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-      toast.error("Something went wrong. Please try again later.");
-    }
+  //       console.error("Booking error:", res.error);
+  //       toast.error(errorMessage);
+  //     } else {
+  //       toast.error("Booking failed. Please try again.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Network error:", error);
+  //     toast.error("Something went wrong. Please try again later.");
+  //   }
+  // };
+
+
+
+
+const onSubmit = async (data: any) => {
+  console.log("Form data submitted:", data);
+
+  // 1️⃣ Safely get localStorage values
+  const tripDate =
+    typeof window !== "undefined"
+      ? localStorage.getItem("date") || params.get("date")
+      : null;
+  const numberOfGuests =
+    typeof window !== "undefined"
+      ? localStorage.getItem("Guests") || params.get("guests")
+      : null;
+  const bookingType =
+    typeof window !== "undefined"
+      ? localStorage.getItem("bookingType") || params.get("bookingType")
+      : null;
+
+  // 2️⃣ Validate before sending
+  if (!tripDate || !numberOfGuests || !bookingType) {
+    toast.error(
+      "Trip date, number of guests or booking type is missing. Please select them before submitting."
+    );
+    return;
+  }
+
+  // 3️⃣ Build booking payload safely
+  const groupBookingInfo = {
+    boatId: boatID || null,
+    tripId: tripId || null,
+    tripDate,
+    amount: "full",
+    bookingType: bookingType === "full" ? true : false, // convert string to boolean if needed
+    groupSize: parseInt(numberOfGuests ?? "1", 10),
+    memberInfo: {
+      firstName: data?.firstName || "",
+      lastName: data?.lastName || "",
+      email: data?.email || "",
+      phoneNumber: data?.phoneNumber || "",
+      fishingType: data?.fishingType || "Offshore",
+      targetSpecies: data?.targetSpecies || "",
+      details: data?.details || "",
+    },
+    where:
+      typeof window !== "undefined"
+        ? localStorage.getItem("location") || "Unknown"
+        : "Unknown",
+    date: tripDate,
   };
+
+  console.log("Sending group booking info:", groupBookingInfo);
+
+  try {
+    const res = await bookingFN(groupBookingInfo);
+    console.log("Booking response:", res);
+
+    if (res?.data?.success) {
+      toast.success(res?.data?.message || "Booking successful!");
+      // 4️⃣ Clean up
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("Guests");
+        localStorage.removeItem("date");
+        localStorage.removeItem("bookingType");
+      }
+      router.push("/group-confirmation");
+    } else if (res?.error) {
+      let errorMessage = "Booking failed. Please try again.";
+      if ("data" in res.error && typeof res.error.data === "object") {
+        errorMessage = (res.error.data as any)?.message || errorMessage;
+      } else if ("message" in res.error) {
+        errorMessage = res.error.message || errorMessage;
+      }
+      toast.error(errorMessage);
+    } else {
+      toast.error("Booking failed. Please try again.");
+    }
+  } catch (error) {
+    console.error("Network error:", error);
+    toast.error("Something went wrong. Please try again later.");
+  }
+};
+
+
+
 
   return (
     <div className="container mx-auto flex flex-col gap-10 xl:px-4 lg:px-3 px-2 py-10">
