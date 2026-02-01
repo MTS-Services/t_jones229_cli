@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import ReduxProvider from "@/redux/provider/ReduxProvider";
-import { ToastContainer } from "react-toastify";
-import ErrorBoundary from "@/components/ErrorBoundary";
 import { Suspense } from "react";
+// import { Geist, Geist_Mono } from "next/font/google";
+import ReduxProvider from "@/redux/provider/ReduxProvider";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import { ToastContainer } from "react-toastify";
+import Loader from "@/components/ui/Loader";
+import "./globals.css";
 
 // import HomeNavbar from "@/Components/Navber/HomeNavbar";
 
@@ -32,6 +33,11 @@ export const metadata: Metadata = {
   },
 };
 
+
+
+
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,7 +49,7 @@ export default function RootLayout({
         <ErrorBoundary>
           <ToastContainer />
           <ReduxProvider>
-            <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+            <Suspense fallback={<Loader />}>{children}</Suspense>
           </ReduxProvider>
         </ErrorBoundary>
       </body>

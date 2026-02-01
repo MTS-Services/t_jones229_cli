@@ -679,7 +679,7 @@ export default function Login() {
             isLoading ? "cursor-not-allowed" : ""
           }`}
         >
-          {isLoading ? <Loader /> : "Log in"}
+          {isLoading ? "Loading..." : "Log in"}
         </Button>
 
         <h1 className="text-base font-normal text-white md:text-[#616161] pt-8 pb-4">

@@ -1,13 +1,13 @@
 import logo2 from "@/assets/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { ToastContainer } from "react-toastify";
+
 import Login from "@/components/Auth/Login";
 
 export default function Page() {
   return (
     <div className="w-full h-screen relative bg-[#f7f7f7]">
-      <ToastContainer />
+
       <div className="container mx-auto flex flex-col justify-center items-center text-white">
         <Link href={"/"}>
           <Image
