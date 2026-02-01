@@ -5,6 +5,50 @@ import { useRouter } from "next/navigation";
 import { TSkeleton } from "../TSkelton";
 import PaginationButton from "./PaginationButton";
 
+function MobileCaptainsView({ captains, itemsPerPage = 6 }: any) {
+  const [page, setPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil((captains?.length || 0) / itemsPerPage));
+
+  const start = (page - 1) * itemsPerPage;
+  const pageCaptains = (captains || []).slice(start, start + itemsPerPage);
+
+  const prev = () => setPage((p: number) => Math.max(1, p - 1));
+  const next = () => setPage((p: number) => Math.min(totalPages, p + 1));
+
+  if (!captains || captains.length === 0) return null;
+
+  return (
+    <div className="block md:hidden py-10 ">
+      <div className="space-y-3">
+        {pageCaptains.map((captain: any, idx: number) => (
+          <div key={captain.id || idx} className="bg-white rounded-lg shadow-sm p-4 border">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-base font-semibold text-gray-900">{captain?.fullName || "Unknown"}</div>
+                <div className="text-base text-gray-500 mt-1 break-words">{captain.email || "No Email"}</div>
+                <div className="text-base text-gray-500 mt-1">{captain.phoneNumber || "N/A"}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-base text-gray-700">{captain.totalTrips ?? 0} trip{captain.totalTrips !== 1 ? "s" : ""}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 flex items-center justify-center gap-2">
+        <button onClick={prev} disabled={page === 1} className="px-3 py-1 rounded-md bg-gray-100 text-sm disabled:opacity-50">Prev</button>
+        <div className="flex items-center gap-2">
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button key={i} onClick={() => setPage(i + 1)} className={`px-3 py-1 rounded-md text-sm ${page === i + 1 ? "bg-blue-600 text-white" : "bg-gray-100"}`}>{i + 1}</button>
+          ))}
+        </div>
+        <button onClick={next} disabled={page === totalPages} className="px-3 py-1 rounded-md bg-gray-100 text-sm disabled:opacity-50">Next</button>
+      </div>
+    </div>
+  );
+}
+
 export default function CaptainManagement({ data = [], isLoading }: any) {
   const router = useRouter();
 
@@ -42,12 +86,14 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
 
   return (
     <div className="p-4 md:p-8">
-      <div className="overflow-x-auto bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
-        <table className="w-full border-collapse">
+      <div className="bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
+        {/* Desktop table (unchanged) */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full border-collapse">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
-                Name
+                {/* Name */}
               </th>
               <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
                 Email
@@ -106,35 +152,18 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
               ))
             )}
           </tbody>
-        </table>
+          </table>
+        </div>
+
+        {/* Mobile: card layout + mobile-only pagination */}
+        <MobileCaptainsView captains={captains} itemsPerPage={6} />
 
         <div className="bg-white">
           {/* See All Button */}
-          <div className="flex justify-end p-4">
-            <button
-              onClick={() => router.push("/dashboard/all-captain")}
-              className="bg-orange-400 hover:bg-orange-500 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
-            >
-              See all
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
-
+    
           {/* Pagination Section */}
           {captains.length > itemsPerPage && (
-            <div className="flex items-center justify-center pb-4 border-t border-gray-100">
+            <div className="hidden md:flex items-center justify-center pb-4 border-t border-gray-100">
               <PaginationButton
                 currentPage={currentPage}
                 totalPages={totalPages}
