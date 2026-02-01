@@ -128,7 +128,7 @@ const AccordionCard = ({
       layout
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`group relative mb-4 overflow-hidden rounded-xl border transition-all duration-300 ${
+      className={`group relative mb-4 overflow-hidden rounded-xl border border-gray-200 transition-all duration-300 ${
         isOpen
           ? "border-[#0f5d9e] bg-white shadow-sm"
           : "border-transparent bg-gray-50 hover:bg-gray-100"
@@ -139,8 +139,8 @@ const AccordionCard = ({
         className="flex w-full items-center justify-between p-5 text-left"
       >
         <span
-          className={`text-lg font-semibold ${
-            isOpen ? "text-[#0f5d9e]" : "text-gray-800"
+          className={`text-base font-semibold ${
+            isOpen ? "text-[#0f5d9e]" : "text-gray-500"
           }`}
         >
           {item.question}
@@ -166,7 +166,7 @@ const AccordionCard = ({
           >
             <div className="px-5 pb-5">
               <div className="h-[1px] w-full bg-[#78b4e6]/30 mb-3" />
-              <p className="text-gray-500 text-base leading-relaxed">
+              <p className="text-gray-600 text-lg leading-relaxed">
                 {item.answer}
               </p>
             </div>
@@ -181,28 +181,28 @@ export default function PremiumFaq() {
   const [openId, setOpenId] = useState<number | null>(null);
 
   return (
-    <Container className="">
-      <div className="">
-        <header className="mb-8 text-left">
-          <p className="md:text-base text-sm font-medium text-black">
+    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 lg:pb-24">
+     
+        <header className="mb-12 text-center">
+          <h1 className="lg:text-4xl md:text-3xl text-2xl font-black text-gray-900 mb-4">
+            Frequently Asked <span className="text-[#0f5d9e]">Questions (FAQ).</span>
+          </h1>
+          <p className="md:text-lg text-sm font-medium text-black max-w-2xl mx-auto">
             "We welcome any feedback or suggestions from our captains. Please
             contact us at anytime to discuss your thoughts or any issues you're
             facing."
           </p>
-          <h1 className="lg:text-4xl md:text-3xl text-2xl font-black text-gray-900 mt-1">
-            Frequently Asked <span className="text-[#0f5d9e]">Questions.</span>
-          </h1>
         </header>
 
         <div className="space-y-14">
           {FAQ_DATA.map((section, idx) => (
             <div key={idx} className="mb-8">
-              <h2 className="my-4 text-lg font-black text-gray-700 flex items-center gap-4">
+              <h2 className="my-4 text-xl font-black text-gray-700 flex items-center gap-4">
                 {section.category}
-                <div className="h-[2px] flex-grow bg-gray-200" />
+                <div className="h-[1px] flex-grow bg-gray-300" />
               </h2>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {section.questions.map((item) => (
                   <AccordionCard
                     key={item.id}
@@ -217,7 +217,7 @@ export default function PremiumFaq() {
             </div>
           ))}
         </div>
-      </div>
-    </Container>
+     
+    </div>
   );
 }
