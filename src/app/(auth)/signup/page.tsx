@@ -93,7 +93,7 @@ export default function Page() {
         })
       );
 
-      
+
       route.push("/");
     } catch (err) {
       console.error("Login error:", err);
@@ -112,6 +112,7 @@ export default function Page() {
             className="h-28 w-52"
           />
         </Link>
+
 
         <div className="text-center mx-auto">
           <div>
