@@ -79,7 +79,7 @@ export default function AboutUsPage() {
         <Container>
           <div className="text-center max-w-2xl mx-auto">
             
-            <p className="text-gray-300 mb-8">
+            <p className="text-gray-300 mb-8 text-lg">
               Join thousands of anglers who've found their perfect fishing trips
               through FishingTripper.
             </p>
