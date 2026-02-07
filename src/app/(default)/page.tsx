@@ -36,9 +36,6 @@ const Experience = dynamic(() => import("@/components/Home/Experience"), {
 export default function Home() {
   return (
     <div>
-      {/* <Suspense fallback={<div style={{ minHeight: "100px" }} />}>
-        <SearchBar />
-      </Suspense> */}
       <Suspense
         fallback={<div style={{ minHeight: "400px", background: "#1a1a1a" }} />}
       >

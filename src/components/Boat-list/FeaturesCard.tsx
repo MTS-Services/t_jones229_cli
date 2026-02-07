@@ -48,7 +48,7 @@ export default function FeaturesCard() {
         {featuresData?.map((feature) => (
           <div
             key={feature.id}
-            className="bg-white text-center rounded-md p-6 transition shadow-[0_6px_20px_rgb(0,0,0,0.08)] feature-card w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)]"
+            className="bg-white text-center rounded-md p-6 transition shadow-md border border-gray-200 w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)]"
           >
             {/* ICON CENTERED */}
             <div className="mx-auto text-[#105e9e] mb-4 w-10 h-10 flex items-center justify-center">

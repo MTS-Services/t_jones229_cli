@@ -10,9 +10,10 @@ const CaptainsInfoPage = () => {
   >(null);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Free Trial Banner */}
-      <div className="bg-[#105e9e] rounded-xl shadow-xl p-8 mb-12 text-white text-center">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+
+     {/* Free Trial Banner */}
+      <div className="bg-[#105e9e] rounded-xl shadow-xl p-8 mb-20 text-white text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
           <Shield className="w-8 h-8" />
           <h3 className="text-3xl font-bold">First 6 Months FREE</h3>
@@ -21,7 +22,6 @@ const CaptainsInfoPage = () => {
           Try FishingTripper risk-free and start booking more trips today
         </p>
       </div>
-
       {/* Pricing Plans */}
       <div className="mb-12">
         <h3 className="text-3xl font-bold text-center text-gray-900 mb-3">
@@ -119,6 +119,8 @@ const CaptainsInfoPage = () => {
           </div>
         </div>
       </div>
+
+       
     </div>
   );
 };
