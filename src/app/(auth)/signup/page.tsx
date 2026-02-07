@@ -55,7 +55,7 @@ export default function Page() {
       }
     } catch (error: any) {
       console.error("Registration error:", error);
-      console.error("Error data:", error?.data);
+      console.error("Error data:", error?.data?.message);
       const errorMessage =
         error?.data?.message || // RTK Query error structure
         error?.response?.data?.message ||

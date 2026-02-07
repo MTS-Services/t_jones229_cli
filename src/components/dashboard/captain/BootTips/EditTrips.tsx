@@ -93,10 +93,7 @@ export default function EditTrip() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="border border-gray-300 rounded-md p-6 mb-8 relative"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="p-10">
       <h2 className="text-xl font-semibold mb-4">Fishing Trip</h2>
 
       {/* Trip Name */}
@@ -160,8 +157,8 @@ export default function EditTrip() {
               {h < 12
                 ? `${h}:00 AM`
                 : h === 12
-                ? "12:00 PM"
-                : `${h - 12}:00 PM`}
+                  ? "12:00 PM"
+                  : `${h - 12}:00 PM`}
             </option>
           ))}
         </select>

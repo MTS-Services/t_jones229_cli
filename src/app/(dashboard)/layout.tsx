@@ -1,6 +1,7 @@
 "use client";
-import Sidebar from "@/components/dashboard/shared/Sidebar";
 import React from "react";
+import Sidebar from "@/components/dashboard/shared/Sidebar";
+import { ToastContainer } from "react-toastify";
 
 export default function DashboardLayout({
   children,
@@ -10,6 +11,7 @@ export default function DashboardLayout({
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
+      <ToastContainer />
       <Sidebar />
 
       {/* Main Content Area */}
