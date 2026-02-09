@@ -8,8 +8,9 @@ import React from "react";
 
 export default function page() {
   const stripePromise = loadStripe(
-    "pk_live_51S7FGMFMScDbRANiZVe5OTvZn5WiO4k4zc1B38SIjGRDobCpmIwGrN18nmNaT4CMGQZfPIIN6mGi6rbju9usFnw5003r19idFS"
-  );  
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
+      "pk_test_51R61J0CZ2kLTrYVYE9WQTKQfW3pfUXk24wvYy2ZnBiylVvfjMdCXhTPuDnFIzJhbAOG45ZC0EN45mqH5Kqsr4HPw005XK2Dm4F",
+  );
   // const stripePromise = loadStripe(
   //   "pk_test_51S7FGWFSOdhjuWuwt3kJdy5Z1mbFuygwNcHF9RwdEWtGOaD8ttn7rCxgvgXF8sgGRKmaRRZodTExO7K0mei0rSMt00QCt0obAN"
   // );

@@ -47,7 +47,7 @@ export default function Page() {
       if (res?.success) {
         toast.success(
           res?.message ||
-            "Registration successful! Please check your email to verify your account."
+            "Registration successful! Please check your email to verify your account.",
         );
         route.push("/login");
       } else {
@@ -90,9 +90,8 @@ export default function Page() {
           user: res?.data?.data,
           token: res?.data?.data?.accessToken,
           isAuthenticated: true,
-        })
+        }),
       );
-
 
       route.push("/");
     } catch (err) {
@@ -113,7 +112,6 @@ export default function Page() {
           />
         </Link>
 
-
         <div className="text-center mx-auto">
           <div>
             <h2 className="text-black text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
@@ -131,7 +129,7 @@ export default function Page() {
           {/* Signup Form */}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="md:bg-white  md:p-10 border border-[#0f5d9d] rounded-lg space-y-4"
+            className="md:bg-white p-4 md:p-10 border border-[#d4e9fa] rounded-lg space-y-4"
           >
             {/* first  Name */}
             <div>
@@ -286,7 +284,8 @@ export default function Page() {
                 isLoading ? "cursor-not-allowed" : ""
               }`}
             >
-              {isLoading ? <Loader /> : "Register"}
+              {/* {isLoading ? <Loader /> : "Register"} */}
+              {isLoading ? "Loading..." : "Register"}
             </Button>
 
             <h1 className="text-base font-normal text-white md:text-[#616161] py-2">
