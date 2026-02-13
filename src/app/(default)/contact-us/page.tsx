@@ -1,11 +1,8 @@
 "use client";
-import Button from "@/components/ReUsible/Button";
-import FloatingInput from "@/components/ReUsible/InputField";
-import { useSupportMutation } from "@/redux/api/authApi";
 import React from "react";
+import { useSupportMutation } from "@/redux/api/authApi";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Image from "next/image";
 
 type FormValues = {
   email: string;
@@ -22,7 +19,6 @@ export default function Page() {
   } = useForm<FormValues>();
 
   const [support] = useSupportMutation();
-
   const onSubmit = async (data: FormValues) => {
     try {
       const response = await support(data);
@@ -45,7 +41,7 @@ export default function Page() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#0f5a8b] mb-3">
               Contact Us
             </h1>
             <p className="text-gray-600 text-lg">
@@ -116,7 +112,7 @@ export default function Page() {
                     <textarea
                       id="description"
                       rows={4}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f5a8b] focus:border-[#0f5a8b] outline-none transition resize-none"
                       placeholder="Tell us how we can help..."
                       {...register("description", {
                         required: "Please enter your message",
@@ -129,14 +125,13 @@ export default function Page() {
                     )}
                   </div>
 
-                  <Button
-                    className="w-full py-3 text-lg mt-2"
-                    variant="secondary"
+                  <button
+                    className="w-full rounded-full bg-[#0f5a8b] hover:bg-[#1376af] text-white py-3 text-lg mt-2"
                     type="submit"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Sending..." : "Send Message"}
-                  </Button>
+                  </button>
                 </form>
               </div>
 
@@ -150,9 +145,9 @@ export default function Page() {
                   <div className="space-y-6">
                     {/* Email Support */}
                     <div className="flex items-start gap-4">
-                      <div className="bg-blue-50 p-3 rounded-lg">
+                      <div className="bg-[#0f5a8b] p-3 rounded-lg">
                         <svg
-                          className="w-6 h-6 text-blue-600"
+                          className="w-6 h-6 text-white"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -171,7 +166,7 @@ export default function Page() {
                         </h3>
                         <a
                           href="mailto:tom@fishingtripper.com"
-                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                          className="text-[#0f5a8b] hover:text-[#1376af] transition-colors"
                         >
                           tom@fishingtripper.com
                         </a>
@@ -180,9 +175,9 @@ export default function Page() {
 
                     {/* Response Time */}
                     <div className="flex items-start gap-4">
-                      <div className="bg-green-50 p-3 rounded-lg">
+                      <div className="bg-[#0f5a8b] p-3 rounded-lg">
                         <svg
-                          className="w-6 h-6 text-green-600"
+                          className="w-6 h-6 text-white"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -205,9 +200,9 @@ export default function Page() {
 
                     {/* Business Hours */}
                     <div className="flex items-start gap-4">
-                      <div className="bg-purple-50 p-3 rounded-lg">
+                      <div className="bg-[#0f5a8b] p-3 rounded-lg">
                         <svg
-                          className="w-6 h-6 text-purple-600"
+                          className="w-6 h-6 text-white"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -233,11 +228,11 @@ export default function Page() {
                 </div>
 
                 {/* Image/Placeholder */}
-                <div className="mt-8 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-xl p-6">
+                <div className="mt-8 bg-gradient-to-r from-[#0f5a8b] to-[#2a8bcc] rounded-xl p-6">
                   <div className="text-center">
                     <div className="inline-block p-4 bg-white rounded-xl shadow-sm mb-4">
                       <svg
-                        className="w-12 h-12 text-blue-600"
+                        className="w-12 h-12 text-[#0f5a8b]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -250,10 +245,10 @@ export default function Page() {
                         />
                       </svg>
                     </div>
-                    <h4 className="font-semibold text-gray-800 mb-2">
+                    <h4 className="font-semibold text-white mb-2">
                       We Love Helping Anglers
                     </h4>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-white text-sm">
                       Your fishing adventure is important to us
                     </p>
                   </div>

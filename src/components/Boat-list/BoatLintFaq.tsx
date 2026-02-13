@@ -2,9 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Container from "../common/Container";
-// 1. Import icons from react-icons
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { MdKeyboardArrowDown } from "react-icons/md";
 
 interface FAQItem {
   id: number;
@@ -182,42 +180,39 @@ export default function PremiumFaq() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 lg:pb-24">
-     
-        <header className="mb-12 text-center">
-          <h1 className="lg:text-4xl md:text-3xl text-2xl font-black text-gray-900 mb-4">
-            Frequently Asked <span className="text-[#0f5d9e]">Questions (FAQ).</span>
-          </h1>
-          <p className="md:text-lg text-sm font-medium text-black max-w-2xl mx-auto">
-            "We welcome any feedback or suggestions from our captains. Please
-            contact us at anytime to discuss your thoughts or any issues you're
-            facing."
-          </p>
-        </header>
+      <header className="mb-12 text-center">
+        <h1 className="lg:text-4xl md:text-3xl text-2xl font-black text-gray-900 mb-4">
+          Frequently Asked{" "}
+          <span className="text-[#0f5d9e]">Questions (FAQ).</span>
+        </h1>
+        <p className="md:text-lg text-sm font-medium text-black max-w-2xl mx-auto">
+          "We welcome any feedback or suggestions from our captains. Please
+          contact us at anytime to discuss your thoughts or any issues you're
+          facing."
+        </p>
+      </header>
 
-        <div className="space-y-14">
-          {FAQ_DATA.map((section, idx) => (
-            <div key={idx} className="mb-8">
-              <h2 className="my-4 text-xl font-black text-gray-700 flex items-center gap-4">
-                {section.category}
-                <div className="h-[1px] flex-grow bg-gray-300" />
-              </h2>
+      <div className="space-y-14">
+        {FAQ_DATA.map((section, idx) => (
+          <div key={idx} className="mb-8">
+            <h2 className="my-4 text-xl font-black text-gray-700 flex items-center gap-4">
+              {section.category}
+              <div className="h-[1px] flex-grow bg-gray-300" />
+            </h2>
 
-              <div className="space-y-4">
-                {section.questions.map((item) => (
-                  <AccordionCard
-                    key={item.id}
-                    item={item}
-                    isOpen={openId === item.id}
-                    onClick={() =>
-                      setOpenId(openId === item.id ? null : item.id)
-                    }
-                  />
-                ))}
-              </div>
+            <div className="space-y-4">
+              {section.questions.map((item) => (
+                <AccordionCard
+                  key={item.id}
+                  item={item}
+                  isOpen={openId === item.id}
+                  onClick={() => setOpenId(openId === item.id ? null : item.id)}
+                />
+              ))}
             </div>
-          ))}
-        </div>
-     
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

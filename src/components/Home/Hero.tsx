@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 const content = [
   {
@@ -13,7 +12,6 @@ const content = [
 
 export default function Hero() {
   const [index] = useState(0);
-  const router = useRouter();
   const item = content[index];
 
   return (
@@ -21,7 +19,7 @@ export default function Hero() {
     <div className="relative w-full h-[500px] md:h-[700px] lg:h-[800px] overflow-hidden bg-black">
       {/* Background Video */}
       <video
-        src="/intro/introVideo.webm"
+        src="/intro/hero.webm"
         autoPlay
         muted
         loop
@@ -35,7 +33,7 @@ export default function Hero() {
           video.muted = true;
           video.play().catch(() => {
             // Fallback for when autoplay fails
-            console.log('Video autoplay failed');
+            console.log("Video autoplay failed");
           });
         }}
       />
@@ -46,12 +44,12 @@ export default function Hero() {
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 md:px-8 z-20">
         {/* Heading */}
-        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight max-w-4xl mx-auto text-white">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl uppercase font-bold mb-4 md:mb-6 leading-tight max-w-7xl mx-auto text-white">
           {item.line1}
         </h1>
 
         {/* Description */}
-        <p className="max-w-md md:max-w-xl text-white text-sm sm:text-base md:text-lg mb-8 font-light leading-relaxed">
+        <p className="max-w-md md:max-w-2xl text-white text-sm sm:text-base md:text-lg mb-8 font-light leading-relaxed">
           {item.desc}
         </p>
       </div>

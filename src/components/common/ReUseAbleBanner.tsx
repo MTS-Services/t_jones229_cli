@@ -26,7 +26,6 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
   boardImage,
   buttonTitle,
   backgroundImageClassName,
-  className,
   pathLink,
 }) => {
   const router = useRouter();
@@ -41,8 +40,8 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
     >
       <div className={`absolute inset-0  rounded-2xl bg-black/40`} />
 
-      <div className="relative z-10 container mx-auto flex flex-col gap-6 items-center text-center text-white px-5 lg:px-[135px]">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+      <div className="relative z-10 container mx-auto flex flex-col gap-2 items-center text-center text-white px-5 lg:px-[135px]">
+        <h1 className="text-3xl md:text-4xl lg:text-4xl font-bold leading-tight">
           {title ? title : ""}
         </h1>
         <p className="max-w-2xl text-base md:text-xl font-normal tracking-tight">
@@ -50,11 +49,8 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
         </p>
 
         {button && pathLink && (
-          <Link href={pathLink}>
-            <Button
-              variant="primary"
-              className="flex items-center font-satoshi rounded-[14px] text-base font-bold md:mt-3 mt-2 gap-2"
-            >
+          <Button className="rounded-[14px] bg-[#0f436d] text-base font-bold md:mt-3 mt-2 gap-2">
+            <Link href={pathLink} className="flex items-center gap-2">
               {boardImage && (
                 <Image
                   className="h-3 md:h-6 w-3 md:w-6"
@@ -64,10 +60,9 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
                   height={24}
                 />
               )}
-
               {buttonTitle}
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         )}
       </div>
     </section>

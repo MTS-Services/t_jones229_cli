@@ -16,26 +16,32 @@ const CaptainsInfoPage = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-0 py-10">
       {/* Free Trial Banner - Cleaner Design */}
-      <div className="bg-gradient-to-r from-[#0a4a7a] to-[#105e9e] rounded-2xl shadow-lg p-10 mb-24 text-white text-center relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#0a4a7a] to-[#105e9e] rounded-2xl shadow-lg p-10 mb-16 text-white text-center relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-16 -mb-16"></div>
 
-        <div className="relative">
+        <div className="relative max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Shield className="w-10 h-10 text-yellow-300" />
-            <h3 className="text-4xl md:text-5xl font-bold">
-              First 6 Months Free
+            <Shield className="md:w-12 md:h-12 text-yellow-300" />
+            <h3 className="text-2xl md:text-5xl font-bold">
+              First 6 months free
             </h3>
           </div>
-          <p className="text-xl text-blue-50 max-w-2xl mx-auto">
-            Try FishingTripper risk-free and start booking more trips today
-          </p>
+
+          <div className="space-y-3 text-base md:text-xl text-blue-50">
+            <p>No commission charged during the free period.</p>
+            <p>
+              After 6 months, a simple 5% commission per completed booking
+              applies.
+            </p>
+            <p className="font-medium">No monthly fees. No contracts.</p>
+          </div>
         </div>
       </div>
 
       {/* Pricing Section */}
-      <div className="">
-        <p className="text-3xl mb-16 md:text-4xl font-bold text-center text-gray-900">
+      <div>
+        <p className="text-xl mb-16 md:text-2xl  text-center text-gray-900">
           Select the pricing model that works best for your business
         </p>
 
