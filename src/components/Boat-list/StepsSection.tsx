@@ -1,5 +1,3 @@
-
-
 "use client";
 
 // import { stepsData } from "@/constant/stepsData";
@@ -24,11 +22,10 @@ export const stepsData = [
   {
     id: 3,
     icon: <Wallet />,
-    title: "Get Paid & Set Sail",
+    title: "Get Paid & Go Fishing",
     description: "Earn money on your terms.",
   },
 ];
-
 
 export default function StepsSection() {
   const router = useRouter();
