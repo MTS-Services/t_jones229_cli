@@ -121,50 +121,93 @@ export default function GroupBooking() {
   return (
     <div className="mt-20">
       <ToastContainer />
-      <div className="pt-[35px] pb-[10px]">
+      <div className="py-4">
         <div className="container mx-auto xl:px-4 lg:px-3 px-2">
-          <h1 className="text-xl md:text-2xl font-bold text-[#242424] leading-9">
+          <h1 className="text-base md:text-lg font-bold text-slate-400 leading-9">
             {location ?? "Location not set"} / {tripDate ?? "Date not set"} /{" "}
             {numberOfGuests ?? "Guests not set"} people
           </h1>
         </div>
       </div>
 
-      <div className="container mx-auto flex flex-col gap-10 xl:px-4 lg:px-3 px-2 py-10">
-        <h2 className="text-xl md:text-4xl font-bold text-textSecondary mb-2">
-          How it works:
-        </h2>
+      <div className="container mx-auto flex flex-col gap-10  xl:px-4 lg:px-3 px-2 mb-20">
+        <div className="container mx-auto bg-slate-50 rounded-xl p-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Video Section */}
+            <div className="relative h-full">
+              <div className="h-full min-h-[400px] bg-gray-200 rounded-xl flex items-center justify-center shadow-md">
+                <button className="w-16 h-16 rounded-full bg-[#105d9e] hover:bg-[#70b6f0] flex items-center justify-center transition">
+                  <Play className="w-6 h-6 text-white ml-1" fill="white" />
+                </button>
+              </div>
+            </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          <div>
-            <ol className="list-decimal space-y-4 pl-6 text-black font-normal text-sm md:text-base leading-normal tracking-tight font-sans">
-              <li>Create a free account or sign in to your profile.</li>
-              <li>
-                Confirm your contact information and add some details about the
-                type of fishing you would like to do i.e. Offshore/Inshore and
-                species you'd like to target.
-              </li>
-              <li>
-                Your information will be added to our database and we'll team
-                you up with other anglers looking to do the same type of fishing
-                as you, on your specified date(s).
-              </li>
-              <li>
-                5. An email will be sent to you with details of the proposed
-                trip with a payment link to confirm the booking. Payments will
-                be refunded if the trip does not go ahead.
-              </li>
-            </ol>
-          </div>
+            {/* Steps Section */}
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900">
+                How It Works
+              </h2>
 
-          <div className="relative">
-            <div className="aspect-video bg-gray-300 rounded-lg flex items-center justify-center">
-              <Button
-                size="lg"
-                className="rounded-full w-16 h-16 bg-green-600 hover:bg-green-700"
-              >
-                <Play className="w-6 h-6 ml-1" fill="white" />
-              </Button>
+              <div className="space-y-8">
+                {/* Step 1 */}
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">
+                      Create Your Free Account
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      Sign up or log in to get started.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">
+                      Choose Your Fishing Style
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      Select Offshore or Inshore and your target species.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Get Matched</h3>
+                    <p className="text-gray-600 text-sm">
+                      We connect you with anglers planning the same trip.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 4 */}
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
+                    4
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">
+                      Confirm & Go Fishing
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      Receive trip details by email and confirm securely. Full
+                      refund if cancelled.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
