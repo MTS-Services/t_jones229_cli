@@ -395,11 +395,11 @@ export default function GroupBooking() {
               disabled={!marketingConsent}
               className={`px-6 py-2 rounded-md font-medium text-white w-48 ${
                 marketingConsent
-                  ? "bg-orange-400 hover:bg-orange-500"
+                  ? "bg-[#FF7F50] hover:bg-[#FF7F50]"
                   : "bg-orange-200 cursor-not-allowed"
               }`}
             >
-              {isLoading ? <Loader /> : "Submit Details"}
+              {isLoading ? "Loading..." : "Submit Details"}
             </button>
           </form>
         </div>
