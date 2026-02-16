@@ -3,21 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { Play } from "lucide-react";
 import { IoIosArrowDown } from "react-icons/io";
-import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useCreateBookingMutation } from "@/redux/api/bookingApi";
 import { toast, ToastContainer } from "react-toastify";
-import Loader from "@/components/ui/Loader";
-import { useSelector } from "react-redux";
 
 export default function GroupBooking() {
   const [tripDate, setTripDate] = useState<string | null>(null);
   const [location, setLocation] = useState<string | null>(null);
   const [numberOfGuests, setNumberOfGuests] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const { user } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -45,13 +40,6 @@ export default function GroupBooking() {
 
   const onSubmit = async (data: any) => {
     console.log("=== Form submission started ===");
-
-    if (!user) {
-      toast.warn("Please login to submit your details");
-      const returnUrl = "/group-charter?type=GROUP";
-      router.push(`/login?redirect=${encodeURIComponent(returnUrl)}`);
-      return;
-    }
 
     // Validate required fields
     if (
@@ -218,7 +206,7 @@ export default function GroupBooking() {
           </h2>
           <p className="text-sm md:text-base text-textSecondary mb-2">
             We will take your contact details, and reach out to captains in the
-            area...
+            area to find you a match.
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-8">
@@ -374,19 +362,22 @@ export default function GroupBooking() {
               />
             </div>
 
-            <div className="flex items-start space-x-3">
+            <div className="flex items-center gap-3">
               <input
                 id="marketing"
                 type="checkbox"
                 {...register("marketingConsent")}
-                className="mt-1"
+                className="h-6 w-6"
               />
               <label
                 htmlFor="marketing"
-                className="text-sm md:text-lg text-textSecondary leading-7"
+                className="text-sm text-[#6e6e6e] leading-5"
               >
                 By providing us with your email address, you confirm that we can
-                use it to share your booking information...
+                use it to share your booking information with potential captains
+                and send you updates about your trip. We will not share your
+                email with third parties for marketing purposes without your
+                consent.
               </label>
             </div>
 

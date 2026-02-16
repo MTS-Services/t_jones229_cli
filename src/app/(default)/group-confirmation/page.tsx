@@ -27,35 +27,37 @@ export default function page() {
 
         {/* Heading */}
         <h1 className="font-sk-modernist text-slate-900 text-3xl md:text-4xl text-center font-extrabold tracking-tight mb-6">
-          You're on the <span className="text-[#1a5483]">Shared Trip</span>{" "}
-          list!
+          You're on the <span className="text-green-700">Shared Trip</span>{" "}
+          listed!
         </h1>
 
         <div className="space-y-6 text-center md:text-left">
-          <p className="font-inter text-slate-600 text-base md:text-lg leading-relaxed">
+          <p className=" text-slate-600 text-center leading-relaxed">
             Thanks for registering your interest. We'll now work to pair you
             with like-minded anglers and a suitable charter based on your
             preferences.
           </p>
 
           <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-md">
-            <p className="text-blue-800 text-base font-medium">
-              Next Step: As soon as a match is confirmed, you'll receive an
-              email with full trip details.
+            <p className="text-blue-700">
+              <strong>Next Step:</strong> As soon as a match is confirmed,
+              you'll receive an email with full trip details.
             </p>
           </div>
 
           {/* Contact Section */}
           <div className="flex flex-col md:flex-row items-center justify-between pt-6 border-t border-gray-100 gap-4">
             <div className="flex items-center gap-2 text-slate-500">
-              <MdEmail className="text-blue-500 text-xl" />
-              <span className="text-sm">Questions?</span>
-              <a
-                href="mailto:tom@fishingtripper.com"
-                className="font-semibold text-slate-800 hover:text-blue-600 transition"
-              >
-                tom@fishingtripper.com
-              </a>
+              <div className="">
+                <p className="text-sm">Questions?</p>
+                <a
+                  href="mailto:tom@fishingtripper.com"
+                  className="font-semibold flex gap-2 items-center text-slate-800 hover:text-blue-600 transition"
+                >
+                  <MdEmail className="text-blue-500 text-xl" />{" "}
+                  tom@fishingtripper.com
+                </a>
+              </div>
             </div>
 
             {/* CTA Button */}
@@ -63,7 +65,7 @@ export default function page() {
               href="/"
               className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#105d9e] hover:bg-[#70b6f0] transition-colors shadow-md"
             >
-              Search Private Hire instead
+              Search Private
             </Link>
           </div>
         </div>
