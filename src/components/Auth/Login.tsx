@@ -121,18 +121,19 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <div className="">
       {/* Login Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="md:bg-white  md:p-10 border border-[#d4e9fa] rounded-lg"
+        className=" bg-white md:p-10 p-4 border border-[#d4e9fa] rounded-lg shadow-sm"
       >
-        <div>
+        {/* Email Field */}
+        <div className="mb-4">
           <label
             htmlFor="email"
-            className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+            className="block text-base font-bold text-[#171717] mb-1"
           >
-            Email Address
+            Email Address:
           </label>
           <input
             type="email"
@@ -154,12 +155,13 @@ export default function Login() {
           )}
         </div>
 
-        <div className="mt-4">
+        {/* Password Field */}
+        <div className="mb-4">
           <label
             htmlFor="password"
-            className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+            className="block text-base font-bold text-[#171717] mb-1"
           >
-            Password
+            Password:
           </label>
           <input
             type="password"
@@ -171,7 +173,7 @@ export default function Login() {
                 message: "Password must be at least 6 characters long",
               },
             })}
-            placeholder="Set your password"
+            placeholder="Enter your password"
             className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           {errors.password && (
@@ -181,47 +183,51 @@ export default function Login() {
           )}
         </div>
 
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center py-6">
-          <label className="flex items-center space-x-2 cursor-pointer">
+        {/* Remember & Forgot Password */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <label className="flex items-center space-x-2 cursor-pointer mb-3 md:mb-0">
             <input
               type="checkbox"
-              className="w-5 h-5 border-gray-400 rounded-sm focus:ring-blue-500 focus:ring-2"
+              className="w-5 h-4 border-gray-400 rounded-sm focus:ring-blue-500 focus:ring-2"
               {...register("remember")}
             />
-            <span className="text-white md:text-[#171717] text-base font-normal leading-7">
-              Remember me
+            <span className="text-base font-normal text-[#171717]">
+              Remember me?
             </span>
           </label>
           <Link
             href={"/forgot-password"}
-            className="text-base text-white md:text-[#3D53F5] font-bold leading-7"
+            className="text-base font-bold text-[#3e499e] hover:underline"
           >
             Forgot your Password?
           </Link>
         </div>
 
+        {/* Submit Button */}
         <Button
           type="submit"
-          variant="secondary"
+          variant="primary"
           disabled={isLoading}
-          className={`bg-[#70b6f0] text-white text-base rounded-lg w-full text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-out ${
+          className={`bg-[#70b6f0] text-white text-base rounded-lg w-full font-medium hover:bg-[#105e9e] transition-colors duration-300 ease-in-out ${
             isLoading ? "cursor-not-allowed" : ""
           }`}
         >
           {isLoading ? "Loading..." : "Log in"}
         </Button>
 
-        <h1 className="text-base font-normal text-white md:text-[#616161] pt-8 pb-4">
+        {/* Divider Text */}
+        <h1 className="text-center text-base font-normal text-[#616161] pt-6 pb-4">
           Or continue with
         </h1>
 
+        {/* Social Login */}
         <div className="grid grid-cols-1 gap-3">
           <Button
-            onClick={() => handleLogin(signInWithGoogle)}
             variant="ghost"
-            className="flex items-center gap-3"
+            onClick={() => handleLogin(signInWithGoogle)}
+            className="flex items-center justify-center gap-3 w-full border border-gray-300 rounded-md p-3 hover:bg-gray-100"
           >
-            <FcGoogle /> <span className="text-white">Google</span>
+            <FcGoogle /> <span className="text-white font-medium">Google</span>
           </Button>
         </div>
       </form>

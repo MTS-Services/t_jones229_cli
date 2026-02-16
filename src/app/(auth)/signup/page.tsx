@@ -100,7 +100,7 @@ export default function Page() {
   };
 
   return (
-    <div className="w-full min-h-screen relative bg-[#f7f7f7] lg:py-10 md:py-8 py-6">
+    <div className="w-full h-screen flex items-center justify-center bg-[#f7f7f7]">
       <div className="container mx-auto flex flex-col justify-center items-center text-white">
         <Link href={"/"}>
           <Image
@@ -112,10 +112,10 @@ export default function Page() {
           />
         </Link>
 
-        <div className="text-center mx-auto">
-          <div>
-            <h2 className="text-black text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
-              Register a new account
+        <div className=" mx-auto">
+          <div className="text-center">
+            <h2 className="text-black  text-2xl md:text-4xl font-bold leading-[52px] mb-2">
+              Register New Account
             </h2>
             <p className="text-black text-lg font-normal font-satoshi mb-6">
               Already have an account?
@@ -131,51 +131,55 @@ export default function Page() {
             onSubmit={handleSubmit(onSubmit)}
             className="md:bg-white p-4 md:p-10 border border-[#d4e9fa] rounded-lg space-y-4"
           >
-            {/* first  Name */}
-            <div>
-              <label
-                htmlFor="name"
-                className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
-              >
-                Enter your first name
-              </label>
-              <input
-                type="text"
-                id="fristName"
-                {...register("firstName", {
-                  required: "Frist name is required",
-                })}
-                placeholder="Enter your first name"
-                className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              {errors.firstName && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.firstName.message as string}
-                </p>
-              )}
-            </div>
-            {/* last  Name */}
-            <div>
-              <label
-                htmlFor="name"
-                className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
-              >
-                Enter your last name
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                {...register("lastName", {
-                  required: "Last name is required",
-                })}
-                placeholder="Enter your last name"
-                className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              {errors.lastName && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.lastName.message as string}
-                </p>
-              )}
+            {/* First & Last Name - Flex on md+ screens */}
+            <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+              {/* First Name */}
+              <div className="flex-1">
+                <label
+                  htmlFor="firstName"
+                  className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+                >
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  {...register("firstName", {
+                    required: "First name is required",
+                  })}
+                  placeholder="Enter your first name"
+                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                {errors.firstName && (
+                  <p className="text-red-500 text-sm mt-1 text-left">
+                    {errors.firstName.message as string}
+                  </p>
+                )}
+              </div>
+
+              {/* Last Name */}
+              <div className="flex-1">
+                <label
+                  htmlFor="lastName"
+                  className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+                >
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  {...register("lastName", {
+                    required: "Last name is required",
+                  })}
+                  placeholder="Enter your last name"
+                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                {errors.lastName && (
+                  <p className="text-red-500 text-sm mt-1 text-left">
+                    {errors.lastName.message as string}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Email Address */}
@@ -278,7 +282,7 @@ export default function Page() {
 
             <Button
               type="submit"
-              variant="secondary"
+              variant="primary"
               disabled={isLoading}
               className={`bg-[#70b6f0] text-white text-base rounded-lg w-full text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-out ${
                 isLoading ? "cursor-not-allowed" : ""
@@ -288,9 +292,9 @@ export default function Page() {
               {isLoading ? "Loading..." : "Register"}
             </Button>
 
-            <h1 className="text-base font-normal text-white md:text-[#616161] py-2">
+            <p className="text-center font-normal text-white md:text-[#616161]">
               Or continue with
-            </h1>
+            </p>
 
             <div className="grid grid-cols-1 gap-3">
               <Button

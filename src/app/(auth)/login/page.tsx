@@ -6,8 +6,7 @@ import Login from "@/components/Auth/Login";
 
 export default function Page() {
   return (
-    <div className="w-full h-screen relative bg-[#f7f7f7]">
-
+    <div className="w-full h-screen flex items-center justify-center bg-[#f7f7f7]">
       <div className="container mx-auto flex flex-col justify-center items-center text-white">
         <Link href={"/"}>
           <Image
@@ -19,8 +18,8 @@ export default function Page() {
           />
         </Link>
 
-        <div className="text-center mx-auto">
-          <div>
+        <div className="mx-auto">
+          <div className="text-center">
             <h2 className="text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
               Log in to your account
             </h2>

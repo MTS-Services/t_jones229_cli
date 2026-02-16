@@ -53,15 +53,15 @@ const ForgotPassword = () => {
             Forgot Password!
           </h2>
 
-          <p className="text-lg leading-7 font-normal mb-6">
-            Enter a valid email address. <br />
-            After submission, check your email to set a new password.
+          <p className="text-lg leading-7 mx-auto max-w-xl font-normal mb-6">
+            Enter a valid email address. After submission, check your email to
+            set a new password.
           </p>
 
           {/* Form */}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg mx-auto mt-10 text-left"
+            className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg mx-auto mt-10 text-left"
           >
             <label
               htmlFor="email"
@@ -92,8 +92,7 @@ const ForgotPassword = () => {
 
             <Button
               type="submit"
-              variant="secondary"
-              className="w-full mt-6 font-bold"
+              className="w-full mt-6 font-bold rounded-lg bg-[#0c4a7a] text-white hover:bg-[#1577c2] transition-colors duration-300 ease-in-out"
               disabled={isLoading}
             >
               {isLoading ? "Sending..." : "Submit"}
