@@ -27,7 +27,7 @@ export default function Button({
     "px-3 py-3 text-base font-medium  focus:outline-none transition duration-200";
   const variantClasses = {
     primary:
-      "bg-[#70b6f0] text-white text-base rounded-[23px] text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-ou",
+      "bg-[#0c4a7a] text-white text-base rounded-[23px] text-center  font-medium font-shatosi hover:bg-[#70b6f0] transition-colors duration-300 ease-in-ou",
     secondary:
       "bg-[#70b6f0] text-white text-base rounded-[10px] text-center  font-medium font-shatosi",
     outline:

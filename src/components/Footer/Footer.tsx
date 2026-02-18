@@ -1,119 +1,88 @@
 import React from "react";
-import {
-  FaTwitter,
-  FaFacebookF,
-  FaInstagram,
-  FaTelegramPlane,
-  FaYoutube,
-} from "react-icons/fa";
-
+import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import logo from "@/assets/logo2.svg";
 import Image from "next/image";
 
 const Footer: React.FC = () => {
+  const footerLinks = [
+    {
+      title: "Company",
+      links: ["About Us", "Contact Us", "FAQ"],
+    },
+    {
+      title: "Help & Support",
+      links: ["Customer Service", "Booking Issues", "Payment Queries"],
+    },
+    {
+      title: "Legal & Policies",
+      links: ["Terms of Service", "Privacy Policy", "Cookie Policy"],
+    },
+  ];
+
+  const socialLinks = [
+    { icon: FaFacebookF, href: "https://facebook.com", label: "Facebook" },
+    { icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
+    { icon: FaYoutube, href: "https://youtube.com", label: "YouTube" },
+  ];
+
   return (
-    
-     <section className="">
-        {/* <div className="text-center mb-4">
-            <span className="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-0.5 rounded uppercase tracking-wide">Concept 2: The Mega Footer</span>
-        </div> */}
- 
-        {/* <!-- Footer Start --> */}
-        <footer className="bg-slate-900 text-slate-300">
-            <div className="max-w-7xl mx-auto px-6 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-10">
-                   
-                    {/* <!-- Brand Column --> */}
-                    <div className="lg:col-span-2">
-                        <div className="flex flex-col items-start justify-start  gap-2">
-                            <div className=" rounded-lg  ">
-
+    <footer className="bg-slate-900 text-slate-300">
+      <div className="max-w-7xl mx-auto px-6 pt-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+          {/* Brand Column */}
+          <div className="lg:col-span-2">
+            <div className="flex flex-col items-start gap-6">
               <Image
-              src={logo}
-              alt="logo"
-              height={100}
-              width={100}
-              className="w-36"
-            />
-                                
-                            </div>
-                           
-                        <p className="text-slate-400 text-base leading-relaxed mb-6 max-w-xs">
-                           I'm surprised you had the courage to take the
-responsibility yourself. Leave that to me.
-                        </p>
-
-
-                 <div className="flex gap-8 items-center ">
-              {/* <FaTwitter
-                className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
-                size={20}
-              /> */}
-              <FaFacebookF
-                className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
-                size={20}
+                src={logo}
+                alt="Fishing Tripper"
+                height={100}
+                width={100}
+                className="w-36"
               />
 
-              <FaInstagram
-                className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
-                size={20}
-              />
-              <FaYoutube
-                className=" h-5 w-5 cursor-pointer transition-colors duration-300 ease-in-out"
-                size={20}
-              />
+              <div className="flex gap-6">
+                {socialLinks.map(({ icon: Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    className="hover:text-indigo-400 transition-colors duration-200"
+                  >
+                    <Icon size={20} />
+                  </a>
+                ))}
+              </div>
             </div>
+          </div>
 
-                        </div>
-            
-                    </div>
- 
-                    {/* <!-- Links Column 1 --> */}
-                    <div>
-                        <h3 className="text-white font-semibold mb-6">HEADING</h3>
-                        <ul className="space-y-4 text-sm">
-                            <li><a href="/about-us" className="hover:text-indigo-400 transition hover:underline">ABOUT US</a></li>
-                            <li><a href="/contact-us"  className="hover:text-indigo-400 transition hover:underline">CONTACT US</a></li>
-                            <li><a   href="/faq" className="hover:text-indigo-400 transition hover:underline">FAQ</a></li>
-                            <li className="hover:text-indigo-400 transition hover:underline">Footer Link #4</li>
-                            <li className="hover:text-indigo-400 transition hover:underline">Footer Link #5</li>
-                        </ul>
-                    </div>
- 
-                    {/* <!-- Links Column 2 --> */}
-                    <div>
-                        <h3 className="text-white font-semibold mb-6">HEADING</h3>
-                        <ul className="space-y-4 text-sm">
-                        <li className="hover:text-indigo-400 transition      hover:underline">Footer Link #1 </li>
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #2 </li>
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #3</li>
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #4</li>
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #5</li>
-                        </ul>
-                    </div>
- 
-                    {/* <!-- Links Column 3 --> */}
-                    <div>
-                        <h3 className="text-white font-semibold mb-6">HEADING</h3>
-                        <ul className="space-y-4 text-sm">
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #1</li>
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #2 </li>
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #3</li>
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #4</li>
-                            <li className="hover:text-indigo-400 transition  hover:underline">Footer Link #5</li>
-                        </ul>  
-                    </div>
-                </div>
- 
-                <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-sm text-slate-500">Copyright &copy;2024. Fishing tripper.</p>
-                    
-                </div>
+          {/* Dynamic Link Columns */}
+          {footerLinks.map((section) => (
+            <div key={section.title}>
+              <h3 className="text-white font-semibold mb-6">{section.title}</h3>
+              <ul className="space-y-3">
+                {section.links.map((link) => (
+                  <li key={link}>
+                    <a
+                      href={`/${link.toLowerCase().replace(/\s+/g, "-")}`}
+                      className="text-sm hover:text-indigo-400 hover:underline transition"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
-        </footer>
-        {/* <!-- Footer End --> */}
-    </section>
-    
+          ))}
+        </div>
+
+        {/* Copyright */}
+        <div className="border-t border-slate-800 py-4 text-center md:text-left">
+          <p className="text-sm text-center text-slate-500">
+            © {new Date().getFullYear()} Fishing Tripper. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 };
 

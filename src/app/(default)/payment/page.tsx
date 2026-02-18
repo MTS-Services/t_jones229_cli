@@ -10,7 +10,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
-import { Divider } from "antd";
 
 // Country name to ISO 3166-1 alpha-2 code mapping
 const countryToISO: Record<string, string> = {
