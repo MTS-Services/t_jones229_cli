@@ -46,7 +46,7 @@ export default function EditProfile() {
     if (!initialValues) return;
 
     const isChanged = Object.keys(initialValues).some(
-      (key) => data[key] !== initialValues[key]
+      (key) => data[key] !== initialValues[key],
     );
 
     if (!isChanged) {
@@ -77,7 +77,8 @@ export default function EditProfile() {
       if (res?.success) {
         toast.success(res?.message);
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to update profile.");
       console.log(error);
     }
   };

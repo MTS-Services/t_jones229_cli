@@ -1,15 +1,11 @@
 "use client";
 
 import React from "react";
-import bgImage from "@/assets/userDashboard2.png";
-import { MdKeyboardArrowRight } from "react-icons/md";
 import { Divider } from "antd";
+import Loader from "@/components/ui/Loader";
 import UpcomingBokingCard from "../captain/mannag-booking/UpcomingBokingCard";
 import PostBokingCard from "../captain/mannag-booking/PostBokingCard";
-
-import Loader from "@/components/ui/Loader";
 import { useGetAllUserBookingQuery } from "@/redux/api/userDashboardApi/userBooking";
-import Link from "next/link";
 
 export default function YourTrip() {
   const { data, isLoading } = useGetAllUserBookingQuery({});
