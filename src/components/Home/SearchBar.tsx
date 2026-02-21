@@ -131,7 +131,7 @@ export default function SearchBar({
       <div className="md:hidden w-full px-4 pb-2">
         <div
           onClick={() => setIsMobileModalOpen(true)}
-          className={`w-full flex items-center gap-3 bg-white rounded-full shadow-lg border border-gray-200 ${scrolled ? "px-3 py-0" : "px-5 py-0"}`}
+          className={`w-full flex items-center gap-3 bg-white rounded-full shadow-lg border border-gray-200 ${scrolled ? "px-3 py-1" : "px-5 py-1"} cursor-pointer transition-all duration-300`}
         >
           <IoIosSearch className="text-2xl text-gray-700" />
           <div className="flex-1">

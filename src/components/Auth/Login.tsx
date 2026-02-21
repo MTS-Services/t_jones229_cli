@@ -125,7 +125,7 @@ export default function Login() {
       {/* Login Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className=" bg-white md:p-10 p-4 border border-[#d4e9fa] rounded-lg shadow-sm"
+        className="w-full max-w-md mx-auto bg-white rounded-lg p-8 shadow-md"
       >
         {/* Email Field */}
         <div className="mb-4">

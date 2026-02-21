@@ -18,7 +18,7 @@ export default function Page() {
           />
         </Link>
 
-        <div className="mx-auto">
+        <div className="">
           <div className="text-center">
             <h2 className="text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
               Log in to your account

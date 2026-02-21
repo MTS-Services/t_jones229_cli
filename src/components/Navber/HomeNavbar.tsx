@@ -206,7 +206,7 @@ export default function HomeNavbar() {
         <div
           className={`container mx-auto px-4 transition-all duration-700 ease-in-out ${
             scrolled && !isSearchActive
-              ? "xl:-mt-[65px] lg:-mt-16 md:-mt-[63px] -mt-[0px] scale-90 opacity-100 max-w-2xl"
+              ? "xl:-mt-[64px] lg:-mt-16 md:-mt-[63px] -mt-[10px] scale-90 opacity-100 max-w-2xl"
               : "xl:-mb-16 lg:-mb-16 md:-mb-[60px] -mb-[55px] scale-100 opacity-100"
           }`}
         >

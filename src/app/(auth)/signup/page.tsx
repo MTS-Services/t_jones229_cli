@@ -129,7 +129,7 @@ export default function Page() {
           {/* Signup Form */}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="md:bg-white p-4 md:p-10 border border-[#d4e9fa] rounded-lg space-y-4"
+            className="bg-white text-black p-6 md:p-10 border border-[#d4e9fa] rounded-lg space-y-4"
           >
             {/* First & Last Name - Flex on md+ screens */}
             <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
@@ -137,7 +137,7 @@ export default function Page() {
               <div className="flex-1">
                 <label
                   htmlFor="firstName"
-                  className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+                  className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
                 >
                   First Name
                 </label>
@@ -161,7 +161,7 @@ export default function Page() {
               <div className="flex-1">
                 <label
                   htmlFor="lastName"
-                  className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+                  className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
                 >
                   Last Name
                 </label>
@@ -186,7 +186,7 @@ export default function Page() {
             <div>
               <label
                 htmlFor="email"
-                className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+                className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
               >
                 Email Address
               </label>
@@ -214,7 +214,7 @@ export default function Page() {
             <div>
               <label
                 htmlFor="password"
-                className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+                className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
               >
                 Password
               </label>
@@ -250,7 +250,7 @@ export default function Page() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="text-base text-start font-bold text-white md:text-[#171717] block mb-1"
+                className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
               >
                 Confirm your password
               </label>
