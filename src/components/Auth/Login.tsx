@@ -53,48 +53,39 @@ export default function Login() {
 
   const onSubmit = async (data: any) => {
     setIsSubmitting(true);
+
     try {
       const userInfo = { email: data.email, password: data.password };
-      const res = await loginFn(userInfo);
 
-      if (res?.data?.success) {
-        const userData = res?.data?.data;
-        const role = userData?.role;
+      const result = await loginFn(userInfo).unwrap();
 
-        // 1. Set cookies
-        Cookies.set("token", userData?.accessToken);
-        Cookies.set("currentUserRole", role);
+      // If we reach here → success
+      const userData = result?.data;
+      const role = userData?.role;
 
-        // 2. Update redux store
-        dispatch(
-          setUser({
-            user: userData,
-            token: userData?.accessToken,
-            isAuthenticated: true,
-          }),
-        );
+      Cookies.set("token", userData?.accessToken);
+      Cookies.set("currentUserRole", role);
 
-        // Show role-based toast message
-        const toastMessage = getRoleBasedToastMessage(role);
-        toast.success(toastMessage);
+      dispatch(
+        setUser({
+          user: userData,
+          token: userData?.accessToken,
+          isAuthenticated: true,
+        }),
+      );
 
-        // 3. Dynamic redirect
-        if (redirectUrl) {
-          route.push(redirectUrl);
-        } else {
-          const targetPath = getRedirectPath(role);
-          route.push(targetPath);
-        }
+      toast.success(getRoleBasedToastMessage(role));
+
+      if (redirectUrl) {
+        route.push(redirectUrl);
       } else {
-        const errorMessage =
-          res?.error?.data?.message ||
-          "Login failed. Please check your credentials and try again.";
-        toast.error(errorMessage);
+        route.push(getRedirectPath(role));
       }
     } catch (error: any) {
       const errorMessage =
         error?.data?.message ||
-        "Network error. Please check your connection and try again.";
+        "Login failed. Please check your credentials and try again.";
+
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
