@@ -15,7 +15,6 @@ import { useDispatch } from "react-redux";
 import { signInWithGoogle } from "../../../services/authService";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-
 export default function Page() {
   const {
     register,
