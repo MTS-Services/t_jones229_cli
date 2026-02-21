@@ -23,14 +23,36 @@ export default function Page() {
     try {
       const response = await support(data);
 
+      console.log("Support API Response:", response); // Debug log
+
       if ("data" in response && response.data) {
-        toast.success(response.data.message || "Message sent successfully!");
+        // Try multiple paths for success message
+        const successMessage =
+          response.data?.message ||
+          response.data?.data?.message ||
+          "Message sent successfully!";
+        toast.success(successMessage);
         reset();
       } else if ("error" in response && response.error) {
-        toast.error("Failed to send message. Please try again.");
+        // Better error message extraction
+        const errorData = response.error as any;
+        let errorMessage = "Failed to send message. Please try again.";
+
+        if (errorData?.data?.message) {
+          errorMessage = errorData.data.message;
+        } else if (errorData?.data?.error) {
+          errorMessage = errorData.data.error;
+        } else if (errorData?.message) {
+          errorMessage = errorData.message;
+        } else if (typeof errorData?.data === "string") {
+          errorMessage = errorData.data;
+        }
+
+        console.error("Support error:", response.error);
+        toast.error(errorMessage);
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Network error:", error);
       toast.error("Something went wrong.");
     }
   };

@@ -100,46 +100,55 @@ export default function Page() {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-[#f7f7f7]">
-      <div className="container mx-auto flex flex-col justify-center items-center text-white">
-        <Link href={"/"}>
-          <Image
-            src={logo2}
-            alt="logo"
-            height={100}
-            width={100}
-            className="h-28 w-52"
-          />
-        </Link>
+    <div className="min-h-screen bg-white py-8 md:py-12 px-4 sm:px-6">
+      <div className="container mx-auto max-w-lg">
+        {/* Header Section */}
+        <div className="flex flex-col items-center mb-8">
+          <Link
+            href={"/"}
+            className="mb-2 transform hover:scale-105 transition-transform duration-300"
+          >
+            <Image
+              src={logo2}
+              alt="logo"
+              height={100}
+              width={100}
+              className="h-20 sm:h-24 w-auto object-contain"
+              priority
+            />
+          </Link>
 
-        <div className=" mx-auto">
           <div className="text-center">
-            <h2 className="text-black  text-2xl md:text-4xl font-bold leading-[52px] mb-2">
+            <h2 className="text-black text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-3">
               Register New Account
             </h2>
-            <p className="text-black text-lg font-normal font-satoshi mb-6">
-              Already have an account?
-              <Link href="/login" className="text-[#FF9500] cursor-pointer">
-                {" "}
+            <p className="text-gray-600 text-base sm:text-lg">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="text-[#FF9500] font-medium hover:text-[#ffaa33] hover:underline transition-all duration-200"
+              >
                 Log in
               </Link>
             </p>
           </div>
+        </div>
 
-          {/* Signup Form */}
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="bg-white text-black p-6 md:p-10 border border-[#d4e9fa] rounded-lg space-y-4"
-          >
-            {/* First & Last Name - Flex on md+ screens */}
-            <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+        {/* Signup Form */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-[#f7f7f7] p-6 sm:p-8 md:p-10 border border-[#d4e9fa] rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+        >
+          <div className="space-y-5">
+            {/* First & Last Name */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* First Name */}
-              <div className="flex-1">
+              <div className="space-y-1">
                 <label
                   htmlFor="firstName"
-                  className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
+                  className="text-sm font-semibold text-gray-700 block"
                 >
-                  First Name
+                  First Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -147,23 +156,25 @@ export default function Page() {
                   {...register("firstName", {
                     required: "First name is required",
                   })}
-                  placeholder="Enter your first name"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  placeholder="John"
+                  className="w-full bg-white border border-gray-300 rounded-lg p-3.5 text-gray-700 
+                       focus:outline-none focus:ring-2 focus:ring-[#70b6f0] focus:border-transparent
+                       transition-all duration-200 placeholder:text-gray-400"
                 />
                 {errors.firstName && (
-                  <p className="text-red-500 text-sm mt-1 text-left">
-                    {errors.firstName.message as string}
+                  <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                    <span>⚠️</span> {errors.firstName.message as string}
                   </p>
                 )}
               </div>
 
               {/* Last Name */}
-              <div className="flex-1">
+              <div className="space-y-1">
                 <label
                   htmlFor="lastName"
-                  className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
+                  className="text-sm font-semibold text-gray-700 block"
                 >
-                  Last Name
+                  Last Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -171,24 +182,26 @@ export default function Page() {
                   {...register("lastName", {
                     required: "Last name is required",
                   })}
-                  placeholder="Enter your last name"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  placeholder="Doe"
+                  className="w-full bg-white border border-gray-300 rounded-lg p-3.5 text-gray-700 
+                       focus:outline-none focus:ring-2 focus:ring-[#70b6f0] focus:border-transparent
+                       transition-all duration-200 placeholder:text-gray-400"
                 />
                 {errors.lastName && (
-                  <p className="text-red-500 text-sm mt-1 text-left">
-                    {errors.lastName.message as string}
+                  <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                    <span>⚠️</span> {errors.lastName.message as string}
                   </p>
                 )}
               </div>
             </div>
 
             {/* Email Address */}
-            <div>
+            <div className="space-y-1">
               <label
                 htmlFor="email"
-                className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
+                className="text-sm font-semibold text-gray-700 block"
               >
-                Email Address
+                Email Address <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
@@ -197,26 +210,28 @@ export default function Page() {
                   required: "Email is required",
                   pattern: {
                     value: /^\S+@\S+\.\S+$/,
-                    message: "Invalid email format",
+                    message: "Please enter a valid email address",
                   },
                 })}
-                placeholder="Enter your email address"
-                className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="john.doe@example.com"
+                className="w-full bg-white border border-gray-300 rounded-lg p-3.5 text-gray-700 
+                     focus:outline-none focus:ring-2 focus:ring-[#70b6f0] focus:border-transparent
+                     transition-all duration-200 placeholder:text-gray-400"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.email.message as string}
+                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                  <span>⚠️</span> {errors.email.message as string}
                 </p>
               )}
             </div>
 
             {/* Password */}
-            <div>
+            <div className="space-y-1">
               <label
                 htmlFor="password"
-                className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
+                className="text-sm font-semibold text-gray-700 block"
               >
-                Password
+                Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -229,84 +244,125 @@ export default function Page() {
                       message: "Password must be at least 6 characters",
                     },
                   })}
-                  placeholder="Set your password"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  placeholder="••••••••"
+                  className="w-full bg-white border border-gray-300 rounded-lg p-3.5 text-gray-700 
+                       focus:outline-none focus:ring-2 focus:ring-[#70b6f0] focus:border-transparent
+                       transition-all duration-200 placeholder:text-gray-400 pr-16"
                 />
-                <span
-                  className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600"
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-[#70b6f0] 
+                       hover:text-[#105e9e] transition-colors duration-200 focus:outline-none"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? "Hide" : "Show"}
-                </span>
+                </button>
               </div>
               {errors.password && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.password.message as string}
+                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                  <span>⚠️</span> {errors.password.message as string}
                 </p>
               )}
             </div>
 
             {/* Confirm Password */}
-            <div>
+            <div className="space-y-1">
               <label
                 htmlFor="confirmPassword"
-                className="text-base text-start font-bold text-black md:text-[#171717] block mb-1"
+                className="text-sm font-semibold text-gray-700 block"
               >
-                Confirm your password
+                Confirm Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   id="confirmPassword"
                   {...register("confirmPassword", {
-                    required: "Confirm Password is required",
+                    required: "Please confirm your password",
                     validate: (value) =>
-                      value === password || "Passwords do not match",
+                      value === watch("password") || "Passwords do not match",
                   })}
-                  placeholder="Confirm your password"
-                  className="w-full border text-[#9E9E9E] border-gray-300 rounded-md p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  placeholder="••••••••"
+                  className="w-full bg-white border border-gray-300 rounded-lg p-3.5 text-gray-700 
+                       focus:outline-none focus:ring-2 focus:ring-[#70b6f0] focus:border-transparent
+                       transition-all duration-200 placeholder:text-gray-400 pr-16"
                 />
-                <span
-                  className="absolute right-3 top-3 cursor-pointer text-sm text-blue-600"
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-[#70b6f0] 
+                       hover:text-[#105e9e] transition-colors duration-200 focus:outline-none"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? "Hide" : "Show"}
-                </span>
+                </button>
               </div>
               {errors.confirmPassword && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.confirmPassword.message as string}
+                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                  <span>⚠️</span> {errors.confirmPassword.message as string}
                 </p>
               )}
             </div>
 
+            {/* Register Button */}
             <Button
               type="submit"
-              variant="primary"
               disabled={isLoading}
-              className={`bg-[#70b6f0] text-white text-base rounded-lg w-full text-center  font-medium font-shatosi hover:bg-[#105e9e] transition-colors duration-300 ease-in-out ${
-                isLoading ? "cursor-not-allowed" : ""
-              }`}
+              className={`w-full bg-[#70b6f0] text-white text-base font-medium py-3.5 rounded-lg
+                     hover:bg-[#105e9e] focus:ring-4 focus:ring-[#70b6f0] focus:ring-opacity-50
+                     transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]
+                     ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
-              {/* {isLoading ? <Loader /> : "Register"} */}
-              {isLoading ? "Loading..." : "Register"}
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Creating Account...
+                </span>
+              ) : (
+                "Register"
+              )}
             </Button>
 
-            <p className="text-center font-normal text-white md:text-[#616161]">
-              Or continue with
-            </p>
-
-            <div className="grid grid-cols-1 gap-3">
-              <Button
-                onClick={() => handleLogin(signInWithGoogle)}
-                variant="ghost"
-                className="flex items-center gap-3"
-              >
-                <FaGoogle /> <span className="text-white">Google</span>
-              </Button>
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-[#f7f7f7] text-gray-500">
+                  Or continue with
+                </span>
+              </div>
             </div>
-          </form>
-        </div>
+
+            {/* Social Login */}
+            <Button
+              onClick={() => handleLogin(signInWithGoogle)}
+              variant="ghost"
+              className="flex items-center gap-3 w-full"
+            >
+              <FaGoogle /> <span className="text-white">Google</span>
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );

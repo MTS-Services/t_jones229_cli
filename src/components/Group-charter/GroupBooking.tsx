@@ -96,92 +96,100 @@ export default function BookingSection() {
   //   }
   // };
 
+  const onSubmit = async (data: any) => {
+    console.log("Form data submitted:", data);
 
-
-
-const onSubmit = async (data: any) => {
-  console.log("Form data submitted:", data);
-
-  // 1️⃣ Safely get localStorage values
-  const tripDate =
-    typeof window !== "undefined"
-      ? localStorage.getItem("date") || params.get("date")
-      : null;
-  const numberOfGuests =
-    typeof window !== "undefined"
-      ? localStorage.getItem("Guests") || params.get("guests")
-      : null;
-  const bookingType =
-    typeof window !== "undefined"
-      ? localStorage.getItem("bookingType") || params.get("bookingType")
-      : null;
-
-  // 2️⃣ Validate before sending
-  if (!tripDate || !numberOfGuests || !bookingType) {
-    toast.error(
-      "Trip date, number of guests or booking type is missing. Please select them before submitting."
-    );
-    return;
-  }
-
-  // 3️⃣ Build booking payload safely
-  const groupBookingInfo = {
-    boatId: boatID || null,
-    tripId: tripId || null,
-    tripDate,
-    amount: "full",
-    bookingType: bookingType === "full" ? true : false, // convert string to boolean if needed
-    groupSize: parseInt(numberOfGuests ?? "1", 10),
-    memberInfo: {
-      firstName: data?.firstName || "",
-      lastName: data?.lastName || "",
-      email: data?.email || "",
-      phoneNumber: data?.phoneNumber || "",
-      fishingType: data?.fishingType || "Offshore",
-      targetSpecies: data?.targetSpecies || "",
-      details: data?.details || "",
-    },
-    where:
+    // 1️⃣ Safely get localStorage values
+    const tripDate =
       typeof window !== "undefined"
-        ? localStorage.getItem("location") || "Unknown"
-        : "Unknown",
-    date: tripDate,
-  };
+        ? localStorage.getItem("date") || params.get("date")
+        : null;
+    const numberOfGuests =
+      typeof window !== "undefined"
+        ? localStorage.getItem("Guests") || params.get("guests")
+        : null;
+    const bookingType =
+      typeof window !== "undefined"
+        ? localStorage.getItem("bookingType") || params.get("bookingType")
+        : null;
 
-  console.log("Sending group booking info:", groupBookingInfo);
-
-  try {
-    const res = await bookingFN(groupBookingInfo);
-    console.log("Booking response:", res);
-
-    if (res?.data?.success) {
-      toast.success(res?.data?.message || "Booking successful!");
-      // 4️⃣ Clean up
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("Guests");
-        localStorage.removeItem("date");
-        localStorage.removeItem("bookingType");
-      }
-      router.push("/group-confirmation");
-    } else if (res?.error) {
-      let errorMessage = "Booking failed. Please try again.";
-      if ("data" in res.error && typeof res.error.data === "object") {
-        errorMessage = (res.error.data as any)?.message || errorMessage;
-      } else if ("message" in res.error) {
-        errorMessage = res.error.message || errorMessage;
-      }
-      toast.error(errorMessage);
-    } else {
-      toast.error("Booking failed. Please try again.");
+    // 2️⃣ Validate before sending
+    if (!tripDate || !numberOfGuests || !bookingType) {
+      toast.error(
+        "Trip date, number of guests or booking type is missing. Please select them before submitting.",
+      );
+      return;
     }
-  } catch (error) {
-    console.error("Network error:", error);
-    toast.error("Something went wrong. Please try again later.");
-  }
-};
 
+    // 3️⃣ Build booking payload safely
+    const groupBookingInfo = {
+      boatId: boatID || null,
+      tripId: tripId || null,
+      tripDate,
+      amount: "full",
+      bookingType: bookingType === "full" ? true : false, // convert string to boolean if needed
+      groupSize: parseInt(numberOfGuests ?? "1", 10),
+      memberInfo: {
+        firstName: data?.firstName || "",
+        lastName: data?.lastName || "",
+        email: data?.email || "",
+        phoneNumber: data?.phoneNumber || "",
+        fishingType: data?.fishingType || "Offshore",
+        targetSpecies: data?.targetSpecies || "",
+        details: data?.details || "",
+      },
+      where:
+        typeof window !== "undefined"
+          ? localStorage.getItem("location") || "Unknown"
+          : "Unknown",
+      date: tripDate,
+    };
 
+    console.log("Sending group booking info:", groupBookingInfo);
 
+    try {
+      const res = await bookingFN(groupBookingInfo);
+      console.log("Booking API Response:", res); // Debug log
+
+      if (res?.data?.success) {
+        // Try multiple paths for success message
+        const successMessage =
+          res?.data?.message ||
+          res?.data?.data?.message ||
+          "Booking successful!";
+        toast.success(successMessage);
+        // 4️⃣ Clean up
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("Guests");
+          localStorage.removeItem("date");
+          localStorage.removeItem("bookingType");
+        }
+        router.push("/group-confirmation");
+      } else if (res?.error) {
+        let errorMessage = "Booking failed. Please try again.";
+
+        // Try multiple paths for error messages
+        const errorData = res.error as any;
+        if (errorData?.data?.message) {
+          errorMessage = errorData.data.message;
+        } else if (errorData?.data?.error) {
+          errorMessage = errorData.data.error;
+        } else if (errorData?.message) {
+          errorMessage = errorData.message;
+        } else if (typeof errorData?.data === "string") {
+          errorMessage = errorData.data;
+        }
+
+        console.error("Booking error:", res.error);
+        toast.error(errorMessage);
+      } else {
+        toast.error("Booking failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      toast.error("Something went wrong. Please try again later.");
+    }
+  };
 
   return (
     <div className="container mx-auto flex flex-col gap-10 xl:px-4 lg:px-3 px-2 py-10">

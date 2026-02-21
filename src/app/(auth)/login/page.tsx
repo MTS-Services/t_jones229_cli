@@ -6,33 +6,39 @@ import Login from "@/components/Auth/Login";
 
 export default function Page() {
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-[#f7f7f7]">
-      <div className="container mx-auto flex flex-col justify-center items-center text-white">
-        <Link href={"/"}>
+    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-4">
+      <div className="container mx-auto flex flex-col justify-center items-center max-w-md w-full">
+        {/* Logo with enhanced styling */}
+        <Link
+          href={"/"}
+          className="mb-4 transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-200 rounded-lg"
+        >
           <Image
             src={logo2}
-            alt="logo"
+            alt="FishingTripper Logo - Return to homepage"
             height={100}
-            width={100}
-            className="h-28 w-52"
+            width={200}
+            className="h-20 w-44 md:h-28 md:w-52 drop-shadow-sm"
+            priority
           />
         </Link>
 
-        <div className="">
-          <div className="text-center">
-            <h2 className="text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
-              Log in to your account
-            </h2>
-            <p className="text-black text-lg font-normal font-satoshi mb-6">
-              Don&apos;t have an account?
-              <Link href="/signup" className="text-[#FF9500] cursor-pointer">
-                {" "}
-                Sign up
-              </Link>
-            </p>
-          </div>
+        {/* Header with improved typography */}
+        <div className="text-center mb-6 space-y-3">
+          <h2 className="text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
+            Log in to your account
+          </h2>
+          <p className="text-black text-lg font-normal font-satoshi mb-6">
+            Don&apos;t have an account?
+            <Link href="/signup" className="text-[#FF9500] cursor-pointer">
+              {" "}
+              Sign up
+            </Link>
+          </p>
+        </div>
 
-          {/* Login Form */}
+        {/* Login Form */}
+        <div className="w-full">
           <Login />
         </div>
       </div>

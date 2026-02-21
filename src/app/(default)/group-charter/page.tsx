@@ -77,10 +77,15 @@ export default function GroupBooking() {
     try {
       const res: any = await bookingFN(groupBookingInfo);
 
+      console.log("Booking API Response:", res); // Debug log
+
       if (res?.data?.success) {
-        toast.success(
-          res?.data?.message || "Group booking inquiry submitted successfully!",
-        );
+        // Try multiple paths for success message
+        const successMessage =
+          res?.data?.message ||
+          res?.data?.data?.message ||
+          "Group booking inquiry submitted successfully!";
+        toast.success(successMessage);
         if (typeof window !== "undefined") {
           localStorage.removeItem("date");
           localStorage.removeItem("location");
@@ -88,12 +93,19 @@ export default function GroupBooking() {
         }
         router.push("/group-confirmation");
       } else if (res?.error) {
-        // FIXED: Using type casting to access .data.message without TS errors
+        // Better error message extraction
         const errorData = res.error as any;
-        const errorMessage =
-          errorData?.data?.message ||
-          errorData?.message ||
-          "Booking submission failed";
+        let errorMessage = "Booking submission failed";
+
+        if (errorData?.data?.message) {
+          errorMessage = errorData.data.message;
+        } else if (errorData?.data?.error) {
+          errorMessage = errorData.data.error;
+        } else if (errorData?.message) {
+          errorMessage = errorData.message;
+        } else if (typeof errorData?.data === "string") {
+          errorMessage = errorData.data;
+        }
 
         console.error("Booking error:", res.error);
         toast.error(errorMessage);
