@@ -99,7 +99,7 @@ export default function ListBookingSearchBar({
   );
 
   return (
-    <div className="w-full mx-auto px-4 relative" ref={containerRef}>
+    <div className="w-full mx-auto relative" ref={containerRef}>
       <div className="relative flex items-center bg-white rounded-full border-2 shadow-sm border-gray-100 py-1 px-1">
         <div className="flex flex-row w-full items-center justify-between">
           {/* WHERE SECTION */}

@@ -95,12 +95,12 @@ export default function SearchBar({
         setActiveTab(null);
       }
     }
-    
+
     // Only add event listener when there's an active dropdown
     if (activeTab) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeTab]);
 
@@ -128,7 +128,7 @@ export default function SearchBar({
   return (
     <>
       {/* --- Mobile Compact Bar --- */}
-      <div className="md:hidden w-full px-4 pb-2 px-10">
+      <div className="md:hidden w-full px-4 pb-2">
         <div
           onClick={() => setIsMobileModalOpen(true)}
           className={`w-full flex items-center gap-3 bg-white rounded-full shadow-lg border border-gray-200 ${scrolled ? "px-3 py-0" : "px-5 py-0"}`}
@@ -402,7 +402,7 @@ export default function SearchBar({
               ) : (
                 location && (
                   <span className="text-[10px] text-blue-600 font-bold truncate max-w-[60px]">
-                    {location} 
+                    {location}
                   </span>
                 )
               )}
@@ -421,7 +421,6 @@ export default function SearchBar({
                       <h2 className="text-sm font-bold text-gray-400 uppercase tracking-tight">
                         Destinations
                       </h2>
-                 
                     </div>
                     <div className="max-h-60 overflow-y-auto custom-scrollbar">
                       {filteredDestinations.map((dest: any, idx: number) => (
@@ -492,8 +491,6 @@ export default function SearchBar({
                     initial="hidden"
                     animate="visible"
                     exit="exit"
-
-
                     className="absolute top-[115%] left-0 z-50 bg-white shadow-2xl rounded-3xl p-4 border border-gray-100"
                     onClick={(e) => e.stopPropagation()}
                   >

@@ -11,7 +11,6 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div>
-      
       <div className="bg-[#F5F5F5] py-9 px-5 lg:px-0">
         <div className="container mx-auto px-5 lg:px-0">
           <h1 className="text-2xl text-[#242424] font-bold leading-9">

@@ -249,7 +249,7 @@ export default function HomeNavbar() {
                 </button>
               </>
             ) : (
-              <div className="flex flex-col gap-4 mt-10">
+              <div className="flex flex-col gap-4 mt-10 bg-white p-5 rounded-2xl border border-gray-100">
                 <button
                   onClick={() => handleAuthAction("/login")}
                   className="flex items-center justify-center gap-3 bg-white border-2 border-black text-black py-4 rounded-2xl font-bold text-xl active:scale-95 transition-transform"
