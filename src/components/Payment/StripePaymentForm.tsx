@@ -19,17 +19,20 @@ import masteCard from "@/assets/payment/masteCard.svg";
 import mestero from "@/assets/payment/mestero.svg";
 import payPal from "@/assets/payment/payPal.svg";
 
-// Initialize Stripe with the publishable key from environment
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
-).then((stripe) => {
-  if (!stripe) {
-    console.error("❌ Stripe failed to load");
-  } else {
-    console.log("✅ Stripe loaded successfully");
-  }
-  return stripe;
-});
+// Initialize Stripe with the publishable key from environment (only in browser)
+const stripePromise =
+  typeof window !== "undefined"
+    ? loadStripe(
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+      ).then((stripe) => {
+        if (!stripe) {
+          console.error("❌ Stripe failed to load");
+        } else {
+          console.log("✅ Stripe loaded successfully");
+        }
+        return stripe;
+      })
+    : Promise.resolve(null);
 
 // Card element styles to match the existing form design
 const cardElementOptions = {
