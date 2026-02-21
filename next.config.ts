@@ -34,8 +34,8 @@ const nextConfig: NextConfig = {
 
     return config;
   },
-  // Output settings for better production builds
-  output: 'standalone',
+  // Remove standalone output for development - use only for production builds
+  // output: 'standalone',
   // Compress output
   compress: true,
   // Production source maps for debugging (disable to save memory)
