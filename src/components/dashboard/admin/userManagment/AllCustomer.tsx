@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { useAllUserQuery } from "@/redux/api/authApi";
-import { TSkeleton } from "../TSkelton";
 import PaginationButton from "./PaginationButton";
+import TableLoading from "../../common/TableLoading";
 
 export default function AllCustomer() {
   const [page, setPage] = useState(1);
@@ -30,10 +30,15 @@ export default function AllCustomer() {
 
   if (isLoading) {
     return (
-      <div className="divide-y divide-gray-100 p-6 bg-white">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <TSkeleton key={i} />
-        ))}
+      <div className="p-4 md:p-8">
+        <div className="bg-white border border-gray-100 rounded-lg shadow-sm">
+          <TableLoading
+            variant="skeleton"
+            rows={10}
+            columns={4}
+            message="Loading customers..."
+          />
+        </div>
       </div>
     );
   }

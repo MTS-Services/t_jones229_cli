@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { TSkeleton } from "../TSkelton";
 import { FaArrowRight } from "react-icons/fa";
 import CustomerDetailsModal from "./CustomerDetailsModal";
 import PaginationButton from "./PaginationButton";
+import TableLoading from "../../common/TableLoading";
 
 function MobileUsersView({ users, itemsPerPage = 5, onView }: any) {
   const [page, setPage] = useState(1);
@@ -134,11 +134,12 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
 
   if (isLoading) {
     return (
-      <div className="divide-y divide-gray-100 p-6">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <TSkeleton key={i} />
-        ))}
-      </div>
+      <TableLoading
+        variant="skeleton"
+        rows={10}
+        columns={5}
+        message="Loading customers..."
+      />
     );
   }
 

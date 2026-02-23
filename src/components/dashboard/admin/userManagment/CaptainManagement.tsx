@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { TSkeleton } from "../TSkelton";
 import PaginationButton from "./PaginationButton";
+import TableLoading from "../../common/TableLoading";
 
 function MobileCaptainsView({ captains, itemsPerPage = 6 }: any) {
   const [page, setPage] = useState(1);
@@ -109,11 +109,12 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
 
   if (isLoading) {
     return (
-      <div className="divide-y divide-gray-100">
-        {Array.from({ length: 7 }).map((_, i) => (
-          <TSkeleton key={i} />
-        ))}
-      </div>
+      <TableLoading
+        variant="skeleton"
+        rows={7}
+        columns={5}
+        message="Loading captains..."
+      />
     );
   }
 

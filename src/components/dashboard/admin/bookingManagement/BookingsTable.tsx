@@ -3,6 +3,7 @@
 import Link from "next/link";
 import StatusButton from "../button/StatusButton";
 import PaginationButton from "../userManagment/PaginationButton";
+import TableLoading from "../../common/TableLoading";
 import {
   Filter,
   Calendar,
@@ -337,19 +338,8 @@ export default function BookingsTable({
         </div>
 
         {/* Loading State */}
-        {loading && (
-          <div className="flex items-center justify-center p-12">
-            <div className="text-center">
-              <div className="relative">
-                <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-blue-600 mx-auto"></div>
-                <RefreshCw className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-blue-600 animate-pulse" />
-              </div>
-              <p className="text-gray-600 font-medium mt-4">
-                Loading bookings...
-              </p>
-            </div>
-          </div>
-        )}
+        {/* Loading State */}
+        {loading && <TableLoading message="Loading bookings..." />}
 
         {/* Empty State */}
         {!loading && data.length === 0 && (

@@ -4,7 +4,7 @@ import { useAllUserQuery } from "@/redux/api/authApi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Pagination } from "../button/Pagination";
-import { TSkeleton } from "../TSkelton";
+import TableLoading from "../../common/TableLoading";
 
 export default function AllCaptain() {
   const router = useRouter();
@@ -32,11 +32,12 @@ export default function AllCaptain() {
       <div className="overflow-x-auto bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
         <div className="bg-white rounded-lg shadow-sm">
           {isLoading ? (
-            <div className="divide-y divide-gray-100">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <TSkeleton key={i} />
-              ))}
-            </div>
+            <TableLoading
+              variant="skeleton"
+              rows={10}
+              columns={5}
+              message="Loading captains..."
+            />
           ) : captainsList.length === 0 ? (
             <div className="p-6 text-gray-500">No captains found.</div>
           ) : (

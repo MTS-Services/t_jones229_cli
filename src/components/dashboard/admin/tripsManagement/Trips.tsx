@@ -6,6 +6,7 @@ import CancelTripsModal from "../../modal/CancelTripModal";
 import { Pagination } from "../button/Pagination"; // If you want to use this, keep it, otherwise remove
 import StatusButton from "../button/StatusButton";
 import PaginationButton from "../userManagment/PaginationButton";
+import TableLoading from "../../common/TableLoading";
 
 interface TripProps {
   data: any[];
@@ -55,7 +56,7 @@ export default function Trips({
         </div>
 
         {loading ? (
-          <div className="p-6 text-gray-500">Loading...</div>
+          <TableLoading message="Loading trips..." />
         ) : (
           <>
             <table className="min-w-full table-auto divide-y divide-gray-200">
