@@ -16,6 +16,7 @@ import { signInWithGoogle } from "../../../services/authService";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import RegistrationSuccess from "@/components/common/RegistrationSuccess";
+import { FcGoogle } from "react-icons/fc";
 
 export default function Page() {
   const {
@@ -362,13 +363,22 @@ export default function Page() {
                 </div>
 
                 {/* Social Login */}
-                <Button
-                  onClick={() => handleLogin(signInWithGoogle)}
-                  variant="ghost"
-                  className="flex items-center gap-3 w-full"
-                >
-                  <FaGoogle /> <span className="text-white">Google</span>
-                </Button>
+                <div>
+                  <Button
+                    onClick={() => handleLogin(signInWithGoogle)}
+                    variant="ghost"
+                    className={`w-full flex items-center justify-center gap-3 border border-gray-300 rounded-lg py-3 px-4 font-medium transition-all duration-300 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-gray-200 ${
+                      isLoading
+                        ? "opacity-70 cursor-not-allowed bg-gray-50 "
+                        : "bg-white hover:bg-gray-50 text-gray-700 hover:border-gray-400"
+                    }`}
+                  >
+                    <FcGoogle className="w-5 h-5" />
+                    <span className=" text-gray-600 text-sm">
+                      Continue with Google
+                    </span>
+                  </Button>
+                </div>
               </div>
             </form>
           </>
