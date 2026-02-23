@@ -4,6 +4,7 @@ import Link from "next/link";
 import { RxReset } from "react-icons/rx";
 import { MdLockReset } from "react-icons/md";
 import { TbSpeedboat } from "react-icons/tb";
+import { FaRegAddressBook } from "react-icons/fa";
 
 import {
   TbLayoutDashboard,
@@ -16,6 +17,7 @@ import {
   TbLifebuoy,
 } from "react-icons/tb";
 import { MdChecklistRtl } from "react-icons/md";
+import { PiUserListBold } from "react-icons/pi";
 
 export const sidebarItems: TSidebarItem[] = [
   {
@@ -44,7 +46,7 @@ export const sidebarItems: TSidebarItem[] = [
   },
   {
     key: "Captain Management",
-    icon: <TbUsers />,
+    icon: <PiUserListBold />,
     label: <Link href="/dashboard/captain-management">Captain Management</Link>,
     roles: ["SUPERADMIN", "ADMIN"],
   },
@@ -81,7 +83,7 @@ export const sidebarItems: TSidebarItem[] = [
 
   {
     key: "Booking Management",
-    icon: <TbRoute />,
+    icon: <FaRegAddressBook />,
     label: <Link href="/dashboard/booking-managment">Booking Management</Link>,
     roles: [userRole.fishingTripper, "ADMIN"],
   },

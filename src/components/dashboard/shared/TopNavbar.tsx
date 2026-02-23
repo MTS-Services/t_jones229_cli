@@ -1,6 +1,21 @@
 "use client";
 import React, { useState } from "react";
-import { Menu, Bell, Search, User, Settings } from "lucide-react";
+import {
+  Menu,
+  Bell,
+  Search,
+  User,
+  Settings,
+  LogOut,
+  Settings2,
+} from "lucide-react";
+import { useRouter } from "next/dist/client/components/navigation";
+import Cookies from "js-cookie";
+
+import { logOut } from "@/services/authService";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/slices/authSlice";
+import Link from "next/link";
 
 interface TopNavbarProps {
   onMenuClick: () => void;
@@ -8,6 +23,16 @@ interface TopNavbarProps {
 
 const TopNavbar = ({ onMenuClick }: TopNavbarProps) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    logOut();
+    Cookies.remove("token");
+    Cookies.remove("currentUserRole");
+    router.push("/");
+  };
 
   return (
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-20">
@@ -50,9 +75,20 @@ const TopNavbar = ({ onMenuClick }: TopNavbarProps) => {
 
             {showProfileMenu && (
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                <div className="py-2">
-                  <button className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Sign out
+                <div className="p-2">
+                  <Link
+                    href="/dashboard/reset-password"
+                    className="w-full flex items-center gap-2 text-left px-4
+                    py-2 text-sm text-gray-600 dark:text-gray-300
+                    hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <Settings size={16} /> Security
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <LogOut size={16} /> Logout
                   </button>
                 </div>
               </div>
