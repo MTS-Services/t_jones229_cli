@@ -69,14 +69,25 @@ const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
         console.warn("Action: Check your backend terminal logs.");
       } else if (isEmptyResponse) {
         // Empty response but not 500 - likely network or CORS issue
-        console.error("API Error - Empty Response:", {
+        console.error("❌ API Error - Empty Response:", {
           status: status,
           endpoint: endpoint,
           possibleCause:
             status === "FETCH_ERROR"
-              ? "Network/CORS issue"
+              ? "Network/CORS issue - Backend server may not be running"
               : "Server returned empty response",
         });
+        
+        if (status === "FETCH_ERROR") {
+          console.error("\n🔴 CONNECTION FAILED:");
+          console.error("📍 Endpoint:", endpoint);
+          console.error("🌐 Base URL:", baseApiHandler());
+          console.error("\n💡 SOLUTION:");
+          console.error("   1. Check if your backend API is running");
+          console.error("   2. Run: cd api && npm run dev");
+          console.error("   3. Verify NEXT_PUBLIC_API_URL in .env.local");
+          console.error("   4. Check CORS settings in api/src/app.ts\n");
+        }
       } else {
         // Log normal errors with full details
         console.error("API Error:", {

@@ -55,12 +55,30 @@ export default function Page() {
     } catch (error: any) {
       console.error("Registration error:", error);
       console.error("Error data:", error?.data?.message);
-      const errorMessage =
-        error?.data?.message || // RTK Query error structure
-        error?.response?.data?.message ||
-        error?.message ||
-        "Something went wrong";
-      toast.error(errorMessage);
+
+      let errorMessage = "Registration failed. Please try again.";
+
+      // Handle different error types
+      if (error?.status === "FETCH_ERROR") {
+        errorMessage =
+          "⚠️ Cannot connect to server. Please ensure the API is running on http://localhost:3001";
+        console.error(
+          "🔴 API Connection Error: Make sure your backend API is running!",
+        );
+        console.error(
+          "💡 Run 'cd api && npm run dev' to start the backend server",
+        );
+      } else if (error?.data?.message) {
+        errorMessage = error.data.message;
+      } else if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage, {
+        autoClose: 5000,
+      });
     }
   };
 

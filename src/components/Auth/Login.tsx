@@ -82,11 +82,29 @@ export default function Login() {
         route.push(getRedirectPath(role));
       }
     } catch (error: any) {
-      const errorMessage =
-        error?.data?.message ||
-        "Login failed. Please check your credentials and try again.";
+      console.error("Login error:", error);
 
-      toast.error(errorMessage);
+      let errorMessage = "Login failed. Please try again.";
+
+      // Handle different error types
+      if (error?.status === "FETCH_ERROR") {
+        errorMessage =
+          "⚠️ Cannot connect to server. Please ensure the API is running on http://localhost:3001";
+        console.error(
+          "🔴 API Connection Error: Make sure your backend API is running!",
+        );
+        console.error(
+          "💡 Run 'cd api && npm run dev' to start the backend server",
+        );
+      } else if (error?.data?.message) {
+        errorMessage = error.data.message;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage, {
+        autoClose: 5000,
+      });
     } finally {
       setIsSubmitting(false);
     }
