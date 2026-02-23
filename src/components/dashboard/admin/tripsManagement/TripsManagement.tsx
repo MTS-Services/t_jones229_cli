@@ -25,15 +25,15 @@ export default function TripsManagement() {
     }));
   };
 
-  const totalPages = data?.data?.meta?.totalPage || 1;
+  const totalPages = data?.meta?.totalPage || 1;
   const currentPage = filters.page;
 
   return (
     <div className="space-y-6">
       <SearchTrips filters={filters} setFilters={setFilters} />
       <Trips
-        data={data?.data?.data || []}
-        meta={data?.data?.meta}
+        data={data?.data || []}
+        meta={data?.meta}
         loading={isLoading}
         currentPage={currentPage}
         totalPages={totalPages}
