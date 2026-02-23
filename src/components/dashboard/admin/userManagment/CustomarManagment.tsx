@@ -9,7 +9,10 @@ import PaginationButton from "./PaginationButton";
 
 function MobileUsersView({ users, itemsPerPage = 5, onView }: any) {
   const [page, setPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil((users?.length || 0) / itemsPerPage));
+  const totalPages = Math.max(
+    1,
+    Math.ceil((users?.length || 0) / itemsPerPage),
+  );
 
   const start = (page - 1) * itemsPerPage;
   const pageUsers = (users || []).slice(start, start + itemsPerPage);
@@ -26,13 +29,26 @@ function MobileUsersView({ users, itemsPerPage = 5, onView }: any) {
           <div key={u.id} className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-start justify-between">
               <div>
-                <div className="text-base font-semibold text-gray-900">{u.fullName}</div>
-                <div className="text-base text-gray-500 mt-1 break-words">{u.email}</div>
-                <div className="text-base text-gray-500 mt-1">{u.phoneNumber || 'N/A'}</div>
+                <div className="text-base font-semibold text-gray-900">
+                  {u.fullName}
+                </div>
+                <div className="text-base text-gray-500 mt-1 break-words">
+                  {u.email}
+                </div>
+                <div className="text-base text-gray-500 mt-1">
+                  {u.phoneNumber || "N/A"}
+                </div>
               </div>
               <div className="text-right">
-                <div className="text-sm text-gray-700">{u.totalTrips ?? 0} trip{(u.totalTrips ?? 0) !== 1 ? 's' : ''}</div>
-                <button onClick={() => onView(u)} className="mt-3 text-blue-600 text-sm">View</button>
+                <div className="text-sm text-gray-700">
+                  {u.totalTrips ?? 0} trip{(u.totalTrips ?? 0) !== 1 ? "s" : ""}
+                </div>
+                <button
+                  onClick={() => onView(u)}
+                  className="mt-3 text-blue-600 text-sm"
+                >
+                  View
+                </button>
               </div>
             </div>
           </div>
@@ -40,13 +56,31 @@ function MobileUsersView({ users, itemsPerPage = 5, onView }: any) {
       </div>
 
       <div className="mt-6 flex items-center justify-center gap-2">
-        <button onClick={prev} disabled={page === 1} className="px-3 py-1 rounded-md bg-gray-100 text-sm disabled:opacity-50">Prev</button>
+        <button
+          onClick={prev}
+          disabled={page === 1}
+          className="px-3 py-1 rounded-md bg-gray-100 text-sm disabled:opacity-50"
+        >
+          Prev
+        </button>
         <div className="flex items-center gap-2">
           {Array.from({ length: totalPages }).map((_, i) => (
-            <button key={i} onClick={() => setPage(i + 1)} className={`px-3 py-1 rounded-md text-sm ${page === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-100'}`}>{i + 1}</button>
+            <button
+              key={i}
+              onClick={() => setPage(i + 1)}
+              className={`px-3 py-1 rounded-md text-sm ${page === i + 1 ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+            >
+              {i + 1}
+            </button>
           ))}
         </div>
-        <button onClick={next} disabled={page === totalPages} className="px-3 py-1 rounded-md bg-gray-100 text-sm disabled:opacity-50">Next</button>
+        <button
+          onClick={next}
+          disabled={page === totalPages}
+          className="px-3 py-1 rounded-md bg-gray-100 text-sm disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
@@ -110,93 +144,95 @@ export default function CustomerManagement({ data = [], isLoading }: any) {
 
   return (
     <>
-      <div className="p-4 md:p-8">
+      <div className="">
         <div className="bg-[#f9fafb] border border-gray-100 rounded-lg shadow-sm">
           {/* Desktop table (unchanged) */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
-                  Phone
-                </th>
-                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
-                  Trips
-                </th>
-                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
-                  Action
-                </th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-gray-100">
-              {currentUsers.length === 0 ? (
+              <thead className="bg-gray-100">
                 <tr>
-                  <td
-                    colSpan={5}
-                    className="px-6 py-4 text-base text-gray-500 text-center bg-white"
-                  >
-                    No user found
-                  </td>
+                  <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                    Phone
+                  </th>
+                  <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                    Trips
+                  </th>
+                  <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">
+                    Action
+                  </th>
                 </tr>
-              ) : (
-                currentUsers.map((customer: any) => (
-                  <tr
-                    key={customer.id}
-                    className="hover:bg-white transition bg-white/50"
-                  >
-                    <td className="px-6 py-4 text-base font-medium text-gray-900">
-                      {customer?.fullName}
-                    </td>
+              </thead>
 
-                    <td className="px-6 py-4 text-base">
-                      <a
-                        href={
-                          customer.email?.includes("@")
-                            ? `mailto:${customer.email}`
-                            : `https://${customer.email}`
-                        }
-                        className="text-blue-600 hover:underline break-all"
-                      >
-                        {customer.email}
-                      </a>
-                    </td>
-
-                    <td className="px-6 py-4 text-base text-gray-700">
-                      {customer.phoneNumber || "N/A"}
-                    </td>
-
-                    <td className="px-6 py-4 text-base text-gray-700">
-                      {customer.totalTrips ?? 0} trip
-                      {(customer.totalTrips ?? 0) !== 1 ? "s" : ""}
-                    </td>
-                    <td className="px-6 py-4 text-base">
-                      <button
-                        onClick={() => handleViewDetails(customer)}
-                        className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors"
-                      >
-                        View Details
-                      </button>
+              <tbody className="divide-y divide-gray-100">
+                {currentUsers.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-4 text-base text-gray-500 text-center bg-white"
+                    >
+                      No user found
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
+                ) : (
+                  currentUsers.map((customer: any) => (
+                    <tr
+                      key={customer.id}
+                      className="hover:bg-white transition bg-white/50"
+                    >
+                      <td className="px-6 py-4 text-base font-medium text-gray-900">
+                        {customer?.fullName}
+                      </td>
+
+                      <td className="px-6 py-4 text-base">
+                        <a
+                          href={
+                            customer.email?.includes("@")
+                              ? `mailto:${customer.email}`
+                              : `https://${customer.email}`
+                          }
+                          className="text-blue-600 hover:underline break-all"
+                        >
+                          {customer.email}
+                        </a>
+                      </td>
+
+                      <td className="px-6 py-4 text-base text-gray-700">
+                        {customer.phoneNumber || "N/A"}
+                      </td>
+
+                      <td className="px-6 py-4 text-base text-gray-700">
+                        {customer.totalTrips ?? 0} trip
+                        {(customer.totalTrips ?? 0) !== 1 ? "s" : ""}
+                      </td>
+                      <td className="px-6 py-4 text-base">
+                        <button
+                          onClick={() => handleViewDetails(customer)}
+                          className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors"
+                        >
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
             </table>
           </div>
 
           {/* Mobile: card layout + mobile-only pagination */}
-          <MobileUsersView users={users} itemsPerPage={5} onView={handleViewDetails} />
+          <MobileUsersView
+            users={users}
+            itemsPerPage={5}
+            onView={handleViewDetails}
+          />
 
           <div className="">
-     
-
             <div>
               {users.length > itemsPerPage && (
                 <div className="hidden md:flex items-center justify-center pb-4 border-t border-gray-100 bg-white">

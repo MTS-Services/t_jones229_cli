@@ -48,7 +48,7 @@ export default function Trips({
   };
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="">
       <div className="bg-white shadow rounded-lg overflow-hidden">
         <div className="px-6 py-4 border-b">
           <h1 className="text-xl font-semibold">All trips</h1>

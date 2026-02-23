@@ -14,7 +14,7 @@ export default function UserManag() {
 
   return (
     <div>
-      <TitleSection />
+      {/* <TitleSection /> */}
       <CustomerManagement
         data={customerData?.data?.data || []}
         isLoading={loadingUser}

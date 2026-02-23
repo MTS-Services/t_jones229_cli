@@ -29,8 +29,7 @@ export default function TripsManagement() {
   const currentPage = filters.page;
 
   return (
-    <div>
-      <TitleSection />
+    <div className="space-y-6">
       <SearchTrips filters={filters} setFilters={setFilters} />
       <Trips
         data={data?.data?.data || []}

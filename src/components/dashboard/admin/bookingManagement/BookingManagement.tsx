@@ -32,10 +32,10 @@ export default function BookingManagement() {
   const currentPage = filters.page;
 
   return (
-    <div>
-      <TitleSection />
-      <SearchBookings filters={filters} setFilters={setFilters} />
+    <div className="space-y-6">
       <BookingsTable
+        filters={filters}
+        setFilters={setFilters}
         data={data?.data || []}
         meta={data?.meta}
         loading={isLoading}

@@ -11,7 +11,7 @@ interface SearchTripsProps {
 
 export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
   const handleChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>,
   ) => {
     setFilters((prev: any) => ({
       ...prev,
@@ -25,7 +25,7 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
   };
 
   return (
-    <div className="px-4 md:px-8 pt-4 md:pt-8">
+    <div className="">
       <div className="w-full">
         <h1 className="text-2xl font-medium text-gray-900 mb-6">
           Search trips
@@ -34,16 +34,15 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
         <div className="flex flex-wrap lg:flex-row gap-3 items-center">
           {/* Search Input with Icon */}
           <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-gray-400" />
-            </div>
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+
             <input
               type="text"
               name="searchTerm"
               value={filters.searchTerm}
               onChange={handleChange}
               placeholder="Search by trip name, customer or captain name"
-              className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all placeholder-gray-400 bg-white"
+              className="w-full py-3 pl-12 pr-4 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all placeholder-gray-400 bg-white"
             />
           </div>
 

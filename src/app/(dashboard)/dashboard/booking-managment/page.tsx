@@ -2,9 +2,5 @@ import BookingManagement from "@/components/dashboard/admin/bookingManagement/Bo
 import React from "react";
 
 export default function page() {
-  return (
-    <div>
-      <BookingManagement />
-    </div>
-  );
+  return <BookingManagement />;
 }

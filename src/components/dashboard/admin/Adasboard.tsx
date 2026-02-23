@@ -87,7 +87,7 @@ export default function Adashboard() {
     title: string,
     value: number | string,
     icon: React.ReactNode,
-    link: string
+    link: string,
   ) => {
     return isLoading ? (
       <Skeleton className="h-20 rounded-lg" />
@@ -97,7 +97,7 @@ export default function Adashboard() {
   };
 
   return (
-    <main className="p-4 md:p-8 space-y-6">
+    <main className="space-y-6">
       <h2 className="text-lg font-semibold text-gray-800 mb-6">
         Platform Metrics
       </h2>
@@ -108,7 +108,7 @@ export default function Adashboard() {
           "UPCOMING TRIPS:",
           tripMetrics.PENDING ?? 0,
           <LuCalendarDays className="text-[#FF9500]" size={28} />,
-          "/dashboard/trips-managment"
+          "/dashboard/trips-managment",
         )}
 
         {renderCard(
@@ -116,7 +116,7 @@ export default function Adashboard() {
           "COMPLETED:",
           tripMetrics.COMPLETE ?? 0,
           <FaCheckCircle className="text-[#FF9500]" size={28} />,
-          "/dashboard/trips-managment"
+          "/dashboard/trips-managment",
         )}
 
         {renderCard(
@@ -124,7 +124,7 @@ export default function Adashboard() {
           "CANCELLED:",
           0,
           <FaTimesCircle className="text-[#FF9500]" size={28} />,
-          "/dashboard/trips-managment"
+          "/dashboard/trips-managment",
         )}
 
         {renderCard(
@@ -132,7 +132,7 @@ export default function Adashboard() {
           "ACTIVE CUSTOMERS:",
           userMetrics.USER ?? 0,
           <FaUsers className="text-[#FF9500]" size={28} />,
-          "/dashboard/user-management"
+          "/dashboard/user-management",
         )}
 
         {renderCard(
@@ -140,7 +140,7 @@ export default function Adashboard() {
           "ACTIVE CAPTAINS:",
           userMetrics.CAPTAIN ?? 0,
           <FaUserTie className="text-[#FF9500]" size={28} />,
-          "/dashboard/user-management"
+          "/dashboard/user-management",
         )}
 
         {renderCard(
@@ -148,7 +148,7 @@ export default function Adashboard() {
           "REFUND REQUESTS:",
           listingRequest ?? 0,
           <FaMoneyBillWave className="text-[#FF9500]" size={28} />,
-          "/dashboard/user-management"
+          "/dashboard/user-management",
         )}
       </div>
 

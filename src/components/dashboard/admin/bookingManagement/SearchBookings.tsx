@@ -55,29 +55,38 @@ export default function SearchBookings({
     setSearchInput(e.target.value);
   };
 
-  const handleStatusChange = useCallback((status: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      status: status,
-      page: 1, // Reset to first page when filter changes
-    }));
-  }, [setFilters]);
+  const handleStatusChange = useCallback(
+    (status: string) => {
+      setFilters((prev) => ({
+        ...prev,
+        status: status,
+        page: 1, // Reset to first page when filter changes
+      }));
+    },
+    [setFilters],
+  );
 
-  const handleDateChange = useCallback((date: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      date: date,
-      page: 1, // Reset to first page when filter changes
-    }));
-  }, [setFilters]);
+  const handleDateChange = useCallback(
+    (date: string) => {
+      setFilters((prev) => ({
+        ...prev,
+        date: date,
+        page: 1, // Reset to first page when filter changes
+      }));
+    },
+    [setFilters],
+  );
 
-  const handleCityChange = useCallback((city: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      city: city,
-      page: 1, // Reset to first page when filter changes
-    }));
-  }, [setFilters]);
+  const handleCityChange = useCallback(
+    (city: string) => {
+      setFilters((prev) => ({
+        ...prev,
+        city: city,
+        page: 1, // Reset to first page when filter changes
+      }));
+    },
+    [setFilters],
+  );
 
   const handleReset = useCallback(() => {
     setSearchInput("");
@@ -92,10 +101,10 @@ export default function SearchBookings({
   }, [setFilters]);
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="">
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-semibold mb-4">Search & Filter Bookings</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {/* Search In */}
           {/* <div>

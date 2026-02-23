@@ -44,8 +44,8 @@ export default function BookingDetails() {
 
   if (isLoading) {
     return (
-      <div className="p-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="">
+        <div className="max-w-6xl mx-auto items-center justify-center p-8">
           <div className="text-gray-500">Loading booking details...</div>
         </div>
       </div>
@@ -90,11 +90,15 @@ export default function BookingDetails() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500">Trip Name</p>
-                  <p className="font-medium">{booking.trip?.tripName || "N/A"}</p>
+                  <p className="font-medium">
+                    {booking.trip?.tripName || "N/A"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Trip Type</p>
-                  <p className="font-medium">{booking.trip?.tripType || "N/A"}</p>
+                  <p className="font-medium">
+                    {booking.trip?.tripType || "N/A"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Duration</p>
@@ -129,7 +133,9 @@ export default function BookingDetails() {
 
             {/* Customer Information */}
             <div className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-semibold mb-4">Customer Information</h2>
+              <h2 className="text-lg font-semibold mb-4">
+                Customer Information
+              </h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500">Name</p>
@@ -195,7 +201,9 @@ export default function BookingDetails() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Boat Type</p>
-                  <p className="font-medium">{booking.boat?.boatType || "N/A"}</p>
+                  <p className="font-medium">
+                    {booking.boat?.boatType || "N/A"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Capacity</p>

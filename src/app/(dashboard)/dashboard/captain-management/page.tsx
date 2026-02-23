@@ -12,7 +12,10 @@ export default function Page() {
 
   return (
     <div>
-      <TitleSection />
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold">Captain Management</h1>
+        <p className="text-gray-600">Manage and moderate user accounts.</p>
+      </div>
       <CaptainManagementComponent
         data={captainData?.data?.data || []}
         isLoading={loadingCaptain}

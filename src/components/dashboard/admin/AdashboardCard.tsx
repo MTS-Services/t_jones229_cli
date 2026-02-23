@@ -15,7 +15,7 @@ export default function AdashboardCard({
   link,
 }: AdashboardCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-lg w-full border border-gray-100 h-[144px] p-4">
+    <div className="bg-white rounded-xl shadow-md w-full border border-gray-100 h-[144px] p-4">
       <Link href={link} className="block h-full">
         <div className="h-full">
           <div className="flex items-center justify-between h-[47px] mb-2">
