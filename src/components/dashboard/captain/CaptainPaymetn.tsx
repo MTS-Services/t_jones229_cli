@@ -72,7 +72,7 @@ export default function CaptainMembership() {
 
     const isChanged = Object.entries(defaultValues).some(
       ([key, defaultVal]) =>
-        watchedFields[key as keyof FormValues] !== defaultVal
+        watchedFields[key as keyof FormValues] !== defaultVal,
     );
 
     setHasUnsavedChanges(isChanged);
@@ -82,7 +82,7 @@ export default function CaptainMembership() {
     if (!defaultValues) return;
 
     const isChanged = Object.entries(defaultValues).some(
-      ([key, defaultVal]) => formData[key as keyof FormValues] !== defaultVal
+      ([key, defaultVal]) => formData[key as keyof FormValues] !== defaultVal,
     );
 
     if (!isChanged) {
@@ -105,7 +105,7 @@ export default function CaptainMembership() {
           {
             position: "top-right",
             autoClose: 3000,
-          }
+          },
         );
         setDefaultValues(formData);
         setHasUnsavedChanges(false);
@@ -161,7 +161,7 @@ export default function CaptainMembership() {
             {
               position: "top-right",
               autoClose: 4000,
-            }
+            },
           );
         }
       }
@@ -203,15 +203,13 @@ export default function CaptainMembership() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="p-4 md:p-8 space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       <ToastContainer />
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-gray-200">
         <div>
-          <h2 className="text-2xl md:text-3xl text-[#242424] font-bold">
-            Payment Details
-          </h2>
+          <h2 className="text-xl text-[#242424] font-bold">Payment Details</h2>
           <p className="text-sm text-gray-500 mt-1">
             Manage your payment information securely
           </p>

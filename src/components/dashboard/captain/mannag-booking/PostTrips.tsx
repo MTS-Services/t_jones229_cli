@@ -6,7 +6,7 @@ export default function PostTrips({ postTrips }: any) {
   const hasTrips = postTrips && postTrips.length > 0;
 
   return (
-    <section className="mx-auto px-[24px] py-10">
+    <section className="">
       <h1 className="text-2xl font-bold text-[#242424] pb-4">Past Trips</h1>
       <div className="h-[1px]  border-[#D9D9D9]"></div>
 

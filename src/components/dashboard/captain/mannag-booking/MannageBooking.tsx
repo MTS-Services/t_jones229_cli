@@ -34,7 +34,7 @@ export default function MannageBooking() {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       <UpcomingTrips upcomingTrips={upcomingTrips} />
       <PostTrips postTrips={postTrips} />
     </div>

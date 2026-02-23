@@ -5,7 +5,7 @@ import UpcomingBokingCard from "./UpcomingBokingCard";
 export default function UpcomingTrips({ upcomingTrips }: any) {
   const hasTrips = upcomingTrips && upcomingTrips.length > 0;
   return (
-    <section className="mx-auto px-[24px] py-10">
+    <section className="">
       <h1 className="text-[24px] font-bold border-b-2 text-[#242424]   pb-4">
         Upcoming Trips
       </h1>
