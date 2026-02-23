@@ -84,7 +84,7 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="p-4 md:p-8 w-full">
+    <div className="">
       <ToastContainer />
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>

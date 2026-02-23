@@ -14,7 +14,7 @@ export default function page() {
 
   return (
     <div>
-      <TitleSection />
+      {/* <TitleSection /> */}
       <Elements stripe={stripePromise}>
         <EditProfile />
       </Elements>

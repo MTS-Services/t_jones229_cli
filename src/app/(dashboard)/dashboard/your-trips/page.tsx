@@ -5,7 +5,7 @@ import React from "react";
 export default function page() {
   return (
     <div>
-      <TitleSection />
+      {/* <TitleSection /> */}
       <YourTrip />
     </div>
   );

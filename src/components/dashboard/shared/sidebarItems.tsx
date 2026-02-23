@@ -2,6 +2,8 @@ import { userRole } from "@/constant/user.constants";
 import type { TSidebarItem } from "@/types/dashboard.types";
 import Link from "next/link";
 import { RxReset } from "react-icons/rx";
+import { MdLockReset } from "react-icons/md";
+import { TbSpeedboat } from "react-icons/tb";
 
 import {
   TbLayoutDashboard,
@@ -20,7 +22,7 @@ export const sidebarItems: TSidebarItem[] = [
     key: "Dashboard",
     icon: <TbLayoutDashboard />,
     label: <Link href="/dashboard">Dashboard</Link>,
-    roles: ["SUPERADMIN","ADMIN"],
+    roles: ["SUPERADMIN", "ADMIN"],
   },
   {
     key: "Edit your details",
@@ -30,7 +32,7 @@ export const sidebarItems: TSidebarItem[] = [
   },
   {
     key: "Your Trips",
-    icon: <TbLayoutDashboard />,
+    icon: <TbSpeedboat />,
     label: <Link href="/dashboard/your-trips">Your Trips</Link>,
     roles: [userRole.user],
   },
@@ -38,13 +40,13 @@ export const sidebarItems: TSidebarItem[] = [
     key: "User Management",
     icon: <TbUsers />,
     label: <Link href="/dashboard/user-management">User Management</Link>,
-    roles: ["SUPERADMIN" ,"ADMIN"],
+    roles: ["SUPERADMIN", "ADMIN"],
   },
   {
     key: "Captain Management",
     icon: <TbUsers />,
     label: <Link href="/dashboard/captain-management">Captain Management</Link>,
-    roles: ["SUPERADMIN","ADMIN"],
+    roles: ["SUPERADMIN", "ADMIN"],
   },
   {
     key: "Check Your Trip",
@@ -74,14 +76,14 @@ export const sidebarItems: TSidebarItem[] = [
     key: "Trips Management",
     icon: <TbRoute />,
     label: <Link href="/dashboard/trips-managment">Trips Management</Link>,
-    roles: [userRole.fishingTripper,"ADMIN"],
+    roles: [userRole.fishingTripper, "ADMIN"],
   },
-  
+
   {
     key: "Booking Management",
     icon: <TbRoute />,
     label: <Link href="/dashboard/booking-managment">Booking Management</Link>,
-    roles: [userRole.fishingTripper,"ADMIN"],
+    roles: [userRole.fishingTripper, "ADMIN"],
   },
 
   {
@@ -99,8 +101,8 @@ export const sidebarItems: TSidebarItem[] = [
 
   {
     key: "Reset Password",
-    icon: <RxReset />,
+    icon: <MdLockReset />,
     label: <Link href="/dashboard/reset-password">Change Password</Link>,
-    roles: [userRole.captain, userRole.user, userRole.fishingTripper,"ADMIN"],
+    roles: [userRole.captain, userRole.user, userRole.fishingTripper, "ADMIN"],
   },
 ];

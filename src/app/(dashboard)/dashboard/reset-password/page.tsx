@@ -24,8 +24,6 @@ export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const password = watch("newPassword");
-
   const onSubmit = async (data: any) => {
     const passInfo = {
       newPassword: data?.newPassword,
@@ -49,20 +47,20 @@ export default function Page() {
   };
 
   return (
-    <div className="h-screen w-full">
-      <TitleSection />
-      <div className=" relative bg-[#ffffff] flex flex-col justify-center items-center">
+    <div className="">
+      {/* <TitleSection /> */}
+      <div className="relative flex flex-col justify-center items-center">
         <ToastContainer />
 
-        <div className="container mx-auto px-4 py-10 flex flex-col justify-center items-center">
+        <div className="min-h-[80vh] w-full  flex items-center justify-center p-4">
           <div className="w-full max-w-[500px] text-center">
-            <h2 className="text-black text-2xl md:text-4xl font-bold leading-tight mb-8">
-              Change your password
+            <h2 className="text-black text-2xl font-bold leading-tight mb-8">
+              Change your current password
             </h2>
 
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="bg-white p-6 md:p-10 border border-[#0f5d9d] rounded-xl shadow-lg space-y-6"
+              className="bg-white p-6 md:p-10 border border-[#d5e5f1] rounded-xl shadow-lg space-y-6"
             >
               {/* Old Password */}
               <div className="text-left">
@@ -70,20 +68,21 @@ export default function Page() {
                   htmlFor="oldPassword"
                   className="text-base font-bold text-[#171717] block mb-1"
                 >
-                  Old Password
+                  Current Password
                 </label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     id="oldPassword"
                     {...register("oldPassword", {
-                      required: "Old password is required",
+                      required: "Current password is required",
                       minLength: {
                         value: 6,
-                        message: "Old password must be at least 6 characters",
+                        message:
+                          "Current password must be at least 6 characters",
                       },
                     })}
-                    placeholder="old password"
+                    placeholder="current password"
                     className="w-full border text-[#4b4b4b] border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
                   <span
@@ -172,7 +171,7 @@ export default function Page() {
                 type="submit"
                 className="bg-[#105e9e] hover:bg-[#0d4d82] text-white text-base py-3 rounded-lg w-full font-medium transition-all duration-300"
               >
-                {isLoading ? <Loader /> : "Change Password"}
+                {isLoading ? "Loading..." : "Change Password"}
               </Button>
             </form>
           </div>
