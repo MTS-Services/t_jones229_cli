@@ -42,22 +42,15 @@ export default function Page() {
       registerType: "EMAILPASS",
     };
 
-    console.log("Submitting registration with data:", userInfo);
-
     try {
       const res = await registerFN(userInfo).unwrap();
-      console.log("Registration response:", res);
       if (res?.success) {
         setRegistrationSuccess(true);
       } else {
         toast.error((res?.error as string) || "Registration failed");
       }
     } catch (error: any) {
-      console.error("Registration error:", error);
-      console.error("Error data:", error?.data?.message);
-
       let errorMessage = "Registration failed. Please try again.";
-
       // Handle different error types
       if (error?.status === "FETCH_ERROR") {
         errorMessage =
@@ -67,6 +60,15 @@ export default function Page() {
         );
         console.error(
           "💡 Run 'cd api && npm run dev' to start the backend server",
+        );
+      } else if (error?.status === "TIMEOUT_ERROR") {
+        errorMessage =
+          "⏱️ Request timed out. The server is taking too long to respond.";
+        console.error(
+          "🔴 API Timeout Error: Backend is running but responding too slowly!",
+        );
+        console.error(
+          "💡 Check backend terminal for errors or restart: cd api && npm run dev",
         );
       } else if (error?.data?.message) {
         errorMessage = error.data.message;

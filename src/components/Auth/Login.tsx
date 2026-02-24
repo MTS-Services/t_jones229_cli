@@ -82,8 +82,6 @@ export default function Login() {
         route.push(getRedirectPath(role));
       }
     } catch (error: any) {
-      console.error("Login error:", error);
-
       let errorMessage = "Login failed. Please try again.";
 
       // Handle different error types
@@ -95,6 +93,15 @@ export default function Login() {
         );
         console.error(
           "💡 Run 'cd api && npm run dev' to start the backend server",
+        );
+      } else if (error?.status === "TIMEOUT_ERROR") {
+        errorMessage =
+          "⏱️ Request timed out. The server is taking too long to respond.";
+        console.error(
+          "🔴 API Timeout Error: Backend is running but responding too slowly!",
+        );
+        console.error(
+          "💡 Check backend terminal for errors or restart: cd api && npm run dev",
         );
       } else if (error?.data?.message) {
         errorMessage = error.data.message;

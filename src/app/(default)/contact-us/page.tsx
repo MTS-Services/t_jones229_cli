@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 type FormValues = {
   email: string;
   name: string;
-  description: string;
+  message: string;
 };
 
 export default function Page() {
@@ -132,17 +132,17 @@ export default function Page() {
                       Your Message *
                     </label>
                     <textarea
-                      id="description"
+                      id="message"
                       rows={4}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f5a8b] focus:border-[#0f5a8b] outline-none transition resize-none"
                       placeholder="Tell us how we can help..."
-                      {...register("description", {
+                      {...register("message", {
                         required: "Please enter your message",
                       })}
                     />
-                    {errors.description && (
+                    {errors.message && (
                       <p className="text-red-500 text-sm mt-1">
-                        {errors.description.message}
+                        {errors.message.message}
                       </p>
                     )}
                   </div>

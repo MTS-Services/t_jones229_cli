@@ -1,130 +1,147 @@
 // src/redux/api/baseApi.ts
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store/store";
+import {
+  createApi,
+  fetchBaseQuery,
+  retry,
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react";
+import type { RootState } from "../store/store";
 
-// 1. Setup the Base URL
-const baseApiHandler = () => {
+// --------------------------------------------------
+// 1. Base URL Handler
+// --------------------------------------------------
+const getBaseUrl = (): string => {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL ||
-    "https://api.fishingtripper.com";
-  console.log("🔧 API Base URL:", `${baseUrl}/api/v1`);
+    process.env.NEXT_PUBLIC_API_URL || "https://api.fishingtripper.com";
+
   return `${baseUrl}/api/v1`;
 };
-    
-// 2. Custom Base Query with Fix for Empty 500 Errors
-const baseQueryWithRetry = async (args: any, api: any, extraOptions: any) => {
-  const baseQuery = fetchBaseQuery({
-    baseUrl: baseApiHandler(),
-    prepareHeaders: (headers, { getState }) => {
-      try {
-        const token = (getState() as RootState).auth.token;
-        console.log(
-          "📤 Token from Redux state:",
-          token ? token.substring(0, 30) + "..." : "NO TOKEN"
-        );
-        if (token) {
-          // Ensure correct Bearer format
-          const authHeader = token.startsWith("Bearer ")
-            ? token
-            : `Bearer ${token}`;
-          headers.set("Authorization", authHeader);
-          console.log(
-            "📤 Authorization header set:",
-            authHeader.substring(0, 35) + "..."
-          );
-        } else {
-          console.warn(
-            "⚠️ No token found in Redux state - user may not be logged in"
-          );
-        }
-      } catch (error) {
-        console.error("Error preparing headers:", error);
-        // Build headers silently
-      }
-      // Don't set Content-Type for FormData - let browser set it with boundary
-      // fetchBaseQuery handles this automatically, but ensure we don't override it
-      return headers;
-    },
-    timeout: 30000,
-  });
 
-  try {
-    const result = await baseQuery(args, api, extraOptions);
+// --------------------------------------------------
+// 2. Raw Base Query (Created Once)
+// --------------------------------------------------
+const rawBaseQuery = fetchBaseQuery({
+  baseUrl: getBaseUrl(),
+  timeout: 30000, // 30 seconds timeout for all requests
 
-    // --- FIX STARTS HERE ---
-    if (result.error) {
-      const status = result.error.status;
-      const data = result.error.data;
-      const endpoint = typeof args === "string" ? args : args.url;
+  prepareHeaders: (headers, { getState }) => {
+    const state = getState() as RootState;
+    const token = state?.auth?.token;
 
-      // Check if the server sent empty data (common in 500 crashes)
-      const isServerCrash = status === 500;
-      const isEmptyResponse =
-        !data || (typeof data === "object" && Object.keys(data).length === 0);
+    if (token) {
+      const formattedToken = token.startsWith("Bearer ")
+        ? token
+        : `Bearer ${token}`;
 
-      if (isServerCrash && isEmptyResponse) {
-        // Instead of showing {}, we show a clear message
-        console.warn(`⚠️ Backend Server Error (500) at ${endpoint}`);
-        console.warn("The server crashed without sending an error message.");
-        console.warn("Action: Check your backend terminal logs.");
-      } else if (isEmptyResponse) {
-        // Empty response but not 500 - likely network or CORS issue
-        console.error("❌ API Error - Empty Response:", {
-          status: status,
-          endpoint: endpoint,
-          possibleCause:
-            status === "FETCH_ERROR"
-              ? "Network/CORS issue - Backend server may not be running"
-              : "Server returned empty response",
-        });
-        
-        if (status === "FETCH_ERROR") {
-          console.error("\n🔴 CONNECTION FAILED:");
-          console.error("📍 Endpoint:", endpoint);
-          console.error("🌐 Base URL:", baseApiHandler());
-          console.error("\n💡 SOLUTION:");
-          console.error("   1. Check if your backend API is running");
-          console.error("   2. Run: cd api && npm run dev");
-          console.error("   3. Verify NEXT_PUBLIC_API_URL in .env.local");
-          console.error("   4. Check CORS settings in api/src/app.ts\n");
-        }
-      } else {
-        // Log normal errors with full details
-        console.error("API Error:", {
-          status: status,
-          message: data,
-          endpoint: endpoint,
-        });
-      }
+      headers.set("Authorization", formattedToken);
     }
-    // --- FIX ENDS HERE ---
 
-    return result;
-  } catch (error) {
-    console.error("API Request Exception:", error);
-    return {
-      error: {
-        status: "FETCH_ERROR",
-        error: String(error),
-      },
-    };
+    return headers;
+  },
+});
+
+// --------------------------------------------------
+// 3. Base Query With Global Error Handling
+// --------------------------------------------------
+const baseQueryWithHandling: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  const result = await rawBaseQuery(args, api, extraOptions);
+
+  if (result.error) {
+    const status = result.error.status;
+    const endpoint =
+      typeof args === "string" ? args : args.url;
+
+    // ----------------------------------------
+    // Handle 401 Unauthorized (Global Logout)
+    // ----------------------------------------
+    if (status === 401) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("🔐 Unauthorized - Token expired or invalid.");
+      }
+
+      // Optional:
+      // api.dispatch(logout());
+    }
+
+    // ----------------------------------------
+    // Handle Empty 500 Server Crash
+    // ----------------------------------------
+    const isServerCrash =
+      status === 500 &&
+      (!result.error.data ||
+        (typeof result.error.data === "object" &&
+          Object.keys(result.error.data).length === 0));
+
+    if (isServerCrash && process.env.NODE_ENV === "development") {
+      console.error(`🔥 Backend crashed at: ${endpoint}`);
+      console.error("Check backend terminal logs.");
+    }
+
+    // ----------------------------------------
+    // Network / CORS Error
+    // ----------------------------------------
+    if (status === "FETCH_ERROR" && process.env.NODE_ENV === "development") {
+      console.error("🌐 Network Error:", {
+        endpoint,
+        baseUrl: getBaseUrl(),
+        message: result.error.error,
+      });
+      console.error("\n💡 SOLUTION:");
+      console.error("   1. Check if backend API is running: cd api && npm run dev");
+      console.error("   2. Verify NEXT_PUBLIC_API_URL in .env.local");
+      console.error("   3. Check CORS settings in api/src/app.ts\n");
+    }
+
+    // ----------------------------------------
+    // Timeout Error (Request took too long)
+    // ----------------------------------------
+    if (status === "TIMEOUT_ERROR" && process.env.NODE_ENV === "development") {
+      console.error("⏱️ Request Timed Out:", {
+        endpoint,
+        baseUrl: getBaseUrl(),
+        timeout: "30 seconds",
+      });
+      console.error("💡 SOLUTION:");
+      console.error("   1. Check if backend API is running: cd api && npm run dev");
+      console.error("   2. Verify NEXT_PUBLIC_API_URL in .env.local");
+      console.error("   3. Check backend logs for performance issues\n");
+    }
   }
+
+  return result;
 };
 
-// 3. Define the API
+// --------------------------------------------------
+// 4. Add Retry Logic (Best Practice)
+// --------------------------------------------------
+const baseQueryWithRetry = retry(baseQueryWithHandling, {
+  maxRetries: 2,
+});
+
+// --------------------------------------------------
+// 5. Create API
+// --------------------------------------------------
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithRetry,
-  endpoints: () => ({}),
+
   tagTypes: [
     "auth",
     "boat",
-    "Calender",
+    "calendar",
     "file",
     "support",
     "userBooking",
     "user",
-    "Dashboard",
+    "dashboard",
     "booking",
   ],
+
+  endpoints: () => ({}),
 });
