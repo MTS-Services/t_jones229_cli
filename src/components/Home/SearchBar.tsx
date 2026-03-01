@@ -181,7 +181,7 @@ export default function SearchBar({
                       <>
                         <h2 className="text-xl font-bold mb-3">Where to?</h2>
                         <div className="relative mb-3">
-                          <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+                          <IoIosSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
                           <input
                             autoFocus
                             type="text"
@@ -191,7 +191,7 @@ export default function SearchBar({
                               setLocation(e.target.value);
                               setSearchTerm(e.target.value);
                             }}
-                            className="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-300 rounded-xl outline-none focus:ring-2 ring-black text-sm"
+                            className="w-full pl-8 pr-4 py-2.5 bg-white border border-gray-300 rounded-xl outline-none focus:ring-2 ring-black text-sm"
                           />
                         </div>
                         <div className="max-h-56 overflow-y-auto">

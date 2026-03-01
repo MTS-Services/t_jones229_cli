@@ -30,7 +30,7 @@ export default function SearchDestinationsCard({
 
   return (
     <div
-      className={`group cursor-pointer ${
+      className={`cursor-pointer ${
         isLast
           ? "w-full md:max-w-[352px] md:mx-auto md:col-span-2 lg:col-span-1 lg:max-w-full"
           : "w-full"
@@ -38,7 +38,7 @@ export default function SearchDestinationsCard({
       onClick={handleClick}
     >
       {/* Container for Image and Overlays */}
-      <div className="relative overflow-hidden rounded-[16px] w-full h-[380px]">
+      <div className="relative overflow-hidden rounded-sm md:rounded-2xl w-full h-[380px]">
         {/* Main Background Image */}
         <Image
           src={cardInfo.image || placeholder}

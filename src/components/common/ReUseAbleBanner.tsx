@@ -28,8 +28,6 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
   backgroundImageClassName,
   pathLink,
 }) => {
-  const router = useRouter();
-
   return (
     <section
       className={`${backgroundImageClassName} relative flex items-center justify-center bg-cover bg-center bg-no-repeat h-[500px] w-full ${backgroundImageClassName} `}

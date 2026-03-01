@@ -11,7 +11,7 @@ const Container: React.FC<ContainerProps> = ({ children, className = "" }) => {
   return (
     <div
       // We use a template literal to merge your default styles with the new ones
-      className={`container mx-auto xl:px-6 lg:px-5 md:px-4 px-3  md:my-20 my-14 ${className}`}
+      className={`container mx-auto xl:px-6 lg:px-5 md:px-4 px-2 md:my-20 my-10 ${className}`}
     >
       {children}
     </div>

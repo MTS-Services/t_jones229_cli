@@ -19,9 +19,9 @@ export default function SearchDestinations() {
   };
 
   return (
-    <Container className="">
-      <h1 className="text-[#242424] text-xl md:text-4xl text-center font-bold mb-8">
-        Search Our Destinations{" "}
+    <Container>
+      <h1 className="text-[#242424] text-xl md:text-4xl text-center font-bold mb-4 md:mb-8">
+        Search Our Destinations
       </h1>
 
       {/* Desktop Grid - Hidden on Mobile */}
@@ -44,7 +44,7 @@ export default function SearchDestinations() {
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
             {cards.map((cardInfo, index) => (
-              <div key={index} className="min-w-full px-2">
+              <div key={index} className="min-w-full">
                 <SearchDestinationsCard cardInfo={cardInfo} isLast={false} />
               </div>
             ))}
@@ -54,14 +54,14 @@ export default function SearchDestinations() {
         {/* Navigation Arrows */}
         <button
           onClick={prevSlide}
-          className="absolute left-3 top-1/2 -translate-y-1/2 z-30 bg-black/30 hover:bg-gray-800 text-white border border-gray-500 p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-black/30 hover:bg-gray-800 text-white border border-gray-500 p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
           aria-label="Previous destination"
         >
           <ChevronLeft size={24} />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-3 top-1/2 -translate-y-1/2 z-30 bg-black/30 hover:bg-gray-800 text-white border border-gray-500 p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-black/30 hover:bg-gray-800 text-white border border-gray-500 p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
           aria-label="Next destination"
         >
           <ChevronRight size={24} />
