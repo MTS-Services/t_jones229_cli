@@ -8,6 +8,30 @@ import { useForm } from "react-hook-form";
 import { useCreateBookingMutation } from "@/redux/api/bookingApi";
 import { toast, ToastContainer } from "react-toastify";
 
+const steps = [
+  {
+    id: 1,
+    title: "Create Your Free Account",
+    description: "Sign up or log in to get started.",
+  },
+  {
+    id: 2,
+    title: "Choose Your Fishing Style",
+    description: "Select Offshore or Inshore and your target species.",
+  },
+  {
+    id: 3,
+    title: "Get Matched",
+    description: "We connect you with anglers planning the same trip.",
+  },
+  {
+    id: 4,
+    title: "Confirm & Go Fishing",
+    description:
+      "Receive trip details by email and confirm securely. Full refund if cancelled.",
+  },
+];
+
 export default function GroupBooking() {
   const [tripDate, setTripDate] = useState<string | null>(null);
   const [location, setLocation] = useState<string | null>(null);
@@ -119,7 +143,7 @@ export default function GroupBooking() {
   };
 
   return (
-    <div className="mt-20">
+    <div className="mt-12 md:mt-20">
       <ToastContainer />
       <div className="py-4">
         <div className="container mx-auto xl:px-4 lg:px-3 px-2">
@@ -130,8 +154,8 @@ export default function GroupBooking() {
         </div>
       </div>
 
-      <div className="container mx-auto flex flex-col gap-10  xl:px-4 lg:px-3 px-2 mb-20">
-        <div className="container mx-auto bg-slate-50 rounded-xl p-10">
+      <div className="container mx-auto flex flex-col  xl:px-4 lg:px-3 px-2">
+        <div className="container mx-auto bg-slate-50 rounded-t-xl md:p-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Video Section */}
             <div className="relative h-full">
@@ -143,76 +167,42 @@ export default function GroupBooking() {
             </div>
 
             {/* Steps Section */}
-            <div>
+            <div className="p-4 md:p-0">
               <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900">
                 How It Works
               </h2>
 
-              <div className="space-y-8">
-                {/* Step 1 */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
-                    1
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Create Your Free Account
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Sign up or log in to get started.
-                    </p>
-                  </div>
-                </div>
+              <div className="space-y-4 md:space-y-8">
+                {steps.map((step) => (
+                  <div
+                    key={step.id}
+                    className="flex items-start sm:items-center gap-4"
+                  >
+                    <div
+                      className="w-10 h-10 flex items-center justify-center 
+                        rounded-full bg-[#105d9e] text-white font-semibold 
+                        shrink-0"
+                    >
+                      {step.id}
+                    </div>
 
-                {/* Step 2 */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
-                    2
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Choose Your Fishing Style
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Select Offshore or Inshore and your target species.
-                    </p>
-                  </div>
-                </div>
+                    <div>
+                      <h3 className="font-semibold text-base sm:text-lg">
+                        {step.title}
+                      </h3>
 
-                {/* Step 3 */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
-                    3
+                      <p className="text-gray-600 text-sm sm:text-base">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">Get Matched</h3>
-                    <p className="text-gray-600 text-sm">
-                      We connect you with anglers planning the same trip.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 4 */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
-                    4
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Confirm & Go Fishing
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Receive trip details by email and confirm securely. Full
-                      refund if cancelled.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-50 rounded-lg p-5 md:p-8">
+        <div className="bg-slate-50 rounded-b-lg p-5 md:p-8 mb-8 md:mb-16">
           <h2 className="text-xl md:text-3xl font-bold text-textSecondary mb-2">
             Enter your details
           </h2>

@@ -8,7 +8,16 @@ import { createPortal } from "react-dom";
 import { IoIosSearch } from "react-icons/io";
 import { GoPlusCircle } from "react-icons/go";
 import { CiCircleMinus } from "react-icons/ci";
-import { IoCloseOutline } from "react-icons/io5";
+import {
+  IoCloseOutline,
+  IoLocationOutline,
+  IoCalendarOutline,
+  IoPeopleOutline,
+  IoBoatOutline,
+  IoChevronForwardOutline,
+  IoAddOutline,
+  IoRemoveOutline,
+} from "react-icons/io5";
 import { MdOutlineClose } from "react-icons/md";
 import { useGetBoatListByLocationQuery } from "@/redux/api/boatApi";
 import Image from "next/image";
@@ -148,223 +157,429 @@ export default function SearchBar({
       {/* --- Mobile Full Screen Modal (Using Portal) --- */}
       {mounted &&
         createPortal(
-          <AnimatePresence>
+          <div>
             {isMobileModalOpen && (
               <motion.div
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "100%" }}
-                transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                className="md:hidden fixed inset-0 bg-[#F7F7F7] flex flex-col"
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                className="md:hidden fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex flex-col"
                 style={{ zIndex: 999999 }}
               >
-                {/* Header */}
-                <div className="bg-white px-4 pt-4 pb-2">
-                  <div className="flex items-center relative h-10">
+                {/* Enhanced Header */}
+                <div className="bg-white/95 backdrop-blur-sm px-6 py-2 border-b border-gray-100/50">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-800 mb-1">
+                        Find Your Adventure
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        Search for the perfect fishing trip
+                      </p>
+                    </div>
                     <button
                       onClick={() => setIsMobileModalOpen(false)}
-                      className="absolute left-0 p-1.5 border border-gray-300 rounded-full"
+                      className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all"
                     >
-                      <IoCloseOutline className="text-xl" />
+                      <IoCloseOutline className="text-xl text-gray-600" />
                     </button>
                   </div>
                 </div>
 
+                {/* Progress Indicator */}
+                <div className="px-4 py-2 bg-white/95 backdrop-blur-sm">
+                  <div className="flex space-x-2">
+                    {["where", "when", "who", "type"].map((section, index) => {
+                      const currentIndex = [
+                        "where",
+                        "when",
+                        "who",
+                        "type",
+                      ].indexOf(activeMobileSection);
+                      return (
+                        <div
+                          key={section}
+                          className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+                            index <= currentIndex
+                              ? "bg-gradient-to-r from-blue-500 to-blue-600"
+                              : "bg-gray-200"
+                          }`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
                 {/* Scrollable Content */}
-                <div className="flex-1 overflow-y-auto p-3 space-y-2.5 pb-24">
-                  {/* Where Card */}
+                <div className="flex-1 overflow-y-auto px-2 py-4 space-y-2">
+                  {/* Where Card - Enhanced */}
                   <div
-                    className={`bg-white rounded-2xl shadow-sm border border-gray-100 transition-all ${activeMobileSection === "where" ? "p-4" : "p-3 flex justify-between items-center cursor-pointer"}`}
+                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow border border-white/70 transition-all duration-300 ${
+                      activeMobileSection === "where"
+                        ? "p-4 ring-2 ring-blue-100 ring-opacity-30 "
+                        : "p-4 cursor-pointer hover:shadow-xl"
+                    }`}
                     onClick={() => setActiveMobileSection("where")}
                   >
                     {activeMobileSection === "where" ? (
-                      <>
-                        <h2 className="text-xl font-bold mb-3">Where to?</h2>
-                        <div className="relative mb-3">
-                          <IoIosSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="">
+                            <IoLocationOutline className="text-2xl text-gray-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-sm text-gray-800">
+                              Where to?
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              Choose your fishing destination
+                            </p>
+                          </div>
+                        </div>
+                        <div className="relative">
+                          <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg z-10" />
                           <input
                             autoFocus
                             type="text"
-                            placeholder="Search destinations"
+                            placeholder="Search destinations..."
                             value={location}
                             onChange={(e) => {
                               setLocation(e.target.value);
                               setSearchTerm(e.target.value);
                             }}
-                            className="w-full pl-8 pr-4 py-2.5 bg-white border border-gray-300 rounded-xl outline-none focus:ring-2 ring-black text-sm"
+                            className="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 font-medium placeholder-gray-400"
                           />
                         </div>
-                        <div className="max-h-56 overflow-y-auto">
-                          {filteredDestinations.map((dest: any, i: number) => (
-                            <div
-                              key={i}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setLocation(dest.city);
-                                setActiveMobileSection("when");
-                              }}
-                              className="flex items-center gap-3 py-2.5 border-b border-gray-50 active:bg-gray-50"
-                            >
-                              <div className="p-2 bg-gray-100 rounded-lg">
-                                <Image
-                                  src={flag}
-                                  alt="flag"
-                                  width={20}
-                                  height={20}
-                                />
-                              </div>
-                              <span className="font-semibold text-gray-700 text-sm">
-                                {dest.city}
-                              </span>
-                            </div>
-                          ))}
+                        <div className="space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
+                          {filteredDestinations
+                            .slice(0, 6)
+                            .map((destination: any, index: number) => (
+                              <button
+                                key={index}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setLocation(destination.city);
+                                  setActiveMobileSection("when");
+                                }}
+                                className="w-full flex items-center space-x-2 p-0 rounded-xl hover:bg-blue-50 active:bg-blue-100 transition-all duration-200 text-left group"
+                              >
+                                <div className="p-1 bg-blue-100 rounded-xl group-hover:bg-blue-200 transition-colors">
+                                  <Image
+                                    src={flag}
+                                    alt="flag"
+                                    width={20}
+                                    height={20}
+                                    className="rounded-sm"
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-800 group-hover:text-blue-700">
+                                    {destination.city}
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    {destination.country}
+                                  </p>
+                                </div>
+                                <IoChevronForwardOutline className="text-gray-400 group-hover:text-blue-500 transition-colors" />
+                              </button>
+                            ))}
                         </div>
-                      </>
+                      </div>
                     ) : (
-                      <>
-                        <span className="text-gray-500 text-sm font-medium">
-                          Where
-                        </span>
-                        <span className="font-bold text-xs">
-                          {location || "Add destination"}
-                        </span>
-                      </>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <div className="">
+                            <IoLocationOutline className="text-2xl text-gray-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-800 text-sm">
+                              Where
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              {location || "Choose destination"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {location && (
+                            <div className="w-2 h-2 bg-green-500 rounded-full" />
+                          )}
+                          <IoChevronForwardOutline className="text-gray-400" />
+                        </div>
+                      </div>
                     )}
                   </div>
 
-                  {/* When Card */}
+                  {/* When Card - Enhanced */}
                   <div
-                    className={`bg-white rounded-2xl shadow-sm border border-gray-100 transition-all ${activeMobileSection === "when" ? "p-4" : "p-3 flex justify-between items-center cursor-pointer"}`}
+                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 ${
+                      activeMobileSection === "when"
+                        ? "p-4 ring-2 ring-green-500 ring-opacity-30"
+                        : "p-4 cursor-pointer hover:shadow-xl hover:scale-[1.01]"
+                    }`}
                     onClick={() => setActiveMobileSection("when")}
                   >
                     {activeMobileSection === "when" ? (
-                      <>
-                        <h2 className="text-xl font-bold mb-3">When</h2>
-                        <div className="scale-95 origin-top">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="">
+                            <IoCalendarOutline className="text-xl text-gray-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-sm text-gray-800">
+                              When?
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              Select your preferred date
+                            </p>
+                          </div>
+                        </div>
+                        <div className="bg-gray-50 rounded-2xl p-2 border border-gray-100">
                           <Calendar
                             fullscreen={false}
                             onSelect={(date) => {
                               setSelectedDate(date);
                               setActiveMobileSection("who");
                             }}
+                            className="custom-calendar"
                           />
                         </div>
-                      </>
+                      </div>
                     ) : (
-                      <>
-                        <span className="text-gray-500 text-sm font-medium">
-                          When
-                        </span>
-                        <span className="font-bold text-xs">
-                          {selectedDate
-                            ? selectedDate.format("MMM DD")
-                            : "Add dates"}
-                        </span>
-                      </>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="">
+                            <IoCalendarOutline className="text-lg text-gray-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-800 text-sm">
+                              When
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              {selectedDate
+                                ? selectedDate.format("MMM DD, YYYY")
+                                : "Select date"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {selectedDate && (
+                            <div className="w-2 h-2 bg-green-500 rounded-full" />
+                          )}
+                          <IoChevronForwardOutline className="text-gray-400" />
+                        </div>
+                      </div>
                     )}
                   </div>
 
-                  {/* Who Card */}
+                  {/* Who Card - Enhanced */}
                   <div
-                    className={`bg-white rounded-2xl shadow-sm border border-gray-100 transition-all ${activeMobileSection === "who" ? "p-4" : "p-3 flex justify-between items-center cursor-pointer"}`}
+                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 ${
+                      activeMobileSection === "who"
+                        ? "p-4 ring-2 ring-purple-500 ring-opacity-30"
+                        : "p-4 cursor-pointer hover:shadow-xl hover:scale-[1.01]"
+                    }`}
                     onClick={() => setActiveMobileSection("who")}
                   >
                     {activeMobileSection === "who" ? (
-                      <>
-                        <h2 className="text-xl font-bold mb-3">Who</h2>
-                        <div className="flex items-center justify-between py-1">
-                          <span className="text-base font-bold">Guests</span>
-                          <div className="flex items-center gap-4">
-                            <CiCircleMinus
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                guests > 0 && setGuests(guests - 1);
-                              }}
-                              className="text-3xl text-gray-300 active:text-black cursor-pointer"
-                            />
-                            <span className="text-lg font-bold w-4 text-center">
-                              {guests}
-                            </span>
-                            <GoPlusCircle
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setGuests(guests + 1);
-                              }}
-                              className="text-3xl text-gray-300 active:text-black cursor-pointer"
-                            />
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="">
+                            <IoPeopleOutline className="text-xl text-gray-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-sm text-gray-800">
+                              Who's coming?
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              Add guests to your trip
+                            </p>
                           </div>
                         </div>
-                      </>
+                        <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                          <div className="flex items-center justify-between">
+                            <span className="font-semibold text-gray-800 text-sm">
+                              Guests
+                            </span>
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setGuests(Math.max(0, guests - 1));
+                                }}
+                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-purple-500 hover:bg-purple-50 active:scale-95 transition-all"
+                              >
+                                <IoRemoveOutline className="text-gray-600 text-lg" />
+                              </button>
+                              <div className="w-16 text-center">
+                                <span className="text-2xl font-bold text-gray-800">
+                                  {guests}
+                                </span>
+                                <p className="text-xs text-gray-500">
+                                  guest{guests !== 1 ? "s" : ""}
+                                </p>
+                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setGuests(guests + 1);
+                                }}
+                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-purple-500 hover:bg-purple-50 active:scale-95 transition-all"
+                              >
+                                <IoAddOutline className="text-gray-600 text-lg" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMobileSection("type");
+                          }}
+                          className="w-full py-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-2xl font-semibold text-lg hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
+                        >
+                          Continue
+                        </button>
+                      </div>
                     ) : (
-                      <>
-                        <span className="text-gray-500 text-sm font-medium">
-                          Who
-                        </span>
-                        <span className="font-bold text-xs">
-                          {guests > 0 ? `${guests} guests` : "Add guests"}
-                        </span>
-                      </>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="">
+                            <IoPeopleOutline className="text-lg text-gray-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-800 text-sm">
+                              Who
+                            </h3>
+                            <p className="text-sm text-gray-500 ">
+                              {guests > 0
+                                ? `${guests} guest${guests > 1 ? "s" : ""}`
+                                : "Add guests"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {guests > 0 && (
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          )}
+                          <IoChevronForwardOutline className="text-gray-400" />
+                        </div>
+                      </div>
                     )}
                   </div>
 
-                  {/* Type Card */}
+                  {/* Type Card - Enhanced */}
                   <div
-                    className={`bg-white rounded-2xl shadow-sm border border-gray-100 transition-all ${activeMobileSection === "type" ? "p-4" : "p-3 flex justify-between items-center cursor-pointer"}`}
+                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 ${
+                      activeMobileSection === "type"
+                        ? "p-4 ring-2 ring-orange-500 ring-opacity-30"
+                        : "p-4 cursor-pointer hover:shadow-xl hover:scale-[1.01]"
+                    }`}
                     onClick={() => setActiveMobileSection("type")}
                   >
                     {activeMobileSection === "type" ? (
-                      <>
-                        <h2 className="text-xl font-bold mb-3">Type</h2>
-                        <div className="space-y-2.5">
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="">
+                            <IoBoatOutline className="text-xl text-gray-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-sm text-gray-800">
+                              Trip type
+                            </h3>
+                            <p className="text-sm text-gray-500 ">
+                              Choose your booking preference
+                            </p>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
                           {bookingTypes.map((type, index) => (
-                            <div
+                            <button
                               key={index}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelected(type);
                               }}
-                              className={`p-3.5 rounded-xl border-2 transition-all ${
+                              className={`w-full p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
                                 selected?.value === type.value
-                                  ? "border-[#105d9e] bg-blue-50"
-                                  : "border-gray-100 bg-gray-50"
+                                  ? "border-orange-300 bg-orange-50 ring-2 ring-orange-200 scale-[1.02]"
+                                  : "border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 hover:scale-[1.01]"
                               }`}
                             >
-                              <h3 className="font-bold text-gray-800 text-sm">
+                              <h4 className="font-semibold text-gray-800 text-sm mb-2">
                                 {type.title}
-                              </h3>
-                              <p className="text-[11px] text-gray-500 leading-tight">
+                              </h4>
+                              <p className="text-sm text-gray-500 leading-relaxed">
                                 {type.description}
                               </p>
-                            </div>
+                            </button>
                           ))}
                         </div>
-                      </>
+                      </div>
                     ) : (
-                      <>
-                        <span className="text-gray-500 text-sm font-medium">
-                          Type
-                        </span>
-                        <span className="font-bold text-xs">
-                          {selected ? selected.title : "Select type"}
-                        </span>
-                      </>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="">
+                            <IoBoatOutline className="text-lg text-gray-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-800 text-sm">
+                              Type
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              {selected ? selected.title : "Select trip type"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {selected && (
+                            <div className="w-2 h-2 bg-green-500 rounded-full" />
+                          )}
+                          <IoChevronForwardOutline className="text-gray-400" />
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                {/* Bottom Search Bar (Simplified) */}
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+                {/* Enhanced Bottom Search Button */}
+                <div className="p-4 bg-white/95 backdrop-blur-sm border-t border-gray-100/50">
                   <button
                     onClick={handleSearch}
-                    className="w-full py-3 bg-[#105d9e] text-white rounded-xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"
+                    disabled={!location || !selectedDate || !selected}
+                    className="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] transition-all duration-200"
                   >
                     <IoIosSearch className="text-xl" />
-                    Search
+                    {!location || !selectedDate || !selected
+                      ? "Complete Fields to Search"
+                      : "Search Fishing Trips"}
                   </button>
+                  {(!location || !selectedDate || !selected) && (
+                    <div className="flex items-center justify-center mt-3 space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <div
+                          className={`w-2 h-2 rounded-full ${location ? "bg-green-500" : "bg-gray-300"}`}
+                        ></div>
+                        <span className="text-xs text-gray-500">Where</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div
+                          className={`w-2 h-2 rounded-full ${selectedDate ? "bg-green-500" : "bg-gray-300"}`}
+                        ></div>
+                        <span className="text-xs text-gray-500">When</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div
+                          className={`w-2 h-2 rounded-full ${selected ? "bg-green-500" : "bg-gray-300"}`}
+                        ></div>
+                        <span className="text-xs text-gray-500">Type</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
-          </AnimatePresence>,
+          </div>,
           document.body,
         )}
 
