@@ -19,6 +19,9 @@ const Sidebar = () => {
   useEffect(() => {
     const role = Cookies.get("currentUserRole") || "GUEST";
     setCurrentUserRole(role);
+
+    // Debug: check what's actually in the totalTrips cookie
+    const rawCookie = Cookies.get("totalTrips");
   }, []);
 
   // Close mobile menu when clicking outside
@@ -68,9 +71,17 @@ const Sidebar = () => {
     );
   }
 
-  const sidebarItemsToShow = sidebarItems?.filter((item) =>
-    item?.roles?.includes(currentUserRole),
-  );
+  const sidebarItemsToShow = sidebarItems?.filter((item) => {
+    if (!item?.roles?.includes(currentUserRole)) return false;
+    // Hide Trip Calendar ONLY when totalTrips cookie is explicitly "0"
+    if (currentUserRole === "CAPTAIN" && item.key === "Trip Calendar") {
+      const raw = Cookies.get("totalTrips");
+      console.log("🔍 Trip Calendar filter — cookie raw:", raw);
+      // Only hide if cookie is explicitly the string "0"
+      if (raw === "0") return false;
+    }
+    return true;
+  });
 
   return (
     <>

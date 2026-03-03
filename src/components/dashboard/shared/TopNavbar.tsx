@@ -68,9 +68,9 @@ const TopNavbar = ({ onMenuClick }: TopNavbarProps) => {
               <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-gray-500 dark:text-gray-400" />
               </div>
-              <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300">
-                John Doe
-              </span>
+              {/* <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Profile
+              </span> */}
             </button>
 
             {showProfileMenu && (

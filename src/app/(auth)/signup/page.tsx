@@ -32,6 +32,7 @@ export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("USER");
 
   const onSubmit = async (data: any) => {
     const userInfo = {
@@ -40,6 +41,7 @@ export default function Page() {
       firstName: data.firstName,
       lastName: data.lastName,
       registerType: "EMAILPASS",
+      role: selectedRole,
     };
 
     try {
@@ -95,6 +97,7 @@ export default function Page() {
         email: user.email,
         registerType: "GOOGLE",
         password: "",
+        role: selectedRole,
       };
 
       const res = await registerFN(loginInfo);
@@ -145,10 +148,10 @@ export default function Page() {
               </Link>
 
               <div className="text-center">
-                <h2 className="text-black text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-3">
+                <h2 className="text-black text-xl sm:text-2xl md:text-2xl font-bold leading-tight mb-3">
                   Register New Account
                 </h2>
-                <p className="text-gray-600 text-base sm:text-lg">
+                <p className="text-gray-600 text-sm sm:text-base">
                   Already have an account?{" "}
                   <Link
                     href="/login"
@@ -330,6 +333,44 @@ export default function Page() {
                       <span>⚠️</span> {errors.confirmPassword.message as string}
                     </p>
                   )}
+                </div>
+
+                {/* Role Selection Toggle */}
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-gray-700 block">
+                    Select Account Type <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-300">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedRole("USER")}
+                        className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#70b6f0] focus:ring-opacity-50 ${
+                          selectedRole === "USER"
+                            ? "bg-white text-[#70b6f0] shadow-sm border border-gray-200"
+                            : "text-gray-600 hover:text-gray-800"
+                        }`}
+                      >
+                        🏄‍♂️ User
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedRole("CAPTAIN")}
+                        className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#70b6f0] focus:ring-opacity-50 ${
+                          selectedRole === "CAPTAIN"
+                            ? "bg-white text-[#70b6f0] shadow-sm border border-gray-200"
+                            : "text-gray-600 hover:text-gray-800"
+                        }`}
+                      >
+                        ⛵ Captain
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {selectedRole === "USER"
+                      ? "Book fishing trips and explore charters"
+                      : "List your boat and manage bookings"}
+                  </p>
                 </div>
 
                 {/* Register Button */}

@@ -25,10 +25,10 @@ export default function Page() {
 
         {/* Header with improved typography */}
         <div className="text-center mb-6 space-y-3">
-          <h2 className="text-black text-2xl md:text-4xl font-bold leading-[52px] mb-2 w-full md:w-[450px]">
+          <h2 className="text-black text-xl sm:text-2xl md:text-2xl font-bold leading-tight mb-3">
             Log in to your account
           </h2>
-          <p className="text-black text-lg font-normal font-satoshi mb-6">
+          <p className="text-gray-600 text-sm sm:text-base">
             Don&apos;t have an account?
             <Link href="/signup" className="text-[#FF9500] cursor-pointer">
               {" "}

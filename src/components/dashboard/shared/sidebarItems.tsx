@@ -1,7 +1,6 @@
 import { userRole } from "@/constant/user.constants";
 import type { TSidebarItem } from "@/types/dashboard.types";
 import Link from "next/link";
-import { RxReset } from "react-icons/rx";
 import { MdLockReset } from "react-icons/md";
 import { TbSpeedboat } from "react-icons/tb";
 import { FaRegAddressBook } from "react-icons/fa";

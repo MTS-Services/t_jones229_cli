@@ -65,6 +65,7 @@ export default function Login() {
 
       Cookies.set("token", userData?.accessToken);
       Cookies.set("currentUserRole", role);
+      Cookies.set("totalTrips", String(userData?.totalTrips ?? 0));
 
       dispatch(
         setUser({
