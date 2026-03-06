@@ -1,6 +1,7 @@
 "use client";
 
 import { useCancelBookingMutation } from "@/redux/api/bookingApi";
+import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -30,10 +31,10 @@ export default function CancelTripModal({
     }
   };
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-center">
-        <div className="text-orange-500 mb-3 text-4xl">⚠️</div>
-        <h2 className="text-xl font-semibold mb-2">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-8 text-center">
+        <Trash2 size={25} className="mx-auto mb-4 text-red-500" />
+        <h2 className="text-lg font-semibold mb-2">
           Are You Sure You Want to Cancel This Trip?
         </h2>
         <p className="text-gray-600 text-sm mb-4">
@@ -49,7 +50,7 @@ export default function CancelTripModal({
             disabled={isLoading}
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
           >
-            {isLoading ? "Cancelling..." : "Confirm cancellation"}
+            {isLoading ? "Cancelling..." : "Confirm"}
           </button>
           <button
             onClick={onClose}

@@ -74,7 +74,7 @@ export default function TableLoading({
  */
 export function TableSkeletonRow({ columns = 6 }: { columns?: number }) {
   return (
-    <div className="flex items-center gap-4 px-6 py-4 animate-pulse">
+    <div className="flex items-center gap-4 p-4 animate-pulse">
       {Array.from({ length: columns }).map((_, colIndex) => (
         <div key={colIndex} className="flex-1">
           <div

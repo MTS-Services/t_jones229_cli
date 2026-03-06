@@ -2,9 +2,5 @@ import BookingDetails from "@/components/dashboard/admin/bookingManagement/Booki
 import React from "react";
 
 export default function page() {
-  return (
-    <div>
-      <BookingDetails />
-    </div>
-  );
+  return <BookingDetails />;
 }

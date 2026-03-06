@@ -25,7 +25,7 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
   };
 
   return (
-    <div className="">
+    <div className="mb-6">
       <div className="w-full">
         <h1 className="text-2xl font-medium text-gray-900 mb-6">
           Search trips

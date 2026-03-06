@@ -3,7 +3,6 @@
 // src/pages/UserManag.tsx
 import React from "react";
 import CustomerManagement from "./CustomarManagment";
-import TitleSection from "../../captain/TiltleSection";
 import { useAllUserQuery } from "@/redux/api/authApi";
 
 export default function UserManag() {
@@ -13,12 +12,9 @@ export default function UserManag() {
   });
 
   return (
-    <div>
-      {/* <TitleSection /> */}
-      <CustomerManagement
-        data={customerData?.data?.data || []}
-        isLoading={loadingUser}
-      />
-    </div>
+    <CustomerManagement
+      data={customerData?.data?.data || []}
+      isLoading={loadingUser}
+    />
   );
 }
