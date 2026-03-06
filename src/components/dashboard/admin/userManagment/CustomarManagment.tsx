@@ -331,10 +331,10 @@ export default function CustomerManagement({
         </div>
 
         {/* Main Content */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="overflow-hidden">
           {/* Desktop Table View */}
           {viewMode === "list" && (
-            <div className="hidden md:block overflow-x-auto">
+            <div className="hidden md:block overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100">
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-50 border-y border-gray-100">
@@ -487,7 +487,7 @@ export default function CustomerManagement({
 
           {/* Grid View */}
           {viewMode === "grid" && (
-            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4">
               {currentUsers.length === 0 ? (
                 <div className="col-span-full text-center py-12">
                   <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -501,7 +501,7 @@ export default function CustomerManagement({
                 currentUsers.map((customer: any) => (
                   <div
                     key={customer.id}
-                    className="bg-white border border-gray-100 rounded-xl p-5 hover:shadow-md transition-all group"
+                    className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all group"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
@@ -585,7 +585,7 @@ export default function CustomerManagement({
 
           {/* Pagination */}
           {users.length > itemsPerPage && (
-            <div className="hidden md:block px-6 py-4 border-t border-gray-100 bg-gray-50">
+            <div className="hidden md:block bg-gray-50">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="text-sm text-gray-500">
                   Showing{" "}
