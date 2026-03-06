@@ -334,14 +334,11 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                       <td className="px-4 py-2">
                         <div className="flex items-center gap-3">
                           <div className="bg-slate-200 rounded-full p-2">
-                            <User className="h-5 w-5 text-gray-400" />
+                            <User className="h-4 w-4 text-gray-400" />
                           </div>
                           <div>
                             <div className="font-medium text-gray-900">
                               {captain?.fullName || "Unknown"}
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              ID: #{captain.id?.slice(-6) || "N/A"}
                             </div>
                           </div>
                         </div>
@@ -349,7 +346,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                       <td className="px-4 py-2">
                         <a
                           href={`mailto:${captain.email}`}
-                          className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
+                          className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1.5"
                         >
                           <Mail className="h-3.5 w-3.5" />
                           {captain.email || "No Email"}
@@ -383,7 +380,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                           <span className="text-xs text-gray-400">{`(${captain.totalReviews ?? 0})`}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-4 py-2 text-center">
                         <button
                           onClick={() => handleViewDetails(captain)}
                           className="mx-auto p-2 text-gray-500 hover:bg-gray-100 rounded-lg flex items-center justify-center gap-2 transition-colors"

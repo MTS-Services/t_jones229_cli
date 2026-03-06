@@ -62,7 +62,15 @@ const Sidebar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const isActiveMenuItem = (href: string) => pathname === href;
+  const isActiveMenuItem = (href: string) => {
+    // Exact match for dashboard home
+    if (href === "/dashboard" && pathname === "/dashboard") return true;
+
+    // For other routes, check if pathname starts with href (for nested routes)
+    if (href !== "/dashboard" && pathname.startsWith(href)) return true;
+
+    return false;
+  };
 
   // **Skeleton loader if role is not yet set (optional)**
   if (!currentUserRole) {

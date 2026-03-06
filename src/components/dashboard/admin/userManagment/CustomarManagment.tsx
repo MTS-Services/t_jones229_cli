@@ -404,7 +404,7 @@ export default function CustomerManagement({
                         key={customer.id}
                         className="hover:bg-gray-50 transition-colors group"
                       >
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-2">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-gradient-to-br from-blue-200 to-blue-300 rounded-full flex items-center justify-center text-white font-semibold">
                               <User className="h-5 w-5" />
@@ -419,7 +419,7 @@ export default function CustomerManagement({
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-2">
                           <a
                             href={`mailto:${customer.email}`}
                             className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
@@ -430,13 +430,13 @@ export default function CustomerManagement({
                             </span>
                           </a>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-2">
                           <span className="text-sm text-gray-700 flex items-center gap-1">
                             <Phone className="h-3.5 w-3.5 text-gray-400" />
                             {customer.phoneNumber || "N/A"}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-2">
                           <span className="text-sm font-semibold text-gray-900">
                             {customer.totalTrips ?? 0}
                           </span>
@@ -444,7 +444,7 @@ export default function CustomerManagement({
                             trip{customer.totalTrips !== 1 ? "s" : ""}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-2">
                           <span
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${getUserStatusBadge(
                               customer.userStatus,
@@ -454,7 +454,7 @@ export default function CustomerManagement({
                             {customer.userStatus || "UNKNOWN"}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-2">
                           <span
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${
                               customer.waitlistStatus === "active"
@@ -468,7 +468,7 @@ export default function CustomerManagement({
                             {customer.waitlistStatus || "none"}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-6 py-2 text-center">
                           <button
                             onClick={() => handleViewDetails(customer)}
                             className="p-2 hover:bg-gray-100 rounded-lg transition-colors inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
