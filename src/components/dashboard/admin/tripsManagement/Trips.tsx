@@ -57,7 +57,7 @@ export default function Trips({
   };
 
   const getStatusConfig = (status: string) => {
-    const statusMap = {
+    const statusMap: Record<string, any> = {
       confirmed: {
         color: "#10B981",
         bg: "bg-emerald-50",
@@ -379,7 +379,6 @@ export default function Trips({
         isOpen={isModalOpen}
         id={bookingId as string}
         onClose={closeModal}
-        bookingDetails={selectedBooking}
       />
     </>
   );
