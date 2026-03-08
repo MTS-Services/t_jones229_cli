@@ -45,7 +45,7 @@ export default function DashboardLayout({
         <TopNavbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto p-4 md:p-8">
+        <main className="flex-1 overflow-auto p-4 md:p-12">
           <div className="mx-auto">{children}</div>
         </main>
       </div>

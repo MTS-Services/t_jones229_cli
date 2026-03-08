@@ -283,25 +283,25 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                     </div>
                   </th>
                   <th className="px-4 py-4 text-left">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       <Ship className="h-3.5 w-3.5" />
                       Experience
                     </div>
                   </th>
-                  <th className="px-4 py-4 text-left">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-center">
+                    <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       <Calendar className="h-3.5 w-3.5" />
                       Total Trips
                     </div>
                   </th>
-                  <th className="px-4 py-4 text-left">
+                  {/* <th className="px-4 py-4 text-left">
                     <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       <Award className="h-3.5 w-3.5" />
                       Rating
                     </div>
-                  </th>
+                  </th> */}
                   <th className="px-4 py-4 text-center">
-                    <div className=" text-xs font-semibold text-gray-500">
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Actions
                     </div>
                   </th>
@@ -358,20 +358,20 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                           {captain.phoneNumber || "N/A"}
                         </span>
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-2 text-center">
                         <span className="inline-flex items-center px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full text-xs font-medium border border-amber-100">
                           {captain.experience || "0"} years
                         </span>
                       </td>
-                      <td className="px-4 py-2">
-                        <span className="text-sm font-semibold text-gray-900">
-                          {captain.totalTrips ?? 0}
-                        </span>
-                        <span className="text-xs text-gray-500 ml-1">
-                          trip{captain.totalTrips !== 1 ? "s" : ""}
-                        </span>
+                      <td className="px-4 py-2 text-center">
+                        <div className="inline-flex items-center gap-1">
+                          <Ship className="h-3.5 w-3.5 text-gray-400" />
+                          <span className="text-sm font-semibold text-gray-900">
+                            {captain.totalTrips ?? 0}
+                          </span>
+                        </div>
                       </td>
-                      <td className="px-4 py-2">
+                      {/* <td className="px-4 py-2">
                         <div className="flex items-center gap-1">
                           <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
                           <span className="text-sm font-medium text-gray-700">
@@ -379,7 +379,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                           </span>
                           <span className="text-xs text-gray-400">{`(${captain.totalReviews ?? 0})`}</span>
                         </div>
-                      </td>
+                      </td> */}
                       <td className="px-4 py-2 text-center">
                         <button
                           onClick={() => handleViewDetails(captain)}

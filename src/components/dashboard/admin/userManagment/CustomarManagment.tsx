@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import CustomerDetailsModal from "./CustomerDetailsModal";
 import PaginationButton from "./PaginationButton";
 import TableLoading from "../../common/TableLoading";
+import { useDeleteUserMutation } from "@/redux/api/authApi";
+import { toast } from "react-toastify";
 import {
   User,
   Mail,
@@ -16,9 +18,6 @@ import {
   MoreVertical,
   Eye,
   Edit,
-  Star,
-  Calendar,
-  MapPin,
   Award,
   Menu,
   LayoutGrid,
@@ -30,6 +29,7 @@ import {
   UserCheck,
   UserX,
 } from "lucide-react";
+import { IoBoat } from "react-icons/io5";
 
 function MobileUsersView({ users, itemsPerPage = 5, onView, viewMode }: any) {
   const [page, setPage] = useState(1);
@@ -189,7 +189,7 @@ export default function CustomerManagement({
   isLoading,
   meta,
 }: any) {
-  const router = useRouter();
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
@@ -231,6 +231,18 @@ export default function CustomerManagement({
     } else {
       setWaitlistStatus("pending");
       console.log("User moved to pending waitlist:", selectedCustomer);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      const result = await deleteUser(userId).unwrap();
+      toast.success(result?.message || "User deleted successfully");
+      handleCloseModal();
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Failed to delete user. Please try again.",
+      );
     }
   };
 
@@ -294,10 +306,10 @@ export default function CustomerManagement({
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Customer Management
+                  User Management
                 </h1>
                 <p className="text-sm text-gray-500 mt-1">
-                  {totalItems} customer{totalItems !== 1 ? "s" : ""} registered
+                  {totalItems} User{totalItems !== 1 ? "s" : ""} registered
                 </p>
               </div>
             </div>
@@ -357,7 +369,7 @@ export default function CustomerManagement({
                       </div>
                     </th>
                     <th className="px-6 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         <Ship className="h-3.5 w-3.5" />
                         Total Trips
                       </div>
@@ -368,13 +380,13 @@ export default function CustomerManagement({
                         Status
                       </div>
                     </th>
-                    <th className="px-6 py-4 text-left">
+                    {/* <th className="px-6 py-4 text-left">
                       <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         Waitlist
                       </div>
-                    </th>
+                    </th> */}
                     <th className="px-6 py-4 text-center">
-                      <div className="text-xs font-semibold text-gray-500">
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         Actions
                       </div>
                     </th>
@@ -436,13 +448,13 @@ export default function CustomerManagement({
                             {customer.phoneNumber || "N/A"}
                           </span>
                         </td>
-                        <td className="px-6 py-2">
-                          <span className="text-sm font-semibold text-gray-900">
-                            {customer.totalTrips ?? 0}
-                          </span>
-                          <span className="text-xs text-gray-500 ml-1">
-                            trip{customer.totalTrips !== 1 ? "s" : ""}
-                          </span>
+                        <td className="px-6 py-2 text-center">
+                          <div className="inline-flex items-center gap-1">
+                            <Ship className="h-3.5 w-3.5 text-gray-400" />
+                            <span className="text-sm font-semibold text-gray-900">
+                              {customer.totalTrips ?? 0}
+                            </span>
+                          </div>
                         </td>
                         <td className="px-6 py-2">
                           <span
@@ -454,7 +466,7 @@ export default function CustomerManagement({
                             {customer.userStatus || "UNKNOWN"}
                           </span>
                         </td>
-                        <td className="px-6 py-2">
+                        {/* <td className="px-6 py-2">
                           <span
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${
                               customer.waitlistStatus === "active"
@@ -467,7 +479,7 @@ export default function CustomerManagement({
                             {getWaitlistIcon(customer.waitlistStatus)}
                             {customer.waitlistStatus || "none"}
                           </span>
-                        </td>
+                        </td> */}
                         <td className="px-6 py-2 text-center">
                           <button
                             onClick={() => handleViewDetails(customer)}
@@ -619,6 +631,8 @@ export default function CustomerManagement({
         waitlistStatus={waitlistStatus}
         onClose={handleCloseModal}
         onToggleWaitlist={handleWaitlistToggle}
+        onDelete={handleDeleteUser}
+        isDeleting={isDeleting}
       />
     </>
   );

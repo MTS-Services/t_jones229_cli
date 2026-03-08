@@ -92,7 +92,7 @@ const AuthApi = baseApi.injectEndpoints({
         url: `users/${id}`,
         method: "DELETE",
       }),
-      // Assuming this mutation is for deleting a user, it invalidates the auth tag
+      invalidatesTags: ["user", "auth"],
     }),
     // Contact support
     sendOtp: build.mutation({

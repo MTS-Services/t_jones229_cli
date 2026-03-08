@@ -18,6 +18,7 @@ import {
   Phone,
   MapPin,
   RefreshCw,
+  Eye,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 
@@ -495,11 +496,11 @@ export default function BookingsTable({
                           href={`/dashboard/booking-managment/${booking?.id}`}
                           className="font-medium text-sm  text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
                         >
-                          <span className="truncate max-w-[180px]">
+                          <span className="truncate max-w-[100px]">
                             {booking.trip?.tripName || "Untitled Trip"}{" "}
                           </span>
                           <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                            →
+                            <Eye className="w-3.5 h-3.5" />
                           </span>
                         </Link>
                         {booking.boat?.name && (
