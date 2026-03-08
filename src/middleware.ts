@@ -12,7 +12,7 @@ interface DecodedToken {
   iat: number;
   exp: number;
 }
-
+// Define role-based access control
 const roleAccess = {
   SUPERADMIN: [
     "/dashboard",
