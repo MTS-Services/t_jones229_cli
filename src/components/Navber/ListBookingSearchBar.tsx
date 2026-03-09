@@ -67,6 +67,7 @@ export default function ListBookingSearchBar({
     const formattedDate = selectedDate ? selectedDate.format("YYYY-MM-DD") : "";
     localStorage.setItem("location", location);
     localStorage.setItem("date", formattedDate);
+    localStorage.setItem("StartDate", formattedDate); // For backward compatibility
     localStorage.setItem("bookingType", String(selected?.value));
     localStorage.setItem("Guests", guests.toString());
 

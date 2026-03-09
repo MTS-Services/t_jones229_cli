@@ -286,9 +286,12 @@ export default function Page() {
         }
 
         toast.success(res?.data?.message);
-        localStorage.removeItem("date");
-        localStorage.removeItem("Guests");
-        localStorage.removeItem("bookingType");
+        // Clean up all booking-related localStorage items
+        // localStorage.removeItem("date");
+        // localStorage.removeItem("StartDate");
+        // localStorage.removeItem("Guests");
+        // localStorage.removeItem("bookingType");
+        // localStorage.removeItem("location");
         router.push("/private-confirmation");
       } else {
         let errorMessage = "An error occurred during booking.";

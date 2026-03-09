@@ -112,8 +112,10 @@ export default function GroupBooking() {
         toast.success(successMessage);
         if (typeof window !== "undefined") {
           localStorage.removeItem("date");
+          localStorage.removeItem("StartDate");
           localStorage.removeItem("location");
           localStorage.removeItem("Guests");
+          localStorage.removeItem("bookingType");
         }
         router.push("/group-confirmation");
       } else if (res?.error) {

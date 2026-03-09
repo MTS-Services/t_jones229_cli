@@ -162,7 +162,9 @@ export default function BookingSection() {
         if (typeof window !== "undefined") {
           localStorage.removeItem("Guests");
           localStorage.removeItem("date");
+          localStorage.removeItem("StartDate");
           localStorage.removeItem("bookingType");
+          localStorage.removeItem("location");
         }
         router.push("/group-confirmation");
       } else if (res?.error) {

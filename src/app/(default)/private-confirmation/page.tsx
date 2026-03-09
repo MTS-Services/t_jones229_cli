@@ -41,7 +41,8 @@ export default function ConfirmationPage() {
       }
 
       setBookingDetails({
-        tripDate: localStorage.getItem("date"),
+        tripDate:
+          localStorage.getItem("date") || localStorage.getItem("StartDate"),
         numberOfGuests: localStorage.getItem("Guests"),
         bookingType: localStorage.getItem("bookingType"),
         location: localStorage.getItem("location"),
