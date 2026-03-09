@@ -160,6 +160,7 @@ export default function BookingSection() {
         toast.success(successMessage);
         // 4️⃣ Clean up
         if (typeof window !== "undefined") {
+          localStorage.removeItem("searchData"); // New object format
           localStorage.removeItem("Guests");
           localStorage.removeItem("date");
           localStorage.removeItem("StartDate");

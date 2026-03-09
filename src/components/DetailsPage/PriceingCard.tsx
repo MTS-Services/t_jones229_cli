@@ -17,9 +17,6 @@ const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
     typeof window !== "undefined" ? localStorage.getItem("bookingType") : null;
 
   const handleclick = (id: number) => {
-    console.log(id);
-    console.log(bookingType);
-
     // Get date and guests from localStorage to pass as URL params
     const date =
       typeof window !== "undefined" ? localStorage.getItem("date") : null;
@@ -38,80 +35,93 @@ const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
     if (bookingType) params.append("bookingType", bookingType);
 
     route.push(`/payment?${params.toString()}`);
-
-
-    
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg p-4 gap-4 border mt-5">
-      <div className="relative w-80 h-60 rounded-2xl overflow-hidden">
-        <Image
-          src={image || imageUrl}
-          alt="trip image"
-          fill
-          className="rounded-2xl object-cover"
-          sizes="320px"
-        />
-      </div>
-
-      <div className="flex-1">
-        <div className="flex flex-col lg:flex-row gap-5 lg:gap-0 justify-between ">
-          <h3 className=" text-xl md:text-2xl text-[#242424] leading-6 font-bold align-text-bottom ">
-            {tripInfo?.tripName}
-          </h3>
-          <div className="flex gap-6 items-center">
-            <span className="text-[#878787] text-base font-normal leading-7 flex items-center gap-1">
-              Price :
-              <span className="text-base font-bold text-[#242424]">
-                ${tripInfo?.price}
-              </span>
-            </span>
-
-            <button
-              onClick={() => handleclick(tripInfo?.id)}
-              className="bg-orange-400 text-white px-4 py-2 rounded-lg  font-satoshi text-sm md:text-base"
-            >
-              Reserve
-            </button>
-          </div>
+    <div className="bg-white rounded-lg shadow-sm border mt-5 overflow-hidden">
+      <div className="flex flex-col md:flex-row">
+        {/* Image Section */}
+        <div className="relative w-full md:w-80 h-48 md:h-auto flex-shrink-0">
+          <Image
+            src={image || imageUrl}
+            alt="trip image"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 320px"
+            priority
+          />
         </div>
 
-        <p className="text-base text-[#878787] my-4">{tripInfo?.description}</p>
-        <p className="font-bold text-sm text-[#171717] ">Key features:</p>
+        {/* Content Section */}
+        <div className="flex-1 p-4 md:p-5 flex flex-col min-w-0">
+          {/* Header: Title + Price/Action */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
+            <h3 className="text-xl md:text-2xl font-bold text-[#242424] leading-tight truncate w-full sm:w-auto">
+              {tripInfo?.tripName}
+            </h3>
 
-        <div className="flex flex-wrap  md:flex-row w-full items-center gap-2 md:gap-4 mt-4">
-          <div className="flex items-center gap-1 bg-[#EDF1FF] px-2 py-1 rounded-full border-2 border-[#b2c3ff] text-[#242424] text-sm md:text-base">
-            <Image
-              src={men}
-              alt="clock"
-              height={100}
-              width={100}
-              className="w-4 md:w-5 h-4 md:h-5 object-cover rounded-lg"
-            />
-            Private Group
+            <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+              <span className="text-[#878787] text-sm md:text-base whitespace-nowrap">
+                Price:{" "}
+                <span className="font-bold text-[#242424]">
+                  ${tripInfo?.price}
+                </span>
+              </span>
+              <button
+                onClick={() => handleclick(tripInfo?.id)}
+                className="bg-orange-400 hover:bg-orange-500 text-white px-5 py-2 rounded-lg font-satoshi text-sm md:text-base transition-colors flex-shrink-0"
+              >
+                Reserve
+              </button>
+            </div>
           </div>
 
-          <div className="flex items-center gap-1 bg-[#EDF1FF] px-2 py-1 rounded-full border-2 border-[#b2c3ff] text-[#242424] text-sm md:text-base ">
-            <Image
-              src={clock}
-              alt="clock"
-              height={100}
-              width={100}
-              className="w-4 md:w-5 h-4 md:h-5 object-cover rounded-lg"
-            />
-            {tripInfo?.duration} Hours
-          </div>
+          {/* Description */}
+          <p className="text-sm md:text-base text-[#878787] mb-4 line-clamp-2 md:line-clamp-none">
+            {tripInfo?.description}
+          </p>
 
-          <div className="flex items-center gap-1 bg-[#EDF1FF] px-2 py-1 rounded-full border-2 border-[#b2c3ff] text-[#242424] text-sm md:text-base ">
-            <Image
-              src={doller}
-              alt="doller"
-              height={100}
-              width={100}
-              className="w-4 md:w-5 h-4 md:h-5 object-cover rounded-lg"
-            />
-            {tripInfo?.price}
+          {/* Features Label */}
+          <p className="font-bold text-xs md:text-sm text-[#171717] mb-3 uppercase tracking-wide">
+            Key features:
+          </p>
+
+          {/* Feature Tags */}
+          <div className="flex flex-wrap gap-2 md:gap-3">
+            <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
+              <Image
+                src={men}
+                alt="group"
+                height={20}
+                width={20}
+                className="w-4 h-4 object-contain flex-shrink-0"
+              />
+              <span className="whitespace-nowrap">Private Group</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
+              <Image
+                src={clock}
+                alt="clock"
+                height={20}
+                width={20}
+                className="w-4 h-4 object-contain flex-shrink-0"
+              />
+              <span className="whitespace-nowrap">
+                {tripInfo?.duration} Hours
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
+              <Image
+                src={doller}
+                alt="price"
+                height={20}
+                width={20}
+                className="w-4 h-4 object-contain flex-shrink-0"
+              />
+              <span className="whitespace-nowrap">${tripInfo?.price}</span>
+            </div>
           </div>
         </div>
       </div>

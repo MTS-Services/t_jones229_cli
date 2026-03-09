@@ -8,19 +8,19 @@ import dynamic from "next/dynamic";
 // Dynamically import Leaflet components to avoid SSR issues
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
+  { ssr: false },
 );
 const TileLayer = dynamic(
   () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
+  { ssr: false },
 );
 const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
+  { ssr: false },
 );
 const useMapEvents = dynamic(
   () => import("react-leaflet").then((mod) => mod.useMapEvents as any),
-  { ssr: false }
+  { ssr: false },
 ) as any;
 
 const containerStyle = {
@@ -89,7 +89,7 @@ export default function InteractiveMap({
   const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(
     initialLocation
       ? [initialLocation.latitude, initialLocation.longitude]
-      : null
+      : null,
   );
 
   useEffect(() => {
@@ -119,12 +119,7 @@ export default function InteractiveMap({
     );
   }
 
-  const {
-    MapContainer,
-    TileLayer,
-    Marker,
-    useMapEvents,
-  } = require("react-leaflet");
+  const { MapContainer, TileLayer } = require("react-leaflet");
 
   return (
     <div style={containerStyle}>
@@ -135,7 +130,7 @@ export default function InteractiveMap({
       <MapContainer
         center={markerPosition || center}
         zoom={10}
-        style={{ height: "100%", width: "100%", borderRadius: "8px" }}
+        style={{ height: "100vh", width: "100%", borderRadius: "8px" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -65,17 +65,40 @@ export default function ListBookingSearchBar({
 
   const handleSearch = () => {
     const formattedDate = selectedDate ? selectedDate.format("YYYY-MM-DD") : "";
+
+    // Store all search data as a single object for better organization
+    const searchData = {
+      location: location,
+      date: formattedDate,
+      startDate: formattedDate, // For backward compatibility
+      bookingType: String(selected?.value),
+      guests: guests.toString(),
+      timestamp: new Date().toISOString(),
+    };
+
+    // Store as object in localStorage
+    localStorage.setItem("searchData", JSON.stringify(searchData));
+
+    // Keep individual items for backward compatibility (remove these later)
     localStorage.setItem("location", location);
     localStorage.setItem("date", formattedDate);
     localStorage.setItem("StartDate", formattedDate); // For backward compatibility
     localStorage.setItem("bookingType", String(selected?.value));
     localStorage.setItem("Guests", guests.toString());
 
-    router.push(
-      selected?.value === true
-        ? "/group-charter?type=GROUP"
-        : "/search-charter",
-    );
+    // Build URL parameters
+    const searchParams = new URLSearchParams();
+    if (location) searchParams.set("location", location);
+    if (formattedDate) searchParams.set("date", formattedDate);
+    if (guests > 0) searchParams.set("guests", guests.toString());
+    if (selected) searchParams.set("bookingType", String(selected.value));
+
+    const queryString = searchParams.toString();
+    const baseUrl =
+      selected?.value === true ? "/group-charter" : "/search-charter";
+    const fullUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+
+    router.push(fullUrl);
   };
 
   useEffect(() => {

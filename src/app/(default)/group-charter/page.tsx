@@ -111,6 +111,7 @@ export default function GroupBooking() {
           "Group booking inquiry submitted successfully!";
         toast.success(successMessage);
         if (typeof window !== "undefined") {
+          localStorage.removeItem("searchData"); // New object format
           localStorage.removeItem("date");
           localStorage.removeItem("StartDate");
           localStorage.removeItem("location");
