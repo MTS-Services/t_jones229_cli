@@ -36,11 +36,12 @@ interface CaptainDetailsProps {
       paymentMethod: any;
     };
     trip: any[];
+    boat: any[];
   };
 }
 
 export default function CaptainDetails({ userData }: CaptainDetailsProps) {
-  const { user, trip } = userData;
+  const { user, trip, boat } = userData;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -336,6 +337,108 @@ export default function CaptainDetails({ userData }: CaptainDetailsProps) {
               </p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Boats List - Table Format */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 bg-blue-50 border-b border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <Ship className="h-5 w-5 text-blue-600" />
+            Boats list ({boat?.length || 0})
+          </h2>
+        </div>
+        <div className="">
+          {boat && boat.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left text-gray-500">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
+                    <th scope="col" className="px-6 py-3">
+                      Boat Name
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Type
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Capacity
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Length
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Model Year
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Status
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Trips
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {boat.map((boatItem: any) => (
+                    <tr
+                      key={boatItem.id}
+                      className="bg-white border-b hover:bg-gray-50"
+                    >
+                      <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        {boatItem.manufacturer || "Unknown Boat"}
+                      </td>
+                      <td className="px-6 py-4">
+                        {boatItem.boatType || "N/A"}
+                      </td>
+                      <td className="px-6 py-4">
+                        {boatItem.guests || 0}{" "}
+                        {boatItem.guests === 1 ? "Guest" : "Guests"}
+                      </td>
+                      <td className="px-6 py-4">
+                        {boatItem.boatLength || 0} ft
+                      </td>
+                      <td className="px-6 py-4">
+                        {boatItem.modelYear || "N/A"}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                            boatItem.approvalStatus === "APPROVED"
+                              ? "bg-emerald-50 text-emerald-700"
+                              : boatItem.approvalStatus === "PENDING"
+                                ? "bg-amber-50 text-amber-700"
+                                : "bg-gray-50 text-gray-700"
+                          }`}
+                        >
+                          {boatItem.approvalStatus || "N/A"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        {boatItem.trips?.length || 0}
+                      </td>
+                      <td className="px-6 py-4">
+                        <button className="font-medium text-blue-600 hover:text-blue-800 hover:underline">
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Ship className="h-8 w-8 text-blue-400" />
+              </div>
+              <p className="text-gray-500 font-medium">No boats found</p>
+              <p className="text-sm text-gray-400 mt-1">
+                This captain hasn't added any boats yet.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

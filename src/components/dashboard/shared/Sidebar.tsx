@@ -114,6 +114,7 @@ const Sidebar = () => {
               alt="logo"
               height={200}
               width={200}
+              priority
               className="h-28 w-full"
             />
           </Link>
@@ -174,6 +175,7 @@ const Sidebar = () => {
                   alt="logo"
                   width={300}
                   height={100}
+                  priority
                   className="w-32 h-auto"
                 />
               </div>
