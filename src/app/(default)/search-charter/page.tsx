@@ -21,7 +21,7 @@ export default function Page() {
 
   // Get values from URL parameters
   const location = searchParams.get("location") || "";
-  const guests = searchParams.get("guests") || "";
+  const guests = Number(searchParams.get("guests")) || 0;
   const date = searchParams.get("date") || "";
   const bookingType = searchParams.get("bookingType") || "";
 

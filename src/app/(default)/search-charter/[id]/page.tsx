@@ -286,7 +286,7 @@ const TripSelectionSection: React.FC<{
               key={trip.id}
               tripInfo={trip}
               boatId={boatId}
-              image={boatImage}
+              image={boatImage || ""}
             />
           ))}
         </div>
