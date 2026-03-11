@@ -37,13 +37,13 @@ export const getStatusConfig = (status: string): StatusConfig => {
         icon: Clock3,
         label: "Pending Review",
       };
-    case "APPROVED":
+    case "APPROVE":
       return {
         color: "bg-green-50 text-green-700 border-green-200",
         icon: CheckCircle2,
         label: "Approved",
       };
-    case "REJECTED":
+    case "DECLINE":
       return {
         color: "bg-red-50 text-red-700 border-red-200",
         icon: XCircle,

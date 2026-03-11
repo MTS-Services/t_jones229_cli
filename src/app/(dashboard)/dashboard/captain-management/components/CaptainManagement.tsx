@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import PaginationButton from "./PaginationButton";
-import TableLoading from "../../common/TableLoading";
+
 import {
   User,
   Mail,
@@ -21,6 +20,8 @@ import {
   Menu,
   LayoutGrid,
 } from "lucide-react";
+import PaginationButton from "./PaginationButton";
+import TableLoading from "@/components/dashboard/common/TableLoading";
 
 function MobileCaptainsView({
   captains,

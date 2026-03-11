@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useParams } from "next/navigation";
-import CaptainDetails from "@/components/dashboard/admin/userManagment/CaptainDetails";
+import CaptainDetails from "./components/CaptainDetails";
 import { useSingleUserQuery } from "@/redux/api/authApi";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -10,7 +10,6 @@ import Link from "next/link";
 export default function CaptainDetailPage() {
   const params = useParams();
   const id = params.id as string;
-
   const { data, isLoading, error } = useSingleUserQuery(id);
 
   if (isLoading) {

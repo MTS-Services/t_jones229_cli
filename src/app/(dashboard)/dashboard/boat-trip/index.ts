@@ -5,5 +5,6 @@ export * from "./components/FacilitiesList";
 export * from "./components/CaptainInfo";
 export * from "./components/MeetingPoints";
 export * from "./components/TripsList";
+export * from "./components/DeleteConfirmModal";
 export * from "./types";
 export * from "./utils";

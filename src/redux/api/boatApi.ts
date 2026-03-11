@@ -71,14 +71,16 @@ const BoatApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["boat"],
     }),
+
     //delete boat
     deleteBoat: build.mutation({
-      query: ({ id }: { boatInfo: any; id: string }) => ({
+      query: ({ id }: { id: string }) => ({
         url: `/boat/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["boat"],
     }),
+
     //delete trip
     deleteTrip: build.mutation({
       query: (id) => ({
@@ -96,12 +98,23 @@ const BoatApi = baseApi.injectEndpoints({
       }),
       providesTags: ["boat"],
     }),
+
     //update single trip by id
     updateTrip: build.mutation({
       query: ({ tripId, data }) => ({
         url: `/boat/trip/${tripId}`,
         method: "PATCH",
         body: { ...data },
+      }),
+      invalidatesTags: ["boat"],
+    }),
+
+    // status update for boat
+    updateBoatStatus: build.mutation({
+      query: ({ id, status }) => ({
+        url: `boat/status/${id}`,
+        method: "PATCH",
+        body: { status },
       }),
       invalidatesTags: ["boat"],
     }),
@@ -114,13 +127,11 @@ export const {
   useCreateBoatMutation,
   useGetBoatListByLocationQuery,
   useGetMyBoatQuery,
-
   useUpdateBoatMutation,
-
   useDeleteBoatMutation,
   useDeleteTripMutation,
-
   useGetTripQuery,
   useUpdateTripMutation,
+  useUpdateBoatStatusMutation,
 } = BoatApi;
 export default BoatApi;

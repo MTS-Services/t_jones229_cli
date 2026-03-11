@@ -12,18 +12,26 @@ import {
   Fish,
   AlertCircle,
 } from "lucide-react";
-import { useGetMyBoatQuery } from "@/redux/api/boatApi";
-import { Boat, BoatDetailModal, getStatusConfig } from "./index";
+import { useGetMyBoatQuery, useDeleteBoatMutation } from "@/redux/api/boatApi";
+import { toast } from "react-toastify";
+import {
+  Boat,
+  BoatDetailModal,
+  DeleteConfirmModal,
+  getStatusConfig,
+} from "./index";
 
 export default function Page() {
   const [selectedBoat, setSelectedBoat] = useState<Boat | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [boatToDelete, setBoatToDelete] = useState<Boat | null>(null);
 
   const {
     data: boatsData,
     isLoading: loading,
     error: apiError,
   } = useGetMyBoatQuery({});
+  const [deleteBoat, { isLoading: isDeleting }] = useDeleteBoatMutation();
   const boats = boatsData?.data || [];
   const error = apiError ? "Error loading boats" : null;
 
@@ -35,6 +43,22 @@ export default function Page() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedBoat(null);
+  };
+
+  const handleDeleteBoat = async (boat: Boat) => {
+    setBoatToDelete(boat);
+  };
+
+  const confirmDeleteBoat = async () => {
+    if (!boatToDelete) return;
+    try {
+      await deleteBoat({ id: boatToDelete.id }).unwrap();
+      toast.success(`"${boatToDelete.manufacturer}" deleted successfully`);
+    } catch {
+      toast.error("Failed to delete boat");
+    } finally {
+      setBoatToDelete(null);
+    }
   };
 
   if (loading) {
@@ -238,7 +262,9 @@ export default function Page() {
                             <Edit className="w-5 h-5" />
                           </button>
                           <button
-                            className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            onClick={() => handleDeleteBoat(boat)}
+                            disabled={isDeleting}
+                            className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                             title="Delete"
                           >
                             <Trash2 className="w-5 h-5" />
@@ -268,6 +294,16 @@ export default function Page() {
           onClose={handleCloseModal}
         />
       )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={!!boatToDelete}
+        title="Delete Boat"
+        message={`Are you sure you want to delete "${boatToDelete?.manufacturer}"? All associated trips will also be removed. This action cannot be undone.`}
+        onConfirm={confirmDeleteBoat}
+        onCancel={() => setBoatToDelete(null)}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

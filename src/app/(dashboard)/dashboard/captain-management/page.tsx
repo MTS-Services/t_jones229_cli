@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import CaptainManagementComponent from "@/components/dashboard/admin/userManagment/CaptainManagement";
+import CaptainManagementComponent from "./components/CaptainManagement";
 import { useAllUserQuery } from "@/redux/api/authApi";
 
 export default function Page() {
