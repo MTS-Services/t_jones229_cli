@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Divider } from "antd";
-import Loader from "@/components/ui/Loader";
 import UpcomingBokingCard from "../captain/mannag-booking/UpcomingBokingCard";
 import PostBokingCard from "../captain/mannag-booking/PostBokingCard";
 import { useGetAllUserBookingQuery } from "@/redux/api/userDashboardApi/userBooking";

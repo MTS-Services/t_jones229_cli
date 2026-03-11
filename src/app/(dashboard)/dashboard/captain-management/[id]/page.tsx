@@ -57,7 +57,7 @@ export default function CaptainDetailPage() {
           className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Captain Management
+          Back to Captains
         </Link>
       </div>
       <CaptainDetails userData={data?.data} />

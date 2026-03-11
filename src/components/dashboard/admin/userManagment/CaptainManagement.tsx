@@ -284,22 +284,17 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                   </th>
                   <th className="px-4 py-4 text-left">
                     <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      <Ship className="h-3.5 w-3.5" />
+                      <Calendar className="h-3.5 w-3.5" />
                       Experience
                     </div>
                   </th>
                   <th className="px-4 py-4 text-center">
                     <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      <Calendar className="h-3.5 w-3.5" />
-                      Total Trips
+                      <Ship className="h-3.5 w-3.5" />
+                      Total Boat
                     </div>
                   </th>
-                  {/* <th className="px-4 py-4 text-left">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      <Award className="h-3.5 w-3.5" />
-                      Rating
-                    </div>
-                  </th> */}
+
                   <th className="px-4 py-4 text-center">
                     <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Actions
@@ -371,15 +366,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                           </span>
                         </div>
                       </td>
-                      {/* <td className="px-4 py-2">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
-                          <span className="text-sm font-medium text-gray-700">
-                            {captain.rating?.toFixed(1) || "N/A"}
-                          </span>
-                          <span className="text-xs text-gray-400">{`(${captain.totalReviews ?? 0})`}</span>
-                        </div>
-                      </td> */}
+
                       <td className="px-4 py-2 text-center">
                         <button
                           onClick={() => handleViewDetails(captain)}
