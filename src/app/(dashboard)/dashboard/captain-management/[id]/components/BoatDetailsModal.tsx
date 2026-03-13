@@ -440,49 +440,67 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                   {boat.trips.length} trips
                 </span>
               </div>
-              <div className="space-y-3">
+              <div className="">
                 {boat.trips.map((tripItem: any) => (
                   <div
                     key={tripItem.id}
-                    className="p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-200 transition-colors"
+                    className="flex bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-200 transition-colors overflow-hidden"
                   >
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                      <div>
-                        <h4 className="font-semibold text-gray-900">
-                          {tripItem.tripName}
-                        </h4>
-                        <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                          {tripItem.description}
-                        </p>
-                        <div className="flex flex-wrap gap-3 mt-2">
-                          <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                            <Clock className="h-3 w-3" />
-                            {tripItem.duration}h
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                            <DollarSign className="h-3 w-3" />${tripItem.price}
-                          </span>
-                          <span
-                            className={`inline-flex items-center gap-1 text-xs ${
-                              tripItem.tripStatus === "OPEN"
-                                ? "text-emerald-600"
-                                : "text-amber-600"
-                            }`}
-                          >
-                            <span
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                tripItem.tripStatus === "OPEN"
-                                  ? "bg-emerald-500"
-                                  : "bg-amber-500"
-                              }`}
-                            ></span>
-                            {tripItem.tripStatus}
-                          </span>
+                    {/* Boat Photo */}
+                    <div className="hidden md:block w-44 h-auto flex-shrink-0">
+                      {boat.photos && boat.photos.length > 0 ? (
+                        <img
+                          src={boat.photos[0].url}
+                          alt={boat.manufacturer || "Boat"}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                          <Ship className="h-8 w-8 text-gray-400" />
                         </div>
+                      )}
+                    </div>
+                    {/* Trip Info */}
+                    <div className="flex-1 p-4 ">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 ">
+                        <div className=" space-y-4">
+                          <h2 className="font-semibold text-lg text-gray-600">
+                            {tripItem.tripName}
+                          </h2>
+                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                            {tripItem.description}
+                          </p>
+                          <div className="flex flex-wrap gap-3 mt-2">
+                            <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                              <Clock className="h-3 w-3" />
+                              {tripItem.duration}h
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                              <DollarSign className="h-3 w-3" />$
+                              {tripItem.price}
+                            </span>
+                            <span
+                              className={`inline-flex items-center gap-1 text-xs ${
+                                tripItem.tripStatus === "OPEN"
+                                  ? "text-emerald-600"
+                                  : "text-amber-600"
+                              }`}
+                            >
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${
+                                  tripItem.tripStatus === "OPEN"
+                                    ? "bg-emerald-500"
+                                    : "bg-amber-500"
+                                }`}
+                              ></span>
+                              {tripItem.tripStatus}
+                            </span>
+                          </div>
+                        </div>
+                        {/* <button className="px-4 py-2 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors whitespace-nowrap">
+                          View Trip
+                        </button> */}
                       </div>
-                      <button className="px-4 py-2 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors whitespace-nowrap">
-                        View Trip
-                      </button>
                     </div>
                   </div>
                 ))}
