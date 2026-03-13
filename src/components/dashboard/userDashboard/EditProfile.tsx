@@ -126,7 +126,7 @@ export default function EditProfile() {
         // Update initial values for personal fields
         setInitialValues((prev: any) => ({
           ...prev,
-          ...personalFields.reduce((acc, field) => {
+          ...personalFields.reduce((acc: Record<string, any>, field) => {
             acc[field] = data[field];
             return acc;
           }, {}),
@@ -166,7 +166,7 @@ export default function EditProfile() {
         // Update initial values for payment fields
         setInitialValues((prev: any) => ({
           ...prev,
-          ...paymentFields.reduce((acc, field) => {
+          ...paymentFields.reduce((acc: Record<string, any>, field) => {
             acc[field] = data[field];
             return acc;
           }, {}),

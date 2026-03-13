@@ -32,7 +32,7 @@ export default function Page() {
     error: apiError,
   } = useGetMyBoatQuery({});
   const [deleteBoat, { isLoading: isDeleting }] = useDeleteBoatMutation();
-  const boats = boatsData?.data || [];
+  const boats: Boat[] = boatsData?.data ?? [];
   const error = apiError ? "Error loading boats" : null;
 
   const handleViewBoat = (boat: Boat) => {
@@ -162,7 +162,7 @@ export default function Page() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {boats.map((boat) => {
+                {boats.map((boat: Boat) => {
                   const statusConfig = getStatusConfig(boat.approvalStatus);
                   const StatusIcon = statusConfig.icon;
 
@@ -175,7 +175,7 @@ export default function Page() {
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
-                            {boat.photos.length > 0 ? (
+                            {boat.photos && boat.photos.length > 0 ? (
                               <img
                                 src={boat.photos[0].url}
                                 alt={boat.manufacturer}
@@ -244,10 +244,12 @@ export default function Page() {
                       {/* Captain */}
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
-                          {boat.captain.firstName} {boat.captain.lastName}
+                          {boat.captain
+                            ? `${boat.captain.firstName} ${boat.captain.lastName}`
+                            : "N/A"}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {boat.captain.phoneNumber}
+                          {boat.captain?.phoneNumber ?? "N/A"}
                         </div>
                       </td>
 
