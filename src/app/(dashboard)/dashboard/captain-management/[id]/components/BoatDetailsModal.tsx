@@ -81,7 +81,7 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-100 flex items-center justify-center">
       <div className="bg-white rounded-2xl max-w-5xl w-full shadow-2xl animate-in fade-in zoom-in duration-200">
         {/* Modal Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 p-6 rounded-t-2xl flex items-center justify-between text-white">
+        <div className="sticky top-0 bg-[#035292] p-6 rounded-t-2xl flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
               <Ship className="h-5 w-5" />
@@ -430,7 +430,7 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
           {boat.trips && boat.trips.length > 0 && (
             <div className="mb-4">
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Ship className="h-4 w-4 text-gray-500" />
                   <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                     Associated Trips
@@ -440,7 +440,7 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                   {boat.trips.length} trips
                 </span>
               </div>
-              <div className="">
+              <div className="space-y-4">
                 {boat.trips.map((tripItem: any) => (
                   <div
                     key={tripItem.id}
@@ -475,8 +475,8 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                               <Clock className="h-3 w-3" />
                               {tripItem.duration}h
                             </span>
-                            <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                              <DollarSign className="h-3 w-3" />$
+                            <span className="inline-flex items-center text-xs text-gray-500">
+                              <DollarSign className="h-3 w-3" />
                               {tripItem.price}
                             </span>
                             <span
@@ -514,29 +514,15 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               Close
             </button>
-            {currentStatus !== "APPROVE" && (
-              <button
-                onClick={() => handleStatusUpdate("APPROVE")}
-                disabled={isUpdating}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50"
-              >
-                {isUpdating ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <CheckCircle className="h-4 w-4" />
-                )}
-                Approve
-              </button>
-            )}
             {currentStatus !== "DECLINE" && (
               <button
                 onClick={() => handleStatusUpdate("DECLINE")}
                 disabled={isUpdating}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
               >
                 {isUpdating ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -544,6 +530,20 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                   <XCircle className="h-4 w-4" />
                 )}
                 Decline
+              </button>
+            )}
+            {currentStatus !== "APPROVE" && (
+              <button
+                onClick={() => handleStatusUpdate("APPROVE")}
+                disabled={isUpdating}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50"
+              >
+                {isUpdating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <CheckCircle className="h-4 w-4" />
+                )}
+                Approve
               </button>
             )}
           </div>

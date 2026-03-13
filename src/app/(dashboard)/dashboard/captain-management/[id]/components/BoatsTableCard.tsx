@@ -26,7 +26,7 @@ const BoatsTableCard: React.FC<BoatsTableCardProps> = ({
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="px-6 py-4 bg-blue-50 border-b border-gray-100">
+      <div className="px-6 py-4 bg-blue-100 border-b border-gray-100">
         <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <Ship className="h-5 w-5 text-blue-600" />
           Boat & Trips Information ({boats?.length || 0})

@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Ship,
   Users,
-  MapPin,
   PlusCircle,
   Eye,
   Edit,
@@ -20,6 +19,7 @@ import {
   DeleteConfirmModal,
   getStatusConfig,
 } from "./index";
+import Link from "next/link";
 
 export default function Page() {
   const [selectedBoat, setSelectedBoat] = useState<Boat | null>(null);
@@ -98,10 +98,13 @@ export default function Page() {
               </p>
             </div>
           </div>
-          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
+          <Link
+            href="/dashboard/check-your-trip"
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+          >
             <PlusCircle className="w-5 h-5" />
             <span>Add New Boat</span>
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -117,10 +120,13 @@ export default function Page() {
           <p className="text-gray-500 mb-6">
             Start by listing your first boat and share your passion for fishing!
           </p>
-          <button className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
+          <Link
+            href="/dashboard/check-your-trip"
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+          >
             <PlusCircle className="w-5 h-5" />
             <span>List Your Boat</span>
-          </button>
+          </Link>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">

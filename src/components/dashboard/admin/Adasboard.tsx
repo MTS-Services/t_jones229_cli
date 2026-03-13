@@ -148,7 +148,7 @@ export default function Adashboard() {
               DashboardCard,
               "COMPLETED:",
               tripMetrics.COMPLETE ?? 0,
-              <FaCheckCircle className="text-[#FF9500]" size={28} />,
+              <FaCheckCircle className="text-[#1eaa41]" size={28} />,
               "/dashboard/trips-managment",
             )}
 
@@ -156,15 +156,15 @@ export default function Adashboard() {
               DashboardCard,
               "CANCELLED:",
               0,
-              <FaTimesCircle className="text-[#FF9500]" size={28} />,
+              <FaTimesCircle className="text-red-500" size={28} />,
               "/dashboard/trips-managment",
             )}
 
             {renderCard(
               DashboardCard,
-              "ACTIVE CUSTOMERS:",
+              "ACTIVE USERS:",
               userMetrics.USER ?? 0,
-              <FaUsers className="text-[#FF9500]" size={28} />,
+              <FaUsers className="text-[#035292]" size={28} />,
               "/dashboard/user-management",
             )}
 
@@ -172,7 +172,7 @@ export default function Adashboard() {
               DashboardCard,
               "ACTIVE CAPTAINS:",
               userMetrics.CAPTAIN ?? 0,
-              <FaUserTie className="text-[#FF9500]" size={28} />,
+              <FaUserTie className="text-[#4961e9]" size={28} />,
               "/dashboard/user-management",
             )}
 
@@ -180,7 +180,7 @@ export default function Adashboard() {
               DashboardCard,
               "REFUND REQUESTS:",
               listingRequest ?? 0,
-              <FaMoneyBillWave className="text-[#FF9500]" size={28} />,
+              <FaMoneyBillWave className="text-[#e2c20a]" size={28} />,
               "/dashboard/user-management",
             )}
           </div>
@@ -207,16 +207,20 @@ export default function Adashboard() {
                   <span className="text-sm text-gray-600">Completed</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#007AFF]"></div>
-                  <span className="text-sm text-gray-600">Ongoing</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#FF3B30]"></div>
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
                   <span className="text-sm text-gray-600">Cancelled</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#5856D6]"></div>
-                  <span className="text-sm text-gray-600">Confirmed</span>
+                  <div className="w-3 h-3 rounded-full bg-[#035292]"></div>
+                  <span className="text-sm text-gray-600">Users</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#4961e9]"></div>
+                  <span className="text-sm text-gray-600">Captains</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#d6c356]"></div>
+                  <span className="text-sm text-gray-600">Refund</span>
                 </div>
               </div>
             </div>

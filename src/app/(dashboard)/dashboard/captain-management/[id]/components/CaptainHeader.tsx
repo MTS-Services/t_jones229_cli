@@ -10,7 +10,7 @@ interface CaptainHeaderProps {
 
 const CaptainHeader: React.FC<CaptainHeaderProps> = ({ user }) => {
   return (
-    <div className="bg-blue-400 rounded-xl shadow p-8 text-white">
+    <div className="bg-[#035292] rounded-xl shadow p-8 text-white">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-white/30">

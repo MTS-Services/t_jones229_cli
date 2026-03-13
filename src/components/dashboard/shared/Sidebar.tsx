@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { sidebarItems } from "./sidebarItems";
 import { HiMenu, HiX } from "react-icons/hi";
 import logo from "@/assets/logo.svg";
+import { useGetMyBoatQuery } from "@/redux/api/boatApi";
 
 const Sidebar = () => {
   // Set default role to avoid blank sidebar
@@ -16,12 +17,13 @@ const Sidebar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  const isCaptain = currentUserRole === "CAPTAIN";
+  const { data: boatsData } = useGetMyBoatQuery({}, { skip: !isCaptain });
+  const hasBoats = (boatsData?.data?.length ?? 0) > 0;
+
   useEffect(() => {
     const role = Cookies.get("currentUserRole") || "GUEST";
     setCurrentUserRole(role);
-
-    // Debug: check what's actually in the totalTrips cookie
-    const rawCookie = Cookies.get("totalTrips");
   }, []);
 
   // Close mobile menu when clicking outside
@@ -81,12 +83,9 @@ const Sidebar = () => {
 
   const sidebarItemsToShow = sidebarItems?.filter((item) => {
     if (!item?.roles?.includes(currentUserRole)) return false;
-    // Hide Trip Calendar ONLY when totalTrips cookie is explicitly "0"
-    if (currentUserRole === "CAPTAIN" && item.key === "Trip Calendar") {
-      const raw = Cookies.get("totalTrips");
-      console.log("🔍 Trip Calendar filter — cookie raw:", raw);
-      // Only hide if cookie is explicitly the string "0"
-      if (raw === "0") return false;
+    // Hide Trip Calendar when captain has no boats
+    if (isCaptain && item.key === "Trip Calendar" && !hasBoats) {
+      return false;
     }
     return true;
   });

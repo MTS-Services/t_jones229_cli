@@ -19,6 +19,7 @@ import {
   Award,
   Menu,
   LayoutGrid,
+  Fish,
 } from "lucide-react";
 import PaginationButton from "./PaginationButton";
 import TableLoading from "@/components/dashboard/common/TableLoading";
@@ -215,8 +216,8 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 rounded-xl">
-              <Anchor className="h-6 w-6 text-blue-600" />
+            <div className="p-3 bg-[#035292] rounded-xl">
+              <Anchor className="h-6 w-6 text-white" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
@@ -235,7 +236,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
               onClick={() => setViewMode("list")}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                 viewMode === "list"
-                  ? "bg-white text-blue-600 shadow-sm"
+                  ? "bg-white text-blue-800 shadow-sm"
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
               }`}
             >
@@ -246,7 +247,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
               onClick={() => setViewMode("grid")}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                 viewMode === "grid"
-                  ? "bg-white text-blue-600 shadow-sm"
+                  ? "bg-white text-blue-800 shadow-sm"
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
               }`}
             >
@@ -264,40 +265,46 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
           <div className="hidden md:block overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 border-y border-gray-100">
+                <tr className="bg-[#035292] border-y border-gray-100">
                   <th className="px-4 py-4 text-left">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      <User className="h-3.5 w-3.5" />
+                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                      <Anchor className="h-3.5 w-3.5" />
                       Captain
                     </div>
                   </th>
                   <th className="px-4 py-4 text-left">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
                       <Mail className="h-3.5 w-3.5" />
                       Email
                     </div>
                   </th>
                   <th className="px-4 py-4 text-left">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
                       <Phone className="h-3.5 w-3.5" />
                       Phone
                     </div>
                   </th>
                   <th className="px-4 py-4 text-left">
-                    <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      <Calendar className="h-3.5 w-3.5" />
-                      Experience
+                    <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                      <Ship className="h-3.5 w-3.5" />
+                      Total Boats
                     </div>
                   </th>
                   <th className="px-4 py-4 text-center">
-                    <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      <Ship className="h-3.5 w-3.5" />
-                      Total Boat
+                    <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                      <Fish className="h-3.5 w-3.5" />
+                      Total Trips
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-left">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                      <Award className="h-3.5 w-3.5" />
+                      Status
                     </div>
                   </th>
 
                   <th className="px-4 py-4 text-center">
-                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <div className="text-xs font-semibold text-gray-200 uppercase tracking-wider">
                       Actions
                     </div>
                   </th>
@@ -350,24 +357,38 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                       </td>
                       <td className="px-4 py-2">
                         <span className="text-sm text-gray-700 flex items-center gap-1">
-                          <Phone className="h-3.5 w-3.5 text-gray-400" />
                           {captain.phoneNumber || "N/A"}
                         </span>
                       </td>
+
                       <td className="px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full text-xs font-medium border border-amber-100">
-                          {captain.experience || "0"} years
-                        </span>
+                        <div className="inline-flex items-center gap-1">
+                          <span className="text-sm font-semibold text-gray-900">
+                            {captain.totalBoats ?? 0}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-4 py-2 text-center">
                         <div className="inline-flex items-center gap-1">
-                          <Ship className="h-3.5 w-3.5 text-gray-400" />
                           <span className="text-sm font-semibold text-gray-900">
                             {captain.totalTrips ?? 0}
                           </span>
                         </div>
                       </td>
-
+                      <td className="px-6 py-2">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border`}
+                        >
+                          <span
+                            className={`h-2.5 w-2.5 rounded-full ${
+                              captain.userStatus === "ACTIVE"
+                                ? "bg-emerald-500"
+                                : "bg-red-500"
+                            }`}
+                          />
+                          {captain.userStatus || "UNKNOWN"}
+                        </span>
+                      </td>
                       <td className="px-4 py-2 text-center">
                         <button
                           onClick={() => handleViewDetails(captain)}
@@ -401,29 +422,29 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                   key={captain.id || index}
                   className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all group"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
-                        {captain?.fullName?.charAt(0) || "C"}
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">
-                          {captain?.fullName || "Unknown"}
-                        </h3>
-                        <div className="flex items-center gap-1 mt-1">
-                          <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                          <span className="text-xs text-gray-500">4.8</span>
-                        </div>
-                      </div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                      {captain?.fullName?.charAt(0) || "C"}
                     </div>
-                    <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-gray-50 rounded-lg">
-                      <MoreVertical className="h-4 w-4 text-gray-400" />
-                    </button>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-gray-900 truncate">
+                        {captain?.fullName || "Unknown"}
+                      </h3>
+                      <span
+                        className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                          captain.userStatus === "ACTIVE"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-red-50 text-red-700"
+                        }`}
+                      >
+                        {captain.userStatus || "N/A"}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2.5 text-sm">
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Mail className="h-4 w-4 text-gray-400" />
+                      <Mail className="h-4 w-4 text-gray-400 flex-shrink-0" />
                       <a
                         href={`mailto:${captain.email}`}
                         className="text-blue-600 hover:underline truncate"
@@ -432,26 +453,52 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                       </a>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Phone className="h-4 w-4 text-gray-400" />
+                      <Phone className="h-4 w-4 text-gray-400 flex-shrink-0" />
                       <span>{captain.phoneNumber || "N/A"}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <Ship className="h-4 w-4 text-gray-400" />
-                      <span>{captain.totalTrips ?? 0} trips</span>
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-gray-100 flex gap-2">
-                    <button
-                      onClick={() => handleViewDetails(captain)}
-                      className="flex-1 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-xs font-medium text-gray-600 transition-colors"
-                    >
-                      View Details
-                    </button>
-                    <button className="px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs font-medium text-blue-600 transition-colors">
-                      Edit
-                    </button>
+                  <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-gray-100">
+                    <div className="bg-blue-50 rounded-lg p-2.5 text-center">
+                      <Ship className="h-4 w-4 text-blue-600 mx-auto mb-1" />
+                      <p className="text-lg font-bold text-gray-900">
+                        {captain.totalBoats ?? 0}
+                      </p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+                        Boats
+                      </p>
+                    </div>
+                    <div className="bg-purple-50 rounded-lg p-2.5 text-center">
+                      <Award className="h-4 w-4 text-purple-600 mx-auto mb-1" />
+                      <p className="text-lg font-bold text-gray-900">
+                        {captain.totalTrips ?? 0}
+                      </p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+                        Trips
+                      </p>
+                    </div>
                   </div>
+
+                  {captain.createdAt && (
+                    <div className="flex items-center gap-1.5 mt-3 text-xs text-gray-400">
+                      <Calendar className="h-3 w-3" />
+                      <span>
+                        Joined{" "}
+                        {new Date(captain.createdAt).toLocaleDateString(
+                          "en-US",
+                          { month: "short", day: "numeric", year: "numeric" },
+                        )}
+                      </span>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => handleViewDetails(captain)}
+                    className="w-full mt-3 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-xs font-medium text-gray-600 transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <Eye className="h-3.5 w-3.5" />
+                    View Details
+                  </button>
                 </div>
               ))
             )}

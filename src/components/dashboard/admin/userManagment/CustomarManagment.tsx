@@ -301,8 +301,8 @@ export default function CustomerManagement({
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-blue-50 rounded-xl">
-                <Users className="h-6 w-6 text-blue-600" />
+              <div className="p-3 bg-[#035292] rounded-xl">
+                <Users className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
@@ -315,7 +315,7 @@ export default function CustomerManagement({
             </div>
 
             {/* View Toggle with Icons */}
-            <div className="flex items-center gap-2 bg-gray-50 p-1 rounded-lg">
+            <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg">
               <button
                 onClick={() => setViewMode("list")}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
@@ -349,44 +349,40 @@ export default function CustomerManagement({
             <div className="hidden md:block overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-50 border-y border-gray-100">
+                  <tr className="bg-[#035292] border-y border-gray-100">
                     <th className="px-6 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
                         <User className="h-3.5 w-3.5" />
                         Customer
                       </div>
                     </th>
                     <th className="px-6 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
                         <Mail className="h-3.5 w-3.5" />
                         Email
                       </div>
                     </th>
                     <th className="px-6 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
                         <Phone className="h-3.5 w-3.5" />
                         Phone
                       </div>
                     </th>
                     <th className="px-6 py-4 text-left">
-                      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
                         <Ship className="h-3.5 w-3.5" />
                         Total Trips
                       </div>
                     </th>
                     <th className="px-6 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-200 uppercase tracking-wider">
                         <Award className="h-3.5 w-3.5" />
                         Status
                       </div>
                     </th>
-                    {/* <th className="px-6 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        Waitlist
-                      </div>
-                    </th> */}
+
                     <th className="px-6 py-4 text-center">
-                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="text-xs font-semibold text-gray-200 uppercase tracking-wider">
                         Actions
                       </div>
                     </th>
@@ -418,8 +414,8 @@ export default function CustomerManagement({
                       >
                         <td className="px-6 py-2">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-200 to-blue-300 rounded-full flex items-center justify-center text-white font-semibold">
-                              <User className="h-5 w-5" />
+                            <div className="bg-slate-200 rounded-full p-2">
+                              <User className="h-4 w-4 text-gray-400" />
                             </div>
                             <div>
                               <div className="font-medium text-gray-900">
@@ -466,20 +462,7 @@ export default function CustomerManagement({
                             {customer.userStatus || "UNKNOWN"}
                           </span>
                         </td>
-                        {/* <td className="px-6 py-2">
-                          <span
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${
-                              customer.waitlistStatus === "active"
-                                ? "bg-green-50 text-green-700 border-green-200"
-                                : customer.waitlistStatus === "pending"
-                                  ? "bg-amber-50 text-amber-700 border-amber-200"
-                                  : "bg-gray-50 text-gray-700 border-gray-200"
-                            }`}
-                          >
-                            {getWaitlistIcon(customer.waitlistStatus)}
-                            {customer.waitlistStatus || "none"}
-                          </span>
-                        </td> */}
+
                         <td className="px-6 py-2 text-center">
                           <button
                             onClick={() => handleViewDetails(customer)}
