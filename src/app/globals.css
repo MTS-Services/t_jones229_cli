@@ -35,7 +35,6 @@ body {
   font-weight: normal;
 }
 
-
 .custom-sidebar-menu .ant-menu-item-selected {
   background-color: #0024a7 !important;
   border-left: 4px solid #ff9500;
@@ -66,27 +65,33 @@ body {
 }
 
 .admindas-shadow {
-  box-shadow: 0 28px 61px 0 rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 28px 61px 0 rgba(0, 0, 0, 0.1),
     0 110px 110px 0 rgba(0, 0, 0, 0.05);
 }
 
 .searchbarShadow {
-  box-shadow: 0px 26px 58px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0px 26px 58px rgba(0, 0, 0, 0.1),
     0px 105px 105px rgba(0, 0, 0, 0.09),
     0px 236px 142px rgba(0, 0, 0, 0.05),
     0px 420px 168px rgba(0, 0, 0, 0.01);
 }
 .feature-card {
-  box-shadow: 0px 10px 22px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0px 10px 22px rgba(0, 0, 0, 0.1),
     0px 41px 41px rgba(0, 0, 0, 0.05);
 }
 /* styles.css or global.css */
 .custom-shadow {
-  box-shadow: 0px 0px 1px 0px rgba(48, 49, 51, 0.05),
+  box-shadow:
+    0px 0px 1px 0px rgba(48, 49, 51, 0.05),
     0px 16px 24px 0px rgba(48, 49, 51, 0.1);
 }
 .custom-dark-shadow {
-  box-shadow: 0px 0px 1px 0px rgba(13, 13, 13, 0.9), 0px 8px 16px 0px #0d0d0d;
+  box-shadow:
+    0px 0px 1px 0px rgba(13, 13, 13, 0.9),
+    0px 8px 16px 0px #0d0d0d;
 }
 
 .ant-drawer-header {
@@ -187,8 +192,12 @@ body {
 }
 
 @keyframes ken-burns {
-  from { transform: scale(1); }
-  to { transform: scale(1.15); }
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.15);
+  }
 }
 
 .animate-bg {
@@ -196,8 +205,13 @@ body {
 }
 
 @keyframes boat-float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 .animate-float {
@@ -208,9 +222,9 @@ body {
   background: linear-gradient(
     105deg,
     transparent 20%,
-    rgba(255,255,255,.1) 40%,
-    rgba(255,255,255,.2) 45%,
-    rgba(255,255,255,.1) 50%,
+    rgba(255, 255, 255, 0.1) 40%,
+    rgba(255, 255, 255, 0.2) 45%,
+    rgba(255, 255, 255, 0.1) 50%,
     transparent 70%
   );
   background-size: 200% 100%;
@@ -220,11 +234,12 @@ body {
 }
 
 @keyframes shimmer-wave {
-  from { background-position: -200% 0; }
-  to { background-position: 200% 0; }
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
 }
 
-
-
-
-
+/* Custom scrollbar styles */

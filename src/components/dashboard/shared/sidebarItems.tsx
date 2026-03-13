@@ -80,12 +80,12 @@ export const sidebarItems: TSidebarItem[] = [
     roles: [userRole.fishingTripper, "ADMIN"],
   },
 
-  {
-    key: "Booking Management",
-    icon: <FaRegAddressBook />,
-    label: <Link href="/dashboard/booking-managment">Booking Management</Link>,
-    roles: [userRole.fishingTripper, "ADMIN"],
-  },
+  // {
+  //   key: "Booking Management",
+  //   icon: <FaRegAddressBook />,
+  //   label: <Link href="/dashboard/booking-managment">Booking Management</Link>,
+  //   roles: [userRole.fishingTripper, "ADMIN"],
+  // },
 
   {
     key: "Membership",

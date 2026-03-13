@@ -139,7 +139,7 @@ export default function SearchTrips({ filters, setFilters }: SearchTripsProps) {
           {/* Search Button */}
           <button
             onClick={handleSearch}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-[15px] rounded-md text-sm font-medium flex items-center gap-2 transition-colors duration-200"
+            className="bg-[#035292] hover:bg-[#034a7a] text-white px-6 py-[15px] rounded-md text-sm font-medium flex items-center gap-2 transition-colors duration-200"
           >
             Search
             <Search className="h-4 w-4" />

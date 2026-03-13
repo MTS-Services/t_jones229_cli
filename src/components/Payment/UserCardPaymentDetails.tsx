@@ -3,7 +3,7 @@
 import { useGetMeQuery } from "@/redux/api/authApi";
 import { Divider, Skeleton } from "antd";
 import { useFormContext } from "react-hook-form";
-import UserCardPaymentDetailsForm from "../dashboard/userDashboard/UserCardPaymentDetailsForm";
+import UserCardPaymentDetailsForm from "../dashboard/captain/CheckYourTrip/USAPaymentDetailsForm";
 import { usePathname } from "next/navigation";
 import { User, CreditCard } from "lucide-react";
 import { useEffect } from "react";

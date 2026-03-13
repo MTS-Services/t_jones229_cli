@@ -34,6 +34,14 @@ const BookingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["booking", "userBooking"],
     }),
+    updateBookingStatus: build.mutation({
+      query: ({ id, status }: { id: string; status: string }) => ({
+        url: `/booking/status/${id}`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["booking", "userBooking"],
+    }),
     getChargeEnable: build.query({
       query: () => ({
         url: `/users/active-stripe-account`,
@@ -50,5 +58,6 @@ export const {
   useGetMyBookingQuery,
   useGetChargeEnableQuery,
   useCancelBookingMutation,
+  useUpdateBookingStatusMutation,
 } = BookingApi;
 export default BookingApi;

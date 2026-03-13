@@ -151,44 +151,44 @@ export default function Trips({
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-50 border-y border-gray-100">
+                  <tr className="bg-[#035292] border-y border-gray-100">
                     <th className="px-4 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-white uppercase tracking-wider">
                         <Ship className="h-3.5 w-3.5" />
                         Trip Name
                       </div>
                     </th>
                     <th className="px-4 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-white uppercase tracking-wider">
                         <Calendar className="h-3.5 w-3.5" />
                         Date
                       </div>
                     </th>
                     <th className="px-4 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-white uppercase tracking-wider">
                         <User className="h-3.5 w-3.5" />
                         Captain
                       </div>
                     </th>
                     <th className="px-4 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-white uppercase tracking-wider">
                         <Tag className="h-3.5 w-3.5" />
                         Type
                       </div>
                     </th>
                     <th className="px-4 py-4 text-left">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-white uppercase tracking-wider">
                         <MapPin className="h-3.5 w-3.5" />
                         Location
                       </div>
                     </th>
                     <th className="px-4 py-4 text-left">
-                      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-white uppercase tracking-wider">
                         Status
                       </div>
                     </th>
                     <th className="px-4 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center justify-center gap-2 text-xs font-semibold text-white uppercase tracking-wider">
                         Actions
                       </div>
                     </th>

@@ -4,7 +4,7 @@ import { Divider, Skeleton } from "antd";
 import { useFormContext } from "react-hook-form";
 import { usePathname } from "next/navigation";
 import { User, CreditCard } from "lucide-react";
-import PaymentDetailsForm from "../../userDashboard/PaymentDetailsForm";
+import PaymentDetailsForm from "./USAPaymentDetailsForm";
 
 // Define the shape of your form for TypeScript
 interface CheckoutFormData {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useGetBookingQuery } from "@/redux/api/bookingApi";
+import { useGetBookingQuery, useCancelBookingMutation } from "@/redux/api/bookingApi";
 import {
   ArrowLeft,
   Calendar,
@@ -17,670 +17,510 @@ import {
   Fish,
   Camera,
   FileText,
-  Receipt,
+  DollarSign,
   Activity,
+  Copy,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
 } from "lucide-react";
 import StatusButton from "../button/StatusButton";
-import Image from "next/image";
+import { useState } from "react";
 
-// Skeleton Loader Component
-function BookingDetailsSkeleton() {
+/* ── helpers ── */
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function formatDateTime(dateStr: string) {
+  return new Date(dateStr).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function formatTime(raw: string) {
+  const num = parseInt(raw, 10);
+  if (isNaN(num)) return raw;
+  const h = num % 12 || 12;
+  const ampm = num >= 12 ? "PM" : "AM";
+  return `${h}:00 ${ampm}`;
+}
+
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
+}
+
+function getStatusConfig(status: string) {
+  switch (status?.toUpperCase()) {
+    case "CONFIRMED":
+    case "COMPLETE":
+      return { color: "#10B981", bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200", icon: CheckCircle };
+    case "PENDING":
+      return { color: "#F59E0B", bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", icon: AlertCircle };
+    case "CANCELLED":
+    case "CANCEL":
+      return { color: "#EF4444", bg: "bg-red-50", text: "text-red-700", border: "border-red-200", icon: XCircle };
+    default:
+      return { color: "#6B7280", bg: "bg-gray-50", text: "text-gray-700", border: "border-gray-200", icon: AlertCircle };
+  }
+}
+
+function getPaymentConfig(status: string) {
+  switch (status?.toUpperCase()) {
+    case "PAID":
+      return { color: "#10B981", bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" };
+    case "UNPAID":
+      return { color: "#F59E0B", bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" };
+    case "PARTIAL":
+      return { color: "#3B82F6", bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" };
+    default:
+      return { color: "#6B7280", bg: "bg-gray-50", text: "text-gray-700", border: "border-gray-200" };
+  }
+}
+
+/* ── sub-components ── */
+
+function Skeleton() {
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Skeleton */}
-        <div className="mb-8 animate-pulse">
-          <div className="h-4 w-24 bg-gray-200 rounded mb-4"></div>
-          <div className="h-8 w-48 bg-gray-200 rounded"></div>
+    <div className="space-y-6 animate-pulse">
+      <div className="h-5 w-28 bg-gray-200 rounded" />
+      <div className="h-8 w-56 bg-gray-200 rounded" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6">
+              <div className="h-5 w-36 bg-gray-200 rounded mb-5" />
+              <div className="grid grid-cols-2 gap-5">
+                {[1, 2, 3, 4].map((j) => (
+                  <div key={j}>
+                    <div className="h-3 w-16 bg-gray-200 rounded mb-2" />
+                    <div className="h-5 w-28 bg-gray-200 rounded" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-
-        {/* Content Grid Skeleton */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="bg-white rounded-xl shadow-sm p-6 animate-pulse"
-              >
-                <div className="h-6 w-40 bg-gray-200 rounded mb-4"></div>
-                <div className="grid grid-cols-2 gap-4">
-                  {[1, 2, 3, 4].map((j) => (
-                    <div key={j}>
-                      <div className="h-4 w-20 bg-gray-200 rounded mb-2"></div>
-                      <div className="h-5 w-32 bg-gray-200 rounded"></div>
-                    </div>
-                  ))}
-                </div>
+        <div className="space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6">
+              <div className="h-5 w-28 bg-gray-200 rounded mb-5" />
+              <div className="space-y-4">
+                {[1, 2, 3].map((j) => (
+                  <div key={j} className="h-5 w-full bg-gray-200 rounded" />
+                ))}
               </div>
-            ))}
-          </div>
-
-          <div className="space-y-6">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="bg-white rounded-xl shadow-sm p-6 animate-pulse"
-              >
-                <div className="h-6 w-32 bg-gray-200 rounded mb-4"></div>
-                <div className="space-y-3">
-                  {[1, 2, 3].map((j) => (
-                    <div key={j}>
-                      <div className="h-4 w-24 bg-gray-200 rounded mb-2"></div>
-                      <div className="h-5 w-full bg-gray-200 rounded"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-// Error Component
-function ErrorState({ message }: { message: string }) {
-  const router = useRouter();
-
+function Field({ label, value, icon: Icon }: { label: string; value: string | number | null | undefined; icon?: any }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl">⚠️</span>
-        </div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          Failed to Load
-        </h2>
-        <p className="text-gray-600 mb-6">{message}</p>
-        <button
-          onClick={() => router.back()}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Go Back
-        </button>
-      </div>
+    <div className="space-y-1">
+      <p className="text-xs font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+        {Icon && <Icon className="w-3.5 h-3.5" />}
+        {label}
+      </p>
+      <p className="text-sm font-semibold text-gray-900">{value || "—"}</p>
     </div>
   );
 }
 
-// Info Card Component
-function InfoCard({
-  title,
-  icon: Icon,
-  children,
-  className = "",
-}: {
-  title: string;
-  icon: any;
-  children: React.ReactNode;
-  className?: string;
-}) {
+function Card({ title, icon: Icon, children }: { title: string; icon: any; children: React.ReactNode }) {
   return (
-    <div
-      className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow ${className}`}
-    >
-      <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-blue-50 rounded-lg">
-            <Icon className="w-5 h-5 text-blue-600" />
-          </div>
-          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center">
+          <Icon className="w-4 h-4 text-orange-600" />
         </div>
+        <h2 className="text-base font-semibold text-gray-900">{title}</h2>
       </div>
       <div className="p-6">{children}</div>
     </div>
   );
 }
 
-// Detail Row Component
-function DetailRow({
-  label,
-  value,
-  icon: Icon,
-  className = "",
-}: {
-  label: string;
-  value: string | number | null | undefined;
-  icon?: any;
-  className?: string;
-}) {
+function Badge({ label, config }: { label: string; config: { bg: string; text: string; border: string } }) {
   return (
-    <div className={`flex items-start gap-3 ${className}`}>
-      {Icon && (
-        <div className="flex-shrink-0 mt-1">
-          <Icon className="w-4 h-4 text-gray-400" />
-        </div>
-      )}
-      <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
-          {label}
-        </p>
-        <p className="text-sm text-gray-900 font-medium break-words">
-          {value || "N/A"}
-        </p>
-      </div>
-    </div>
+    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${config.bg} ${config.text} ${config.border}`}>
+      {label}
+    </span>
   );
 }
 
-// Stats Card Component
-function StatCard({
-  label,
-  value,
-  icon: Icon,
-  color = "blue",
-}: {
-  label: string;
-  value: string | number;
-  icon: any;
-  color?: "blue" | "green" | "orange" | "red" | "purple";
-}) {
-  const colorClasses = {
-    blue: "bg-blue-50 text-blue-600",
-    green: "bg-green-50 text-green-600",
-    orange: "bg-orange-50 text-orange-600",
-    red: "bg-red-50 text-red-600",
-    purple: "bg-purple-50 text-purple-600",
-  };
-
-  return (
-    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-      <div className={`p-2 rounded-lg ${colorClasses[color]}`}>
-        <Icon className="w-5 h-5" />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 font-medium">{label}</p>
-        <p className="text-lg font-semibold text-gray-900">{value}</p>
-      </div>
-    </div>
-  );
-}
+/* ── main component ── */
 
 export default function BookingDetails() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const [copied, setCopied] = useState(false);
 
   const { data, isLoading, error } = useGetBookingQuery(id);
+  const [cancelBooking, { isLoading: isCancelling }] = useCancelBookingMutation();
   const booking = data?.data;
 
-  const getStatusButtonProps = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "confirmed":
-        return {
-          color: "#10B981",
-          className: "text-white",
-          bgClass: "bg-green-100 text-green-800",
-          icon: "✓",
-        };
-      case "pending":
-        return {
-          color: "#F59E0B",
-          className: "text-white",
-          bgClass: "bg-yellow-100 text-yellow-800",
-          icon: "⏳",
-        };
-      case "cancelled":
-      case "cancel":
-        return {
-          color: "#EF4444",
-          className: "text-white",
-          bgClass: "bg-red-100 text-red-800",
-          icon: "✕",
-        };
-      case "completed":
-        return {
-          color: "#3B82F6",
-          className: "text-white",
-          bgClass: "bg-blue-100 text-blue-800",
-          icon: "✓",
-        };
-      default:
-        return {
-          color: "#6B7280",
-          className: "text-white",
-          bgClass: "bg-gray-100 text-gray-800",
-          icon: "•",
-        };
-    }
+  const copyId = () => {
+    navigator.clipboard.writeText(booking?.id || "");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const getPaymentStatusProps = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "paid":
-        return {
-          color: "#10B981",
-          className: "text-white",
-          bgClass: "bg-green-100 text-green-800",
-          icon: "✓",
-        };
-      case "unpaid":
-        return {
-          color: "#F59E0B",
-          className: "text-white",
-          bgClass: "bg-yellow-100 text-yellow-800",
-          icon: "⏳",
-        };
-      case "partial":
-        return {
-          color: "#3B82F6",
-          className: "text-white",
-          bgClass: "bg-blue-100 text-blue-800",
-          icon: "◐",
-        };
-      default:
-        return {
-          color: "#6B7280",
-          className: "text-white",
-          bgClass: "bg-gray-100 text-gray-800",
-          icon: "•",
-        };
-    }
+  const handleCancel = async () => {
+    if (!booking || booking.status === "CANCEL" || booking.status === "CANCELLED") return;
+    if (!confirm("Are you sure you want to cancel this booking? This will trigger a refund.")) return;
+    await cancelBooking(booking.id);
   };
 
-  if (isLoading) {
-    return <BookingDetailsSkeleton />;
-  }
+  if (isLoading) return <Skeleton />;
 
   if (error || !booking) {
     return (
-      <ErrorState message="Unable to load booking details. Please try again." />
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto">
+            <XCircle className="w-7 h-7 text-red-500" />
+          </div>
+          <p className="text-gray-600">Unable to load booking details.</p>
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700"
+          >
+            <ArrowLeft className="w-4 h-4" /> Go Back
+          </button>
+        </div>
+      </div>
     );
   }
 
-  const statusProps = getStatusButtonProps(booking.status);
-  const paymentProps = getPaymentStatusProps(booking.paymentStatus);
+  const statusCfg = getStatusConfig(booking.status);
+  const paymentCfg = getPaymentConfig(booking.paymentStatus);
+  const total = (booking.payFirst || 0) + (booking.payDue || 0);
+  const paidPercent = total > 0 ? Math.round(((booking.payFirst || 0) / total) * 100) : 0;
+  const StatusIcon = statusCfg.icon;
+
+  const tripDays = booking.trip?.tripDays?.filter(
+    (d: string) => !["Private", "Group booking"].includes(d)
+  );
 
   return (
-    <div className="">
-      {/* Enhanced Header */}
-      <div className="mb-8">
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors group"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors mb-4"
         >
-          <div className="p-1 rounded-lg group-hover:bg-gray-100">
-            <ArrowLeft size={18} />
-          </div>
-          <span>Back to Bookings</span>
+          <ArrowLeft className="w-4 h-4" /> Back to Bookings
         </button>
 
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Booking Details
+            <h1 className="text-2xl font-bold text-gray-900">
+              {booking.trip?.tripName || "Booking Details"}
             </h1>
-            <p className="text-gray-500">
-              View complete information about this booking
-            </p>
+            <div className="flex items-center gap-2 mt-1.5">
+              <span className="text-sm text-gray-400 font-mono">#{booking.id.slice(-8)}</span>
+              <button onClick={copyId} className="text-gray-300 hover:text-gray-500 transition-colors">
+                {copied ? <CheckCircle className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+              </button>
+            </div>
           </div>
 
-          {/* Quick Status Summary */}
-          <div className="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm border border-gray-200">
-            <div className={`px-3 py-1.5 rounded-lg ${statusProps.bgClass}`}>
-              <span className="text-sm font-medium flex items-center gap-1">
-                <span>{statusProps.icon}</span>
-                {booking.status}
-              </span>
-            </div>
-            <div className={`px-3 py-1.5 rounded-lg ${paymentProps.bgClass}`}>
-              <span className="text-sm font-medium flex items-center gap-1">
-                <span>{paymentProps.icon}</span>
-                {booking.paymentStatus}
-              </span>
-            </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge label={booking.status} config={statusCfg} />
+            <Badge label={booking.paymentStatus} config={paymentCfg} />
+            <Badge
+              label={booking.bookingType}
+              config={{
+                bg: booking.bookingType === "GROUP" ? "bg-purple-50" : "bg-blue-50",
+                text: booking.bookingType === "GROUP" ? "text-purple-700" : "text-blue-700",
+                border: booking.bookingType === "GROUP" ? "border-purple-200" : "border-blue-200",
+              }}
+            />
           </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
+      {/* Stats Row */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <DollarSign className="w-4 h-4 text-emerald-500" />
+            <span className="text-xs font-medium text-gray-400 uppercase">Total</span>
+          </div>
+          <p className="text-xl font-bold text-gray-900">{formatCurrency(total)}</p>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <CreditCard className="w-4 h-4 text-orange-500" />
+            <span className="text-xs font-medium text-gray-400 uppercase">Due</span>
+          </div>
+          <p className="text-xl font-bold text-gray-900">{formatCurrency(booking.payDue || 0)}</p>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Users className="w-4 h-4 text-blue-500" />
+            <span className="text-xs font-medium text-gray-400 uppercase">Group Size</span>
+          </div>
+          <p className="text-xl font-bold text-gray-900">{booking.groupSize || 1}</p>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <StatusIcon className="w-4 h-4" style={{ color: statusCfg.color }} />
+            <span className="text-xs font-medium text-gray-400 uppercase">Status</span>
+          </div>
+          <StatusButton color={statusCfg.color} className="text-white text-xs">
+            {booking.status}
+          </StatusButton>
+        </div>
+      </div>
+
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Main Info (2/3 width) */}
+        {/* Left Column */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Trip Information */}
-          <InfoCard title="Trip Information" icon={Calendar}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <DetailRow
-                label="Trip Name"
-                value={booking.trip?.tripName}
-                icon={MapPin}
-              />
-              <DetailRow
-                label="Trip Type"
-                value={booking.trip?.tripType}
-                icon={Activity}
-              />
-              <DetailRow
-                label="Duration"
-                value={
-                  booking.trip?.duration
-                    ? `${booking.trip.duration} hours`
-                    : "N/A"
-                }
-                icon={Clock}
-              />
-              <DetailRow
-                label="Departure Time"
-                value={booking.trip?.departureTime}
-                icon={Clock}
-              />
-              <DetailRow
+
+          {/* Trip Info */}
+          <Card title="Trip Details" icon={Calendar}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <Field label="Trip Name" value={booking.trip?.tripName} icon={MapPin} />
+              <Field label="Trip Type" value={booking.trip?.tripType} icon={Activity} />
+              <Field
                 label="Trip Date"
-                value={
-                  booking.tripDate
-                    ? new Date(booking.tripDate).toLocaleDateString("en-US", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })
-                    : "N/A"
-                }
+                value={booking.tripDate ? formatDate(booking.tripDate) : null}
                 icon={Calendar}
               />
-              <DetailRow
-                label="Available Days"
-                value={booking.trip?.tripDays?.join(", ")}
-                icon={Calendar}
+              <Field
+                label="Departure"
+                value={booking.trip?.departureTime ? formatTime(booking.trip.departureTime) : null}
+                icon={Clock}
               />
+              <Field
+                label="Duration"
+                value={booking.trip?.duration ? `${booking.trip.duration} hours` : null}
+                icon={Clock}
+              />
+              <Field label="Price per Trip" value={booking.trip?.price ? formatCurrency(booking.trip.price) : null} icon={DollarSign} />
             </div>
-            {booking.trip?.description && (
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <DetailRow
-                  label="Description"
-                  value={booking.trip.description}
-                  icon={FileText}
-                />
+
+            {tripDays && tripDays.length > 0 && (
+              <div className="mt-5 pt-5 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Available Days</p>
+                <div className="flex flex-wrap gap-2">
+                  {tripDays.map((day: string) => (
+                    <span key={day} className="px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-md">
+                      {day}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
-          </InfoCard>
 
-          {/* Customer Information */}
-          <InfoCard title="Customer Information" icon={User}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <DetailRow
+            {booking.trip?.fishingLocation?.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Fishing Locations</p>
+                <div className="flex flex-wrap gap-2">
+                  {booking.trip.fishingLocation.map((loc: string) => (
+                    <span key={loc} className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-md">
+                      {loc}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {booking.trip?.fishingTechnique?.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Techniques</p>
+                <div className="flex flex-wrap gap-2">
+                  {booking.trip.fishingTechnique.map((tech: string) => (
+                    <span key={tech} className="px-2.5 py-1 bg-orange-50 text-orange-700 text-xs font-medium rounded-md">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {booking.trip?.description && (
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Description</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{booking.trip.description}</p>
+              </div>
+            )}
+          </Card>
+
+          {/* Customer Info */}
+          <Card title="Customer" icon={User}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <Field
                 label="Full Name"
-                value={`${booking.user?.firstName} ${booking.user?.lastName}`}
+                value={booking.user ? `${booking.user.firstName} ${booking.user.lastName}` : null}
                 icon={User}
               />
-              <DetailRow
-                label="Email"
-                value={booking.user?.email}
-                icon={Mail}
-              />
+              <Field label="Email" value={booking.user?.email} icon={Mail} />
               {booking.groupMember && (
                 <>
-                  <DetailRow
-                    label="Phone"
-                    value={booking.groupMember.phoneNumber}
-                    icon={Phone}
-                  />
-                  <DetailRow
-                    label="Fishing Type"
-                    value={booking.groupMember.fishingType}
-                    icon={Fish}
-                  />
-                  <DetailRow
-                    label="Target Species"
-                    value={booking.groupMember.targetSpecies}
-                    icon={Fish}
-                  />
+                  <Field label="Phone" value={booking.groupMember.phoneNumber} icon={Phone} />
+                  <Field label="Fishing Type" value={booking.groupMember.fishingType} icon={Fish} />
+                  <Field label="Target Species" value={booking.groupMember.targetSpecies} icon={Fish} />
                 </>
               )}
             </div>
             {booking.groupMember?.details && (
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <DetailRow
-                  label="Additional Details"
-                  value={booking.groupMember.details}
-                  icon={FileText}
-                />
+              <div className="mt-5 pt-5 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Additional Notes</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{booking.groupMember.details}</p>
               </div>
             )}
-          </InfoCard>
+          </Card>
 
-          {/* Boat & Captain Information */}
-          <InfoCard title="Boat & Captain Information" icon={Ship}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <DetailRow
-                label="Captain Name"
-                value={`${booking.boat?.captain?.firstName} ${booking.boat?.captain?.lastName}`}
+          {/* Boat & Captain */}
+          <Card title="Boat & Captain" icon={Ship}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <Field
+                label="Captain"
+                value={booking.boat?.captain ? `${booking.boat.captain.firstName} ${booking.boat.captain.lastName}` : null}
                 icon={User}
               />
-              <DetailRow
-                label="Captain Email"
-                value={booking.boat?.captain?.email}
-                icon={Mail}
-              />
-              <DetailRow
-                label="Boat Type"
-                value={booking.boat?.boatType}
-                icon={Anchor}
-              />
-              <DetailRow
-                label="Capacity"
-                value={
-                  booking.boat?.guests ? `${booking.boat.guests} guests` : "N/A"
-                }
-                icon={Users}
-              />
+              <Field label="Captain Email" value={booking.boat?.captain?.email} icon={Mail} />
+              <Field label="Boat Type" value={booking.boat?.boatType} icon={Anchor} />
+              <Field label="Capacity" value={booking.boat?.guests ? `${booking.boat.guests} guests` : null} icon={Users} />
             </div>
             {booking.boat?.description && (
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <DetailRow
-                  label="Boat Description"
-                  value={booking.boat.description}
-                  icon={FileText}
-                />
+              <div className="mt-5 pt-5 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">About the Boat</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{booking.boat.description}</p>
               </div>
             )}
             {booking.boat?.photos && booking.boat.photos.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-1">
-                  <Camera className="w-4 h-4" />
-                  Boat Photos
+              <div className="mt-5 pt-5 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  <Camera className="w-3.5 h-3.5" /> Photos
                 </p>
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
                   {booking.boat.photos.slice(0, 4).map((photo: any) => (
-                    <div
-                      key={photo.id}
-                      className="relative group cursor-pointer"
-                    >
-                      <div className="aspect-square rounded-lg overflow-hidden border border-gray-200">
-                        <img
-                          src={photo.url}
-                          alt="Boat"
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity rounded-lg" />
+                    <div key={photo.id} className="aspect-square rounded-lg overflow-hidden border border-gray-200">
+                      <img src={photo.url} alt="Boat" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
                     </div>
                   ))}
                 </div>
               </div>
             )}
-          </InfoCard>
+          </Card>
         </div>
 
-        {/* Right Column - Summary (1/3 width) */}
+        {/* Right Column */}
         <div className="space-y-6">
-          {/* Booking Summary Card */}
-          <InfoCard title="Booking Summary" icon={Receipt}>
+
+          {/* Payment Card */}
+          <Card title="Payment" icon={CreditCard}>
             <div className="space-y-4">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-medium text-gray-500 mb-2">
-                  Booking ID
-                </p>
-                <p className="font-mono text-sm font-semibold text-gray-900 break-all">
-                  {booking.id}
-                </p>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Paid</span>
+                <span className="text-base font-bold text-emerald-600">{formatCurrency(booking.payFirst || 0)}</span>
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <StatCard
-                  label="Group Size"
-                  value={booking.groupSize || 1}
-                  icon={Users}
-                  color="blue"
-                />
-                <StatCard
-                  label="Type"
-                  value={booking.bookingType}
-                  icon={Activity}
-                  color="purple"
-                />
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Due</span>
+                <span className="text-base font-bold text-orange-600">{formatCurrency(booking.payDue || 0)}</span>
               </div>
-
-              <div className="border-t border-gray-100 pt-4">
-                <p className="text-xs font-medium text-gray-500 mb-3">
-                  Status Overview
-                </p>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">
-                      Booking Status
-                    </span>
-                    <StatusButton
-                      color={statusProps.color}
-                      className={statusProps.className}
-                    >
-                      {booking.status}
-                    </StatusButton>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">
-                      Payment Status
-                    </span>
-                    <StatusButton
-                      color={paymentProps.color}
-                      className={paymentProps.className}
-                    >
-                      {booking.paymentStatus}
-                    </StatusButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </InfoCard>
-
-          {/* Payment Details Card */}
-          <InfoCard title="Payment Details" icon={CreditCard}>
-            <div className="space-y-4">
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-4">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Paid Amount</span>
-                    <span className="text-lg font-semibold text-green-600">
-                      ${booking.payFirst?.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Due Amount</span>
-                    <span className="text-lg font-semibold text-orange-600">
-                      ${booking.payDue?.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="border-t border-gray-200 pt-3 mt-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-semibold text-gray-900">
-                        Total Amount
-                      </span>
-                      <span className="text-xl font-bold text-gray-900">
-                        ${(booking.payFirst + booking.payDue).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
+              <div className="border-t border-gray-100 pt-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-semibold text-gray-900">Total</span>
+                  <span className="text-lg font-bold text-gray-900">{formatCurrency(total)}</span>
                 </div>
               </div>
 
-              {/* Payment Progress */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs text-gray-500">
-                  <span>Payment Progress</span>
-                  <span>
-                    {(
-                      (booking.payFirst / (booking.payFirst + booking.payDue)) *
-                      100
-                    ).toFixed(0)}
-                    %
-                  </span>
+              {/* Progress Bar */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>Paid</span>
+                  <span>{paidPercent}%</span>
                 </div>
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-green-500 rounded-full"
-                    style={{
-                      width: `${(booking.payFirst / (booking.payFirst + booking.payDue)) * 100}%`,
-                    }}
+                    className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                    style={{ width: `${paidPercent}%` }}
                   />
                 </div>
               </div>
-            </div>
-          </InfoCard>
 
-          {/* Timestamps Card */}
-          <InfoCard title="Timeline" icon={Clock}>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-blue-50 rounded-lg">
-                  <Clock className="w-4 h-4 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">Created</p>
-                  <p className="text-sm font-medium text-gray-900">
-                    {new Date(booking.createdAt).toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-purple-50 rounded-lg">
-                  <Clock className="w-4 h-4 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">
-                    Last Updated
-                  </p>
-                  <p className="text-sm font-medium text-gray-900">
-                    {new Date(booking.updatedAt).toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
+              <div className="pt-2">
+                <StatusButton color={paymentCfg.color} className="text-white text-xs" fullWidth>
+                  {booking.paymentStatus}
+                </StatusButton>
               </div>
             </div>
-          </InfoCard>
+          </Card>
 
-          {/* Quick Actions */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">
-              Quick Actions
-            </h3>
-            <div className="grid grid-cols-2 gap-2">
-              <button className="p-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Edit Booking
-              </button>
-              <button className="p-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Send Reminder
-              </button>
-              <button className="p-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Print Details
-              </button>
-              <button className="p-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                Cancel
+          {/* Timeline */}
+          <Card title="Timeline" icon={Clock}>
+            <div className="relative space-y-0">
+              {/* Vertical line */}
+              <div className="absolute left-[15px] top-2 bottom-2 w-px bg-gray-200" />
+
+              <div className="relative flex items-start gap-3 pb-5">
+                <div className="w-[30px] h-[30px] rounded-full bg-orange-50 border-2 border-orange-200 flex items-center justify-center z-10 flex-shrink-0">
+                  <Calendar className="w-3.5 h-3.5 text-orange-600" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-400">Booked On</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatDateTime(booking.createdAt)}</p>
+                </div>
+              </div>
+
+              <div className="relative flex items-start gap-3 pb-5">
+                <div className="w-[30px] h-[30px] rounded-full bg-blue-50 border-2 border-blue-200 flex items-center justify-center z-10 flex-shrink-0">
+                  <Calendar className="w-3.5 h-3.5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-400">Trip Date</p>
+                  <p className="text-sm font-semibold text-gray-900">{booking.tripDate ? formatDate(booking.tripDate) : "—"}</p>
+                </div>
+              </div>
+
+              <div className="relative flex items-start gap-3">
+                <div className="w-[30px] h-[30px] rounded-full bg-gray-50 border-2 border-gray-200 flex items-center justify-center z-10 flex-shrink-0">
+                  <Clock className="w-3.5 h-3.5 text-gray-500" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-400">Last Updated</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatDateTime(booking.updatedAt)}</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Actions */}
+          {booking.status !== "CANCEL" && booking.status !== "CANCELLED" && (
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+              <button
+                onClick={handleCancel}
+                disabled={isCancelling}
+                className="w-full py-2.5 rounded-lg text-sm font-medium text-red-600 border border-red-200 hover:bg-red-50 transition-colors disabled:opacity-50"
+              >
+                {isCancelling ? "Cancelling..." : "Cancel Booking"}
               </button>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

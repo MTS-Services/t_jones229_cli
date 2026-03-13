@@ -263,12 +263,13 @@ export default function Page() {
                           >
                             <Eye className="w-5 h-5" />
                           </button>
-                          <button
+                          {/* <Link
+                            href={`/dashboard/check-your-trip?boatId=${boat.id}`}
                             className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                             title="Edit"
                           >
                             <Edit className="w-5 h-5" />
-                          </button>
+                          </Link> */}
                           <button
                             onClick={() => handleDeleteBoat(boat)}
                             disabled={isDeleting}
@@ -276,12 +277,6 @@ export default function Page() {
                             title="Delete"
                           >
                             <Trash2 className="w-5 h-5" />
-                          </button>
-                          <button
-                            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-                            title="More Options"
-                          >
-                            <MoreVertical className="w-5 h-5" />
                           </button>
                         </div>
                       </td>
