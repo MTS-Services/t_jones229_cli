@@ -55,8 +55,7 @@ export default function Page() {
       let errorMessage = "Registration failed. Please try again.";
       // Handle different error types
       if (error?.status === "FETCH_ERROR") {
-        errorMessage =
-          "⚠️ Cannot connect to server. Please ensure the API is running on http://localhost:3001";
+        errorMessage = "⚠️ Cannot connect to server. Please try again later.";
         console.error(
           "🔴 API Connection Error: Make sure your backend API is running!",
         );
