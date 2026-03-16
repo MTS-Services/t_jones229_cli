@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   Ship,
   Calendar,
@@ -10,17 +9,12 @@ import {
   Users,
   MapPin,
   DollarSign,
-  User,
-  Mail,
-  Phone,
   CheckCircle,
   XCircle,
   AlertCircle,
-  ChevronRight,
   Anchor,
   Sunrise,
   Timer,
-  MailCheck,
   MailIcon,
   User2,
 } from "lucide-react";
