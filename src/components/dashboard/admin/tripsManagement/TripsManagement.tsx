@@ -210,7 +210,8 @@ function MobileTripsView({
                   <Eye className="h-3.5 w-3.5" />
                   View
                 </Link>
-                {(booking.status === "PENDING" || booking.status === "UPCOMING") && (
+                {(booking.status === "PENDING" ||
+                  booking.status === "UPCOMING") && (
                   <button
                     onClick={() => onApprove(booking)}
                     className="flex-1 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 rounded-lg text-xs font-medium text-emerald-600 transition-colors flex items-center justify-center gap-1"
@@ -221,7 +222,9 @@ function MobileTripsView({
                 )}
                 <button
                   onClick={() => onCancel(booking)}
-                  disabled={booking.status === "CANCEL" || booking.status === "COMPLETE"}
+                  disabled={
+                    booking.status === "CANCEL" || booking.status === "COMPLETE"
+                  }
                   className="flex-1 px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-medium text-red-600 transition-colors flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <XCircle className="h-3.5 w-3.5" />
@@ -585,17 +588,20 @@ export default function TripsManagement() {
                             </div>
                           </td>
                           <td className="px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
-                                <User className="h-3.5 w-3.5 text-gray-500" />
-                              </div>
-                              <span className="text-sm text-gray-600">
-                                {booking.boat?.captain?.firstName &&
-                                booking.boat?.captain?.lastName
+                            <div className="flex flex-col">
+                              {/* Name */}
+                              <span className="text-sm text-gray-800 font-medium">
+                                {booking?.boat?.captain?.firstName &&
+                                booking?.boat?.captain?.lastName
                                   ? `${booking.boat.captain.firstName} ${booking.boat.captain.lastName}`
-                                  : booking.boat?.captain?.email?.split(
+                                  : booking?.boat?.captain?.email?.split(
                                       "@",
                                     )[0] || "N/A"}
+                              </span>
+
+                              {/* Email */}
+                              <span className="text-xs text-gray-500">
+                                {booking?.boat?.captain?.email || "N/A"}
                               </span>
                             </div>
                           </td>
@@ -633,7 +639,8 @@ export default function TripsManagement() {
                                 <Eye className="h-3.5 w-3.5" />
                                 View
                               </Link>
-                              {(booking.status === "PENDING" || booking.status === "UPCOMING") && (
+                              {(booking.status === "PENDING" ||
+                                booking.status === "UPCOMING") && (
                                 <button
                                   onClick={() => handleApprove(booking)}
                                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300 transition-all"
@@ -642,7 +649,8 @@ export default function TripsManagement() {
                                   Approve
                                 </button>
                               )}
-                              {(booking.status === "CONFIRMED" || booking.status === "UPCOMING") && (
+                              {(booking.status === "CONFIRMED" ||
+                                booking.status === "UPCOMING") && (
                                 <button
                                   onClick={() => handleComplete(booking)}
                                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all"
@@ -654,7 +662,8 @@ export default function TripsManagement() {
                               <button
                                 onClick={() => openCancelModal(booking)}
                                 disabled={
-                                  booking.status === "CANCEL" || booking.status === "COMPLETE"
+                                  booking.status === "CANCEL" ||
+                                  booking.status === "COMPLETE"
                                 }
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:border-red-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                               >
@@ -774,7 +783,8 @@ export default function TripsManagement() {
                           <Eye className="h-3.5 w-3.5" />
                           View
                         </Link>
-                        {(booking.status === "PENDING" || booking.status === "UPCOMING") && (
+                        {(booking.status === "PENDING" ||
+                          booking.status === "UPCOMING") && (
                           <button
                             onClick={() => handleApprove(booking)}
                             className="flex-1 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 rounded-lg text-xs font-medium text-emerald-600 transition-colors flex items-center justify-center gap-1.5"
@@ -786,7 +796,8 @@ export default function TripsManagement() {
                         <button
                           onClick={() => openCancelModal(booking)}
                           disabled={
-                            booking.status === "CANCEL" || booking.status === "COMPLETE"
+                            booking.status === "CANCEL" ||
+                            booking.status === "COMPLETE"
                           }
                           className="px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-medium text-red-600 transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
