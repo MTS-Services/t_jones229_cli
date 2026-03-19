@@ -220,16 +220,16 @@ function MobileTripsView({
                     Approve
                   </button>
                 )}
-                <button
-                  onClick={() => onCancel(booking)}
-                  disabled={
-                    booking.status === "CANCEL" || booking.status === "COMPLETE"
-                  }
-                  className="flex-1 px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-medium text-red-600 transition-colors flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <XCircle className="h-3.5 w-3.5" />
-                  Cancel
-                </button>
+                {booking.status !== "COMPLETE" && (
+                  <button
+                    onClick={() => onCancel(booking)}
+                    disabled={booking.status === "CANCEL"}
+                    className="flex-1 px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-medium text-red-600 transition-colors flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <XCircle className="h-3.5 w-3.5" />
+                    Cancel
+                  </button>
+                )}
               </div>
             </div>
           );
@@ -617,7 +617,7 @@ export default function TripsManagement() {
                           </td>
                           <td className="px-4 py-3 text-center">
                             <div className="flex flex-col items-center">
-                              <span className="text-xs font-semibold text-emerald-600 bg-green-100 px-2.5 py-1 rounded-full border border-green-200">
+                              <span className="text-xs font-semibold text-orange-500 bg-orange-100 px-2.5 py-1 rounded-full border border-orange-200">
                                 {booking.paymentStatus}
                               </span>
                             </div>
@@ -659,17 +659,16 @@ export default function TripsManagement() {
                                   Complete
                                 </button>
                               )}
-                              <button
-                                onClick={() => openCancelModal(booking)}
-                                disabled={
-                                  booking.status === "CANCEL" ||
-                                  booking.status === "COMPLETE"
-                                }
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:border-red-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                <XCircle className="h-3.5 w-3.5" />
-                                Cancel
-                              </button>
+                              {booking.status !== "COMPLETE" && (
+                                <button
+                                  onClick={() => openCancelModal(booking)}
+                                  disabled={booking.status === "CANCEL"}
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:border-red-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  <XCircle className="h-3.5 w-3.5" />
+                                  Cancel
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -793,17 +792,16 @@ export default function TripsManagement() {
                             Approve
                           </button>
                         )}
-                        <button
-                          onClick={() => openCancelModal(booking)}
-                          disabled={
-                            booking.status === "CANCEL" ||
-                            booking.status === "COMPLETE"
-                          }
-                          className="px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-medium text-red-600 transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <XCircle className="h-3.5 w-3.5" />
-                          Cancel
-                        </button>
+                        {booking.status !== "COMPLETE" && (
+                          <button
+                            onClick={() => openCancelModal(booking)}
+                            disabled={booking.status === "CANCEL"}
+                            className="px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-medium text-red-600 transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <XCircle className="h-3.5 w-3.5" />
+                            Cancel
+                          </button>
+                        )}
                       </div>
                     </div>
                   );
