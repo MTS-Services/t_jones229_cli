@@ -219,9 +219,8 @@ export default function MultiStepFormContent() {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-lg">
+    <div className="">
       <ToastContainer position="top-right" autoClose={3000} />
-
       <StepProgressBar
         currentStep={currentStep}
         completedSteps={completedSteps}
@@ -239,14 +238,16 @@ export default function MultiStepFormContent() {
           >
             <div className="flex-1 mb-6">{renderStepComponent()}</div>
 
-            <StepNavigation
-              currentStep={currentStep}
-              boatId={boatId}
-              isLoading={isLoading}
-              isLicenceImage={isLicenceImage}
-              isBoatImage={isBoatImage}
-              onBack={handleBack}
-            />
+            <div className="bg-white py-4 border-t border-orange-200 px-4 rounded-xl">
+              <StepNavigation
+                currentStep={currentStep}
+                boatId={boatId}
+                isLoading={isLoading}
+                isLicenceImage={isLicenceImage}
+                isBoatImage={isBoatImage}
+                onBack={handleBack}
+              />
+            </div>
           </form>
         </RHFProvider>
       </div>

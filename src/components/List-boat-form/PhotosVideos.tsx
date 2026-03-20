@@ -7,9 +7,19 @@ import {
   type DragEvent,
   type ChangeEvent,
 } from "react";
-import { X, Upload, Play, ImageIcon } from "lucide-react";
+import {
+  X,
+  Upload,
+  Play,
+  ImageIcon,
+  Camera,
+  Video,
+  Info,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 import Image from "next/image";
-import { Card } from "antd";
+import { Card, Progress } from "antd";
 import { useUploadFileMutation } from "@/redux/api/uploadFile";
 import { useFormContext } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -20,6 +30,8 @@ interface UploadedFile {
   file: File;
   preview: string;
   type: "image" | "video";
+  uploadProgress?: number;
+  status?: "uploading" | "success" | "error";
 }
 
 interface PhotosVideosProps {
@@ -31,6 +43,9 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const [idCounter, setIdCounter] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>(
+    {},
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
 
@@ -66,64 +81,122 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
 
   const [uploadFileFN, { isLoading }] = useUploadFileMutation();
 
+  const validateFile = (file: File): { valid: boolean; error?: string } => {
+    const isImage = file.type.startsWith("image/");
+    const isVideo = file.type.startsWith("video/");
+
+    if (!isImage && !isVideo) {
+      return { valid: false, error: "File must be an image or video" };
+    }
+
+    if (isVideo) {
+      if (file.size > 1024 * 1024 * 1024) {
+        // 1GB
+        return { valid: false, error: "Video must be less than 1GB" };
+      }
+      if (file.size < 5 * 1024 * 1024) {
+        // 5MB
+        return {
+          valid: false,
+          error: "Video must be at least 5 seconds (min 5MB)",
+        };
+      }
+    }
+
+    return { valid: true };
+  };
+
   const handleFiles = async (files: File[]) => {
-    const validFiles = files.filter((file) => {
-      const isImage = file.type.startsWith("image/");
-      const isVideo = file.type.startsWith("video/");
-      return isImage || isVideo;
+    const validFiles: File[] = [];
+    const errors: string[] = [];
+
+    files.forEach((file) => {
+      const validation = validateFile(file);
+      if (validation.valid) {
+        validFiles.push(file);
+      } else if (validation.error) {
+        errors.push(`${file.name}: ${validation.error}`);
+      }
     });
 
-    // Only proceed if there are valid files
+    if (errors.length > 0) {
+      // You could show a toast notification here
+      console.warn("Validation errors:", errors);
+    }
+
     if (validFiles.length === 0) {
-      console.log("No valid image/video files selected");
       return;
     }
 
-    validFiles.forEach((file) => {
+    // Add files with uploading status
+    const newFiles: UploadedFile[] = validFiles.map((file) => {
       const id = generateId();
       const preview = URL.createObjectURL(file);
       const type = file.type.startsWith("image/") ? "image" : "video";
 
-      const newFile: UploadedFile = {
+      return {
         id,
         file,
         preview,
         type,
+        status: "uploading",
+        uploadProgress: 0,
       };
-
-      setUploadedFiles((prev) => [...prev, newFile]);
     });
 
-    // Create FormData inside the function to avoid stale data
+    setUploadedFiles((prev) => [...prev, ...newFiles]);
+
+    // Upload files
     const formData = new FormData();
     validFiles.forEach((file) => {
       formData.append("images", file);
     });
 
-    // Debug: Log FormData contents
-    console.log("📤 Uploading files:", validFiles.length);
-    for (const [key, value] of formData.entries()) {
-      console.log(`  ${key}:`, value);
-    }
-
     try {
+      // Simulate progress for better UX (remove if API doesn't support progress)
+      const interval = setInterval(() => {
+        setUploadProgress((prev) => {
+          const newProgress = { ...prev };
+          newFiles.forEach((file) => {
+            newProgress[file.id] = Math.min(
+              (newProgress[file.id] || 0) + 10,
+              90,
+            );
+          });
+          return newProgress;
+        });
+      }, 200);
+
       const res = await uploadFileFN(formData).unwrap();
-      console.log("✅ Upload response:", res);
-      if (res?.success) {
-        // const uploadedUrls = res?.data?.images || [];
-        if (res?.success && Array.isArray(res?.data?.images)) {
-          // setValue("photos", [res.data.images]);
-          setValue(
-            "photos",
-            res.data.images.map((img: string) => ({ url: img }))
-          );
-          dispatch(setImageUrl(res.data.images));
-          setIsBoatImage(true);
-        }
+      clearInterval(interval);
+
+      if (res?.success && Array.isArray(res?.data?.images)) {
+        // Update files to success status
+        setUploadedFiles((prev) =>
+          prev.map((file) => ({
+            ...file,
+            status: "success",
+            uploadProgress: 100,
+          })),
+        );
+
+        setValue(
+          "photos",
+          res.data.images.map((img: string) => ({ url: img })),
+        );
+        dispatch(setImageUrl(res.data.images));
+        setIsBoatImage(true);
+      } else {
+        throw new Error("Upload failed");
       }
     } catch (error: any) {
-      console.error("❌ Upload error:", error);
-      console.error("❌ Error details:", JSON.stringify(error, null, 2));
+      console.error("Upload error:", error);
+      setUploadedFiles((prev) =>
+        prev.map((file) => ({
+          ...file,
+          status: "error",
+        })),
+      );
     }
   };
 
@@ -135,80 +208,151 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
       }
       return prev.filter((f) => f.id !== id);
     });
+
+    // Clean up progress
+    setUploadProgress((prev) => {
+      const newProgress = { ...prev };
+      delete newProgress[id];
+      return newProgress;
+    });
   };
 
   const handleBrowseClick = () => {
     fileInputRef.current?.click();
   };
 
+  const getFileSizeText = (bytes: number): string => {
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+    if (bytes < 1024 * 1024 * 1024)
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+  };
+
+  const getStatusIcon = (status?: string) => {
+    switch (status) {
+      case "success":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "error":
+        return <AlertCircle className="h-4 w-4 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="">
-        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-4">
-          Upload photos and videos
-        </h1>
-        <p className="text-lg font-medium text-gray-900 mb-4">
-          Upload at least 5 photos to make your listing stand out. For an
-          attractive gallery, we recommend:
-        </p>
-
-        <ul className="text-base text-gray-600 font-normal mb-4 px-8 space-y-1">
-          <li className="list-disc">
-            A variety of images, including your boat, happy customers, and your
-            catches.
-          </li>
-          <li className="list-disc">
-            Horizontal / landscape photos for the best display.
-          </li>
-          <li className="list-disc">
-            Avoid using screenshots of photos to maintain quality.
-          </li>
-        </ul>
-
-        <div className="mb-6">
-          <p className="text-lg font-medium text-gray-900 leading-normal">
-            Video Guidelines:
+    <div className="">
+      {/* Header Section */}
+      <section className="mb-8">
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+          <p className="text-blue-700">
+            <Info className="inline-block h-5 w-5 mr-2" />
+            Upload at least 5 photos to make your listing stand out!
           </p>
-          <ul className="text-base font-normal text-gray-600 mb-4 px-8 space-y-1">
-            <li className="list-disc">
-              Videos must be at least 5 seconds long.
+        </div>
+      </section>
+
+      {/* Guidelines Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Photo Guidelines */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Camera className="h-5 w-5 text-orange-500" />
+            <h2 className="text-lg font-semibold text-gray-900">
+              Photo Guidelines
+            </h2>
+          </div>
+          <ul className="space-y-2 text-gray-600">
+            <li className="flex items-start gap-2">
+              <span className="text-orange-500 mt-1">•</span>
+              <span>
+                A variety of images, including your boat, happy customers, and
+                catches
+              </span>
             </li>
-            <li className="list-disc">
-              File size should be between 5MB and 1GB.
+            <li className="flex items-start gap-2">
+              <span className="text-orange-500 mt-1">•</span>
+              <span>Horizontal/landscape photos for the best display</span>
             </li>
-            <li className="list-disc">
-              Resolution: Portrait (720x1280px) or Landscape (1280x720px) or
-              higher.
+            <li className="flex items-start gap-2">
+              <span className="text-orange-500 mt-1">•</span>
+              <span>Avoid using screenshots to maintain quality</span>
             </li>
-            <li className="list-disc">Slideshows are not allowed.</li>
-            <li className="list-disc">
-              Videos with visible contact information will be removed.
+          </ul>
+        </div>
+
+        {/* Video Guidelines */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Video className="h-5 w-5 text-orange-500" />
+            <h2 className="text-lg font-semibold text-gray-900">
+              Video Guidelines
+            </h2>
+          </div>
+          <ul className="space-y-2 text-gray-600">
+            <li className="flex items-start gap-2">
+              <span className="text-orange-500 mt-1">•</span>
+              <span>Videos must be at least 5 seconds long</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-orange-500 mt-1">•</span>
+              <span>File size: 5MB - 1GB</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-orange-500 mt-1">•</span>
+              <span>
+                Resolution: 720x1280px (Portrait) or 1280x720px (Landscape) or
+                higher
+              </span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-orange-500 mt-1">•</span>
+              <span>Slideshows are not allowed</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-orange-500 mt-1">•</span>
+              <span>Videos with contact information will be removed</span>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="block lg:max-w-4xl md:max-w-3xl w-full mx-auto mx-auto pt-6">
-        <Card className="bg-[#f5f5f5] border-2 border-dashed border-[#e0e0e0] max-w-3xl">
-          <div className="p-5">
+      {/* Upload Area */}
+      <div className="flex justify-center mb-8">
+        <div className="w-full ">
+          <Card className="bg-white border-2 border-dashed border-gray-300 hover:border-orange-400 transition-all">
             <div
-              className={`text-center space-y-4 ${
-                isDragOver ? "bg-blue-50 border-blue-300" : ""
+              className={`p-8 text-center transition-all ${
+                isDragOver ? "bg-orange-50 border-orange-300 scale-105" : ""
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
-              <div className="flex justify-center">
-                <Upload className="h-12 w-12 text-blue-500" />
+              <div className="flex justify-center mb-4">
+                <div
+                  className={`p-4 rounded-full transition-all ${
+                    isDragOver ? "bg-orange-200 scale-110" : "bg-orange-100"
+                  }`}
+                >
+                  <Upload
+                    className={`h-8 w-8 transition-all ${
+                      isDragOver ? "text-orange-600" : "text-orange-500"
+                    }`}
+                  />
+                </div>
               </div>
-              <p className=" text-sm text-gray-700">Drag & Drop your files</p>
+              <p className="text-lg font-medium text-gray-700 mb-2">
+                {isDragOver ? "Drop your files here" : "Drag & Drop your files"}
+              </p>
+              <p className="text-sm text-gray-500 mb-4">
+                Supports images and videos (max 1GB per file)
+              </p>
               <button
                 onClick={handleBrowseClick}
                 type="button"
-                className="bg-[#ff9500] text-sm rounded-md hover:bg-orange-600 text-white px-6 py-2 md:text-base font-semibold leading-normal"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-sm"
               >
-                Browse to Upload
+                Browse Files
               </button>
               <input
                 ref={fileInputRef}
@@ -219,67 +363,156 @@ export default function PhotosVideos({ setIsBoatImage }: PhotosVideosProps) {
                 className="hidden"
               />
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
 
+      {/* Uploaded Files Gallery */}
       {uploadedFiles.length > 0 && (
-        <div className="px-14">
-          <h2 className="text-xl font-semibold mb-4">
-            Uploaded Files ({uploadedFiles.length})
-          </h2>
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900">
+              Uploaded Files
+              <span className="ml-2 text-sm font-normal text-gray-500">
+                ({uploadedFiles.length} file
+                {uploadedFiles.length !== 1 ? "s" : ""})
+              </span>
+            </h2>
+            {uploadedFiles.length < 5 && (
+              <p className="text-sm text-orange-600 flex items-center gap-1">
+                <AlertCircle className="h-4 w-4" />
+                Add {5 - uploadedFiles.length} more file
+                {5 - uploadedFiles.length !== 1 ? "s" : ""} (minimum 5)
+              </p>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {uploadedFiles.map((uploadedFile) => (
-              <Card key={uploadedFile.id} className="relative group">
-                <div className="p-2">
-                  <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
-                    {uploadedFile.type === "image" ? (
+              <Card
+                key={uploadedFile.id}
+                className="group overflow-hidden hover:shadow-lg transition-all"
+                bodyStyle={{ padding: 0 }}
+              >
+                <div className="relative aspect-square">
+                  {/* Media Preview */}
+                  {uploadedFile.type === "image" ? (
+                    <div className="relative w-full h-full bg-gray-100">
                       <Image
                         src={uploadedFile.preview || "/placeholder.svg"}
-                        alt="Uploaded image"
+                        alt={uploadedFile.file.name}
                         fill
-                        className="object-cover"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                    ) : (
-                      <div className="relative w-full h-full">
-                        <video
-                          src={uploadedFile.preview}
-                          className="w-full h-full object-cover"
-                          muted
-                          playsInline
-                          preload="metadata"
-                          // @ts-ignore - webkit attribute for iOS
-                          webkitPlaysinline="true"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-                          <Play className="h-8 w-8 text-white" />
-                        </div>
+                    </div>
+                  ) : (
+                    <div className="relative w-full h-full bg-gray-900">
+                      <video
+                        src={uploadedFile.preview}
+                        className="w-full h-full object-cover"
+                        muted
+                        playsInline
+                        preload="metadata"
+                        // @ts-ignore - webkit attribute for iOS
+                        webkitPlaysinline="true"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-all">
+                        <Play className="h-10 w-10 text-white" />
                       </div>
-                    )}
+                    </div>
+                  )}
 
-                    <button
-                      onClick={() => removeFile(uploadedFile.id)}
-                      className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
+                  {/* Status Overlay */}
+                  {uploadedFile.status === "uploading" && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                      <div className="bg-white rounded-lg p-2 w-3/4">
+                        <Progress
+                          percent={uploadProgress[uploadedFile.id] || 0}
+                          size="small"
+                          strokeColor="#f97316"
+                          showInfo={false}
+                        />
+                        <p className="text-xs text-white text-center mt-1">
+                          Uploading...
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
-                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                      {uploadedFile.type === "image" ? (
-                        <ImageIcon className="h-3 w-3 inline mr-1" />
-                      ) : (
-                        <Play className="h-3 w-3 inline mr-1" />
-                      )}
-                      {uploadedFile.file.name.length > 15
-                        ? `${uploadedFile.file.name.substring(0, 15)}...`
-                        : uploadedFile.file.name}
+                  {uploadedFile.status === "error" && (
+                    <div className="absolute inset-0 bg-red-500 bg-opacity-80 flex items-center justify-center">
+                      <p className="text-white text-xs text-center px-2">
+                        Upload failed
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Remove Button */}
+                  <button
+                    onClick={() => removeFile(uploadedFile.id)}
+                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-all transform hover:scale-110 shadow-lg"
+                    aria-label="Remove file"
+                    disabled={uploadedFile.status === "uploading"}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+
+                  {/* File Info */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2">
+                    <div className="flex items-center justify-between text-white">
+                      <div className="flex items-center gap-1 text-xs">
+                        {uploadedFile.type === "image" ? (
+                          <Camera className="h-3 w-3" />
+                        ) : (
+                          <Video className="h-3 w-3" />
+                        )}
+                        <span className="truncate max-w-[100px]">
+                          {uploadedFile.file.name.length > 15
+                            ? `${uploadedFile.file.name.substring(0, 12)}...`
+                            : uploadedFile.file.name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs">
+                        {getStatusIcon(uploadedFile.status)}
+                        <span>{getFileSizeText(uploadedFile.file.size)}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </Card>
             ))}
           </div>
-          {isLoading ? "uploading..." : ""}
+
+          {/* Loading Indicator */}
+          {isLoading && (
+            <div className="fixed bottom-4 right-4 bg-orange-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50">
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+              <span className="text-sm">Uploading files...</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Progress Summary */}
+      {uploadedFiles.length > 0 && uploadedFiles.length < 5 && (
+        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-800 flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" />
+            You've uploaded {uploadedFiles.length} file
+            {uploadedFiles.length !== 1 ? "s" : ""}. Please upload at least 5
+            photos to make your listing stand out!
+          </p>
+        </div>
+      )}
+
+      {uploadedFiles.length >= 5 && (
+        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-sm text-green-800 flex items-center gap-2">
+            <CheckCircle className="h-4 w-4" />
+            Great! You've uploaded {uploadedFiles.length} file
+            {uploadedFiles.length !== 1 ? "s" : ""}. Your listing is ready to
+            go!
+          </p>
         </div>
       )}
     </div>

@@ -1,31 +1,19 @@
 // components/InteractiveMap.js
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import dynamic from "next/dynamic";
 
-// Dynamically import Leaflet components to avoid SSR issues
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false },
-);
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false },
-);
 const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
   { ssr: false },
 );
-const useMapEvents = dynamic(
-  () => import("react-leaflet").then((mod) => mod.useMapEvents as any),
-  { ssr: false },
-) as any;
 
 const containerStyle = {
   width: "100%",
-  height: "98vh",
+  minHeight: "50vh",
+  height: "50vh",
 };
 
 const center: [number, number] = [37.7749, -122.4194]; // San Francisco as default
@@ -112,9 +100,15 @@ export default function InteractiveMap({
     return (
       <div
         style={containerStyle}
-        className="bg-gray-100 flex items-center justify-center rounded-lg"
+        className="bg-gray-100 flex items-center justify-center rounded-lg relative"
       >
-        <div className="text-gray-500">Loading map...</div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+          <div className="text-gray-600 font-medium">
+            Loading interactive map...
+          </div>
+          <div className="text-gray-500 text-sm mt-1">Please wait a moment</div>
+        </div>
       </div>
     );
   }
@@ -129,8 +123,8 @@ export default function InteractiveMap({
       />
       <MapContainer
         center={markerPosition || center}
-        zoom={10}
-        style={{ height: "100vh", width: "100%", borderRadius: "8px" }}
+        zoom={12}
+        className="z-10"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

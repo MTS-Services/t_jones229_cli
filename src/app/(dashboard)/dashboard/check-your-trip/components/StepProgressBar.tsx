@@ -27,7 +27,7 @@ export default function StepProgressBar({
   };
 
   return (
-    <div className="flex-none bg-gradient-to-br from-orange-50 to-white border-b-2 border-orange-100">
+    <div className="flex-none bg-gradient-to-br from-orange-100 to-white border-b-2 border-orange-200 rounded-xl">
       <div className="px-6 sm:px-8 lg:px-12 py-8">
         {/* Step Progress Bar */}
         <div className="relative mb-2">
@@ -71,7 +71,7 @@ export default function StepProgressBar({
                   {/* Step Title */}
                   <span
                     className={`
-                      mt-3 text-xs sm:text-sm font-semibold text-center max-w-[80px] leading-tight
+                      mt-2 text-xs sm:text-sm font-semibold text-center max-w-[100px] leading-tight
                       ${status === "completed" ? "text-[#f2a93b]" : ""}
                       ${status === "current" ? "text-[#f2a93b] font-bold" : ""}
                       ${status === "visited" ? "text-gray-700" : ""}
@@ -83,7 +83,7 @@ export default function StepProgressBar({
 
                   {/* Arrow between steps (except last) */}
                   {index < TABS.length - 1 && (
-                    <div className="hidden lg:block absolute -right-4 top-4 text-gray-300">
+                    <div className="hidden lg:block absolute right-12 top-4 text-gray-300">
                       <MdKeyboardArrowRight size={24} />
                     </div>
                   )}
@@ -94,11 +94,11 @@ export default function StepProgressBar({
         </div>
 
         {/* Current Step Description */}
-        <div className="mt-8 text-center sm:text-left bg-white rounded-lg p-6 shadow-sm border border-orange-100">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        <div className="mt-4 text-center sm:text-left bg-white rounded-lg p-4 shadow-sm border border-orange-100">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
             {heading.title}
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-500 leading-relaxed">
             {heading.description}
           </p>
         </div>

@@ -1,84 +1,165 @@
 import { Divider } from "antd";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { FileText, Type, Info, CheckCircle, AlertCircle } from "lucide-react";
 
-export default function Discription() {
-  const { register, watch } = useFormContext();
+export default function Description() {
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext();
+
+  const titleValue = watch("listingTypeTitle") || "";
+  const descriptionValue = watch("listingTypeDescription") || "";
+
+  const titleRemaining = 50 - titleValue.length;
+  const descriptionRemaining = 500 - descriptionValue.length;
+
+  const isTitleValid = titleValue.length > 0 && titleValue.length <= 50;
+  const isDescriptionValid =
+    descriptionValue.length > 0 && descriptionValue.length <= 500;
+
+  const ErrorMessage = ({ error }: { error?: string }) =>
+    error ? (
+      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+        <AlertCircle className="h-4 w-4" />
+        {error}
+      </p>
+    ) : null;
 
   return (
-    <div className="space-y-6 ">
-      <div className="">
-        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-4">
-          Listing Type
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl gap-4">
-          {/* Listing Type */}
+    <div className="">
+      {/* Listing Type Section */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-8 w-1 bg-orange-500 rounded-full"></div>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Type</h1>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          {/* Title Input */}
           <div>
-            <label className="block text-base font-medium text-gray-600 mb-2">
-              Title:
+            <label className="block text-base font-semibold text-gray-700 mb-2">
+              <Type className="inline-block h-5 w-5 mr-2 text-orange-500" />
+              Listing Title
             </label>
+
             <input
               type="text"
               maxLength={51}
-              {...register("listingTypeTitle")}
-              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
-              placeholder="Add your listing title"
+              {...register("listingTypeTitle", {
+                required: "Listing title is required",
+                maxLength: {
+                  value: 50,
+                  message: "Title must be at most 50 characters",
+                },
+                minLength: {
+                  value: 10,
+                  message: "Please provide at least 10 characters",
+                },
+              })}
+              className={`w-full p-3 border-2 rounded-lg outline-none transition-all ${
+                errors?.listingTypeTitle
+                  ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                  : titleValue.length > 0 && titleValue.length <= 50
+                    ? "border-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                    : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+              }`}
+              placeholder="e.g., Deep Sea Fishing Adventure, Luxury Yacht Charter, Sunset Cruise"
             />
 
-            {watch("listingTypeTitle") ? (
-              <p
-                className={`text-sm mt-2 ${
-                  watch("listingTypeTitle").length >= 50
-                    ? "text-red-500"
-                    : "text-gray-500"
-                }`}
-              >
-                {watch("listingTypeTitle").length < 50
-                  ? `${
-                      50 - watch("listingTypeTitle").length
-                    } characters remaining`
-                  : "Title must be at most 50 characters"}
-              </p>
-            ) : (
-              <p className="text-gray-500 mt-2">50 characters remaining</p>
-            )}
+            {/* Title Status */}
+            <div className="flex justify-between items-center mt-2">
+              <ErrorMessage
+                error={errors?.listingTypeTitle?.message as string}
+              />
+              <div className="flex items-center gap-2">
+                {titleValue.length > 0 &&
+                  (isTitleValid ? (
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <AlertCircle className="h-4 w-4 text-red-500" />
+                  ))}
+                <span
+                  className={`text-xs ${
+                    titleRemaining < 10
+                      ? "text-red-500 font-medium"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {titleRemaining} characters remaining
+                </span>
+              </div>
+            </div>
           </div>
         </div>
-        <Divider style={{ borderColor: "#d9d9d9" }}></Divider>
+      </div>
 
-        <h1 className="text-xl md:text-2xl font-bold text-textPrimary leading-normal mb-4">
-          Add your listing description
-        </h1>
-        <div className=" max-w-4xl  pb-8">
-          {/* Listing Type */}
+      {/* Listing Details Section */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-8 w-1 bg-orange-500 rounded-full"></div>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+            Description
+          </h1>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div>
-            <label className="block text-base font-medium text-gray-600 mb-2">
-              Tell us about the charter services you offer.
+            <label className="block text-base font-semibold text-gray-700 mb-2">
+              <FileText className="inline-block h-5 w-5 mr-2 text-orange-500" />
+              Tell us about your charter
             </label>
+
             <textarea
-              rows={5}
+              rows={6}
               maxLength={501}
-              {...register("listingTypeDescription")}
-              className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-[#73bbf7] focus:border-[#73bbf7] transition-all placeholder-gray-300 mt-2 bg-white text-left flex items-center justify-between"
-              placeholder="Provide some instructions here"
+              {...register("listingTypeDescription", {
+                required: "Listing description is required",
+                maxLength: {
+                  value: 500,
+                  message: "Description must be at most 500 characters",
+                },
+                minLength: {
+                  value: 50,
+                  message: "Please provide at least 50 characters",
+                },
+              })}
+              className={`w-full p-4 border-2 rounded-lg outline-none transition-all resize-vertical ${
+                errors?.listingTypeDescription
+                  ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                  : descriptionValue.length > 0 &&
+                      descriptionValue.length <= 500
+                    ? "border-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                    : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+              }`}
+              placeholder="Describe your charter service in detail."
             />
-            {watch("listingTypeDescription") ? (
-              <p
-                className={`text-sm mt-2 ${
-                  watch("listingTypeDescription")?.length >= 500
-                    ? "text-red-500"
-                    : "text-gray-500"
-                }`}
-              >
-                {watch("listingTypeDescription")?.length <= 500
-                  ? `${
-                      500 - watch("listingTypeDescription")?.length
-                    } characters remaining`
-                  : "Discription must be at most 500 characters"}
-              </p>
-            ) : (
-              <p className="text-gray-500 mt-2">500 haracters remaining</p>
-            )}
+
+            {/* Description Status */}
+            <div className="flex justify-between items-center mt-2">
+              <ErrorMessage
+                error={errors?.listingTypeDescription?.message as string}
+              />
+              <div className="flex items-center gap-2">
+                {descriptionValue.length > 0 &&
+                  (isDescriptionValid ? (
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <AlertCircle className="h-4 w-4 text-red-500" />
+                  ))}
+                <span
+                  className={`text-xs ${
+                    descriptionRemaining < 50
+                      ? "text-red-500 font-medium"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {descriptionRemaining} characters remaining
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

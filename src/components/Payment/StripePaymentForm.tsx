@@ -287,9 +287,7 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
 
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
-      <h3 className="text-xl font-bold text-gray-900 mb-6">
-        Payment Information
-      </h3>
+      <h3 className="text-xl font-bold text-gray-900 mb-6">Card Information</h3>
 
       {/* Card Number */}
       <div className="w-full">

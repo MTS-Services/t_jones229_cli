@@ -42,9 +42,9 @@ export default function PaymentDetails() {
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-blue-50 rounded-lg">
-            <User className="w-6 h-6 text-blue-600" />
+            <User className="w-4 h-4 text-blue-600" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900">
             Personal & Payment Details
           </h2>
         </div>

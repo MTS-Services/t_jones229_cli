@@ -3,7 +3,7 @@ import { Tab, StepHeading, BoatFinalData, TripFormItem } from "../types/types";
 export const TABS: Tab[] = [
   { id: 0, title: "Information" },
   { id: 1, title: "Photos" },
-  { id: 2, title: "Fishing" },
+  { id: 2, title: "Fishing Details" },
   { id: 3, title: "Meeting Point" },
   { id: 4, title: "Map" },
   { id: 5, title: "Description" },
@@ -17,11 +17,11 @@ export const HEADINGS: Record<number, StepHeading> = {
     description: "Complete the account set up below before you list your boat.",
   },
   1: {
-    title: "Photos & Videos",
-    description: "Upload high quality photos and videos.",
+    title: "Upload Photos & Videos",
+    description: "High quality photos and videos.",
   },
   2: {
-    title: "Fishing",
+    title: "Fishing Details",
     description: "Specify your fishing techniques and gear.",
   },
   3: {
@@ -29,16 +29,17 @@ export const HEADINGS: Record<number, StepHeading> = {
     description: "Set the location where customers will meet you.",
   },
   4: {
-    title: "Meeting Point Map",
+    title: "Point on Map",
     description: "Pinpoint your exact location on the map.",
   },
   5: {
-    title: "Description",
+    title: "Listing Details",
     description: "Add a detailed description of your services.",
   },
   6: {
-    title: "Trips",
-    description: "Here you can list variations to your trips.",
+    title: "Trip Packages",
+    description:
+      "Create different trip options for your guests. You can add multiple trips with varying durations, prices, and target species.",
   },
   7: {
     title: "Terms & Pricing",
