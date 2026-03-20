@@ -4,6 +4,18 @@
 import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import dynamic from "next/dynamic";
+import "leaflet/dist/leaflet.css";
+
+// Dynamic imports for all react-leaflet components
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false },
+);
+
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false },
+);
 
 const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
@@ -26,6 +38,12 @@ interface InteractiveMapProps {
   initialLocation?: { latitude: number; longitude: number };
 }
 
+// Dynamic component for map events - must be separate to use hooks properly
+const MapEvents = dynamic(
+  () => import("./MapEventsComponent").then((mod) => mod.default),
+  { ssr: false },
+);
+
 // Component to handle map click events
 function LocationMarker({
   onLocationSelect,
@@ -41,31 +59,16 @@ function LocationMarker({
   markerPosition: [number, number] | null;
   setMarkerPosition: (pos: [number, number]) => void;
 }) {
-  const { useMapEvents: useMapEventsHook } = require("react-leaflet");
-
-  useMapEventsHook({
-    click(e: any) {
-      const position: [number, number] = [e.latlng.lat, e.latlng.lng];
-      const location = {
-        latitude: position[0],
-        longitude: position[1],
-      };
-
-      setMarkerPosition(position);
-
-      // Update form context if available
-      if (formContext?.setValue) {
-        formContext.setValue("location", location);
-      }
-
-      // Call optional callback
-      if (onLocationSelect) {
-        onLocationSelect(location);
-      }
-    },
-  });
-
-  return markerPosition ? <Marker position={markerPosition} /> : null;
+  return (
+    <>
+      <MapEvents
+        onLocationSelect={onLocationSelect}
+        formContext={formContext}
+        setMarkerPosition={setMarkerPosition}
+      />
+      {markerPosition ? <Marker position={markerPosition} /> : null}
+    </>
+  );
 }
 
 export default function InteractiveMap({
@@ -81,19 +84,27 @@ export default function InteractiveMap({
   );
 
   useEffect(() => {
-    setMounted(true);
+    const setupLeaflet = async () => {
+      // Fix for default marker icon - load dynamically
+      const L = await import("leaflet");
 
-    // Fix for default marker icon
-    const L = require("leaflet");
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-      iconUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-      shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    });
+      // Delete the default icon URL method
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+
+      // Set new icon URLs
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+        iconUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+        shadowUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      });
+
+      setMounted(true);
+    };
+
+    setupLeaflet();
   }, []);
 
   if (!mounted) {
@@ -113,18 +124,13 @@ export default function InteractiveMap({
     );
   }
 
-  const { MapContainer, TileLayer } = require("react-leaflet");
-
   return (
     <div style={containerStyle}>
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
-      />
       <MapContainer
         center={markerPosition || center}
         zoom={12}
-        className="z-10"
+        style={{ height: "100%", width: "100%" }}
+        className="z-10 rounded-lg"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
