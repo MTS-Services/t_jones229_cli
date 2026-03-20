@@ -85,6 +85,12 @@ export default function TripForm({
     watch,
     formState: { errors },
   } = useFormContext();
+
+  // Helper function to safely get trip errors
+  const getTripError = (field: string) => {
+    const tripsErrors = errors?.trips as any;
+    return tripsErrors?.[index]?.[field];
+  };
   const filters = watch(`trips.${index}.tripsSpecies`) || [];
   const [searchQuery, setSearchQuery] = React.useState("");
   const [showTips, setShowTips] = React.useState(false);
@@ -163,15 +169,13 @@ export default function TripForm({
                 required: "Trip name is required",
               })}
               className={`w-full p-3 border-2 rounded-lg outline-none transition-all ${
-                errors?.trips?.[index]?.tripName
+                getTripError("tripName")
                   ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
                   : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
               }`}
               placeholder="e.g., Morning Fishing Adventure"
             />
-            <ErrorMessage
-              error={errors?.trips?.[index]?.tripName?.message as string}
-            />
+            <ErrorMessage error={getTripError("tripName")?.message as string} />
           </div>
 
           <div>
@@ -187,7 +191,7 @@ export default function TripForm({
                   valueAsNumber: true,
                 })}
                 className={`flex-1 p-3 border-2 rounded-lg outline-none transition-all ${
-                  errors?.trips?.[index]?.tripsduration
+                  getTripError("tripsduration")
                     ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
                     : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                 }`}
@@ -198,7 +202,7 @@ export default function TripForm({
               </div>
             </div>
             <ErrorMessage
-              error={errors?.trips?.[index]?.tripsduration?.message as string}
+              error={getTripError("tripsduration")?.message as string}
             />
           </div>
         </div>
@@ -218,14 +222,14 @@ export default function TripForm({
               },
             })}
             className={`w-full p-3 border-2 rounded-lg outline-none transition-all resize-none ${
-              errors?.trips?.[index]?.tripsdescription
+              getTripError("tripsdescription")
                 ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
                 : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
             }`}
             placeholder="Describe what guests can expect on this adventure..."
           />
           <ErrorMessage
-            error={errors?.trips?.[index]?.tripsdescription?.message as string}
+            error={getTripError("tripsdescription")?.message as string}
           />
         </div>
 
@@ -304,7 +308,7 @@ export default function TripForm({
                   valueAsNumber: true,
                 })}
                 className={`w-full pl-8 p-3 border-2 rounded-lg outline-none transition-all ${
-                  errors?.trips?.[index]?.tripsprice
+                  getTripError("tripsprice")
                     ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
                     : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                 }`}
@@ -312,7 +316,7 @@ export default function TripForm({
               />
             </div>
             <ErrorMessage
-              error={errors?.trips?.[index]?.tripsprice?.message as string}
+              error={getTripError("tripsprice")?.message as string}
             />
           </div>
 
@@ -339,7 +343,7 @@ export default function TripForm({
               ))}
             </select>
             <ErrorMessage
-              error={errors?.trips?.[index]?.departureTime?.message as string}
+              error={getTripError("departureTime")?.message as string}
             />
           </div>
         </div>
