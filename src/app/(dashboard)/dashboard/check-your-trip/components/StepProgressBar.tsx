@@ -30,63 +30,81 @@ export default function StepProgressBar({
     <div className="flex-none bg-gradient-to-br from-orange-100 to-white border-b-2 border-orange-200 rounded-xl">
       <div className="px-6 sm:px-8 lg:px-12 py-8">
         {/* Step Progress Bar */}
-        <div className="relative mb-2">
-          {/* Progress Line Background */}
-          <div className="absolute top-6 left-0 w-full h-1 bg-gray-100 rounded-full" />
-
-          {/* Active Progress Line */}
+        <div className="relative mb-6">
+          {/* Progress Line Background - properly centered with circles */}
           <div
-            className="absolute top-6 left-0 h-1 bg-gradient-to-r from-[#f2a93b] to-[#ff8c00] rounded-full transition-all duration-500 ease-in-out"
+            className="absolute top-4 sm:top-5 left-0 w-full h-0.5 bg-gray-200 rounded-full"
+            style={{ left: "50px", right: "50px", width: "calc(100% - 100px)" }}
+          />
+
+          {/* Active Progress Line - properly aligned */}
+          <div
+            className="absolute top-4 sm:top-5 h-0.5 bg-gradient-to-r from-[#f2a93b] to-[#ff8c00] rounded-full transition-all duration-700 ease-out"
             style={{
-              width: `${(currentStep / (TABS.length - 1)) * 100}%`,
+              left: "50px",
+              width: `calc((100% - 100px) * ${currentStep} / ${TABS.length - 1})`,
             }}
           />
 
-          {/* Step Circles */}
+          {/* Step Circles Container */}
           <div className="relative flex justify-between">
             {TABS.map((tab: Tab, index: number) => {
               const status = getStepStatus(index);
               return (
                 <div key={tab.id} className="flex flex-col items-center">
+                  {/* Step Circle */}
                   <button
                     type="button"
                     onClick={() => onTabClick(index)}
                     disabled={!boatId && status === "upcoming"}
                     className={`
-                      relative z-10 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center
-                      transition-all duration-300 font-bold text-base sm:text-lg shadow-md hover:shadow-lg
-                      ${status === "completed" ? "bg-gradient-to-br from-[#f2a93b] to-[#e0962d] text-white scale-105" : ""}
-                      ${status === "current" ? "bg-gradient-to-br from-[#f2a93b] to-[#ff8c00] text-white ring-4 ring-orange-200 scale-110 shadow-xl" : ""}
-                      ${status === "visited" && !completedSteps.has(index) ? "bg-white border-3 border-[#f2a93b] text-[#f2a93b] hover:bg-orange-50" : ""}
-                      ${status === "upcoming" ? "bg-white border-2 border-gray-300 text-gray-400 cursor-not-allowed opacity-50" : ""}
+                      relative z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center
+                      transition-all duration-300 font-bold shadow-lg hover:shadow-xl border-2
+                      ${
+                        status === "completed"
+                          ? "bg-gradient-to-br from-[#f2a93b] to-[#e0962d] text-white border-[#e0962d] transform scale-105 hover:scale-110"
+                          : ""
+                      }
+                      ${
+                        status === "current"
+                          ? "bg-gradient-to-br from-[#f2a93b] to-[#ff8c00] text-white border-[#ff8c00] ring-4 ring-orange-200 transform scale-110 hover:scale-115"
+                          : ""
+                      }
+                      ${
+                        status === "visited" && !completedSteps.has(index)
+                          ? "bg-white border-[#f2a93b] text-[#f2a93b] hover:bg-orange-50 hover:border-orange-400"
+                          : ""
+                      }
+                      ${
+                        status === "upcoming"
+                          ? "bg-white border-gray-300 text-gray-400 cursor-not-allowed opacity-60"
+                          : ""
+                      }
                     `}
                   >
                     {status === "completed" ? (
-                      <MdCheck size={24} className="font-bold" />
+                      <MdCheck size={16} className="sm:w-5 sm:h-5" />
                     ) : (
-                      index + 1
+                      <span className="text-xs sm:text-sm font-bold">
+                        {index + 1}
+                      </span>
                     )}
                   </button>
 
-                  {/* Step Title */}
-                  <span
-                    className={`
-                      mt-2 text-xs sm:text-sm font-semibold text-center max-w-[100px] leading-tight
-                      ${status === "completed" ? "text-[#f2a93b]" : ""}
-                      ${status === "current" ? "text-[#f2a93b] font-bold" : ""}
-                      ${status === "visited" ? "text-gray-700" : ""}
-                      ${status === "upcoming" ? "text-gray-400" : ""}
-                    `}
-                  >
-                    {tab.title}
-                  </span>
-
-                  {/* Arrow between steps (except last) */}
-                  {index < TABS.length - 1 && (
-                    <div className="hidden lg:block absolute right-12 top-4 text-gray-300">
-                      <MdKeyboardArrowRight size={24} />
-                    </div>
-                  )}
+                  {/* Step Title - better alignment and spacing */}
+                  <div className="mt-3 w-20 sm:w-24 flex justify-center">
+                    <span
+                      className={`
+                        text-xs sm:text-sm font-semibold text-center leading-tight
+                        ${status === "completed" ? "text-[#f2a93b]" : ""}
+                        ${status === "current" ? "text-[#f2a93b] font-bold" : ""}
+                        ${status === "visited" ? "text-gray-700" : ""}
+                        ${status === "upcoming" ? "text-gray-400" : ""}
+                      `}
+                    >
+                      {tab.title}
+                    </span>
+                  </div>
                 </div>
               );
             })}
