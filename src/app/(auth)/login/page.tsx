@@ -1,8 +1,7 @@
 import logo2 from "@/assets/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
-
-import Login from "@/components/Auth/Login";
+import LoginForm from "@/app/(auth)/login/components/LoginForm";
 
 export default function Page() {
   return (
@@ -39,7 +38,7 @@ export default function Page() {
 
         {/* Login Form */}
         <div className="w-full">
-          <Login />
+          <LoginForm />
         </div>
       </div>
     </div>

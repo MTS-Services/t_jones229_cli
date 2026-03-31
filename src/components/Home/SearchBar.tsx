@@ -23,6 +23,7 @@ import { useGetBoatListByLocationQuery } from "@/redux/api/boatApi";
 import Image from "next/image";
 import flag from "@/assets/flag.png";
 import dayjs, { Dayjs } from "dayjs";
+import { Locate, MapPin, X } from "lucide-react";
 
 const dropdownVariants: Variants = {
   hidden: { opacity: 0, y: 15, scale: 0.95 },
@@ -240,9 +241,6 @@ export default function SearchBar({
                     {activeMobileSection === "where" ? (
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
-                          <div className="">
-                            <IoLocationOutline className="text-2xl text-gray-600" />
-                          </div>
                           <div className="flex-1">
                             <h3 className="font-bold text-sm text-gray-800">
                               Where to?
@@ -263,7 +261,7 @@ export default function SearchBar({
                               setLocation(e.target.value);
                               setSearchTerm(e.target.value);
                             }}
-                            className="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 font-medium placeholder-gray-400"
+                            className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 font-medium placeholder-gray-400"
                           />
                         </div>
                         <div className="space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
@@ -279,20 +277,14 @@ export default function SearchBar({
                                 }}
                                 className="w-full flex items-center space-x-2 p-0 rounded-xl hover:bg-blue-50 active:bg-blue-100 transition-all duration-200 text-left group"
                               >
-                                <div className="p-1 bg-blue-100 rounded-xl group-hover:bg-blue-200 transition-colors">
-                                  <Image
-                                    src={flag}
-                                    alt="flag"
-                                    width={20}
-                                    height={20}
-                                    className="rounded-sm"
-                                  />
+                                <div className="p-1 bg-gray-100 rounded-xl group-hover:bg-gray-200 transition-colors">
+                                  <MapPin className="text-gray-500 h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <p className="font-semibold text-gray-800 group-hover:text-blue-700">
+                                  <p className="text-sm text-gray-800 group-hover:text-blue-700">
                                     {destination.city}
                                   </p>
-                                  <p className="text-sm text-gray-500">
+                                  <p className="text-xs text-gray-500">
                                     {destination.country}
                                   </p>
                                 </div>
@@ -611,7 +603,7 @@ export default function SearchBar({
             {/* Desktop Where */}
             <div
               onClick={() => setActiveTab("where")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-3 py-2.5 items-center flex-[0.8]"} ${activeTab === "where" ? "bg-white shadow-xl z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-3 py-2.5 items-center flex-[0.8]"} ${activeTab === "where" ? "bg-white border z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
             >
               <h1
                 className={`font-extrabold text-black ${isExpanded ? "text-[15px]" : "text-[13px]"}`}
@@ -622,7 +614,7 @@ export default function SearchBar({
                 <input
                   autoFocus={activeTab === "where"}
                   type="text"
-                  placeholder="Search destinations"
+                  placeholder="Search destinations..."
                   value={location}
                   onChange={(e) => {
                     setLocation(e.target.value);
@@ -645,7 +637,7 @@ export default function SearchBar({
                     initial="hidden"
                     animate="visible"
                     exit="exit"
-                    className="absolute top-[115%] left-0 w-[300px] bg-white shadow-2xl rounded-[24px] p-6 z-50 border border-gray-100"
+                    className="absolute top-[105%] left-0 w-[300px] bg-white shadow-2xl rounded-2xl p-6 z-50 border border-gray-100"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex items-center justify-between mb-4">
@@ -662,32 +654,31 @@ export default function SearchBar({
                             setSearchTerm(dest.city);
                             setActiveTab(null);
                           }}
-                          className="flex items-center gap-4 py-3 px-3 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer group"
+                          className="flex items-center gap-2 my-1 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer group"
                         >
-                          <div className="size-8 relative bg-gray-100 rounded-md overflow-hidden">
-                            <Image
-                              src={flag}
-                              alt="flag"
-                              fill
-                              className="object-cover"
-                            />
+                          {/* Icon */}
+                          <div className="size-8 flex items-center justify-center bg-gray-100 rounded-md">
+                            <MapPin className="text-gray-400 w-4 h-4" />
                           </div>
-                          <p className="font-semibold text-black flex-1">
+
+                          {/* City Name */}
+                          <p className="font-semibold text-sm text-gray-600 flex-1">
                             {dest.city}
                           </p>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // Clear search to show all destinations
-                              setSearchTerm("");
-                              setLocation("");
-                            }}
-                            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded-full transition-all"
-                          >
-                            {(searchTerm || location) && (
-                              <MdOutlineClose className="text-gray-400 hover:text-gray-600 text-sm" />
-                            )}
-                          </button>
+
+                          {/* Clear Button */}
+                          {(searchTerm || location) && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSearchTerm("");
+                                setLocation("");
+                              }}
+                              className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded-full transition-all"
+                            >
+                              <X className="text-gray-400 hover:text-gray-600 w-4 h-4" />
+                            </button>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -701,7 +692,7 @@ export default function SearchBar({
             {/* Desktop When */}
             <div
               onClick={() => setActiveTab("when")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "when" ? "bg-white shadow-xl z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "when" ? "bg-white border rounded-none z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
             >
               <h1 className="font-extrabold text-black">When</h1>
               {isExpanded ? (
@@ -722,7 +713,7 @@ export default function SearchBar({
                     initial="hidden"
                     animate="visible"
                     exit="exit"
-                    className="absolute top-[115%] left-0 z-50 bg-white shadow-2xl rounded-3xl p-4 border border-gray-100"
+                    className="absolute top-[104%] left-0 z-50 bg-white shadow-2xl rounded-xl rounded-t p-4 border border-gray-100"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Calendar
@@ -742,7 +733,7 @@ export default function SearchBar({
             {/* Desktop Who */}
             <div
               onClick={() => setActiveTab("who")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.5]"} ${activeTab === "who" ? "bg-white shadow-xl z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.5]"} ${activeTab === "who" ? "bg-white border rounded-none z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
             >
               <h1 className="font-extrabold text-black">Who</h1>
               {isExpanded ? (
@@ -763,7 +754,7 @@ export default function SearchBar({
                     initial="hidden"
                     animate="visible"
                     exit="exit"
-                    className="absolute top-[115%] left-1/2 -translate-x-1/2 bg-white p-6 rounded-2xl shadow-2xl w-64 z-50 border border-gray-100"
+                    className="absolute top-[105%] left-0 -translate-x-1/2 bg-white p-6 rounded-t rounded-2xl shadow-2xl w-64 z-50 border border-gray-100"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex items-center justify-between">
@@ -788,7 +779,7 @@ export default function SearchBar({
             {/* Desktop Type */}
             <div
               onClick={() => setActiveTab("type")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "type" ? "bg-white shadow-xl z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "type" ? "bg-white border z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
             >
               <h1 className="font-extrabold text-black">Type</h1>
               {isExpanded ? (
@@ -809,7 +800,7 @@ export default function SearchBar({
                     initial="hidden"
                     animate="visible"
                     exit="exit"
-                    className="absolute top-[115%] right-0 w-80 bg-white shadow-2xl rounded-2xl p-4 z-50 border border-gray-100"
+                    className="absolute top-[105%] left-0 w-80 bg-white shadow-2xl rounded-2xl p-4 z-50 border border-gray-100"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="space-y-2">

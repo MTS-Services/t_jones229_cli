@@ -252,7 +252,7 @@ const TripSelectionSection: React.FC<{
   };
 
   return (
-    <div className="mt-10 md:mt-10 px-2 lg:px-0 border-t border-[#665151]">
+    <div className="mt-10 md:mt-10 px-2 lg:px-0 border-t border-[#c9c8c8]">
       <div className="mt-5 md:mt-10 ">
         <h1 className="text-xl md:text-3xl text-[#242424] font-bold leading-7">
           Select Your Trip

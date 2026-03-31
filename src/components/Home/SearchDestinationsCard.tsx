@@ -3,6 +3,7 @@
 import Image from "next/image";
 import placeholder from "@/assets/placeholder.webp";
 import { useRouter } from "next/navigation";
+import { MapPin } from "lucide-react";
 
 interface CardInfo {
   image: string;
@@ -53,14 +54,8 @@ export default function SearchDestinationsCard({
         <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
         {/* 2. Flag Icon */}
-        <div className="absolute top-4 left-4 z-20 bg-white/50 rounded-full p-0.5 shadow-md">
-          <Image
-            src={cardInfo.flag}
-            alt="flag"
-            height={32}
-            width={32}
-            className="  object-cover rounded-full"
-          />
+        <div className="absolute top-4 left-4 z-20 bg-blue-800/50 backdrop-blur-sm rounded-full p-1 shadow-md">
+          <MapPin size={20} className="text-gray-200" />
         </div>
 
         {/* 3. Text Content */}

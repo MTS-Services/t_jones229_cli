@@ -350,7 +350,7 @@ export default function Page() {
                             : "text-gray-600 hover:text-gray-800"
                         }`}
                       >
-                        🏄‍♂️ User
+                        Angler
                       </button>
                       <button
                         type="button"
@@ -361,7 +361,7 @@ export default function Page() {
                             : "text-gray-600 hover:text-gray-800"
                         }`}
                       >
-                        ⛵ Captain
+                        Captain
                       </button>
                     </div>
                   </div>

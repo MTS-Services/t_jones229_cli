@@ -11,6 +11,7 @@ import { useGetBoatListByLocationQuery } from "@/redux/api/boatApi";
 import Image from "next/image";
 import flag from "@/assets/flag.png";
 import dayjs, { Dayjs } from "dayjs";
+import { MapPin } from "lucide-react";
 
 const dropdownVariants: Variants = {
   hidden: { opacity: 0, y: 15, scale: 0.95 },
@@ -169,17 +170,12 @@ export default function ListBookingSearchBar({
                           setLocation(dest.city);
                           setActiveTab(null);
                         }}
-                        className="flex items-center gap-4 py-2 px-3 rounded-xl hover:bg-gray-100 cursor-pointer"
+                        className="flex items-center gap-2 my-2 rounded-xl hover:bg-gray-100 cursor-pointer"
                       >
-                        <div className="size-7 relative flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-                          <Image
-                            src={flag}
-                            alt="flag"
-                            fill
-                            className="object-cover"
-                          />
+                        <div className="size-7 relative flex-shrink-0 bg-gray-100 rounded-xl overflow-hidden">
+                          <MapPin className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-500" />
                         </div>
-                        <p className="text-sm font-semibold text-black">
+                        <p className="text-sm font-semibold text-gray-600">
                           {dest.city}
                         </p>
                       </div>
@@ -215,7 +211,7 @@ export default function ListBookingSearchBar({
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className="fixed md:absolute top-[80px] md:top-[120%] left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-[320px] bg-white shadow-2xl rounded-3xl p-4 z-[999] border border-gray-100 mx-auto"
+                  className="fixed md:absolute top-[80px] md:top-[120%] left-4 right-4 md:left-0 md:-translate-x-1/2 md:w-[320px] bg-white shadow-2xl rounded-3xl p-4 z-[999] border border-gray-100 mx-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Calendar
@@ -255,7 +251,7 @@ export default function ListBookingSearchBar({
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className="fixed md:absolute top-[80px] md:top-[120%] left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-64 bg-white p-6 rounded-2xl shadow-2xl z-[999] border border-gray-100 mx-auto"
+                  className="fixed md:absolute top-[80px] md:top-[120%] left-4 right-4 md:left-0 md:-translate-x-1/2 md:w-64 bg-white p-6 rounded-2xl shadow-2xl z-[999] border border-gray-100 mx-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center justify-between">
@@ -296,7 +292,7 @@ export default function ListBookingSearchBar({
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className="fixed md:absolute top-[80px] md:top-[120%] left-4 right-4 md:right-0 md:left-auto md:w-80 bg-white shadow-2xl rounded-2xl p-5 z-[999] border border-gray-100 mx-auto"
+                  className="fixed md:absolute top-[80px] md:top-[120%] left-4 right-4 md:right-0 md:left-0 md:w-80 bg-white shadow-2xl rounded-2xl p-5 z-[999] border border-gray-100 mx-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="space-y-3">

@@ -62,17 +62,11 @@ const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
 
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <span className="text-[#878787] text-sm md:text-base whitespace-nowrap">
-                Price:{" "}
+                Total Price:{" "}
                 <span className="font-bold text-[#242424]">
                   ${tripInfo?.price}
                 </span>
               </span>
-              <button
-                onClick={() => handleclick(tripInfo?.id)}
-                className="bg-orange-400 hover:bg-orange-500 text-white px-5 py-2 rounded-lg font-satoshi text-sm md:text-base transition-colors flex-shrink-0"
-              >
-                Reserve
-              </button>
             </div>
           </div>
 
@@ -87,40 +81,50 @@ const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
           </p>
 
           {/* Feature Tags */}
-          <div className="flex flex-wrap gap-2 md:gap-3">
-            <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
-              <Image
-                src={men}
-                alt="group"
-                height={20}
-                width={20}
-                className="w-4 h-4 object-contain flex-shrink-0"
-              />
-              <span className="whitespace-nowrap">Private Group</span>
-            </div>
+          <div className="flex justify-between gap-2 md:gap-3">
+            <div className="flex  gap-2 md:gap-3">
+              <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
+                <Image
+                  src={men}
+                  alt="group"
+                  height={20}
+                  width={20}
+                  className="w-4 h-4 object-contain flex-shrink-0"
+                />
+                <span className="whitespace-nowrap">Private Group</span>
+              </div>
 
-            <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
-              <Image
-                src={clock}
-                alt="clock"
-                height={20}
-                width={20}
-                className="w-4 h-4 object-contain flex-shrink-0"
-              />
-              <span className="whitespace-nowrap">
-                {tripInfo?.duration} Hours
-              </span>
-            </div>
+              <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
+                <Image
+                  src={clock}
+                  alt="clock"
+                  height={20}
+                  width={20}
+                  className="w-4 h-4 object-contain flex-shrink-0"
+                />
+                <span className="whitespace-nowrap">
+                  {tripInfo?.duration} Hours
+                </span>
+              </div>
 
-            <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
-              <Image
-                src={doller}
-                alt="price"
-                height={20}
-                width={20}
-                className="w-4 h-4 object-contain flex-shrink-0"
-              />
-              <span className="whitespace-nowrap">${tripInfo?.price}</span>
+              <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
+                <Image
+                  src={doller}
+                  alt="price"
+                  height={20}
+                  width={20}
+                  className="w-4 h-4 object-contain flex-shrink-0"
+                />
+                <span className="whitespace-nowrap">${tripInfo?.price}</span>
+              </div>
+            </div>
+            <div>
+              <button
+                onClick={() => handleclick(tripInfo?.id)}
+                className="bg-orange-400 hover:bg-orange-500 text-white px-5 py-2 rounded-lg font-satoshi text-sm md:text-base transition-colors flex-shrink-0"
+              >
+                Reserve with 20% deposit
+              </button>
             </div>
           </div>
         </div>

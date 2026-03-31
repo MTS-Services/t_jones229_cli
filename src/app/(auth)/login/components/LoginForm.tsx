@@ -1,7 +1,5 @@
 "use client";
 
-import Button from "@/components/ReUsible/Button";
-import Loader from "@/components/ui/Loader";
 import { useLoginMutation, useSignupMutation } from "@/redux/api/authApi";
 import { setUser } from "@/redux/slices/authSlice";
 import { signInWithGoogle } from "@/services/authService";
@@ -14,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 
-export default function Login() {
+export default function LoginForm() {
   const {
     register,
     handleSubmit,
