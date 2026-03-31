@@ -22,6 +22,7 @@ export default function LoginForm() {
   const route = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect");
+  const isExpired = searchParams.get("expired") === "1";
   const [loginFn, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -158,6 +159,15 @@ export default function LoginForm() {
       className="bg-white rounded-2xl p-6 md:p-8 shadow border border-gray-100 transition-all duration-300 hover:shadow-md"
       noValidate
     >
+      {/* Session expired banner */}
+      {isExpired && (
+        <div className="mb-5 flex items-center gap-2 rounded-lg border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-700">
+          <span className="text-base">⚠️</span>
+          <span>
+            Your session has expired. Please log in again to continue.
+          </span>
+        </div>
+      )}
       {/* Email Field */}
       <div className="mb-6 space-y-2">
         <label

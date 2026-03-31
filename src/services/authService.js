@@ -68,5 +68,7 @@ export const logOut = async () => {
   if (auth) {
     await signOut(auth);
   }
+  Cookies.remove("token");
   Cookies.remove("accessToken");
+  Cookies.remove("currentUserRole");
 };

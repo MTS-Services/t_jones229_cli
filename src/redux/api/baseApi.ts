@@ -7,6 +7,8 @@ import {
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
+import Cookies from "js-cookie";
+import { logout } from "../slices/authSlice";
 import type { RootState } from "../store/store";
 
 // --------------------------------------------------
@@ -54,19 +56,31 @@ const baseQueryWithHandling: BaseQueryFn<
 
   if (result.error) {
     const status = result.error.status;
-    const endpoint =
-      typeof args === "string" ? args : args.url;
+    const endpoint = typeof args === "string" ? args : args.url;
 
     // ----------------------------------------
-    // Handle 401 Unauthorized (Global Logout)
+    // Handle 401 Unauthorized — token expired
     // ----------------------------------------
     if (status === 401) {
       if (process.env.NODE_ENV === "development") {
-        console.warn("🔐 Unauthorized - Token expired or invalid.");
+        console.warn("🔐 Token expired or invalid — logging out.");
       }
 
-      // Optional:
-      // api.dispatch(logout());
+      // 1. Clear Redux auth state
+      api.dispatch(logout());
+
+      // 2. Clear all auth cookies
+      Cookies.remove("token");
+      Cookies.remove("accessToken");
+      Cookies.remove("currentUserRole");
+
+      // 3. Redirect to login (client-side only)
+      if (typeof window !== "undefined") {
+        window.location.href = "/login?expired=1";
+      }
+
+      // 4. Stop RTK Query from retrying a 401
+      retry.fail(result.error);
     }
 
     // ----------------------------------------
@@ -93,7 +107,9 @@ const baseQueryWithHandling: BaseQueryFn<
         message: result.error.error,
       });
       console.error("\n💡 SOLUTION:");
-      console.error("   1. Check if backend API is running: cd api && npm run dev");
+      console.error(
+        "   1. Check if backend API is running: cd api && npm run dev",
+      );
       console.error("   2. Verify NEXT_PUBLIC_API_URL in .env.local");
       console.error("   3. Check CORS settings in api/src/app.ts\n");
     }
@@ -108,7 +124,9 @@ const baseQueryWithHandling: BaseQueryFn<
         timeout: "30 seconds",
       });
       console.error("💡 SOLUTION:");
-      console.error("   1. Check if backend API is running: cd api && npm run dev");
+      console.error(
+        "   1. Check if backend API is running: cd api && npm run dev",
+      );
       console.error("   2. Verify NEXT_PUBLIC_API_URL in .env.local");
       console.error("   3. Check backend logs for performance issues\n");
     }
