@@ -4,16 +4,16 @@ import StepsSection from "@/components/Boat-list/StepsSection";
 import React from "react";
 import BoatLintFaq from "@/components/Boat-list/BoatLintFaq";
 import ListYourBoat from "@/components/Boat-list/ListYourBoat";
-import CaptainsInfoPage from "@/components/Boat-list/CaptainsInfoPage";
+// import CaptainsInfoPage from "@/components/Boat-list/CaptainsInfoPage";
 
 export default function page() {
   return (
-    <div>
+    <>
       <ListYourBoat />
       <FeaturesCard />
       <StepsSection />
-      <CaptainsInfoPage />
+      {/* <CaptainsInfoPage /> */}
       <BoatLintFaq />
-    </div>
+    </>
   );
 }

@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Check,
-  TrendingUp,
-  Shield,
-  Calendar,
-  CreditCard,
-  Percent,
-} from "lucide-react";
+import { Check, Shield, Percent } from "lucide-react";
 
 const CaptainsInfoPage = () => {
   const [selectedPlan, setSelectedPlan] = useState<"commission" | null>(null);
