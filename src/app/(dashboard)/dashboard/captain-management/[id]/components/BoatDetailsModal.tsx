@@ -77,13 +77,35 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
 
   const approvalStyle = getApprovalStyle(currentStatus);
 
+  const safariBackdropStyle = {
+    WebkitBackdropFilter: "blur(4px)",
+    backdropFilter: "blur(4px)",
+  };
+
+  const safariScrollStyle = {
+    WebkitOverflowScrolling: "touch" as const,
+  };
+
+  const safariLineClampStyle = {
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical" as const,
+    WebkitLineClamp: 2,
+    overflow: "hidden",
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-100 flex items-center justify-center">
-      <div className="bg-white rounded-2xl max-w-5xl w-full shadow-2xl animate-in fade-in zoom-in duration-200">
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto overscroll-contain bg-black/50 p-4 sm:p-6"
+      style={safariBackdropStyle}
+    >
+      <div className="relative flex max-h-[calc(100vh-2rem)] max-h-[calc(100dvh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl transform-gpu animate-in fade-in zoom-in duration-200 will-change-transform">
         {/* Modal Header */}
-        <div className="sticky top-0 bg-[#035292] p-6 rounded-t-2xl flex items-center justify-between text-white">
+        <div className="sticky top-0 z-10 flex shrink-0 items-center justify-between rounded-t-2xl bg-[#035292] p-6 text-white">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur"
+              style={safariBackdropStyle}
+            >
               <Ship className="h-5 w-5" />
             </div>
             <div>
@@ -97,14 +119,17 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-lg transition-all hover:rotate-90"
+            className="rounded-lg p-2 transition-all transform-gpu hover:rotate-90 hover:bg-white/20"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Modal Content */}
-        <div className="p-6 max-h-[75vh] overflow-y-auto">
+        <div
+          className="min-h-0 flex-1 overflow-y-auto p-6"
+          style={safariScrollStyle}
+        >
           {/* Quick Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <div className="bg-gradient-to-br from-blue-50 to-white p-4 rounded-xl border border-blue-100">
@@ -223,12 +248,12 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                 {boat.photos.slice(0, 4).map((photo: any) => (
                   <div
                     key={photo.id}
-                    className="group relative aspect-square rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition-shadow"
+                    className="group relative isolate aspect-square overflow-hidden rounded-xl border border-gray-200 transition-shadow hover:shadow-md"
                   >
                     <img
                       src={photo.url}
                       alt="Boat"
-                      className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="block h-full w-full object-cover transform-gpu transition-transform duration-300 ease-out will-change-transform group-hover:scale-105"
                     />
                   </div>
                 ))}
@@ -444,10 +469,10 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                 {boat.trips.map((tripItem: any) => (
                   <div
                     key={tripItem.id}
-                    className="flex bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-200 transition-colors overflow-hidden"
+                    className="flex overflow-hidden rounded-xl border border-gray-100 bg-gray-50 transition-colors hover:border-blue-200"
                   >
                     {/* Boat Photo */}
-                    <div className="hidden md:block w-44 h-auto flex-shrink-0">
+                    <div className="hidden h-auto w-44 flex-shrink-0 overflow-hidden md:block">
                       {boat.photos && boat.photos.length > 0 ? (
                         <img
                           src={boat.photos[0].url}
@@ -461,13 +486,16 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                       )}
                     </div>
                     {/* Trip Info */}
-                    <div className="flex-1 p-4 ">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 ">
-                        <div className=" space-y-4">
-                          <h2 className="font-semibold text-lg text-gray-600">
+                    <div className="min-w-0 flex-1 p-4">
+                      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+                        <div className="min-w-0 space-y-4">
+                          <h2 className="text-lg font-semibold text-gray-600 break-words">
                             {tripItem.tripName}
                           </h2>
-                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                          <p
+                            className="mt-1 line-clamp-2 break-words text-sm text-gray-600"
+                            style={safariLineClampStyle}
+                          >
                             {tripItem.description}
                           </p>
                           <div className="flex flex-wrap gap-3 mt-2">
