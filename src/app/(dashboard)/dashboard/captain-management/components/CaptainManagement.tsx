@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDeleteUserMutation } from "@/redux/api/authApi";
 
 import {
   User,
@@ -20,6 +21,9 @@ import {
   Menu,
   LayoutGrid,
   Fish,
+  Trash2,
+  X,
+  AlertTriangle,
 } from "lucide-react";
 import PaginationButton from "./PaginationButton";
 import TableLoading from "@/components/dashboard/common/TableLoading";
@@ -28,6 +32,7 @@ function MobileCaptainsView({
   captains,
   itemsPerPage = 6,
   onViewDetails,
+  onDeleteClick,
 }: any) {
   const [page, setPage] = useState(1);
   const totalPages = Math.max(
@@ -135,6 +140,13 @@ function MobileCaptainsView({
                 <Edit className="h-3.5 w-3.5" />
                 Edit
               </button>
+              <button
+                onClick={() => onDeleteClick?.(captain)}
+                className="flex-1 px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-medium text-red-600 transition-colors flex items-center justify-center gap-1"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Delete
+              </button>
             </div>
           </div>
         ))}
@@ -172,11 +184,15 @@ function MobileCaptainsView({
 
 export default function CaptainManagement({ data = [], isLoading }: any) {
   const router = useRouter();
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCaptain, setSelectedCaptain] = useState<any>(null);
-  const [showModal, setShowModal] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [captainToDelete, setCaptainToDelete] = useState<any>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deleteSuccess, setDeleteSuccess] = useState<string | null>(null);
 
   const itemsPerPage = 10;
 
@@ -186,7 +202,6 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
   const currentCaptains = captains.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (page: number) => {
@@ -197,6 +212,45 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
   const handleViewDetails = (captain: any) => {
     setSelectedCaptain(captain);
     router.push(`/dashboard/captain-management/${captain.id}`);
+  };
+
+  const handleDeleteClick = (captain: any) => {
+    setCaptainToDelete(captain);
+    setShowDeleteModal(true);
+    setDeleteError(null);
+    setDeleteSuccess(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!captainToDelete?.id) return;
+
+    try {
+      const response = await deleteUser(captainToDelete.id).unwrap();
+
+      // Show success message
+      setDeleteSuccess(
+        `${captainToDelete.fullName} has been deleted successfully!`,
+      );
+
+      // Close modal after a short delay to show success message
+      setTimeout(() => {
+        setShowDeleteModal(false);
+        setCaptainToDelete(null);
+        setDeleteSuccess(null);
+      }, 1500);
+    } catch (error: any) {
+      // Show error message
+      setDeleteError(
+        error?.data?.message || "Failed to delete captain. Please try again.",
+      );
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setCaptainToDelete(null);
+    setDeleteError(null);
+    setDeleteSuccess(null);
   };
 
   if (isLoading) {
@@ -211,9 +265,9 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Header Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white mb-6 rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-[#035292] rounded-xl">
@@ -390,13 +444,22 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                         </span>
                       </td>
                       <td className="px-4 py-2 text-center">
-                        <button
-                          onClick={() => handleViewDetails(captain)}
-                          className="mx-auto p-2 text-gray-500 hover:bg-gray-100 rounded-lg flex items-center justify-center gap-2 transition-colors"
-                        >
-                          <Eye className="h-4 w-4" />
-                          <span className="text-sm">View</span>
-                        </button>
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => handleViewDetails(captain)}
+                            className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                          >
+                            <Eye className="h-4 w-4" />
+                            <span className="text-sm">View</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(captain)}
+                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span className="text-sm">Delete</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -492,13 +555,22 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                     </div>
                   )}
 
-                  <button
-                    onClick={() => handleViewDetails(captain)}
-                    className="w-full mt-3 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-xs font-medium text-gray-600 transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <Eye className="h-3.5 w-3.5" />
-                    View Details
-                  </button>
+                  <div className="flex gap-2 mt-3">
+                    <button
+                      onClick={() => handleViewDetails(captain)}
+                      className="flex-1 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-xs font-medium text-gray-600 transition-colors flex items-center justify-center gap-1.5"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(captain)}
+                      className="flex-1 px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-medium text-red-600 transition-colors flex items-center justify-center gap-1.5"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Delete
+                    </button>
+                  </div>
                 </div>
               ))
             )}
@@ -510,6 +582,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
           captains={captains}
           itemsPerPage={6}
           onViewDetails={handleViewDetails}
+          onDeleteClick={handleDeleteClick}
         />
 
         {/* Pagination */}
@@ -540,6 +613,150 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in duration-200">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-red-500 to-red-600 px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="h-5 w-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  Delete Captain
+                </h3>
+              </div>
+              <button
+                onClick={handleCancelDelete}
+                className="text-white/80 hover:text-white rounded-lg p-1 hover:bg-white/10 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="px-6 py-5">
+              {deleteSuccess ? (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                  <div className="flex gap-3 items-center">
+                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                      <svg
+                        className="w-6 h-6 text-emerald-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-emerald-900">
+                        {deleteSuccess}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="text-gray-600 mb-4">
+                    Are you sure you want to delete{" "}
+                    <span className="font-semibold text-gray-900">
+                      {captainToDelete?.fullName || "this captain"}
+                    </span>
+                    ?
+                  </p>
+
+                  {deleteError && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                      <div className="flex gap-3">
+                        <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium text-red-900">
+                            {deleteError}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="bg-red-50 border border-red-100 rounded-lg p-4">
+                    <div className="flex gap-3">
+                      <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-red-900 mb-1">
+                          This action cannot be undone
+                        </p>
+                        <p className="text-xs text-red-700">
+                          All associated data including boats and trips will be
+                          affected.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3">
+              {!deleteSuccess && (
+                <>
+                  <button
+                    onClick={handleCancelDelete}
+                    disabled={isDeleting}
+                    className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmDelete}
+                    disabled={isDeleting}
+                    className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isDeleting ? (
+                      <>
+                        <svg
+                          className="animate-spin h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="h-4 w-4" />
+                        Delete Captain
+                      </>
+                    )}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
