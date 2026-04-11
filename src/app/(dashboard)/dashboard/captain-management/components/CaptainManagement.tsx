@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useDeleteUserMutation } from "@/redux/api/authApi";
+import {
+  useDeleteUserMutation,
+  useHardDeleteUserMutation,
+} from "@/redux/api/authApi";
 
 import {
   User,
@@ -184,7 +187,9 @@ function MobileCaptainsView({
 
 export default function CaptainManagement({ data = [], isLoading }: any) {
   const router = useRouter();
-  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  const [deleteUser, { isLoading: isSoftDeleting }] = useDeleteUserMutation();
+  const [hardDeleteUser, { isLoading: isHardDeleting }] =
+    useHardDeleteUserMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCaptain, setSelectedCaptain] = useState<any>(null);
@@ -221,15 +226,15 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
     setDeleteSuccess(null);
   };
 
-  const handleConfirmDelete = async () => {
+  const handleSoftDelete = async () => {
     if (!captainToDelete?.id) return;
 
     try {
-      const response = await deleteUser(captainToDelete.id).unwrap();
+      await deleteUser(captainToDelete.id).unwrap();
 
       // Show success message
       setDeleteSuccess(
-        `${captainToDelete.fullName} has been deleted successfully!`,
+        `${captainToDelete.fullName} has been soft deleted (can be restored)`,
       );
 
       // Close modal after a short delay to show success message
@@ -237,11 +242,37 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
         setShowDeleteModal(false);
         setCaptainToDelete(null);
         setDeleteSuccess(null);
-      }, 1500);
+      }, 2000);
     } catch (error: any) {
       // Show error message
       setDeleteError(
         error?.data?.message || "Failed to delete captain. Please try again.",
+      );
+    }
+  };
+
+  const handleHardDelete = async () => {
+    if (!captainToDelete?.id) return;
+
+    try {
+      await hardDeleteUser(captainToDelete.id).unwrap();
+
+      // Show success message
+      setDeleteSuccess(
+        `${captainToDelete.fullName} has been permanently deleted!`,
+      );
+
+      // Close modal after a short delay to show success message
+      setTimeout(() => {
+        setShowDeleteModal(false);
+        setCaptainToDelete(null);
+        setDeleteSuccess(null);
+      }, 2000);
+    } catch (error: any) {
+      // Show error message
+      setDeleteError(
+        error?.data?.message ||
+          "Failed to permanently delete captain. Please try again.",
       );
     }
   };
@@ -617,7 +648,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in duration-200">
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-red-500 to-red-600 px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -686,17 +717,47 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                     </div>
                   )}
 
-                  <div className="bg-red-50 border border-red-100 rounded-lg p-4">
-                    <div className="flex gap-3">
-                      <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium text-red-900 mb-1">
-                          This action cannot be undone
-                        </p>
-                        <p className="text-xs text-red-700">
-                          All associated data including boats and trips will be
-                          affected.
-                        </p>
+                  <div className="space-y-3">
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                      <div className="flex gap-3">
+                        <svg
+                          className="h-5 w-5 text-orange-600 flex-shrink-0 mt-0.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M20 12H4"
+                          />
+                        </svg>
+                        <div>
+                          <p className="text-sm font-medium text-orange-900 mb-1">
+                            Soft Delete (Reversible)
+                          </p>
+                          <p className="text-xs text-orange-700">
+                            Marks account as deleted but data remains in the
+                            database. Can be restored later. But only hide in
+                            the captain table.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <div className="flex gap-3">
+                        <Trash2 className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium text-red-900 mb-1">
+                            Hard Delete (Permanent)
+                          </p>
+                          <p className="text-xs text-red-700">
+                            Permanently removes all data from the database. This
+                            action cannot be undone!
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -705,22 +766,59 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3">
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
               {!deleteSuccess && (
                 <>
                   <button
                     onClick={handleCancelDelete}
-                    disabled={isDeleting}
-                    className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSoftDeleting || isHardDeleting}
+                    className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </button>
+
                   <button
-                    onClick={handleConfirmDelete}
-                    disabled={isDeleting}
-                    className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={handleHardDelete}
+                    disabled={isSoftDeleting || isHardDeleting}
+                    className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isDeleting ? (
+                    {isHardDeleting ? (
+                      <>
+                        <svg
+                          className="animate-spin h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Permanently Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="h-4 w-4" />
+                        Permanently Delete
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleSoftDelete}
+                    disabled={isSoftDeleting || isHardDeleting}
+                    className="px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSoftDeleting ? (
                       <>
                         <svg
                           className="animate-spin h-4 w-4"
@@ -746,8 +844,20 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
                       </>
                     ) : (
                       <>
-                        <Trash2 className="h-4 w-4" />
-                        Delete Captain
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M20 12H4"
+                          />
+                        </svg>
+                        Soft Delete
                       </>
                     )}
                   </button>

@@ -94,6 +94,13 @@ const AuthApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user", "auth"],
     }),
+    HardDeleteUser: build.mutation({
+      query: (id) => ({
+        url: `users/hard-delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user", "auth"],
+    }),
     // Contact support
     sendOtp: build.mutation({
       query: (data: any) => ({
@@ -144,6 +151,7 @@ export const {
   useGetMeQuery,
   useSentMessageCaptainMutation,
   useDeleteUserMutation,
+  useHardDeleteUserMutation,
   useSendOtpMutation,
   useChangePasswordMutation,
   useForgotPasswordMutation,
