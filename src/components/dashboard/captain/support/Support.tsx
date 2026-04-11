@@ -21,7 +21,7 @@ export default function Support() {
 
       if ("data" in response && response.data) {
         toast.success(
-          response.data.message || "Support request sent successfully!"
+          response.data.message || "Support request sent successfully!",
         );
         reset();
       } else if ("error" in response && response.error) {
@@ -49,7 +49,7 @@ export default function Support() {
 
         <div className="grid md:grid-cols-2 lg:gap-12 md:gap-9 gap-6 items-stretch">
           {/* Form */}
-          <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
+          <div className="bg-white p-8 rounded-2xl shadow hover:shadow-xl transition-shadow duration-300 h-full">
             <form className="space-y-6" onSubmit={handleSubmit(handleSend)}>
               {/* Name Field */}
               <div className="space-y-2">
@@ -150,7 +150,7 @@ export default function Support() {
           </div>
 
           {/* Contact Info */}
-          <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+          <div className="bg-white p-8 rounded-2xl shadow hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
             <h3 className="text-2xl font-bold text-gray-800 mb-8">
               Contact Information
             </h3>

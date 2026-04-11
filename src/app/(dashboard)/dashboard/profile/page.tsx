@@ -41,7 +41,7 @@ export default function ProfilePage() {
     <div className=" space-y-6">
       {/* Profile Header */}
       {/* <ProfileHeader user={user} /> */}
-      <div className=" p-6 md:p-8 rounded-2xl border border-gray-200 shadow">
+      <div className="p-6 md:p-8 rounded-2xl border bg-white border-gray-200 shadow">
         <div className="flex items-center gap-2 mb-2">
           <div className="p-2 rounded-xl">
             <User className="h-8 w-8 text-gray-500" />
@@ -65,7 +65,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Quick Actions */}
-      {/* <QuickActions /> */}
+      <QuickActions />
     </div>
   );
 }
