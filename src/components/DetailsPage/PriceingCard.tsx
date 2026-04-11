@@ -11,7 +11,13 @@ import imageUrl from "@/assets/Overlay.jpg";
 
 // import { useRouter } from "next/navigation";
 
-const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
+const PricingCard: React.FC<tripCardProps> = ({
+  tripInfo,
+  boatId,
+  image,
+  imageIndex = 0,
+}) => {
+  console.log(image);
   const route = useRouter();
   const bookingType =
     typeof window !== "undefined" ? localStorage.getItem("bookingType") : null;
@@ -43,7 +49,13 @@ const PricingCard: React.FC<tripCardProps> = ({ tripInfo, boatId, image }) => {
         {/* Image Section */}
         <div className="relative w-full md:w-80 h-48 md:h-auto flex-shrink-0">
           <Image
-            src={image || imageUrl}
+            src={
+              Array.isArray(image)
+                ? image[imageIndex % image.length]?.url ||
+                  image[0]?.url ||
+                  imageUrl
+                : image || imageUrl
+            }
             alt="trip image"
             fill
             className="object-cover"

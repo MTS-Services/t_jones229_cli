@@ -44,7 +44,7 @@ export default function BoatCreator() {
     <div className="min-h-screen flex items-start sm:items-center justify-center px-4 py-6 sm:py-8 md:py-12">
       <div className="w-full max-w-4xl mx-auto">
         {/* Main Content Card */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl border border-gray-200 p-4 sm:p-6 md:p-8">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow border border-gray-200 p-4 sm:p-6 md:p-8">
           {/* Header Section - Responsive flex column to row */}
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
             {/* Logo - Responsive sizing */}
@@ -70,7 +70,6 @@ export default function BoatCreator() {
                 Thanks for listing your boat with Fishing Tripper! Your payment
                 is set up, and your listing is now under review.
               </p>
-
               {/* Status Badge - Full width on mobile, auto on larger screens */}
               <div className="inline-flex w-full sm:w-auto items-center justify-center sm:justify-start gap-2 bg-green-50 rounded-lg px-3 sm:px-4 py-2 sm:py-2.5">
                 <Sailboat className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 flex-shrink-0" />
