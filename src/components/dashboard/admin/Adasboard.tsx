@@ -131,9 +131,9 @@ export default function Adashboard() {
         </main>
       ) : (
         <main className="space-y-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-6">
+          {/* <h2 className="text-xl font-semibold text-gray-800 mb-6">
             Platform Metrics
-          </h2>
+          </h2> */}
 
           <div className="grid xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-4">
             {renderCard(
