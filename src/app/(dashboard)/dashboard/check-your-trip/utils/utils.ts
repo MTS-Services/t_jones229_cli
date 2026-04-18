@@ -43,7 +43,7 @@ export const HEADINGS: Record<number, StepHeading> = {
   },
   7: {
     title: "Terms & Pricing",
-    description: "Before listing your boat, review our subscription terms.",
+    description: "Before listing your boat, review our terms.",
   },
 };
 
