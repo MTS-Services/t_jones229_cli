@@ -28,7 +28,7 @@ export default function page() {
         {/* Heading */}
         <h1 className="font-sk-modernist text-slate-900 text-3xl md:text-4xl text-center font-extrabold tracking-tight mb-6">
           You're on the <span className="text-green-700">Shared Trip</span>{" "}
-          listed!
+          waiting list!
         </h1>
 
         <div className="space-y-6 text-center md:text-left">
@@ -65,7 +65,7 @@ export default function page() {
               href="/"
               className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#105d9e] hover:bg-[#70b6f0] transition-colors shadow-md"
             >
-              Search Private
+              Return to home
             </Link>
           </div>
         </div>
