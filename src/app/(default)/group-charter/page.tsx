@@ -7,6 +7,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useCreateBookingMutation } from "@/redux/api/bookingApi";
 import { toast, ToastContainer } from "react-toastify";
+import {
+  IoCalendarOutline,
+  IoLocationOutline,
+  IoPeopleOutline,
+} from "react-icons/io5";
+import { formatDisplayDate } from "../search-charter/[id]/utils";
 
 const steps = [
   {
@@ -40,9 +46,19 @@ export default function GroupBooking() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setTripDate(localStorage.getItem("date"));
-      setLocation(localStorage.getItem("location"));
-      setNumberOfGuests(localStorage.getItem("Guests"));
+      try {
+        const raw = localStorage.getItem("searchData");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          setTripDate(parsed?.date ?? null);
+          setLocation(parsed?.location ?? null);
+          setNumberOfGuests(
+            parsed?.guests != null ? String(parsed.guests) : null,
+          );
+        }
+      } catch (err) {
+        console.error("Failed to parse searchData from localStorage", err);
+      }
     }
   }, []);
 
@@ -111,12 +127,7 @@ export default function GroupBooking() {
           "Group booking inquiry submitted successfully!";
         toast.success(successMessage);
         if (typeof window !== "undefined") {
-          localStorage.removeItem("searchData"); // New object format
-          localStorage.removeItem("date");
-          localStorage.removeItem("StartDate");
-          localStorage.removeItem("location");
-          localStorage.removeItem("Guests");
-          localStorage.removeItem("bookingType");
+          localStorage.removeItem("searchData");
         }
         router.push("/group-confirmation");
       } else if (res?.error) {
@@ -148,21 +159,41 @@ export default function GroupBooking() {
   return (
     <div className="mt-12 md:mt-20">
       <ToastContainer />
-      <div className="py-4">
-        <div className="container mx-auto xl:px-4 lg:px-3 px-2">
-          <h1 className="text-base md:text-lg font-bold text-slate-400 leading-9">
-            {location ?? "Location not set"} / {tripDate ?? "Date not set"} /{" "}
-            {numberOfGuests ?? "Guests not set"} people
-          </h1>
+      {/* Search Criteria with Icons */}
+      <div className="container mx-auto xl:px-4 lg:px-3 px-2 py-4">
+        <div className="flex flex-wrap items-center gap-4 mt-2">
+          {location && (
+            <div className="flex items-center gap-2 text-sm md:text-base text-gray-500 font-medium">
+              <IoLocationOutline className="text-[#FF9500] h-5 w-5 flex-shrink-0" />
+              <span className="truncate max-w-[200px]">{location}</span>
+            </div>
+          )}
+
+          {tripDate && (
+            <div className="flex items-center gap-2 text-sm md:text-base text-gray-500 font-medium">
+              <IoCalendarOutline className="text-[#FF9500] h-5 w-5 flex-shrink-0" />
+              <span>{formatDisplayDate(tripDate)}</span>
+            </div>
+          )}
+
+          {numberOfGuests && parseInt(numberOfGuests, 10) > 0 && (
+            <div className="flex items-center gap-2 text-sm md:text-base text-gray-500 font-medium">
+              <IoPeopleOutline className="text-[#FF9500] h-5 w-5 flex-shrink-0" />
+              <span>
+                {numberOfGuests}{" "}
+                {parseInt(numberOfGuests, 10) === 1 ? "person" : "people"}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="container mx-auto flex flex-col  xl:px-4 lg:px-3 px-2">
-        <div className="container mx-auto bg-slate-50 rounded-t-xl md:p-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto gap-4 md:gap-8 flex flex-col lg:px-4 md:px-3 px-2">
+        <div className="bg-slate-50 rounded-t-xl md:p-4">
+          <div className="grid lg:grid-cols-2 gap-4 md:gap-8 lg:gap-12 items-center">
             {/* Video Section */}
             <div className="relative h-full">
-              <div className="h-full min-h-[400px] bg-gray-200 rounded-xl flex items-center justify-center shadow-md">
+              <div className="h-full min-h-[400px] bg-gray-100 rounded flex items-center justify-center shadow-md">
                 <button className="w-16 h-16 rounded-full bg-[#105d9e] hover:bg-[#70b6f0] flex items-center justify-center transition">
                   <Play className="w-6 h-6 text-white ml-1" fill="white" />
                 </button>
@@ -206,7 +237,7 @@ export default function GroupBooking() {
         </div>
 
         <div className="bg-slate-50 rounded-b-lg p-5 md:p-8 mb-8 md:mb-16">
-          <h2 className="text-xl md:text-3xl font-bold text-textSecondary mb-2">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-textSecondary mb-2">
             Enter your details
           </h2>
           <p className="text-sm md:text-base text-textSecondary mb-2">

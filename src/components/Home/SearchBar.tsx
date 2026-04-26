@@ -184,10 +184,10 @@ export default function SearchBar({
                 style={{ zIndex: 999999 }}
               >
                 {/* Enhanced Header */}
-                <div className="bg-white/95 backdrop-blur-sm px-6 py-2 border-b border-gray-100/50">
+                <div className="bg-white/95 backdrop-blur-sm px-4 py-2 border-b border-gray-100/50">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 mb-1">
+                      <h2 className="text-lg font-bold text-gray-800">
                         Find Your Adventure
                       </h2>
                       <p className="text-sm text-gray-500">
@@ -404,7 +404,7 @@ export default function SearchBar({
                             </p>
                           </div>
                         </div>
-                        <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                        <div className="bg-gray-50 rounded-2xl p-2 border border-gray-100">
                           <div className="flex items-center justify-between">
                             <span className="font-semibold text-gray-800 text-sm">
                               Guests
@@ -423,9 +423,6 @@ export default function SearchBar({
                                 <span className="text-2xl font-bold text-gray-800">
                                   {guests}
                                 </span>
-                                <p className="text-xs text-gray-500">
-                                  guest{guests !== 1 ? "s" : ""}
-                                </p>
                               </div>
                               <button
                                 onClick={(e) => {
@@ -444,7 +441,7 @@ export default function SearchBar({
                             e.stopPropagation();
                             setActiveMobileSection("type");
                           }}
-                          className="w-full py-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-2xl font-semibold text-lg hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
+                          className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-semibold text-lg hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
                         >
                           Continue
                         </button>
@@ -555,7 +552,7 @@ export default function SearchBar({
                   <button
                     onClick={handleSearch}
                     disabled={!location || !selectedDate || !selected}
-                    className="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] transition-all duration-200"
+                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] transition-all duration-200"
                   >
                     <IoIosSearch className="text-xl" />
                     {!location || !selectedDate || !selected

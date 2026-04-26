@@ -215,108 +215,105 @@ export default function HomeNavbar() {
             onActiveChange={(isActive) => setIsSearchActive(isActive)}
           />
         </div>
+      </header>
 
-        {/* MOBILE MENU OVERLAY */}
-        {menuOpen && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-black/50 z-[998] lg:hidden animate-in fade-in duration-200"
-              onClick={() => setMenuOpen(false)}
-            />
+      {/* MOBILE MENU OVERLAY — rendered OUTSIDE <header> so the header's
+          backdrop-blur (which creates a containing block for fixed elements)
+          does not clip the full-screen overlay when scrolled. */}
+      {menuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 z-[998] lg:hidden animate-in fade-in duration-200"
+            onClick={() => setMenuOpen(false)}
+          />
 
-            {/* Slide-in Menu */}
-            <div className="fixed left-0 top-0 h-screen w-[300px] max-w-[80vw] bg-white z-[1000] lg:hidden shadow-2xl animate-in slide-in-from-left duration-300">
-              <div className="flex flex-col h-full">
-                {/* User Info (if logged in) */}
-                {user && (
-                  <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">
-                    <div className="flex items-center gap-3">
-                      {user?.image ? (
-                        <Image
-                          src={user.image}
-                          alt={user.name || "User"}
-                          width={48}
-                          height={48}
-                          className="rounded-full object-cover w-12 h-12 border-2 border-white shadow-md"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 bg-gradient-to-br from-[#105d9e] to-[#0a3f6b] text-white flex items-center justify-center rounded-full text-lg font-semibold shadow-md">
-                          {user?.name?.[0]?.toUpperCase() || <User size={20} />}
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 truncate">
-                          {user?.name}
-                        </p>
-                        <p className="text-sm text-gray-600 truncate">
-                          {user?.email}
-                        </p>
+          {/* Slide-in Menu */}
+          <div className="fixed left-0 top-0 h-screen w-[300px] max-w-[80vw] bg-white z-[1000] lg:hidden shadow-2xl animate-in slide-in-from-left duration-300">
+            <div className="flex flex-col h-full">
+              {/* User Info (if logged in) */}
+              {user && (
+                <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">
+                  <div className="flex items-center gap-3">
+                    {user?.image ? (
+                      <Image
+                        src={user.image}
+                        alt={user.name || "User"}
+                        width={48}
+                        height={48}
+                        className="rounded-full object-cover w-12 h-12 border-2 border-white shadow-md"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#105d9e] to-[#0a3f6b] text-white flex items-center justify-center rounded-full text-lg font-semibold shadow-md">
+                        {user?.name?.[0]?.toUpperCase() || <User size={20} />}
                       </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 truncate">
+                        {user?.name}
+                      </p>
+                      <p className="text-sm text-gray-600 truncate">
+                        {user?.email}
+                      </p>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Menu Items */}
-                <div className="flex-1 py-4 overflow-y-auto">
-                  <div className="px-4 space-y-1">
-                    <Link
-                      href="/"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                    >
-                      <Home size={20} className="text-gray-500" />
-                      <span>Home</span>
-                    </Link>
+              {/* Menu Items */}
+              <div className="flex-1 py-4 overflow-y-auto">
+                <div className="px-4 space-y-1">
+                  <Link
+                    href="/"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+                  >
+                    <Home size={20} className="text-gray-500" />
+                    <span>Home</span>
+                  </Link>
 
-                    {user ? (
-                      <>
-                        <button
-                          onClick={() => handleAuthAction()}
-                          className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors text-left"
-                        >
-                          <LayoutDashboard
-                            size={20}
-                            className="text-[#105d9e]"
-                          />
-                          <span>Dashboard</span>
-                        </button>
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors text-left"
-                        >
-                          <LogOut size={20} />
-                          <span>Logout</span>
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => handleAuthAction("/login")}
-                          className="w-full flex items-center gap-3 px-4 py-3 text-[#105d9e] hover:bg-blue-50 rounded-xl transition-colors text-left font-medium"
-                        >
-                          <User size={20} />
-                          <span>Sign In</span>
-                        </button>
-                        <Link
-                          href="/boat-list"
-                          onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 text-[#105d9e] hover:bg-blue-50 rounded-xl transition-colors font-medium"
-                        >
-                          <LayoutDashboard size={20} />
-                          <span>List Your Boat</span>
-                        </Link>
-                      </>
-                    )}
-                  </div>
+                  {user ? (
+                    <>
+                      <button
+                        onClick={() => handleAuthAction()}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors text-left"
+                      >
+                        <LayoutDashboard size={20} className="text-[#105d9e]" />
+                        <span>Dashboard</span>
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors text-left"
+                      >
+                        <LogOut size={20} />
+                        <span>Logout</span>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleAuthAction("/login")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-[#105d9e] hover:bg-blue-50 rounded-xl transition-colors text-left font-medium"
+                      >
+                        <User size={20} />
+                        <span>Sign In</span>
+                      </button>
+                      <Link
+                        href="/boat-list"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 text-[#105d9e] hover:bg-blue-50 rounded-xl transition-colors font-medium"
+                      >
+                        <LayoutDashboard size={20} />
+                        <span>List Your Boat</span>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
-          </>
-        )}
-      </header>
-
-      <div className="h-[105px] md:h-[115px] lg:h-[120px] xl:h-[135px]" />
+          </div>
+        </>
+      )}
     </>
   );
 }

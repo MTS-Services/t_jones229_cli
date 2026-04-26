@@ -8,8 +8,7 @@ import { IoIosSearch } from "react-icons/io";
 import { GoPlusCircle } from "react-icons/go";
 import { CiCircleMinus } from "react-icons/ci";
 import { useGetBoatListByLocationQuery } from "@/redux/api/boatApi";
-import Image from "next/image";
-import flag from "@/assets/flag.png";
+
 import dayjs, { Dayjs } from "dayjs";
 import { MapPin } from "lucide-react";
 
@@ -236,7 +235,7 @@ export default function ListBookingSearchBar({
             }`}
           >
             <h1 className="font-extrabold text-black text-[12px] md:text-[13px]">
-              Whon
+              Who
             </h1>
             {guests > 0 && (
               <span className="text-[10px] text-blue-600 font-bold">
