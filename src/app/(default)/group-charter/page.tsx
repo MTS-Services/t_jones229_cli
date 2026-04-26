@@ -44,8 +44,18 @@ export default function GroupBooking() {
   const [numberOfGuests, setNumberOfGuests] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const params = useSearchParams();
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    const urlLocation = params.get("location");
+    const urlDate = params.get("date");
+    const urlGuests = params.get("guests");
+
+    if (urlLocation || urlDate || urlGuests) {
+      setLocation(urlLocation);
+      setTripDate(urlDate);
+      setNumberOfGuests(urlGuests);
+    } else if (typeof window !== "undefined") {
       try {
         const raw = localStorage.getItem("searchData");
         if (raw) {
@@ -60,9 +70,7 @@ export default function GroupBooking() {
         console.error("Failed to parse searchData from localStorage", err);
       }
     }
-  }, []);
-
-  const params = useSearchParams();
+  }, [params]);
   const {
     register,
     handleSubmit,
