@@ -45,7 +45,7 @@ export default function ManageBookings({
           <div className="p-2 bg-white/10 rounded-xl">
             <Ship className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold">Manage Bookings</h1>
+          <h1 className="text-xl md:text-3xl font-bold">Manage Bookings</h1>
         </div>
         <p className="text-blue-100">
           Track and manage all your fishing trip bookings

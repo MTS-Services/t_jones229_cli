@@ -1,7 +1,5 @@
 "use client";
 import { useState, useCallback } from "react";
-// import TitleSection from "../../captain/TiltleSection";
-// import SearchBookings from "./SearchBookings";
 import BookingsTable from "./BookingsTable";
 import { useAllBookingQuery } from "@/redux/api/userDashboardApi/userBooking";
 
