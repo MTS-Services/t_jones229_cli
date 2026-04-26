@@ -278,28 +278,6 @@ export default function CustomerDetailsModal({
         {/* Footer Actions */}
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex-shrink-0">
           <div className="space-y-3">
-            {/* Waitlist Action */}
-            {/* <button
-              onClick={onToggleWaitlist}
-              className={`w-full py-3 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-                waitlistStatus === "active"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-md hover:shadow-lg"
-                  : "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-md hover:shadow-lg"
-              }`}
-            >
-              {waitlistStatus === "active" ? (
-                <>
-                  <Clock className="w-4 h-4" />
-                  Move to Pending
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="w-4 h-4" />
-                  Activate Waitlist
-                </>
-              )}
-            </button> */}
-
             {/* Delete Section */}
             {!showDeleteConfirm ? (
               <button
@@ -336,14 +314,14 @@ export default function CustomerDetailsModal({
                   <button
                     onClick={handleCancelDelete}
                     disabled={isDeleting}
-                    className="flex-1 py-2.5 px-4 rounded-lg font-medium border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50"
+                    className="flex-1 py-2.5 px-4 rounded-lg font-medium text-xs md:text-base border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleConfirmDelete}
                     disabled={isDeleting}
-                    className="flex-1 py-2.5 px-4 rounded-lg font-medium bg-red-600 text-white hover:bg-red-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex-1 py-2.5 px-4 rounded-lg font-medium text-xs md:text-base bg-red-600 text-white hover:bg-red-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {isDeleting ? (
                       <>

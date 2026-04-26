@@ -1,15 +1,10 @@
 "use client";
 
 import Button from "@/components/ReUsible/Button";
-import Image from "next/image";
 import React, { useState } from "react";
-import logo2 from "@/assets/logo.svg";
 import { useForm } from "react-hook-form";
 import { useSendOtpMutation } from "@/redux/api/authApi";
 import { toast, ToastContainer } from "react-toastify";
-import Loader from "@/components/ui/Loader";
-// import { useRouter } from "next/navigation";
-import TitleSection from "@/components/dashboard/captain/TiltleSection";
 
 export default function Page() {
   const {
@@ -54,7 +49,7 @@ export default function Page() {
 
         <div className="min-h-[80vh] w-full  flex items-center justify-center p-4">
           <div className="w-full max-w-[500px] text-center">
-            <h2 className="text-black text-2xl font-bold leading-tight mb-8">
+            <h2 className="text-black text-lg md:text-2xl font-bold leading-tight mb-8">
               Change your current password
             </h2>
 

@@ -346,7 +346,7 @@ export default function TripsManagement() {
               <Ship className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                 Trips Management
               </h1>
               <p className="text-sm text-gray-500 mt-1">
@@ -384,26 +384,26 @@ export default function TripsManagement() {
       </div>
 
       {/* Search & Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-        <div className="flex flex-wrap lg:flex-row gap-3 items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-4">
+        <div className="flex flex-wrap lg:flex-row gap-2 md:gap-3 items-center">
+          <div className="relative flex-1 min-w-[calc(100%-0px)] md:min-w-0">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 md:h-5 w-4 md:w-5 text-gray-400 pointer-events-none" />
             <input
               type="text"
               name="searchTerm"
               value={filters.searchTerm}
               onChange={handleFilterChange}
               placeholder="Search by trip name, customer or captain"
-              className="w-full py-3 pl-12 pr-4 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all placeholder-gray-400 bg-white"
+              className="w-full py-2.5 md:py-3 pl-10 md:pl-12 pr-4 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all placeholder-gray-400 bg-white text-sm md:text-base"
             />
           </div>
 
-          <div className="relative">
+          <div className="relative flex-1 md:flex-initial">
             <select
               name="date"
               value={filters.date}
               onChange={handleFilterChange}
-              className="appearance-none w-full md:w-[140px] p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all bg-white"
+              className="appearance-none w-full md:w-[140px] p-2.5 md:p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all bg-white text-sm md:text-base"
             >
               <option value="">Date</option>
               <option value="today">Today</option>
@@ -413,7 +413,7 @@ export default function TripsManagement() {
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
               <svg
-                className="w-4 h-4 text-gray-400"
+                className="w-3 h-3 md:w-4 md:h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -428,12 +428,12 @@ export default function TripsManagement() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative flex-1 md:flex-initial">
             <select
               name="status"
               value={filters.status}
               onChange={handleFilterChange}
-              className="appearance-none w-full md:w-[150px] p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all bg-white"
+              className="appearance-none w-full md:w-[150px] p-2.5 md:p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all bg-white text-sm md:text-base"
             >
               <option value="">All Status</option>
               <option value="PENDING">Pending</option>
@@ -444,7 +444,7 @@ export default function TripsManagement() {
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
               <svg
-                className="w-4 h-4 text-gray-400"
+                className="w-3 h-3 md:w-4 md:h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -459,12 +459,12 @@ export default function TripsManagement() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative flex-1 md:flex-initial">
             <select
               name="city"
               value={filters.city}
               onChange={handleFilterChange}
-              className="appearance-none w-full md:w-[140px] p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all bg-white"
+              className="appearance-none w-full md:w-[140px] p-2.5 md:p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#73bbf7] focus:border-transparent transition-all bg-white text-sm md:text-base"
             >
               <option value="">Location</option>
               <option value="Alice">Alice</option>
@@ -472,7 +472,7 @@ export default function TripsManagement() {
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
               <svg
-                className="w-4 h-4 text-gray-400"
+                className="w-3 h-3 md:w-4 md:h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

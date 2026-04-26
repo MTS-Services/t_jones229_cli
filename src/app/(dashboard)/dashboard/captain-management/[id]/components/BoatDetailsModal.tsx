@@ -529,9 +529,6 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                             </span>
                           </div>
                         </div>
-                        {/* <button className="px-4 py-2 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors whitespace-nowrap">
-                          View Trip
-                        </button> */}
                       </div>
                     </div>
                   </div>
