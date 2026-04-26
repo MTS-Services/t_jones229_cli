@@ -35,7 +35,7 @@ export default function PersonalSection({
       onSave={onSave}
       onCancel={onCancel}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <InputField
           label="First Name"
           name="firstName"

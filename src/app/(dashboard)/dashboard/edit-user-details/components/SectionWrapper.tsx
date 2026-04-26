@@ -31,7 +31,7 @@ export default function SectionWrapper({
   return (
     <div
       className={`
-      bg-white rounded-2xl p-6 shadow-sm border-2 transition-all duration-300
+      bg-white rounded-2xl p-4 sm:p-6 shadow-sm border-2 transition-all duration-300
       ${
         isEditing
           ? "border-[#FF9500] shadow-lg shadow-[#FF9500]/10"
@@ -40,11 +40,11 @@ export default function SectionWrapper({
     `}
     >
       {/* Section Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-3">
+      <div className="flex items-start justify-between mb-4 sm:mb-6 gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <div
             className={`
-            p-3 rounded-xl transition-all duration-300
+            p-2 sm:p-3 rounded-xl flex-shrink-0 transition-all duration-300
             ${
               isEditing
                 ? "bg-[#FF9500] text-white"
@@ -52,11 +52,13 @@ export default function SectionWrapper({
             }
           `}
           >
-            <Icon className="size-6" />
+            <Icon className="size-5 sm:size-6" />
           </div>
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
-            <p className="text-sm text-gray-500">{description}</p>
+          <div className="min-w-0">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-800 leading-tight">
+              {title}
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-500">{description}</p>
           </div>
         </div>
 
@@ -65,7 +67,7 @@ export default function SectionWrapper({
             type="button"
             onClick={onEdit}
             className={`
-              flex items-center gap-2 px-4 py-2 rounded-xl
+              flex-shrink-0 flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl
               transition-all duration-300
               ${
                 hasChanges
@@ -75,7 +77,7 @@ export default function SectionWrapper({
             `}
           >
             <MdEdit className="size-4" />
-            <span className="text-sm font-medium">
+            <span className="text-xs sm:text-sm font-medium hidden xs:inline sm:inline">
               {hasChanges ? "Changes Ready" : `Edit ${title}`}
             </span>
             {hasChanges && (
@@ -90,11 +92,11 @@ export default function SectionWrapper({
 
       {/* Section Actions */}
       {isEditing && (
-        <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
+        <div className="mt-4 sm:mt-6 pt-4 border-t border-gray-100 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 sm:gap-3">
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-2.5 text-gray-600 font-medium rounded-xl hover:bg-gray-100 transition-colors"
+            className="w-full sm:w-auto px-6 py-2.5 text-gray-600 font-medium rounded-xl hover:bg-gray-100 transition-colors"
           >
             Cancel
           </button>
@@ -103,7 +105,7 @@ export default function SectionWrapper({
             onClick={onSave}
             disabled={!hasChanges || isUpdating}
             className={`
-              flex items-center gap-2 px-6 py-2.5 
+              w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 
               bg-[#FF9500] text-white font-medium 
               rounded-xl shadow-lg shadow-[#FF9500]/25
               transition-all duration-300
