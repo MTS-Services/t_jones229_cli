@@ -24,7 +24,7 @@ export default function AdashboardCard({
   return (
     <Link
       href={link}
-      className="group relative block h-[170px] rounded-2xl bg-white border border-gray-200 p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-primary/30"
+      className="group relative block h-[130px] sm:h-[170px] rounded-2xl bg-white border border-gray-200 p-3 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-primary/30"
     >
       {/* Soft hover glow */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -32,12 +32,12 @@ export default function AdashboardCard({
       <div className="relative h-full flex flex-col justify-between">
         {/* Top Section */}
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          <h3 className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider leading-tight">
             {title}
           </h3>
 
           {icon && (
-            <div className="text-gray-400 group-hover:text-primary transition-colors duration-300">
+            <div className="text-gray-400 group-hover:text-primary transition-colors duration-300 [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-7 sm:[&>svg]:h-7">
               {icon}
             </div>
           )}
@@ -45,7 +45,9 @@ export default function AdashboardCard({
 
         {/* Middle Section (Main Value) */}
         <div>
-          <div className="text-3xl font-semibold text-gray-900">{value}</div>
+          <div className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            {value}
+          </div>
 
           <div className="flex items-center gap-3 mt-2">
             {subtitle && (
@@ -68,9 +70,9 @@ export default function AdashboardCard({
         </div>
 
         {/* Bottom Section */}
-        <div className="flex items-center text-sm font-medium text-gray-400 group-hover:text-primary transition-colors duration-300">
+        <div className="flex items-center text-xs sm:text-sm font-medium text-gray-400 group-hover:text-primary transition-colors duration-300">
           <span>View details</span>
-          <ChevronRightIcon className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
+          <ChevronRightIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
         </div>
       </div>
     </Link>

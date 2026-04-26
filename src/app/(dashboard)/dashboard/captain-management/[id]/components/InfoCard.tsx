@@ -16,13 +16,17 @@ const InfoCard: React.FC<InfoCardProps> = ({
   iconColor = "text-gray-600",
 }) => {
   return (
-    <div className={`flex items-center gap-3 p-4 ${bgColor} rounded-lg`}>
-      <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
-        <Icon className={`h-6 w-6 ${iconColor}`} />
+    <div
+      className={`flex items-center gap-2 md:gap-3 p-3 md:p-4 ${bgColor} rounded-lg`}
+    >
+      <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-lg flex items-center justify-center">
+        <Icon className={`h-5 w-5 md:h-6 md:w-6 ${iconColor}`} />
       </div>
       <div>
-        <p className="text-sm text-gray-600">{label}</p>
-        <p className="font-semibold text-gray-900">{value}</p>
+        <p className="text-xs md:text-sm text-gray-600">{label}</p>
+        <p className="text-sm md:text-base font-semibold text-gray-900">
+          {value}
+        </p>
       </div>
     </div>
   );

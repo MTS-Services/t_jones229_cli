@@ -67,7 +67,7 @@ export default function CustomerDetailsModal({
   const StatusIcon = statusBadge.icon;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
@@ -76,19 +76,23 @@ export default function CustomerDetailsModal({
       />
 
       {/* Modal */}
-      <div className="relative bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden transform transition-all animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col">
+      <div className="relative bg-white w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[90vh] rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col">
+        {/* Drag handle (mobile only) */}
+        <div className="sm:hidden flex justify-center pt-2 pb-1 flex-shrink-0">
+          <div className="w-10 h-1 bg-gray-300 rounded-full" />
+        </div>
         {/* Header */}
-        <div className="bg-[#035292] px-6 py-4 flex-shrink-0">
+        <div className="bg-[#035292] px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/20 rounded-xl">
-                <FaUser className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 bg-white/20 rounded-xl">
+                <FaUser className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">
+                <h2 className="text-base sm:text-xl font-semibold text-white">
                   Customer Profile
                 </h2>
-                <p className="text-blue-100 text-sm">
+                <p className="text-blue-100 text-xs sm:text-sm">
                   View and manage customer information
                 </p>
               </div>
@@ -104,61 +108,67 @@ export default function CustomerDetailsModal({
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-3 sm:p-6 overflow-y-auto flex-1">
           {/* Quick Stats */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-              <div className="flex items-center gap-2 mb-1">
-                <FaPlane className="w-4 h-4 text-blue-600" />
-                <span className="text-xs font-medium text-blue-600 uppercase tracking-wider">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
+            <div className="bg-blue-50 rounded-xl p-2.5 sm:p-4 border border-blue-100">
+              <div className="flex items-center gap-1.5 mb-1">
+                <FaPlane className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+                <span className="text-[10px] sm:text-xs font-medium text-blue-600 uppercase tracking-wider">
                   Trips
                 </span>
               </div>
-              <p className="text-2xl font-bold text-blue-700">
+              <p className="text-xl sm:text-2xl font-bold text-blue-700">
                 {customer.totalTrips || 0}
               </p>
-              <p className="text-xs text-blue-600 mt-1">Total journeys</p>
+              <p className="text-[10px] sm:text-xs text-blue-600 mt-1">
+                Total journeys
+              </p>
             </div>
 
-            <div className="bg-purple-50 rounded-xl p-4 border border-purple-100">
-              <div className="flex items-center gap-2 mb-1">
-                <FaShieldAlt className="w-4 h-4 text-purple-600" />
-                <span className="text-xs font-medium text-purple-600 uppercase tracking-wider">
+            <div className="bg-purple-50 rounded-xl p-2.5 sm:p-4 border border-purple-100">
+              <div className="flex items-center gap-1.5 mb-1">
+                <FaShieldAlt className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" />
+                <span className="text-[10px] sm:text-xs font-medium text-purple-600 uppercase tracking-wider">
                   Status
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <div
-                  className={`w-2 h-2 rounded-full ${waitlistStatus === "active" ? "bg-emerald-500" : waitlistStatus === "pending" ? "bg-amber-500" : "bg-slate-400"}`}
+                  className={`w-2 h-2 rounded-full flex-shrink-0 ${waitlistStatus === "active" ? "bg-emerald-500" : waitlistStatus === "pending" ? "bg-amber-500" : "bg-slate-400"}`}
                 />
-                <p className="text-sm font-medium text-purple-700 capitalize">
+                <p className="text-xs sm:text-sm font-medium text-purple-700 capitalize truncate">
                   {waitlistStatus || "Inactive"}
                 </p>
               </div>
-              <p className="text-xs text-purple-600 mt-1">Waitlist status</p>
+              <p className="text-[10px] sm:text-xs text-purple-600 mt-1">
+                Waitlist
+              </p>
             </div>
 
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-              <div className="flex items-center gap-2 mb-1">
-                <Calendar className="w-4 h-4 text-slate-600" />
-                <span className="text-xs font-medium text-slate-600 uppercase tracking-wider">
+            <div className="bg-slate-50 rounded-xl p-2.5 sm:p-4 border border-slate-100">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-slate-600" />
+                <span className="text-[10px] sm:text-xs font-medium text-slate-600 uppercase tracking-wider">
                   Member
                 </span>
               </div>
-              <p className="text-sm font-medium text-slate-700">
+              <p className="text-xs sm:text-sm font-medium text-slate-700">
                 {new Date(customer.createdAt).toLocaleDateString("en-US", {
                   month: "short",
                   year: "numeric",
                 })}
               </p>
-              <p className="text-xs text-slate-600 mt-1">Since</p>
+              <p className="text-[10px] sm:text-xs text-slate-600 mt-1">
+                Since
+              </p>
             </div>
           </div>
 
           {/* Main Information Grid */}
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <div className="grid md:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
             {/* Personal Information */}
-            <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+            <div className="bg-white rounded-xl border border-slate-200 p-3 sm:p-5 shadow-sm">
               <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
                 <div className="w-1 h-4 bg-blue-500 rounded-full" />
                 Personal Information
@@ -204,7 +214,7 @@ export default function CustomerDetailsModal({
             </div>
 
             {/* Account Status */}
-            <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+            <div className="bg-white rounded-xl border border-slate-200 p-3 sm:p-5 shadow-sm">
               <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
                 <div className="w-1 h-4 bg-emerald-500 rounded-full" />
                 Account Status
@@ -245,7 +255,7 @@ export default function CustomerDetailsModal({
           </div>
 
           {/* Management Overview Card */}
-          <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-xl p-5 border border-amber-200 mb-2">
+          <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-xl p-3 sm:p-5 border border-amber-200 mb-2">
             <div className="flex items-start gap-3">
               <div className="p-2 bg-amber-200 rounded-lg">
                 <FaChartLine className="w-4 h-4 text-amber-700" />

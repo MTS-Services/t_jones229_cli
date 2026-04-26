@@ -25,14 +25,14 @@ const AccountStatusCard: React.FC<AccountStatusCardProps> = ({
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="px-6 py-4 bg-blue-100 border-b border-gray-100">
-        <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+      <div className="px-4 md:px-6 py-3 md:py-4 bg-blue-100 border-b border-gray-100">
+        <h2 className="text-base md:text-lg font-semibold text-gray-900 flex items-center gap-2">
           <Shield className="h-5 w-5 text-blue-600" />
           Account Status
         </h2>
       </div>
-      <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="p-3 md:p-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
           <InfoCard
             icon={StatusIcon}
             label="Status"

@@ -95,24 +95,28 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto overscroll-contain bg-black/50 p-4 sm:p-6"
+      className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center overscroll-contain bg-black/50 sm:p-6"
       style={safariBackdropStyle}
     >
-      <div className="relative flex max-h-[calc(100vh-2rem)] max-h-[calc(100dvh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl transform-gpu animate-in fade-in zoom-in duration-200 will-change-transform">
+      <div className="relative flex max-h-[92dvh] sm:max-h-[calc(100dvh-2rem)] w-full sm:max-w-5xl flex-col overflow-hidden rounded-t-2xl sm:rounded-2xl bg-white shadow-2xl transform-gpu animate-in fade-in slide-in-from-bottom-4 sm:zoom-in duration-200 will-change-transform">
+        {/* Drag handle (mobile only) */}
+        <div className="sm:hidden flex justify-center pt-2 pb-1 flex-shrink-0">
+          <div className="w-10 h-1 bg-gray-300 rounded-full" />
+        </div>
         {/* Modal Header */}
-        <div className="sticky top-0 z-10 flex shrink-0 items-center justify-between rounded-t-2xl bg-[#035292] p-6 text-white">
-          <div className="flex items-center gap-3">
+        <div className="sticky top-0 z-10 flex shrink-0 items-center justify-between rounded-t-2xl bg-[#035292] px-4 sm:px-6 py-3 sm:py-6 text-white">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div
-              className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur"
+              className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur"
               style={safariBackdropStyle}
             >
-              <Ship className="h-5 w-5" />
+              <Ship className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold">
+              <h2 className="text-base sm:text-xl font-bold">
                 {boat.manufacturer || "Boat Details"}
               </h2>
-              <p className="text-sm text-blue-100 mt-0.5">
+              <p className="text-xs sm:text-sm text-blue-100 mt-0.5">
                 Boat ID: {boat.id?.substring(0, 8)}
               </p>
             </div>
@@ -127,7 +131,7 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
 
         {/* Modal Content */}
         <div
-          className="min-h-0 flex-1 overflow-y-auto p-6"
+          className="min-h-0 flex-1 overflow-y-auto p-3 sm:p-6"
           style={safariScrollStyle}
         >
           {/* Quick Stats Cards */}
@@ -538,19 +542,19 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-6 py-4 flex items-center gap-2 justify-end rounded-b-2xl">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onClose}
-              className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              Close
-            </button>
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-3 sm:px-6 py-3 sm:py-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-2 sm:justify-end rounded-b-2xl">
+          <button
+            onClick={onClose}
+            className="w-full sm:w-auto px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Close
+          </button>
+          <div className="flex gap-2">
             {currentStatus !== "DECLINE" && (
               <button
                 onClick={() => handleStatusUpdate("DECLINE")}
                 disabled={isUpdating}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
               >
                 {isUpdating ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -564,7 +568,7 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
               <button
                 onClick={() => handleStatusUpdate("APPROVE")}
                 disabled={isUpdating}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50"
               >
                 {isUpdating ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

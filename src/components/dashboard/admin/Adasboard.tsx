@@ -122,7 +122,10 @@ export default function Adashboard() {
           <Skeleton className="h-8 w-48 rounded-lg mb-6" />
           <div className="grid xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-[170px] rounded-2xl" />
+              <Skeleton
+                key={i}
+                className="h-[130px] sm:h-[170px] rounded-2xl"
+              />
             ))}
           </div>
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -186,41 +189,53 @@ export default function Adashboard() {
           </div>
 
           {/* Bar Chart Section */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 sm:mb-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                   Trip Status Distribution
                 </h3>
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-gray-500 text-xs sm:text-sm mt-1">
                   Overview of all trips by status
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 mt-2 md:mt-0">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#FF9500]"></div>
-                  <span className="text-sm text-gray-600">Upcoming</span>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 md:mt-0">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#FF9500] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Upcoming
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#34C759]"></div>
-                  <span className="text-sm text-gray-600">Completed</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#34C759] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Completed
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <span className="text-sm text-gray-600">Cancelled</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500 flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Cancelled
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#035292]"></div>
-                  <span className="text-sm text-gray-600">Users</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#035292] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Users
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#4961e9]"></div>
-                  <span className="text-sm text-gray-600">Captains</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#4961e9] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Captains
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#d6c356]"></div>
-                  <span className="text-sm text-gray-600">Refund</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#d6c356] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Refund
+                  </span>
                 </div>
               </div>
             </div>
@@ -238,15 +253,15 @@ export default function Adashboard() {
                 </p>
               </div>
             ) : (
-              <div className="h-80">
+              <div className="h-56 sm:h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
                     data={barChartData}
                     margin={{
-                      top: 20,
-                      right: 30,
-                      left: 20,
-                      bottom: 20,
+                      top: 10,
+                      right: 10,
+                      left: 0,
+                      bottom: 10,
                     }}
                   >
                     <CartesianGrid
@@ -258,12 +273,13 @@ export default function Adashboard() {
                       dataKey="name"
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: "#666", fontSize: 12 }}
+                      tick={{ fill: "#666", fontSize: 11 }}
                     />
                     <YAxis
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: "#666", fontSize: 12 }}
+                      tick={{ fill: "#666", fontSize: 11 }}
+                      width={28}
                     />
                     <Tooltip
                       content={<CustomTooltip />}

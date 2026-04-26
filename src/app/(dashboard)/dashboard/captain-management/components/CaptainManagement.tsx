@@ -52,7 +52,7 @@ function MobileCaptainsView({
   if (!captains || captains.length === 0) return null;
 
   return (
-    <div className="block md:hidden py-6 px-4">
+    <div className="block md:hidden">
       <div className="space-y-4">
         {pageCaptains.map((captain: any, idx: number) => (
           <div
@@ -305,7 +305,7 @@ export default function CaptainManagement({ data = [], isLoading }: any) {
               <Anchor className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                 Captain Management
               </h1>
               <p className="text-sm text-gray-500 mt-1">

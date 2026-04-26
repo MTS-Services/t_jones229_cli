@@ -13,11 +13,11 @@ const CaptainHeader: React.FC<CaptainHeaderProps> = ({ user }) => {
     <div className="bg-[#035292] rounded-xl shadow p-8 text-white">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-white/30">
+          <div className="md:w-20 md:h-20 bg-white/20 text-xs sm:text-sm md:text-base lg:text-lg backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-white/30">
             {user.firstName?.charAt(0) || "U"}
           </div>
           <div>
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">
               {user.firstName} {user.lastName}
             </h1>
             <p className="text-blue-100 mt-1 flex items-center gap-2">
