@@ -164,7 +164,7 @@ export default function Information({ setIsLicenceImage }: InformationProps) {
   const handleBrowseClick = () => fileInputRef.current?.click();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Listing Details Section */}
       <section className="">
         <div className="flex items-center gap-3 mb-6">

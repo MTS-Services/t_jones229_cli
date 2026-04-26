@@ -92,7 +92,9 @@ export default function Page() {
               <Ship className="w-8 h-8 text-blue-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Boat & Trips</h1>
+              <h1 className="text-lg md:text-2xl font-bold text-gray-900">
+                Boat & Trips
+              </h1>
               <p className="text-gray-600 mt-1 max-w-2xl">
                 Manage your boats and their associated trips
               </p>
@@ -103,7 +105,7 @@ export default function Page() {
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
           >
             <PlusCircle className="w-5 h-5" />
-            <span>Add New Boat</span>
+            <span className="hidden md:inline">Add New Boat</span>
           </Link>
         </div>
       </div>
@@ -125,13 +127,92 @@ export default function Page() {
             className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
           >
             <PlusCircle className="w-5 h-5" />
-            <span>List Your Boat</span>
+            <span className="hidden md:inline">List Your Boat</span>
           </Link>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
-          {/* Table */}
-          <div className="overflow-x-auto">
+          {/* ── MOBILE: card list ── */}
+          <div className="divide-y divide-gray-100 md:hidden">
+            {boats.map((boat: Boat) => {
+              const statusConfig = getStatusConfig(boat.approvalStatus);
+              const StatusIcon = statusConfig.icon;
+              return (
+                <div key={boat.id} className="p-4 flex gap-3">
+                  {/* Thumbnail */}
+                  <div className="flex-shrink-0">
+                    {boat.photos && boat.photos.length > 0 ? (
+                      <img
+                        src={boat.photos[0].url}
+                        alt={boat.manufacturer}
+                        className="w-16 h-16 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center">
+                        <Ship className="w-7 h-7 text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="font-semibold text-gray-900 truncate">
+                          {boat.manufacturer}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {boat.modelYear} • {boat.boatLength}ft •{" "}
+                          {boat.boatType}
+                        </p>
+                      </div>
+                      <div
+                        className={`flex-shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${statusConfig.color}`}
+                      >
+                        <StatusIcon className="w-3 h-3" />
+                        <span>{statusConfig.label}</span>
+                      </div>
+                    </div>
+
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Users className="w-3.5 h-3.5" /> {boat.guests} guests
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Fish className="w-3.5 h-3.5" /> {boat.trips.length}{" "}
+                        trips
+                      </span>
+                      {boat.captain && (
+                        <span className="truncate">
+                          Captain: {boat.captain.firstName}{" "}
+                          {boat.captain.lastName}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-3 flex items-center gap-2">
+                      <button
+                        onClick={() => handleViewBoat(boat)}
+                        className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                      >
+                        <Eye className="w-3.5 h-3.5" /> View
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBoat(boat)}
+                        disabled={isDeleting}
+                        className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors disabled:opacity-50"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* ── DESKTOP: full table ── */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
@@ -198,7 +279,6 @@ export default function Page() {
                         </div>
                       </td>
 
-                      {/* Type */}
                       <td className="px-6 py-4">
                         <span className="text-sm text-gray-900">
                           {boat.listingType}
@@ -211,7 +291,6 @@ export default function Page() {
                         </span>
                       </td>
 
-                      {/* Details */}
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center space-x-3">
                           <div className="flex items-center text-sm text-gray-600">
@@ -221,7 +300,6 @@ export default function Page() {
                         </div>
                       </td>
 
-                      {/* Status */}
                       <td className="px-6 py-4 text-center">
                         <div
                           className={`inline-flex items-center justify-center space-x-1 px-3 py-1 rounded-full text-xs font-medium border ${statusConfig.color}`}
@@ -231,7 +309,6 @@ export default function Page() {
                         </div>
                       </td>
 
-                      {/* Trips Count */}
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-1">
                           <Fish className="w-4 h-4 text-gray-400" />
@@ -241,7 +318,6 @@ export default function Page() {
                         </div>
                       </td>
 
-                      {/* Captain */}
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
                           {boat.captain
@@ -253,7 +329,6 @@ export default function Page() {
                         </div>
                       </td>
 
-                      {/* Actions */}
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center space-x-2">
                           <button
@@ -263,13 +338,6 @@ export default function Page() {
                           >
                             <Eye className="w-5 h-5" />
                           </button>
-                          {/* <Link
-                            href={`/dashboard/check-your-trip?boatId=${boat.id}`}
-                            className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                            title="Edit"
-                          >
-                            <Edit className="w-5 h-5" />
-                          </Link> */}
                           <button
                             onClick={() => handleDeleteBoat(boat)}
                             disabled={isDeleting}

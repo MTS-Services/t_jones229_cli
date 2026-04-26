@@ -46,7 +46,7 @@ export const BoatDetailModal: React.FC<BoatDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black bg-opacity-50"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -58,15 +58,20 @@ export const BoatDetailModal: React.FC<BoatDetailModalProps> = ({
         aria-hidden="true"
       />
 
-      {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-5xl w-full mx-4 max-h-[90vh] flex flex-col">
+      {/* Modal — full-screen on mobile, centered card on sm+ */}
+      <div className="relative bg-white w-full sm:rounded-2xl sm:max-w-5xl sm:mx-4 sm:max-h-[90vh] h-[95dvh] sm:h-auto rounded-t-2xl flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-blue-50 rounded-lg">
-              <Ship className="w-6 h-6 text-blue-600" />
+        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between rounded-t-2xl">
+          {/* Drag handle (mobile only) */}
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-gray-300 rounded-full sm:hidden" />
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="p-1.5 sm:p-2 bg-blue-50 rounded-lg">
+              <Ship className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
             </div>
-            <h2 id="modal-title" className="text-xl font-bold text-gray-900">
+            <h2
+              id="modal-title"
+              className="text-base sm:text-xl font-bold text-gray-900"
+            >
               Boat Details
             </h2>
           </div>
@@ -80,25 +85,23 @@ export const BoatDetailModal: React.FC<BoatDetailModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {/* Boat Header */}
-          <div className="mb-6">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+          <div className="mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-4">
               <div>
-                <h3 className="text-2xl font-bold text-gray-900">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
                   {boat.manufacturer}
                 </h3>
-                <p className="text-gray-600 mt-1">
+                <p className="text-sm sm:text-base text-gray-600 mt-1">
                   Listed by: {boat.captain.firstName} {boat.captain.lastName}
                 </p>
               </div>
               <div
-                className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full border ${statusConfig.color}`}
+                className={`self-start inline-flex items-center space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border text-sm ${statusConfig.color}`}
               >
-                <StatusIcon className="w-4 h-4" />
-                <span className="text-sm font-medium">
-                  {statusConfig.label}
-                </span>
+                <StatusIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="font-medium">{statusConfig.label}</span>
               </div>
             </div>
           </div>
@@ -111,12 +114,12 @@ export const BoatDetailModal: React.FC<BoatDetailModalProps> = ({
 
           {/* Description */}
           {boat.description && (
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
                 <Info className="w-4 h-4 mr-2" />
                 Description
               </h4>
-              <p className="text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-xl">
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed bg-gray-50 p-3 sm:p-4 rounded-xl">
                 {boat.description}
               </p>
             </div>
@@ -144,10 +147,10 @@ export const BoatDetailModal: React.FC<BoatDetailModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-6 py-4 flex justify-end rounded-b-2xl">
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex justify-end rounded-b-2xl">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="w-full sm:w-auto px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 font-medium"
           >
             Close
           </button>

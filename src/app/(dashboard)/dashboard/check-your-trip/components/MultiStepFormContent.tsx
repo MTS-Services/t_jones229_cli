@@ -230,7 +230,7 @@ export default function MultiStepFormContent() {
         heading={HEADINGS[currentStep]}
       />
 
-      <div className="flex-1 overflow-y-auto lg:px-12 md:px-10 px-6 py-8">
+      <div className="flex-1 overflow-y-auto md:px-10 lg:px-12 py-8">
         <RHFProvider {...methods}>
           <form
             onSubmit={handleSubmit(handleNext)}

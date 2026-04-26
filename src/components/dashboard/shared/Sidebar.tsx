@@ -5,11 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sidebarItems } from "./sidebarItems";
-import { HiMenu, HiX } from "react-icons/hi";
+import { HiX } from "react-icons/hi";
 import logo from "@/assets/logo.svg";
 import { useGetMyBoatQuery } from "@/redux/api/boatApi";
 
-const Sidebar = () => {
+interface SidebarProps {
+  externalOpen?: boolean;
+  onExternalClose?: () => void;
+}
+
+const Sidebar = ({ externalOpen, onExternalClose }: SidebarProps = {}) => {
   // Set default role to avoid blank sidebar
   const [currentUserRole, setCurrentUserRole] = useState<string | null>(
     Cookies.get("currentUserRole") || "GUEST",
@@ -25,6 +30,13 @@ const Sidebar = () => {
     const role = Cookies.get("currentUserRole") || "GUEST";
     setCurrentUserRole(role);
   }, []);
+
+  // Sync external open state → internal state
+  useEffect(() => {
+    if (externalOpen !== undefined) {
+      setIsMobileMenuOpen(externalOpen);
+    }
+  }, [externalOpen]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -60,8 +72,15 @@ const Sidebar = () => {
     };
   }, [isMobileMenuOpen]);
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    onExternalClose?.();
+  };
+
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    const next = !isMobileMenuOpen;
+    setIsMobileMenuOpen(next);
+    if (!next) onExternalClose?.();
   };
 
   const isActiveMenuItem = (href: string) => {
@@ -92,17 +111,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      {!isMobileMenuOpen && (
-        <button
-          id="mobile-menu-button"
-          className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#0037FF] text-white shadow-lg hover:bg-blue-600 transition-colors"
-          onClick={toggleMobileMenu}
-        >
-          <HiMenu className="w-6 h-6" />
-        </button>
-      )}
-
       {/* Desktop Sidebar */}
       <div className="hidden lg:block bg-slate-100 lg:w-64 h-screen lg:sticky lg:top-0 lg:left-0 lg:overflow-y-auto lg:flex-shrink-0">
         {/* Logo Section */}
@@ -158,71 +166,72 @@ const Sidebar = () => {
 
       {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity duration-300">
+        <div className="lg:hidden fixed inset-0 z-50">
+          {/* Overlay */}
           <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+            onClick={closeMobileMenu}
+          />
+
+          {/* Sidebar */}
+          <aside
             id="mobile-sidebar"
-            className={`fixed inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out overflow-y-auto shadow-xl ${
-              isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-            style={{ backgroundColor: "#0037FF" }}
+            className={`
+        absolute inset-y-0 left-0 w-64 bg-gray-100 shadow-2xl
+        transform transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
           >
-            {/* Mobile Header */}
-            <div className="flex items-center justify-between h-16 px-4">
-              <div className="w-[150px]">
-                <Image
-                  src={logo}
-                  alt="logo"
-                  width={300}
-                  height={100}
-                  priority
-                  className="w-32 h-auto"
-                />
-              </div>
+            {/* Header */}
+            <div className="flex items-center justify-between h-16 px-4 border-b">
+              <Image src={logo} alt="logo" className="w-16 h-auto" />
+
               <button
-                onClick={toggleMobileMenu}
-                className="p-2 rounded-md text-white hover:bg-blue-600 transition-colors"
+                onClick={closeMobileMenu}
+                className="p-2 rounded-md text-gray-700 hover:bg-gray-200 transition"
+                aria-label="Close menu"
               >
                 <HiX className="w-6 h-6" />
               </button>
             </div>
 
-            {/* Mobile Navigation Menu */}
-            <div className="bg-transparent text-white">
+            {/* Menu */}
+            <nav className="py-4">
               {sidebarItemsToShow?.map((item) => {
                 let href = "#";
+
                 if (
                   typeof item.label === "object" &&
                   item.label !== null &&
                   "props" in item.label &&
-                  typeof (item.label as any).props === "object" &&
-                  (item.label as any).props !== null &&
-                  "href" in (item.label as any).props
+                  (item.label as any).props?.href
                 ) {
                   href = (item.label as any).props.href;
                 }
+
                 const isActive = isActiveMenuItem(href);
 
                 return (
                   <Link
                     key={item.key}
                     href={href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={closeMobileMenu}
                     className={`
-                      flex items-center px-6 py-3 text-white transition-all duration-200 border-l-4
-                      ${
-                        isActive
-                          ? "bg-blue-600 border-white text-white font-medium"
-                          : "border-transparent hover:bg-blue-600 hover:border-blue-300"
-                      }
-                    `}
+                flex items-center px-6 py-3 text-sm transition-all duration-200 border-l-4
+                ${
+                  isActive
+                    ? "bg-blue-600 border-blue-700 text-white font-medium"
+                    : "text-gray-700 border-transparent hover:bg-blue-100 hover:border-blue-400"
+                }
+              `}
                   >
                     <span className="text-lg mr-3">{item.icon}</span>
-                    <span className="text-sm">{item.key}</span>
+                    <span>{item.key}</span>
                   </Link>
                 );
               })}
-            </div>
-          </div>
+            </nav>
+          </aside>
         </div>
       )}
     </>

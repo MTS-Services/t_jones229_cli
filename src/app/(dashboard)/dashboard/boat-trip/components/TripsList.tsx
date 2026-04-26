@@ -34,7 +34,7 @@ const TripImage: React.FC<TripImageProps> = ({
 
   if (!imageSrc) {
     return (
-      <div className="w-28 flex-shrink-0 bg-gray-100 rounded-l-xl flex flex-col items-center justify-center text-gray-400">
+      <div className="w-16 md:w-28 flex-shrink-0 bg-gray-100 rounded-l-xl flex flex-col items-center justify-center text-gray-400">
         <ImageOff className="w-6 h-6 mb-1" />
         <span className="text-xs text-center px-1">No image</span>
       </div>
@@ -46,7 +46,7 @@ const TripImage: React.FC<TripImageProps> = ({
       src={imageSrc}
       alt={tripName}
       loading="lazy"
-      className="w-40 flex-shrink-0 object-cover rounded-l-xl self-stretch"
+      className="w-20 md:w-64 flex-shrink-0 object-cover rounded-l-xl self-stretch"
     />
   );
 };

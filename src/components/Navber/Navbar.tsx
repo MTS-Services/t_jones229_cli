@@ -117,7 +117,7 @@ export default function Navbar() {
             : "bg-white border-b border-gray-100"
         }`}
       >
-        <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-2 sm:gap-4">
+        <nav className="container mx-auto px-4 h-18 flex items-center justify-between gap-2 sm:gap-4">
           {/* LOGO */}
           <Link
             href="/"
