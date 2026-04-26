@@ -231,7 +231,7 @@ export default function Navbar() {
         <div
           className={`lg:hidden overflow-hidden ${
             searchExpanded
-              ? "max-h-32 py-3 px-4 bg-gray-500 border-t border-gray-100"
+              ? "py-3 px-3 bg-gray-500/10 border-t border-gray-100"
               : "max-h-0"
           }`}
         >
@@ -244,7 +244,7 @@ export default function Navbar() {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-[998] lg:hidden animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/70 z-[998] lg:hidden animate-in fade-in duration-200"
             onClick={() => setMenuOpen(false)}
           />
 

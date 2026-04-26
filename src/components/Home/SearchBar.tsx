@@ -18,12 +18,28 @@ import {
   IoAddOutline,
   IoRemoveOutline,
 } from "react-icons/io5";
-import { MdOutlineClose } from "react-icons/md";
 import { useGetBoatListByLocationQuery } from "@/redux/api/boatApi";
-import Image from "next/image";
-import flag from "@/assets/flag.png";
 import dayjs, { Dayjs } from "dayjs";
-import { Locate, MapPin, X } from "lucide-react";
+import { MapPin, X } from "lucide-react";
+
+/* ─────────────────────────────────────────────────────────────────
+   CONSTANTS
+───────────────────────────────────────────────────────────────── */
+
+const SEARCH_DATA_KEY = "searchData";
+
+const BOOKING_TYPES = [
+  {
+    title: "Private booking",
+    value: false,
+    description: "Hire out your own boat with a captain.",
+  },
+  {
+    title: "Shared booking",
+    value: true,
+    description: "Join other group bookings to fill a boats.",
+  },
+] as const;
 
 const dropdownVariants: Variants = {
   hidden: { opacity: 0, y: 15, scale: 0.95 },
@@ -41,123 +57,693 @@ const dropdownVariants: Variants = {
   },
 };
 
-export default function SearchBar({
-  scrolled,
-  onActiveChange,
-}: {
+const MOBILE_SECTIONS = ["where", "when", "who", "type"] as const;
+
+/* ─────────────────────────────────────────────────────────────────
+   TYPES
+───────────────────────────────────────────────────────────────── */
+
+type BookingType = (typeof BOOKING_TYPES)[number];
+
+type Destination = { city: string; country?: string };
+
+type SearchState = {
+  location: string;
+  selectedDate: Dayjs | null;
+  guests: number;
+  selected: BookingType | null;
+};
+
+type Props = {
   scrolled: boolean;
   onActiveChange?: (isActive: boolean) => void;
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   LOCAL STORAGE HELPERS
+───────────────────────────────────────────────────────────────── */
+
+function writeSearchData(state: SearchState): void {
+  const formattedDate = state.selectedDate
+    ? state.selectedDate.format("YYYY-MM-DD")
+    : "";
+  const data = {
+    location: state.location,
+    date: formattedDate,
+    startDate: formattedDate,
+    bookingType: String(state.selected?.value),
+    guests: state.guests.toString(),
+    timestamp: new Date().toISOString(),
+  };
+  localStorage.setItem(SEARCH_DATA_KEY, JSON.stringify(data));
+}
+
+function buildSearchUrl(state: SearchState): string {
+  const formattedDate = state.selectedDate
+    ? state.selectedDate.format("YYYY-MM-DD")
+    : "";
+  const params = new URLSearchParams();
+  if (state.location) params.set("location", state.location);
+  if (formattedDate) params.set("date", formattedDate);
+  if (state.guests > 0) params.set("guests", state.guests.toString());
+  if (state.selected) params.set("bookingType", String(state.selected.value));
+  const base =
+    state.selected?.value === true ? "/group-charter" : "/search-charter";
+  return params.toString() ? `${base}?${params}` : base;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   MOBILE MODAL SUB-COMPONENTS
+───────────────────────────────────────────────────────────────── */
+
+function MobileProgressBar({ active }: { active: string }) {
+  const currentIndex = MOBILE_SECTIONS.indexOf(
+    active as (typeof MOBILE_SECTIONS)[number],
+  );
+  return (
+    <div className="px-4 py-2 bg-white/95 backdrop-blur-sm">
+      <div className="flex space-x-2">
+        {MOBILE_SECTIONS.map((section, index) => (
+          <div
+            key={section}
+            className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+              index <= currentIndex
+                ? "bg-gradient-to-r from-blue-500 to-blue-600"
+                : "bg-gray-200"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobileWhereCard({
+  active,
+  location,
+  destinations,
+  onActivate,
+  onSelect,
+  onLocationChange,
+}: {
+  active: boolean;
+  location: string;
+  destinations: Destination[];
+  onActivate: () => void;
+  onSelect: (city: string) => void;
+  onLocationChange: (val: string) => void;
 }) {
+  const filtered = useMemo(
+    () =>
+      destinations.filter((d) =>
+        d.city.toLowerCase().includes(location.toLowerCase()),
+      ),
+    [destinations, location],
+  );
+
+  return (
+    <div
+      className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow border border-white/70 transition-all duration-300 p-4 ${
+        active
+          ? "ring-2 ring-blue-100 ring-opacity-30"
+          : "cursor-pointer hover:shadow-xl"
+      }`}
+      onClick={onActivate}
+    >
+      {active ? (
+        <div className="space-y-2">
+          <div className="flex-1">
+            <h3 className="font-bold text-sm text-gray-800">Where to?</h3>
+            <p className="text-sm text-gray-500">
+              Choose your fishing destination
+            </p>
+          </div>
+          <div className="relative">
+            <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg z-10" />
+            <input
+              autoFocus
+              type="text"
+              placeholder="Search destinations..."
+              value={location}
+              onChange={(e) => onLocationChange(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 font-medium placeholder-gray-400"
+            />
+          </div>
+          <div className="space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
+            {filtered.slice(0, 6).map((dest, i) => (
+              <button
+                key={i}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(dest.city);
+                }}
+                className="w-full flex items-center space-x-2 p-0 rounded-xl hover:bg-blue-50 active:bg-blue-100 transition-all duration-200 text-left group"
+              >
+                <div className="p-1 bg-gray-100 rounded-xl group-hover:bg-gray-200 transition-colors">
+                  <MapPin className="text-gray-500 h-4 w-4" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-800 group-hover:text-blue-700">
+                    {dest.city}
+                  </p>
+                  {dest.country && (
+                    <p className="text-xs text-gray-500">{dest.country}</p>
+                  )}
+                </div>
+                <IoChevronForwardOutline className="text-gray-400 group-hover:text-blue-500 transition-colors" />
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <IoLocationOutline className="text-2xl text-gray-600" />
+            <div>
+              <h3 className="font-semibold text-gray-800 text-sm">Where</h3>
+              <p className="text-sm text-gray-500">
+                {location || "Choose destination"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            {location && <div className="w-2 h-2 bg-green-500 rounded-full" />}
+            <IoChevronForwardOutline className="text-gray-400" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileWhenCard({
+  active,
+  selectedDate,
+  onActivate,
+  onSelect,
+}: {
+  active: boolean;
+  selectedDate: Dayjs | null;
+  onActivate: () => void;
+  onSelect: (d: Dayjs) => void;
+}) {
+  return (
+    <div
+      className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 p-4 ${
+        active
+          ? "ring-2 ring-green-500 ring-opacity-30"
+          : "cursor-pointer hover:shadow-xl hover:scale-[1.01]"
+      }`}
+      onClick={onActivate}
+    >
+      {active ? (
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <IoCalendarOutline className="text-xl text-gray-600" />
+            <div className="flex-1">
+              <h3 className="font-bold text-sm text-gray-800">When?</h3>
+              <p className="text-sm text-gray-500">
+                Select your preferred date
+              </p>
+            </div>
+          </div>
+          <div className="bg-gray-50 rounded-2xl p-2 border border-gray-100">
+            <Calendar
+              fullscreen={false}
+              onSelect={onSelect}
+              className="custom-calendar"
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <IoCalendarOutline className="text-lg text-gray-600" />
+            <div>
+              <h3 className="font-semibold text-gray-800 text-sm">When</h3>
+              <p className="text-sm text-gray-500">
+                {selectedDate
+                  ? selectedDate.format("MMM DD, YYYY")
+                  : "Select date"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            {selectedDate && (
+              <div className="w-2 h-2 bg-green-500 rounded-full" />
+            )}
+            <IoChevronForwardOutline className="text-gray-400" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileWhoCard({
+  active,
+  guests,
+  onActivate,
+  onDecrement,
+  onIncrement,
+  onContinue,
+}: {
+  active: boolean;
+  guests: number;
+  onActivate: () => void;
+  onDecrement: () => void;
+  onIncrement: () => void;
+  onContinue: () => void;
+}) {
+  return (
+    <div
+      className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 p-4 ${
+        active
+          ? "ring-2 ring-purple-500 ring-opacity-30"
+          : "cursor-pointer hover:shadow-xl hover:scale-[1.01]"
+      }`}
+      onClick={onActivate}
+    >
+      {active ? (
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <IoPeopleOutline className="text-xl text-gray-600" />
+            <div className="flex-1">
+              <h3 className="font-bold text-sm text-gray-800">Who's coming?</h3>
+              <p className="text-sm text-gray-500">Add guests to your trip</p>
+            </div>
+          </div>
+          <div className="bg-gray-50 rounded-2xl p-2 border border-gray-100">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-gray-800 text-sm">
+                Guests
+              </span>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDecrement();
+                  }}
+                  className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-purple-500 hover:bg-purple-50 active:scale-95 transition-all"
+                >
+                  <IoRemoveOutline className="text-gray-600 text-lg" />
+                </button>
+                <div className="w-16 text-center">
+                  <span className="text-2xl font-bold text-gray-800">
+                    {guests}
+                  </span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onIncrement();
+                  }}
+                  className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-purple-500 hover:bg-purple-50 active:scale-95 transition-all"
+                >
+                  <IoAddOutline className="text-gray-600 text-lg" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onContinue();
+            }}
+            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-semibold text-lg hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
+          >
+            Continue
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <IoPeopleOutline className="text-lg text-gray-600" />
+            <div>
+              <h3 className="font-semibold text-gray-800 text-sm">Who</h3>
+              <p className="text-sm text-gray-500">
+                {guests > 0
+                  ? `${guests} guest${guests > 1 ? "s" : ""}`
+                  : "Add guests"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            {guests > 0 && (
+              <div className="w-2 h-2 bg-green-500 rounded-full" />
+            )}
+            <IoChevronForwardOutline className="text-gray-400" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileTypeCard({
+  active,
+  selected,
+  onActivate,
+  onSelect,
+}: {
+  active: boolean;
+  selected: BookingType | null;
+  onActivate: () => void;
+  onSelect: (t: BookingType) => void;
+}) {
+  return (
+    <div
+      className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 p-4 ${
+        active
+          ? "ring-2 ring-orange-500 ring-opacity-30"
+          : "cursor-pointer hover:shadow-xl hover:scale-[1.01]"
+      }`}
+      onClick={onActivate}
+    >
+      {active ? (
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <IoBoatOutline className="text-xl text-gray-600" />
+            <div className="flex-1">
+              <h3 className="font-bold text-sm text-gray-800">Trip type</h3>
+              <p className="text-sm text-gray-500">
+                Choose your booking preference
+              </p>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {BOOKING_TYPES.map((type, i) => (
+              <button
+                key={i}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(type);
+                }}
+                className={`w-full p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
+                  selected?.value === type.value
+                    ? "border-orange-300 bg-orange-50 ring-2 ring-orange-200 scale-[1.02]"
+                    : "border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 hover:scale-[1.01]"
+                }`}
+              >
+                <h4 className="font-semibold text-gray-800 text-sm mb-2">
+                  {type.title}
+                </h4>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  {type.description}
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <IoBoatOutline className="text-lg text-gray-600" />
+            <div>
+              <h3 className="font-semibold text-gray-800 text-sm">Type</h3>
+              <p className="text-sm text-gray-500">
+                {selected ? selected.title : "Select trip type"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            {selected && <div className="w-2 h-2 bg-green-500 rounded-full" />}
+            <IoChevronForwardOutline className="text-gray-400" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileSearchFooter({
+  location,
+  selectedDate,
+  selected,
+  onSearch,
+}: {
+  location: string;
+  selectedDate: Dayjs | null;
+  selected: BookingType | null;
+  onSearch: () => void;
+}) {
+  const isReady = !!location && !!selectedDate && !!selected;
+  return (
+    <div className="p-4 bg-white/95 backdrop-blur-sm border-t border-gray-100/50">
+      <button
+        onClick={onSearch}
+        disabled={!isReady}
+        className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] transition-all duration-200"
+      >
+        <IoIosSearch className="text-xl" />
+        {isReady ? "Search Fishing Trips" : "Complete Fields to Search"}
+      </button>
+      {!isReady && (
+        <div className="flex items-center justify-center mt-3 space-x-4">
+          {[
+            { label: "Where", done: !!location },
+            { label: "When", done: !!selectedDate },
+            { label: "Type", done: !!selected },
+          ].map(({ label, done }) => (
+            <div key={label} className="flex items-center space-x-2">
+              <div
+                className={`w-2 h-2 rounded-full ${done ? "bg-green-500" : "bg-gray-300"}`}
+              />
+              <span className="text-xs text-gray-500">{label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   DESKTOP DROPDOWN PANELS
+───────────────────────────────────────────────────────────────── */
+
+function DesktopWhereDropdown({
+  destinations,
+  searchTerm,
+  location,
+  onSelect,
+  onSearchChange,
+  onClear,
+}: {
+  destinations: Destination[];
+  searchTerm: string;
+  location: string;
+  onSelect: (city: string) => void;
+  onSearchChange: (val: string) => void;
+  onClear: () => void;
+}) {
+  const filtered = useMemo(
+    () =>
+      destinations.filter((d) =>
+        d.city.toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
+    [destinations, searchTerm],
+  );
+  return (
+    <motion.div
+      variants={dropdownVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="absolute top-[105%] left-0 w-[300px] bg-white shadow-2xl rounded-2xl p-6 z-50 border border-gray-100"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h2 className="text-sm font-bold text-gray-400 uppercase tracking-tight mb-4">
+        Destinations
+      </h2>
+      <div className="max-h-60 overflow-y-auto custom-scrollbar">
+        {filtered.map((dest, idx) => (
+          <div
+            key={idx}
+            onClick={() => onSelect(dest.city)}
+            className="flex items-center gap-2 my-1 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer group"
+          >
+            <div className="size-8 flex items-center justify-center bg-gray-100 rounded-md">
+              <MapPin className="text-gray-400 w-4 h-4" />
+            </div>
+            <p className="font-semibold text-sm text-gray-600 flex-1">
+              {dest.city}
+            </p>
+            {(searchTerm || location) && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClear();
+                }}
+                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded-full transition-all"
+              >
+                <X className="text-gray-400 hover:text-gray-600 w-4 h-4" />
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function DesktopWhenDropdown({ onSelect }: { onSelect: (d: Dayjs) => void }) {
+  return (
+    <motion.div
+      variants={dropdownVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="absolute top-[104%] left-0 z-50 bg-white shadow-2xl rounded-xl p-4 border border-gray-100"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <Calendar fullscreen={false} onSelect={onSelect} />
+    </motion.div>
+  );
+}
+
+function DesktopWhoDropdown({
+  guests,
+  onDecrement,
+  onIncrement,
+}: {
+  guests: number;
+  onDecrement: () => void;
+  onIncrement: () => void;
+}) {
+  return (
+    <motion.div
+      variants={dropdownVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="absolute top-[105%] left-0 -translate-x-1/2 bg-white p-6 rounded-2xl shadow-2xl w-64 z-50 border border-gray-100"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex items-center justify-between">
+        <span className="font-bold">Guests</span>
+        <div className="flex items-center gap-3">
+          <CiCircleMinus
+            onClick={onDecrement}
+            className="text-3xl text-gray-400 hover:text-black cursor-pointer"
+          />
+          <span className="font-bold">{guests}</span>
+          <GoPlusCircle
+            onClick={onIncrement}
+            className="text-3xl text-gray-400 hover:text-black cursor-pointer"
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function DesktopTypeDropdown({
+  selected,
+  onSelect,
+}: {
+  selected: BookingType | null;
+  onSelect: (t: BookingType) => void;
+}) {
+  return (
+    <motion.div
+      variants={dropdownVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="absolute top-[105%] left-0 w-80 bg-white shadow-2xl rounded-2xl p-4 z-50 border border-gray-100"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="space-y-2">
+        {BOOKING_TYPES.map((type, i) => (
+          <div
+            key={i}
+            onClick={() => onSelect(type)}
+            className={`p-3 rounded-xl border transition-all cursor-pointer ${
+              selected?.value === type.value
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-100 hover:bg-gray-50"
+            }`}
+          >
+            <h3 className="font-bold text-gray-800">{type.title}</h3>
+            <p className="text-xs text-gray-500">{type.description}</p>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   MAIN COMPONENT
+───────────────────────────────────────────────────────────────── */
+
+export default function SearchBar({ scrolled, onActiveChange }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [activeMobileSection, setActiveMobileSection] =
     useState<string>("where");
-  const [selected, setSelected] = useState<any>(null);
-  const [guests, setGuests] = useState<number>(0);
+  const [selected, setSelected] = useState<BookingType | null>(null);
+  const [guests, setGuests] = useState(0);
   const [location, setLocation] = useState("");
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const route = useRouter();
+  const router = useRouter();
 
   const { data } = useGetBoatListByLocationQuery({});
-  const destinations = data?.data || [];
-
-  const bookingTypes = [
-    {
-      title: "Private booking",
-      value: false,
-      description: "Hire out your own boat with a captain.",
-    },
-    {
-      title: "Shared booking",
-      value: true,
-      description: "Join other group bookings to fill a boat.",
-    },
-  ];
+  const destinations: Destination[] = data?.data || [];
 
   const isExpanded = !scrolled || activeTab !== null;
 
-  const handleSearch = () => {
-    const formattedDate = selectedDate ? selectedDate.format("YYYY-MM-DD") : "";
-
-    // Store all search data as a single object for better organization
-    const searchData = {
-      location: location,
-      date: formattedDate,
-      startDate: formattedDate, // For backward compatibility
-      bookingType: String(selected?.value),
-      guests: guests.toString(),
-      timestamp: new Date().toISOString(),
-    };
-
-    // Store as object in localStorage
-    localStorage.setItem("searchData", JSON.stringify(searchData));
-
-    // Build URL parameters
-    const searchParams = new URLSearchParams();
-    if (location) searchParams.set("location", location);
-    if (formattedDate) searchParams.set("date", formattedDate);
-    if (guests > 0) searchParams.set("guests", guests.toString());
-    if (selected) searchParams.set("bookingType", String(selected.value));
-
-    const queryString = searchParams.toString();
-    const baseUrl =
-      selected?.value === true ? "/group-charter" : "/search-charter";
-    const fullUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
-
-    setIsMobileModalOpen(false);
-    route.push(fullUrl);
-  };
-
+  // Mount flag for portal
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    setMounted(true);
+  }, []);
+
+  // Notify parent when desktop dropdown opens/closes
+  useEffect(() => {
+    onActiveChange?.(activeTab !== null);
+  }, [activeTab, onActiveChange]);
+
+  // Close desktop dropdowns on outside click
+  useEffect(() => {
+    if (!activeTab) return;
+    const handler = (e: MouseEvent) => {
       if (
         containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        !containerRef.current.contains(e.target as Node)
       ) {
         setActiveTab(null);
       }
-    }
-
-    // Only add event listener when there's an active dropdown
-    if (activeTab) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [activeTab]);
 
+  // Lock body scroll when mobile modal is open
   useEffect(() => {
-    setMounted(true);
-    if (onActiveChange) onActiveChange(activeTab !== null);
-  }, [activeTab, onActiveChange]);
-
-  useEffect(() => {
-    if (isMobileModalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isMobileModalOpen ? "hidden" : "";
   }, [isMobileModalOpen]);
 
-  const filteredDestinations = useMemo(
-    () =>
-      destinations.filter((d: any) =>
-        d?.city?.toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
-    [destinations, searchTerm],
-  );
+  const handleSearch = () => {
+    const state: SearchState = { location, selectedDate, guests, selected };
+    writeSearchData(state);
+    setIsMobileModalOpen(false);
+    router.push(buildSearchUrl(state));
+  };
 
   return (
     <>
-      {/* --- Mobile Compact Bar --- */}
+      {/* ── MOBILE COMPACT TRIGGER BAR ───────────────────────── */}
       <div className="md:hidden w-full px-4 pb-2">
         <div
           onClick={() => setIsMobileModalOpen(true)}
-          className={`w-full flex items-center gap-3 bg-white rounded-full shadow-lg border border-gray-200 ${scrolled ? "px-3 py-1" : "px-5 py-1"} cursor-pointer transition-all duration-300`}
+          className={`w-full flex items-center gap-3 bg-white rounded-full shadow-lg border border-gray-200 ${
+            scrolled ? "px-3 py-1" : "px-5 py-1"
+          } cursor-pointer transition-all duration-300`}
         >
           <IoIosSearch className="text-2xl text-gray-700" />
           <div className="flex-1">
@@ -171,7 +757,7 @@ export default function SearchBar({
         </div>
       </div>
 
-      {/* --- Mobile Full Screen Modal (Using Portal) --- */}
+      {/* ── MOBILE FULL-SCREEN MODAL (portal) ────────────────── */}
       {mounted &&
         createPortal(
           <div>
@@ -183,7 +769,7 @@ export default function SearchBar({
                 className="md:hidden fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex flex-col"
                 style={{ zIndex: 999999 }}
               >
-                {/* Enhanced Header */}
+                {/* Header */}
                 <div className="bg-white/95 backdrop-blur-sm px-4 py-2 border-b border-gray-100/50">
                   <div className="flex items-center justify-between">
                     <div>
@@ -203,404 +789,79 @@ export default function SearchBar({
                   </div>
                 </div>
 
-                {/* Progress Indicator */}
-                <div className="px-4 py-2 bg-white/95 backdrop-blur-sm">
-                  <div className="flex space-x-2">
-                    {["where", "when", "who", "type"].map((section, index) => {
-                      const currentIndex = [
-                        "where",
-                        "when",
-                        "who",
-                        "type",
-                      ].indexOf(activeMobileSection);
-                      return (
-                        <div
-                          key={section}
-                          className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-                            index <= currentIndex
-                              ? "bg-gradient-to-r from-blue-500 to-blue-600"
-                              : "bg-gray-200"
-                          }`}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
+                <MobileProgressBar active={activeMobileSection} />
 
-                {/* Scrollable Content */}
+                {/* Cards */}
                 <div className="flex-1 overflow-y-auto px-2 py-4 space-y-2">
-                  {/* Where Card - Enhanced */}
-                  <div
-                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow border border-white/70 transition-all duration-300 ${
-                      activeMobileSection === "where"
-                        ? "p-4 ring-2 ring-blue-100 ring-opacity-30 "
-                        : "p-4 cursor-pointer hover:shadow-xl"
-                    }`}
-                    onClick={() => setActiveMobileSection("where")}
-                  >
-                    {activeMobileSection === "where" ? (
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="flex-1">
-                            <h3 className="font-bold text-sm text-gray-800">
-                              Where to?
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              Choose your fishing destination
-                            </p>
-                          </div>
-                        </div>
-                        <div className="relative">
-                          <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg z-10" />
-                          <input
-                            autoFocus
-                            type="text"
-                            placeholder="Search destinations..."
-                            value={location}
-                            onChange={(e) => {
-                              setLocation(e.target.value);
-                              setSearchTerm(e.target.value);
-                            }}
-                            className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 font-medium placeholder-gray-400"
-                          />
-                        </div>
-                        <div className="space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
-                          {filteredDestinations
-                            .slice(0, 6)
-                            .map((destination: any, index: number) => (
-                              <button
-                                key={index}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setLocation(destination.city);
-                                  setActiveMobileSection("when");
-                                }}
-                                className="w-full flex items-center space-x-2 p-0 rounded-xl hover:bg-blue-50 active:bg-blue-100 transition-all duration-200 text-left group"
-                              >
-                                <div className="p-1 bg-gray-100 rounded-xl group-hover:bg-gray-200 transition-colors">
-                                  <MapPin className="text-gray-500 h-4 w-4" />
-                                </div>
-                                <div className="flex-1">
-                                  <p className="text-sm text-gray-800 group-hover:text-blue-700">
-                                    {destination.city}
-                                  </p>
-                                  <p className="text-xs text-gray-500">
-                                    {destination.country}
-                                  </p>
-                                </div>
-                                <IoChevronForwardOutline className="text-gray-400 group-hover:text-blue-500 transition-colors" />
-                              </button>
-                            ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <div className="">
-                            <IoLocationOutline className="text-2xl text-gray-600" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-800 text-sm">
-                              Where
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              {location || "Choose destination"}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {location && (
-                            <div className="w-2 h-2 bg-green-500 rounded-full" />
-                          )}
-                          <IoChevronForwardOutline className="text-gray-400" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* When Card - Enhanced */}
-                  <div
-                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 ${
-                      activeMobileSection === "when"
-                        ? "p-4 ring-2 ring-green-500 ring-opacity-30"
-                        : "p-4 cursor-pointer hover:shadow-xl hover:scale-[1.01]"
-                    }`}
-                    onClick={() => setActiveMobileSection("when")}
-                  >
-                    {activeMobileSection === "when" ? (
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="">
-                            <IoCalendarOutline className="text-xl text-gray-600" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-sm text-gray-800">
-                              When?
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              Select your preferred date
-                            </p>
-                          </div>
-                        </div>
-                        <div className="bg-gray-50 rounded-2xl p-2 border border-gray-100">
-                          <Calendar
-                            fullscreen={false}
-                            onSelect={(date) => {
-                              setSelectedDate(date);
-                              setActiveMobileSection("who");
-                            }}
-                            className="custom-calendar"
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="">
-                            <IoCalendarOutline className="text-lg text-gray-600" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-800 text-sm">
-                              When
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              {selectedDate
-                                ? selectedDate.format("MMM DD, YYYY")
-                                : "Select date"}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {selectedDate && (
-                            <div className="w-2 h-2 bg-green-500 rounded-full" />
-                          )}
-                          <IoChevronForwardOutline className="text-gray-400" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Who Card - Enhanced */}
-                  <div
-                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 ${
-                      activeMobileSection === "who"
-                        ? "p-4 ring-2 ring-purple-500 ring-opacity-30"
-                        : "p-4 cursor-pointer hover:shadow-xl hover:scale-[1.01]"
-                    }`}
-                    onClick={() => setActiveMobileSection("who")}
-                  >
-                    {activeMobileSection === "who" ? (
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="">
-                            <IoPeopleOutline className="text-xl text-gray-600" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-sm text-gray-800">
-                              Who's coming?
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              Add guests to your trip
-                            </p>
-                          </div>
-                        </div>
-                        <div className="bg-gray-50 rounded-2xl p-2 border border-gray-100">
-                          <div className="flex items-center justify-between">
-                            <span className="font-semibold text-gray-800 text-sm">
-                              Guests
-                            </span>
-                            <div className="flex items-center space-x-2">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setGuests(Math.max(0, guests - 1));
-                                }}
-                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-purple-500 hover:bg-purple-50 active:scale-95 transition-all"
-                              >
-                                <IoRemoveOutline className="text-gray-600 text-lg" />
-                              </button>
-                              <div className="w-16 text-center">
-                                <span className="text-2xl font-bold text-gray-800">
-                                  {guests}
-                                </span>
-                              </div>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setGuests(guests + 1);
-                                }}
-                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-purple-500 hover:bg-purple-50 active:scale-95 transition-all"
-                              >
-                                <IoAddOutline className="text-gray-600 text-lg" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMobileSection("type");
-                          }}
-                          className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-semibold text-lg hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
-                        >
-                          Continue
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="">
-                            <IoPeopleOutline className="text-lg text-gray-600" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-800 text-sm">
-                              Who
-                            </h3>
-                            <p className="text-sm text-gray-500 ">
-                              {guests > 0
-                                ? `${guests} guest${guests > 1 ? "s" : ""}`
-                                : "Add guests"}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {guests > 0 && (
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          )}
-                          <IoChevronForwardOutline className="text-gray-400" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Type Card - Enhanced */}
-                  <div
-                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 transition-all duration-300 ${
-                      activeMobileSection === "type"
-                        ? "p-4 ring-2 ring-orange-500 ring-opacity-30"
-                        : "p-4 cursor-pointer hover:shadow-xl hover:scale-[1.01]"
-                    }`}
-                    onClick={() => setActiveMobileSection("type")}
-                  >
-                    {activeMobileSection === "type" ? (
-                      <div className="space-y-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="">
-                            <IoBoatOutline className="text-xl text-gray-600" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-sm text-gray-800">
-                              Trip type
-                            </h3>
-                            <p className="text-sm text-gray-500 ">
-                              Choose your booking preference
-                            </p>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          {bookingTypes.map((type, index) => (
-                            <button
-                              key={index}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelected(type);
-                              }}
-                              className={`w-full p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
-                                selected?.value === type.value
-                                  ? "border-orange-300 bg-orange-50 ring-2 ring-orange-200 scale-[1.02]"
-                                  : "border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 hover:scale-[1.01]"
-                              }`}
-                            >
-                              <h4 className="font-semibold text-gray-800 text-sm mb-2">
-                                {type.title}
-                              </h4>
-                              <p className="text-sm text-gray-500 leading-relaxed">
-                                {type.description}
-                              </p>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="">
-                            <IoBoatOutline className="text-lg text-gray-600" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-800 text-sm">
-                              Type
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              {selected ? selected.title : "Select trip type"}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {selected && (
-                            <div className="w-2 h-2 bg-green-500 rounded-full" />
-                          )}
-                          <IoChevronForwardOutline className="text-gray-400" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  <MobileWhereCard
+                    active={activeMobileSection === "where"}
+                    location={location}
+                    destinations={destinations}
+                    onActivate={() => setActiveMobileSection("where")}
+                    onSelect={(city) => {
+                      setLocation(city);
+                      setActiveMobileSection("when");
+                    }}
+                    onLocationChange={setLocation}
+                  />
+                  <MobileWhenCard
+                    active={activeMobileSection === "when"}
+                    selectedDate={selectedDate}
+                    onActivate={() => setActiveMobileSection("when")}
+                    onSelect={(d) => {
+                      setSelectedDate(d);
+                      setActiveMobileSection("who");
+                    }}
+                  />
+                  <MobileWhoCard
+                    active={activeMobileSection === "who"}
+                    guests={guests}
+                    onActivate={() => setActiveMobileSection("who")}
+                    onDecrement={() => setGuests((g) => Math.max(0, g - 1))}
+                    onIncrement={() => setGuests((g) => g + 1)}
+                    onContinue={() => setActiveMobileSection("type")}
+                  />
+                  <MobileTypeCard
+                    active={activeMobileSection === "type"}
+                    selected={selected}
+                    onActivate={() => setActiveMobileSection("type")}
+                    onSelect={setSelected}
+                  />
                 </div>
 
-                {/* Enhanced Bottom Search Button */}
-                <div className="p-4 bg-white/95 backdrop-blur-sm border-t border-gray-100/50">
-                  <button
-                    onClick={handleSearch}
-                    disabled={!location || !selectedDate || !selected}
-                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] transition-all duration-200"
-                  >
-                    <IoIosSearch className="text-xl" />
-                    {!location || !selectedDate || !selected
-                      ? "Complete Fields to Search"
-                      : "Search Fishing Trips"}
-                  </button>
-                  {(!location || !selectedDate || !selected) && (
-                    <div className="flex items-center justify-center mt-3 space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <div
-                          className={`w-2 h-2 rounded-full ${location ? "bg-green-500" : "bg-gray-300"}`}
-                        ></div>
-                        <span className="text-xs text-gray-500">Where</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div
-                          className={`w-2 h-2 rounded-full ${selectedDate ? "bg-green-500" : "bg-gray-300"}`}
-                        ></div>
-                        <span className="text-xs text-gray-500">When</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div
-                          className={`w-2 h-2 rounded-full ${selected ? "bg-green-500" : "bg-gray-300"}`}
-                        ></div>
-                        <span className="text-xs text-gray-500">Type</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <MobileSearchFooter
+                  location={location}
+                  selectedDate={selectedDate}
+                  selected={selected}
+                  onSearch={handleSearch}
+                />
               </motion.div>
             )}
           </div>,
           document.body,
         )}
 
-      {/* --- Desktop Search Bar (Keep your original UI) --- */}
+      {/* ── DESKTOP SEARCH BAR ───────────────────────────────── */}
       <div
-        className={`hidden md:block w-full mx-auto px-4 transition-all duration-700 ease-in-out ${isExpanded ? "max-w-5xl" : "max-w-xl"}`}
+        className={`hidden md:block w-full mx-auto px-4 transition-all duration-700 ease-in-out ${
+          isExpanded ? "max-w-5xl" : "max-w-xl"
+        }`}
         ref={containerRef}
       >
         <div
-          className={`relative flex flex-col lg:flex-row items-center bg-white rounded-full transition-all duration-700 ease-in-out border-2 shadow-sm ${activeTab ? "border-gray-100 shadow-xl" : "border-gray-100"}`}
+          className={`relative flex flex-col lg:flex-row items-center bg-white rounded-full transition-all duration-700 ease-in-out border-2 shadow-sm ${
+            activeTab ? "border-gray-100 shadow-xl" : "border-gray-100"
+          }`}
         >
           <div className="flex flex-row w-full items-center justify-between">
-            {/* Desktop Where */}
+            {/* WHERE */}
             <div
               onClick={() => setActiveTab("where")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-3 py-2.5 items-center flex-[0.8]"} ${activeTab === "where" ? "bg-white border z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${
+                isExpanded
+                  ? "px-6 py-3 flex-1"
+                  : "px-3 py-2.5 items-center flex-[0.8]"
+              } ${activeTab === "where" ? "bg-white border z-20 scale-105" : "hover:bg-gray-100"}`}
             >
               <h1
                 className={`font-extrabold text-black ${isExpanded ? "text-[15px]" : "text-[13px]"}`}
@@ -626,70 +887,37 @@ export default function SearchBar({
                   </span>
                 )
               )}
-
               <AnimatePresence>
                 {activeTab === "where" && (
-                  <motion.div
-                    variants={dropdownVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    className="absolute top-[105%] left-0 w-[300px] bg-white shadow-2xl rounded-2xl p-6 z-50 border border-gray-100"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-sm font-bold text-gray-400 uppercase tracking-tight">
-                        Destinations
-                      </h2>
-                    </div>
-                    <div className="max-h-60 overflow-y-auto custom-scrollbar">
-                      {filteredDestinations.map((dest: any, idx: number) => (
-                        <div
-                          key={idx}
-                          onClick={() => {
-                            setLocation(dest.city);
-                            setSearchTerm(dest.city);
-                            setActiveTab(null);
-                          }}
-                          className="flex items-center gap-2 my-1 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer group"
-                        >
-                          {/* Icon */}
-                          <div className="size-8 flex items-center justify-center bg-gray-100 rounded-md">
-                            <MapPin className="text-gray-400 w-4 h-4" />
-                          </div>
-
-                          {/* City Name */}
-                          <p className="font-semibold text-sm text-gray-600 flex-1">
-                            {dest.city}
-                          </p>
-
-                          {/* Clear Button */}
-                          {(searchTerm || location) && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSearchTerm("");
-                                setLocation("");
-                              }}
-                              className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded-full transition-all"
-                            >
-                              <X className="text-gray-400 hover:text-gray-600 w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
+                  <DesktopWhereDropdown
+                    destinations={destinations}
+                    searchTerm={searchTerm}
+                    location={location}
+                    onSelect={(city) => {
+                      setLocation(city);
+                      setSearchTerm(city);
+                      setActiveTab(null);
+                    }}
+                    onSearchChange={setSearchTerm}
+                    onClear={() => {
+                      setSearchTerm("");
+                      setLocation("");
+                    }}
+                  />
                 )}
               </AnimatePresence>
             </div>
 
             <div className="w-[1px] h-8 bg-gray-200 mx-1" />
 
-            {/* Desktop When */}
+            {/* WHEN */}
             <div
               onClick={() => setActiveTab("when")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "when" ? "bg-white border rounded-none z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${
+                isExpanded
+                  ? "px-6 py-3 flex-1"
+                  : "px-2 py-1.5 items-center flex-[0.6]"
+              } ${activeTab === "when" ? "bg-white border rounded-none z-20 scale-105" : "hover:bg-gray-100"}`}
             >
               <h1 className="font-extrabold text-black">When</h1>
               {isExpanded ? (
@@ -705,32 +933,26 @@ export default function SearchBar({
               )}
               <AnimatePresence>
                 {activeTab === "when" && (
-                  <motion.div
-                    variants={dropdownVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    className="absolute top-[104%] left-0 z-50 bg-white shadow-2xl rounded-xl rounded-t p-4 border border-gray-100"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Calendar
-                      fullscreen={false}
-                      onSelect={(date) => {
-                        setSelectedDate(date);
-                        setActiveTab(null);
-                      }}
-                    />
-                  </motion.div>
+                  <DesktopWhenDropdown
+                    onSelect={(d) => {
+                      setSelectedDate(d);
+                      setActiveTab(null);
+                    }}
+                  />
                 )}
               </AnimatePresence>
             </div>
 
             <div className="w-[1px] h-8 bg-gray-200 mx-1" />
 
-            {/* Desktop Who */}
+            {/* WHO */}
             <div
               onClick={() => setActiveTab("who")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.5]"} ${activeTab === "who" ? "bg-white border rounded-none z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${
+                isExpanded
+                  ? "px-6 py-3 flex-1"
+                  : "px-2 py-1.5 items-center flex-[0.5]"
+              } ${activeTab === "who" ? "bg-white border rounded-none z-20 scale-105" : "hover:bg-gray-100"}`}
             >
               <h1 className="font-extrabold text-black">Who</h1>
               {isExpanded ? (
@@ -746,37 +968,23 @@ export default function SearchBar({
               )}
               <AnimatePresence>
                 {activeTab === "who" && (
-                  <motion.div
-                    variants={dropdownVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    className="absolute top-[105%] left-0 -translate-x-1/2 bg-white p-6 rounded-t rounded-2xl shadow-2xl w-64 z-50 border border-gray-100"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold">Guests</span>
-                      <div className="flex items-center gap-3">
-                        <CiCircleMinus
-                          onClick={() => guests > 0 && setGuests(guests - 1)}
-                          className="text-3xl text-gray-400 hover:text-black cursor-pointer"
-                        />
-                        <span className="font-bold">{guests}</span>
-                        <GoPlusCircle
-                          onClick={() => setGuests(guests + 1)}
-                          className="text-3xl text-gray-400 hover:text-black cursor-pointer"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
+                  <DesktopWhoDropdown
+                    guests={guests}
+                    onDecrement={() => guests > 0 && setGuests(guests - 1)}
+                    onIncrement={() => setGuests(guests + 1)}
+                  />
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Desktop Type */}
+            {/* TYPE */}
             <div
               onClick={() => setActiveTab("type")}
-              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${isExpanded ? "px-6 py-3 flex-1" : "px-2 py-1.5 items-center flex-[0.6]"} ${activeTab === "type" ? "bg-white border z-20 scale-105" : "hover:bg-gray-100 hover:scale-102"}`}
+              className={`relative flex flex-col cursor-pointer rounded-full transition-all duration-500 ease-in-out ${
+                isExpanded
+                  ? "px-6 py-3 flex-1"
+                  : "px-2 py-1.5 items-center flex-[0.6]"
+              } ${activeTab === "type" ? "bg-white border z-20 scale-105" : "hover:bg-gray-100"}`}
             >
               <h1 className="font-extrabold text-black">Type</h1>
               {isExpanded ? (
@@ -792,43 +1000,24 @@ export default function SearchBar({
               )}
               <AnimatePresence>
                 {activeTab === "type" && (
-                  <motion.div
-                    variants={dropdownVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    className="absolute top-[105%] left-0 w-80 bg-white shadow-2xl rounded-2xl p-4 z-50 border border-gray-100"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div className="space-y-2">
-                      {bookingTypes.map((type, index) => (
-                        <div
-                          key={index}
-                          onClick={() => {
-                            setSelected(type);
-                            setActiveTab(null);
-                          }}
-                          className={`p-3 rounded-xl border transition-all cursor-pointer ${selected?.value === type.value ? "border-blue-500 bg-blue-50" : "border-gray-100 hover:bg-gray-50"}`}
-                        >
-                          <h3 className="font-bold text-gray-800">
-                            {type.title}
-                          </h3>
-                          <p className="text-xs text-gray-500">
-                            {type.description}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
+                  <DesktopTypeDropdown
+                    selected={selected}
+                    onSelect={(t) => {
+                      setSelected(t);
+                      setActiveTab(null);
+                    }}
+                  />
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Search Button */}
+            {/* SEARCH BUTTON */}
             <div className="p-1.5">
               <button
                 onClick={handleSearch}
-                className={`flex items-center justify-center bg-[#105d9e] hover:bg-[#0c4a7e] text-white rounded-full transition-all duration-500 ease-in-out shadow-md hover:shadow-xl active:scale-90 ${isExpanded ? "w-24 h-12 lg:w-28 lg:h-14" : "w-10 h-10"}`}
+                className={`flex items-center justify-center bg-[#105d9e] hover:bg-[#0c4a7e] text-white rounded-full transition-all duration-500 ease-in-out shadow-md hover:shadow-xl active:scale-90 ${
+                  isExpanded ? "w-24 h-12 lg:w-28 lg:h-14" : "w-10 h-10"
+                }`}
               >
                 <IoIosSearch
                   className={`transition-all duration-500 ease-in-out ${isExpanded ? "text-2xl w-6 h-6" : "text-lg"}`}

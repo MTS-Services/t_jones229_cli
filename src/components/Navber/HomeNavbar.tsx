@@ -224,7 +224,7 @@ export default function HomeNavbar() {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-[998] lg:hidden animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/70 z-[998] lg:hidden animate-in fade-in duration-200"
             onClick={() => setMenuOpen(false)}
           />
 

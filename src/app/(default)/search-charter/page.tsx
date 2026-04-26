@@ -19,11 +19,36 @@ export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [queryParams, setQueryParams] = useState<Record<string, string>>({});
 
-  // Get values from URL parameters
-  const location = searchParams.get("location") || "";
-  const guests = Number(searchParams.get("guests")) || 0;
-  const date = searchParams.get("date") || "";
-  const bookingType = searchParams.get("bookingType") || "";
+  // Read from localStorage searchData, fall back to URL params
+  const [location, setLocation] = useState("");
+  const [guests, setGuests] = useState(0);
+  const [date, setDate] = useState("");
+  const [bookingType, setBookingType] = useState("");
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("searchData");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setLocation(parsed?.location || searchParams.get("location") || "");
+        setGuests(
+          Number(parsed?.guests) || Number(searchParams.get("guests")) || 0,
+        );
+        setDate(parsed?.date || searchParams.get("date") || "");
+        setBookingType(
+          parsed?.bookingType || searchParams.get("bookingType") || "",
+        );
+        return;
+      }
+    } catch {
+      // ignore parse errors
+    }
+    // fallback to URL params
+    setLocation(searchParams.get("location") || "");
+    setGuests(Number(searchParams.get("guests")) || 0);
+    setDate(searchParams.get("date") || "");
+    setBookingType(searchParams.get("bookingType") || "");
+  }, [searchParams]);
 
   // Helper function to format date
   const formatDisplayDate = useCallback((dateString: string): string => {
