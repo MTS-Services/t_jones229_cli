@@ -76,7 +76,7 @@ export function CalendarDashboard({
       days.push(
         <div
           key={`empty-${i}`}
-          className="h-20 border border-gray-100 bg-gray-50/50"
+          className="h-12 md:h-20 border border-gray-100 bg-gray-50/50"
         />,
       );
     }
@@ -93,7 +93,7 @@ export function CalendarDashboard({
       days.push(
         <div
           key={day}
-          className={`h-20 border border-gray-100 p-1.5 cursor-pointer transition-all duration-200 hover:shadow-sm hover:border-blue-300 ${
+          className={`h-12 md:h-20 border border-gray-100 p-1 md:p-1.5 cursor-pointer transition-all duration-200 hover:shadow-sm hover:border-blue-300 ${
             isToday ? "bg-blue-50 border-blue-300 shadow-sm" : "bg-white"
           } ${isSelected ? "ring-1 ring-blue-500 bg-blue-50" : ""} ${
             hasBookings ? "hover:bg-blue-50" : "hover:bg-gray-50"
@@ -101,22 +101,23 @@ export function CalendarDashboard({
           onClick={() => setSelectedDate(dateStr)}
         >
           <div
-            className={`flex items-center justify-between mb-1 ${
+            className={`flex items-center justify-between mb-0.5 md:mb-1 ${
               isToday ? "text-blue-700 font-semibold" : "text-gray-900"
             }`}
           >
-            <span className="text-xs font-medium">{day}</span>
+            <span className="text-[10px] md:text-xs font-medium">{day}</span>
             {hasBookings && (
-              <div className="flex items-center space-x-1">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                <span className="text-[10px] text-gray-500">
+              <div className="flex items-center space-x-0.5 md:space-x-1">
+                <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
+                <span className="hidden md:inline text-[10px] text-gray-500">
                   {bookings.length}
                 </span>
               </div>
             )}
           </div>
 
-          <div className="space-y-0.5">
+          {/* Booking pills — hidden on mobile to keep cells compact */}
+          <div className="hidden md:block space-y-0.5">
             {bookings.slice(0, 2).map((booking) => (
               <div
                 key={booking?.id}
@@ -134,6 +135,15 @@ export function CalendarDashboard({
               </div>
             )}
           </div>
+
+          {/* Mobile: just a count badge */}
+          {hasBookings && (
+            <div className="md:hidden mt-0.5 text-center">
+              <span className="text-[9px] font-semibold text-blue-600 bg-blue-100 px-1 rounded">
+                {bookings.length}
+              </span>
+            </div>
+          )}
         </div>,
       );
     }
@@ -194,17 +204,18 @@ export function CalendarDashboard({
     : [];
 
   return (
-    <div className="flex-1 lg:px-10 md:px-8 px-6 py-6">
+    <div className="flex-1 lg:px-10 md:px-4 px-2 py-4 md:py-6">
       {/* Sidebar stats */}
       <CalendarSidebar data={data} />
 
       {/* Calendar area */}
       <div className="flex-1 flex flex-col h-full">
         {/* Header with navigation */}
-        <div className="py-6">
-          <div className="bg-gray-100 rounded-lg border-b border-gray-200 p-4 shadow-sm flex-shrink-0">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-3">
+        <div className="py-3 md:py-6">
+          <div className="bg-gray-100 rounded-lg border-b border-gray-200 p-3 md:p-4 shadow-sm flex-shrink-0">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3 sm:mb-3">
+              {/* Month navigation */}
+              <div className="flex items-center space-x-2">
                 <Button
                   variant="outline"
                   size="icon"
@@ -213,7 +224,7 @@ export function CalendarDashboard({
                 >
                   <ChevronLeft className="h-3 w-3" />
                 </Button>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-lg md:text-2xl font-bold text-gray-900 min-w-[140px] md:min-w-[180px] text-center">
                   {MONTHS[currentMonth]} {currentYear}
                 </h1>
                 <Button
@@ -226,12 +237,13 @@ export function CalendarDashboard({
                 </Button>
               </div>
 
+              {/* Month select + Today */}
               <div className="flex bg-white items-center space-x-2">
                 <Select
                   value={MONTHS[currentMonth]}
                   onValueChange={handleMonthSelect}
                 >
-                  <SelectTrigger className="w-32 h-8 text-sm">
+                  <SelectTrigger className="w-28 md:w-32 h-8 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -264,9 +276,11 @@ export function CalendarDashboard({
               {WEEK_DAYS.map((day) => (
                 <div
                   key={day}
-                  className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 p-2 text-center text-xs font-semibold text-gray-700"
+                  className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 p-1 md:p-2 text-center text-[10px] md:text-xs font-semibold text-gray-700"
                 >
-                  {day}
+                  {/* 3-letter on mobile, full on md+ */}
+                  <span className="md:hidden">{day.slice(0, 3)}</span>
+                  <span className="hidden md:inline">{day}</span>
                 </div>
               ))}
 

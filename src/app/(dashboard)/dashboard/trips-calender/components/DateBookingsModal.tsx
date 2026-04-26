@@ -26,22 +26,29 @@ export default function DateBookingsModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm sm:p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+        className="bg-white w-full sm:rounded-2xl sm:max-w-4xl sm:max-h-[90vh] max-h-[85dvh] rounded-t-2xl overflow-hidden flex flex-col shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Drag handle (mobile) */}
+        <div className="sm:hidden flex justify-center pt-2 pb-1 flex-shrink-0">
+          <div className="w-10 h-1 bg-gray-300 rounded-full" />
+        </div>
+
         {/* Modal Header */}
-        <div className="bg-gradient-to-r from-[#035292] to-blue-500 px-6 py-4 flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/15 rounded-xl">
-              <CalendarIcon className="h-5 w-5 text-white" />
+        <div className="bg-gradient-to-r from-[#035292] to-blue-500 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="p-1.5 sm:p-2 bg-white/15 rounded-xl">
+              <CalendarIcon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">{formattedDate}</h2>
-              <p className="text-sm text-blue-100">
+              <h2 className="text-sm sm:text-lg font-bold text-white">
+                {formattedDate}
+              </h2>
+              <p className="text-xs sm:text-sm text-blue-100">
                 {bookings.length} booking{bookings.length !== 1 ? "s" : ""}
               </p>
             </div>
@@ -56,7 +63,7 @@ export default function DateBookingsModal({
         </div>
 
         {/* Modal Content */}
-        <div>
+        <div className="flex-1 overflow-y-auto">
           {bookings.length > 0 ? (
             <div>
               {bookings.map((booking) => (
@@ -77,10 +84,10 @@ export default function DateBookingsModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 pb-5 flex justify-end border-t border-gray-100 pt-4 flex-shrink-0">
+        <div className="px-4 sm:px-6 pb-5 flex justify-end border-t border-gray-100 pt-3 sm:pt-4 flex-shrink-0">
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
+            className="w-full sm:w-auto px-5 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
           >
             Close
           </button>
