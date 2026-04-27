@@ -29,11 +29,34 @@ export default function PaymentCard({
   const [numberOfGuests, setNumberOfGuests] = useState<string | null>(null);
   const [bookingType, setBookingType] = useState<string | null>(null);
 
-  // Load data from localStorage on client-side only
+  // Load data from localStorage on client-side only.
+  // Priority: new "searchData" JSON object → legacy individual keys.
   useEffect(() => {
-    setTripDate(localStorage.getItem("date"));
-    setNumberOfGuests(localStorage.getItem("Guests"));
-    setBookingType(localStorage.getItem("bookingType"));
+    if (typeof window === "undefined") return;
+
+    let dateFromStorage: string | null = null;
+    let guestsFromStorage: string | null = null;
+    let bookingTypeFromStorage: string | null = null;
+
+    try {
+      const raw = localStorage.getItem("searchData");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        dateFromStorage = parsed?.date ?? null;
+        guestsFromStorage =
+          parsed?.guests != null ? String(parsed.guests) : null;
+        bookingTypeFromStorage =
+          parsed?.bookingType != null ? String(parsed.bookingType) : null;
+      }
+    } catch (err) {
+      console.error("PaymentCard: failed to parse searchData", err);
+    }
+
+    setTripDate(dateFromStorage || localStorage.getItem("date"));
+    setNumberOfGuests(guestsFromStorage || localStorage.getItem("Guests"));
+    setBookingType(
+      bookingTypeFromStorage || localStorage.getItem("bookingType"),
+    );
   }, []);
 
   return (
@@ -78,7 +101,12 @@ export default function PaymentCard({
             people
           </p>
           <p>
-            <span className="font-bold">Booking type:</span> {bookingType}{" "}
+            <span className="font-bold">Booking type:</span>{" "}
+            {bookingType === "true"
+              ? "Shared"
+              : bookingType === "false"
+                ? "Private"
+                : bookingType}{" "}
             booking
           </p>
         </div>

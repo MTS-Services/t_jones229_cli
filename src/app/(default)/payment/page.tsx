@@ -127,20 +127,46 @@ export default function Page() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedDate = localStorage.getItem("date");
-      const storedGuests = localStorage.getItem("Guests");
-      const storedBookingType = localStorage.getItem("bookingType");
+      // 1) Preferred: new searchData JSON object written by SearchBar
+      let dateFromStorage: string | null = null;
+      let guestsFromStorage: string | null = null;
+      let bookingTypeFromStorage: string | null = null;
 
-      console.log("LocalStorage values:", {
-        date: storedDate,
-        guests: storedGuests,
-        bookingType: storedBookingType,
+      try {
+        const raw = localStorage.getItem("searchData");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          dateFromStorage = parsed?.date ?? null;
+          guestsFromStorage =
+            parsed?.guests != null ? String(parsed.guests) : null;
+          bookingTypeFromStorage =
+            parsed?.bookingType != null ? String(parsed.bookingType) : null;
+        }
+      } catch (err) {
+        console.error("Failed to parse searchData from localStorage", err);
+      }
+
+      // 2) Legacy fallback: individual keys (older versions of the search bar)
+      const legacyDate = localStorage.getItem("date");
+      const legacyGuests = localStorage.getItem("Guests");
+      const legacyBookingType = localStorage.getItem("bookingType");
+
+      console.log("Resolved booking inputs:", {
+        searchData: {
+          dateFromStorage,
+          guestsFromStorage,
+          bookingTypeFromStorage,
+        },
+        legacy: { legacyDate, legacyGuests, legacyBookingType },
+        url: { dateFromUrl, guestsFromUrl, bookingTypeFromUrl },
       });
 
-      // Use localStorage values or fallback to URL params
-      setTripDate(storedDate || dateFromUrl);
-      setNumberOfGuests(storedGuests || guestsFromUrl);
-      setBookingType(storedBookingType || bookingTypeFromUrl);
+      // Priority: searchData → legacy keys → URL params
+      setTripDate(dateFromStorage || legacyDate || dateFromUrl);
+      setNumberOfGuests(guestsFromStorage || legacyGuests || guestsFromUrl);
+      setBookingType(
+        bookingTypeFromStorage || legacyBookingType || bookingTypeFromUrl,
+      );
     }
   }, [dateFromUrl, guestsFromUrl, bookingTypeFromUrl]);
 
