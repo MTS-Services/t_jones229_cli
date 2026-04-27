@@ -16,26 +16,6 @@ export default function QuickActions() {
 
   const actions = [
     {
-      icon: Ship,
-      label: "My Trips",
-      description: "View bookings",
-      bgColor: "bg-blue-100",
-      hoverBg: "hover:bg-blue-50",
-      hoverBorder: "hover:border-blue-300",
-      iconColor: "text-blue-600",
-      onClick: () => router.push("/dashboard/your-trips"),
-    },
-    {
-      icon: Edit,
-      label: "Edit Profile",
-      description: "Update info",
-      bgColor: "bg-emerald-100",
-      hoverBg: "hover:bg-emerald-50",
-      hoverBorder: "hover:border-emerald-300",
-      iconColor: "text-emerald-600",
-      onClick: () => router.push("/dashboard/edit-user-details"),
-    },
-    {
       icon: Shield,
       label: "Security",
       description: "Password",

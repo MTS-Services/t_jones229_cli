@@ -68,8 +68,8 @@ export default function BookingTabs({
                   <span
                     className={`px-2 py-0.5 rounded-full text-xs ${
                       isActive
-                        ? "bg-[#035292]/10 text-[#035292]"
-                        : "bg-gray-100 text-gray-500"
+                        ? "bg-red-500 text-[#ecf4fc]"
+                        : "bg-red-500 text-[#ecf4fc]"
                     }`}
                   >
                     {counts[tab.key]}

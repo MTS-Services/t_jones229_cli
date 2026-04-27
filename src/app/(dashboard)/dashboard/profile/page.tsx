@@ -4,8 +4,6 @@ import React from "react";
 import { useGetMeQuery } from "@/redux/api/authApi";
 import { Skeleton } from "antd";
 import {
-  ProfileHeader,
-  QuickStats,
   PersonalInformation,
   AccountDetails,
   QuickActions,
