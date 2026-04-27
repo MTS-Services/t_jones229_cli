@@ -50,6 +50,18 @@ const BookingApi = baseApi.injectEndpoints({
       providesTags: ["booking"],
     }),
 
+    // POST /api/v1/users/active-stripe-account — returns Stripe Connect onboarding URL
+    activateStripeAccount: build.mutation<
+      { data: string; success: boolean; message: string },
+      void
+    >({
+      query: () => ({
+        url: `/users/active-stripe-account`,
+        method: "POST",
+      }),
+      invalidatesTags: ["auth"],
+    }),
+
     /* ===== Deposit-based booking flow (new) ===== */
 
     // POST /api/v1/booking/deposit — creates booking + holds 20% deposit
@@ -108,5 +120,6 @@ export const {
   useCreateBookingDepositMutation,
   useCompleteTripMutation,
   useCancelBookingWithRefundMutation,
+  useActivateStripeAccountMutation,
 } = BookingApi;
 export default BookingApi;
