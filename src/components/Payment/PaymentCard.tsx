@@ -140,8 +140,8 @@ export default function PaymentCard({
                   </span>
                 </div>
                 <p className="text-sm text-gray-600 mt-1">
-                  Pay online in full through FishingBooker and avoid unnecessary
-                  hassle with carrying extra cash.
+                  Pay online in full through FishingTripper and avoid
+                  unnecessary hassle with carrying extra cash.
                 </p>
               </div>
             </label>
@@ -162,12 +162,12 @@ export default function PaymentCard({
                 </span>
                 <div className="text-sm text-gray-600 mt-1 space-y-1">
                   <p>
-                    Pay 30% now and the rest directly to the Captain on or prior
-                    to your trip date.
+                    Pay 20% now and the rest (80%) directly to the Captain on
+                    the trip day.
                   </p>
                   <p>
-                    If you choose to pay the remaining balance by credit card,
-                    an additional 3% charge will apply.
+                    Free cancellation up to 7 days before your trip — partial
+                    refund applies if you cancel within 7 days.
                   </p>
                 </div>
               </div>
@@ -187,7 +187,7 @@ export default function PaymentCard({
               {selectedPayment === "full" ? (
                 <span>US ${filterTrip?.price}</span>
               ) : selectedPayment === "partial" ? (
-                <span>US ${(filterTrip?.price * 0.3).toFixed(2)}</span>
+                <span>US ${(filterTrip?.price * 0.2).toFixed(2)}</span>
               ) : null}
             </div>
             <p className="text-xs text-gray-500 mb-6">

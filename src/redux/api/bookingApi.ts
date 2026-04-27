@@ -49,6 +49,52 @@ const BookingApi = baseApi.injectEndpoints({
       }),
       providesTags: ["booking"],
     }),
+
+    /* ===== Deposit-based booking flow (new) ===== */
+
+    // POST /api/v1/booking/deposit — creates booking + holds 20% deposit
+    createBookingDeposit: build.mutation({
+      query: (data: {
+        boatId: string;
+        tripId: string;
+        tripDate: string; // ISO date
+        groupSize: number;
+        paymentMethodId: string;
+        bookingType?: boolean; // true = PRIVATE, false = GROUP
+      }) => ({
+        url: `/booking/deposit`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["booking", "userBooking"],
+    }),
+
+    // PATCH /api/v1/booking/:id/complete — captain captures deposit + transfer
+    completeTrip: build.mutation({
+      query: (id: string) => ({
+        url: `/booking/${id}/complete`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["booking", "userBooking"],
+    }),
+
+    // DELETE /api/v1/booking/:id/cancel — sliding-scale refund/payout
+    cancelBookingWithRefund: build.mutation({
+      query: ({
+        id,
+        reason,
+        actor,
+      }: {
+        id: string;
+        reason?: string;
+        actor?: "CUSTOMER" | "CAPTAIN" | "WEATHER" | "ADMIN";
+      }) => ({
+        url: `/booking/${id}/cancel`,
+        method: "DELETE",
+        body: { reason, actor },
+      }),
+      invalidatesTags: ["booking", "userBooking"],
+    }),
   }),
 });
 
@@ -59,5 +105,8 @@ export const {
   useGetChargeEnableQuery,
   useCancelBookingMutation,
   useUpdateBookingStatusMutation,
+  useCreateBookingDepositMutation,
+  useCompleteTripMutation,
+  useCancelBookingWithRefundMutation,
 } = BookingApi;
 export default BookingApi;

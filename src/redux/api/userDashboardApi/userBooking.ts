@@ -27,9 +27,12 @@ const userBooking = baseApi.injectEndpoints({
 
         if (params.limit) queryParams.append("limit", params.limit.toString());
         if (params.page) queryParams.append("page", params.page.toString());
-        if (params.date && params.date.trim()) queryParams.append("date", params.date);
-        if (params.city && params.city.trim()) queryParams.append("city", params.city);
-        if (params.status && params.status.trim()) queryParams.append("status", params.status);
+        if (params.date && params.date.trim())
+          queryParams.append("date", params.date);
+        if (params.city && params.city.trim())
+          queryParams.append("city", params.city);
+        if (params.status && params.status.trim())
+          queryParams.append("status", params.status);
         if (params.searchTerm && params.searchTerm.trim())
           queryParams.append("searchTerm", params.searchTerm);
         if (params.sortBy && params.sortBy.trim())
@@ -53,6 +56,15 @@ const userBooking = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["auth"],
     }),
+
+    // Admin override: force-enable charge for a captain by captainId
+    adminEnableCaptainCharge: build.mutation({
+      query: (captainId: string) => ({
+        url: `/users/stripe/charge-enable/${captainId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["auth", "userBooking"],
+    }),
   }),
 });
 
@@ -60,5 +72,6 @@ export const {
   useGetAllUserBookingQuery,
   useAllBookingQuery,
   useUpdateChargeEnabledMutation,
+  useAdminEnableCaptainChargeMutation,
 } = userBooking;
 export default userBooking;

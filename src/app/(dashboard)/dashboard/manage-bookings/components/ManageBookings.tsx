@@ -17,6 +17,7 @@ export default function ManageBookings({
   isLoading,
 }: ManageBookingsProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("today");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
   const todayTrips = data?.todayTrips || [];
   const upcomingTrips = data?.upcomingTrips || [];
@@ -35,7 +36,11 @@ export default function ManageBookings({
   };
 
   const counts = calculateBookingCounts(data);
-  const activeBookings = tripsByTab[activeTab];
+  const rawBookings = tripsByTab[activeTab];
+  const activeBookings =
+    statusFilter === "ALL"
+      ? rawBookings
+      : rawBookings.filter((b: any) => b.status === statusFilter);
 
   return (
     <div className="space-y-6">
@@ -58,10 +63,15 @@ export default function ManageBookings({
       {/* Tabs with Content */}
       <BookingTabs
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setStatusFilter("ALL");
+        }}
         bookings={activeBookings}
         counts={tabCounts}
         isLoading={isLoading}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
       />
     </div>
   );

@@ -617,7 +617,13 @@ export default function TripsManagement() {
                           </td>
                           <td className="px-4 py-3 text-center">
                             <div className="flex flex-col items-center">
-                              <span className="text-xs font-semibold text-orange-500 bg-orange-100 px-2.5 py-1 rounded-full border border-orange-200">
+                              <span
+                                className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
+                                  booking.paymentStatus === "PAID"
+                                    ? "text-emerald-600 bg-emerald-100 border-emerald-200"
+                                    : "text-orange-500 bg-orange-100 border-orange-200"
+                                }`}
+                              >
                                 {booking.paymentStatus}
                               </span>
                             </div>

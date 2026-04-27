@@ -13,11 +13,14 @@ import {
   MailIcon,
   User2,
   XCircle,
+  CheckCircle2,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import CancelBookModal from "@/components/dashboard/modal/CancelBookModal";
 import EmailModal from "@/components/dashboard/modal/SendEmailModal";
+import { useCompleteTripMutation } from "@/redux/api/bookingApi";
+import { toast } from "react-toastify";
 import { Booking } from "../types/types";
 import {
   formatDate,
@@ -38,6 +41,21 @@ export default function BookingCard({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
   const userRole = useSelector((state: RootState) => state.auth.user?.role);
+  const [completeTrip, { isLoading: isCompleting }] = useCompleteTripMutation();
+
+  const handleCompleteTrip = async () => {
+    try {
+      const res: any = await completeTrip(booking.id);
+      if (res?.data?.success) {
+        toast.success(res.data.message ?? "Trip marked complete & payout sent");
+      } else {
+        const msg = res?.error?.data?.message ?? "Failed to complete trip";
+        toast.error(msg);
+      }
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to complete trip");
+    }
+  };
 
   const {
     trip,
@@ -225,6 +243,18 @@ export default function BookingCard({
                   Cancel Booking
                 </button>
               )}
+              {userRole === "CAPTAIN" &&
+                status !== "CANCEL" &&
+                status !== "COMPLETE" && (
+                  <button
+                    onClick={handleCompleteTrip}
+                    disabled={isCompleting}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-all disabled:opacity-50"
+                  >
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    {isCompleting ? "Completing..." : "Mark Trip Complete"}
+                  </button>
+                )}
             </div>
           </div>
         </div>

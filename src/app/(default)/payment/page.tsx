@@ -4,7 +4,10 @@ import PaymentCard from "@/components/Payment/PaymentCard";
 import PaymentDetails from "@/components/Payment/PaymentDetails";
 import StripePaymentForm from "@/components/Payment/StripePaymentForm";
 import { useGetSingleBoatQuery } from "@/redux/api/boatApi";
-import { useCreateBookingMutation } from "@/redux/api/bookingApi";
+import {
+  useCreateBookingMutation,
+  useCreateBookingDepositMutation,
+} from "@/redux/api/bookingApi";
 import { useUpdateProfileMutation } from "@/redux/api/userDashboardApi/updateProfile";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
@@ -177,6 +180,8 @@ export default function Page() {
   const filterTrip = data?.data?.trips?.find((trip: any) => trip.id === tripId);
   const [updateProfileFN] = useUpdateProfileMutation();
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
+  const [createBookingDeposit, { isLoading: isDepositLoading }] =
+    useCreateBookingDepositMutation();
 
   // Handle Stripe payment method creation
   const handlePaymentMethodCreated = (pmId: string) => {
@@ -194,17 +199,8 @@ export default function Page() {
 
   const handleUpdate = async (data: any) => {
     try {
-      console.log("Form data received:", data);
-      console.log("Trip date:", tripDate);
-      console.log("Number of guests:", numberOfGuests);
-      console.log("Booking type:", bookingType);
-      console.log("Selected payment:", selectedPayment);
-      console.log("Payment method ID:", paymentMethodId);
-
       // Check if we have a payment method from Stripe Elements
       if (!paymentMethodId) {
-        // Trigger Stripe Elements to create payment method
-        console.log("Triggering Stripe payment method creation...");
         setIsProcessingPayment(true);
         window.dispatchEvent(new Event("createStripePaymentMethod"));
         return; // handlePaymentMethodCreated will re-call this function
@@ -214,9 +210,7 @@ export default function Page() {
         toast.error(
           "Trip date is missing. Please go back and select a trip date.",
         );
-        console.error(
-          'Missing trip date. Check if localStorage "date" is set or pass it via URL',
-        );
+
         setIsProcessingPayment(false);
         return;
       }
@@ -225,9 +219,7 @@ export default function Page() {
         toast.error(
           "Number of guests is missing. Please go back and select number of guests.",
         );
-        console.error(
-          'Missing or invalid number of guests. Check if localStorage "Guests" is set',
-        );
+
         setIsProcessingPayment(false);
         return;
       }
@@ -239,9 +231,6 @@ export default function Page() {
         setIsProcessingPayment(false);
         return;
       }
-
-      // Prepare user payment info for profile update (without sensitive data)
-      console.log("Processing payment with Stripe payment method...");
 
       // Prepare booking info without card details - use paymentMethodId from Stripe Elements
       const fullPaymentInfo = {
@@ -266,13 +255,45 @@ export default function Page() {
         ? !(bookingType.toLowerCase() === "true" || bookingType === "1")
         : false;
 
-      console.log(
-        "isGroupBooking:",
-        isGroupBooking,
-        "bookingType from storage:",
-        bookingType,
-      );
+      // ─── NEW: route to deposit flow when user picked "partial" ───
+      if (selectedPayment === "partial") {
+        const depositRes = await createBookingDeposit({
+          boatId: boatID,
+          tripId: filterTrip?.id,
+          tripDate,
+          groupSize: parseInt(numberOfGuests ?? "0", 10),
+          paymentMethodId,
+          bookingType: !isGroupBooking, // true = PRIVATE
+        });
 
+        if ((depositRes as any)?.data?.success) {
+          try {
+            await updateProfileFN(fullPaymentInfo).unwrap();
+          } catch (profileError) {
+            console.warn(
+              "Failed to update profile (non-critical):",
+              profileError,
+            );
+          }
+          toast.success(
+            (depositRes as any)?.data?.message ??
+              "Deposit secured. See you at the dock!",
+          );
+          router.push("/private-confirmation");
+        } else {
+          const err = (depositRes as any)?.error;
+          const msg =
+            err?.data?.message ??
+            err?.message ??
+            "Failed to secure deposit. Please try again.";
+          console.error("Deposit booking failed:", err);
+          toast.error(msg);
+        }
+        setIsProcessingPayment(false);
+        return;
+      }
+
+      // ─── Legacy full-payment flow ───
       const bookingInfo: any = {
         boatId: boatID,
         tripId: filterTrip?.id,
@@ -295,10 +316,7 @@ export default function Page() {
         };
       }
 
-      console.log("Booking info to send:", bookingInfo);
-
       const res = await bookingFN(bookingInfo);
-      console.log("Booking response:", res);
 
       if (res?.data?.success) {
         // Try to update profile, but don't fail the whole flow if it doesn't work
@@ -312,13 +330,6 @@ export default function Page() {
         }
 
         toast.success(res?.data?.message);
-        // Clean up all booking-related localStorage items
-        localStorage.removeItem("searchData"); // New object format
-        localStorage.removeItem("date");
-        localStorage.removeItem("StartDate");
-        localStorage.removeItem("Guests");
-        localStorage.removeItem("bookingType");
-        localStorage.removeItem("location");
         router.push("/private-confirmation");
       } else {
         let errorMessage = "An error occurred during booking.";
@@ -338,7 +349,7 @@ export default function Page() {
             );
             if ((res.error as any).data.errorDetails.issues) {
               const issues = (res.error as any).data.errorDetails.issues;
-              console.error("Validation issues:", issues);
+
               issues.forEach((issue: any, index: number) => {
                 console.error(`Issue ${index + 1}:`, {
                   path: issue.path,
@@ -399,7 +410,7 @@ export default function Page() {
                 image={data?.data?.photos?.[0]?.url}
                 location={data?.data?.meetingPoint?.[0]}
                 filterTrip={filterTrip}
-                isLoading={isLoading || isProcessingPayment}
+                isLoading={isLoading || isDepositLoading || isProcessingPayment}
                 setSelectedPayment={setSelectedPayment}
                 selectedPayment={selectedPayment}
                 isCardComplete={isCardComplete}
