@@ -10,7 +10,7 @@ const dashboardApi = baseApi.injectEndpoints({
         url: `booking/dashboard`,
         method: "GET",
       }),
-      providesTags: ["Dashboard"],
+      providesTags: ["dashboard"],
     }),
 
 

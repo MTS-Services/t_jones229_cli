@@ -5,10 +5,12 @@ import ExperienceCard from "./ExperienceCard";
 export default function Experience() {
   return (
     <div className="bg-[#0f5d9e]">
-      <div className="px-5 lg:px-28 py-16 container mx-auto xl:px-6 lg:px-5 md:px-4 px-3">
-        <div className="container mx-auto text-center">
-          <p className=" font-bold text-white">WHY CHOOSE FISHING TRIPPER?</p>
-          <h1 className="md:my-4 my-3 text-white text-2xl md:text-5xl font-normal">
+      <div className="container mx-auto py-10 lg:py-12 xl:py-20 xl:px-6 lg:px-5 md:px-4 px-3">
+        <div className="text-center">
+          <p className="font-bold text-white text-sm md:text-lg uppercase mb-2 tracking-wide">
+            WHY CHOOSE FISHING TRIPPER?
+          </p>
+          <h1 className="md:my-4 my-3 text-white text-3xl md:text-5xl font-normal">
             Experience Fishing Like Never Before
           </h1>
           <p className="text-base md:text-lg font-normal text-white leading-8 px-0 lg:px-32 font-satoshi">

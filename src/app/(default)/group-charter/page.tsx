@@ -7,6 +7,36 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useCreateBookingMutation } from "@/redux/api/bookingApi";
 import { toast, ToastContainer } from "react-toastify";
+import {
+  IoCalendarOutline,
+  IoLocationOutline,
+  IoPeopleOutline,
+} from "react-icons/io5";
+import { formatDisplayDate } from "../search-charter/[id]/utils";
+
+const steps = [
+  {
+    id: 1,
+    title: "Create Your Free Account",
+    description: "Sign up or log in to get started.",
+  },
+  {
+    id: 2,
+    title: "Choose Your Fishing Style",
+    description: "Select Offshore or Inshore and your target species.",
+  },
+  {
+    id: 3,
+    title: "Get Matched",
+    description: "We connect you with anglers planning the same trip.",
+  },
+  {
+    id: 4,
+    title: "Confirm & Go Fishing",
+    description:
+      "Receive trip details by email and confirm securely. Full refund if cancelled.",
+  },
+];
 
 export default function GroupBooking() {
   const [tripDate, setTripDate] = useState<string | null>(null);
@@ -14,15 +44,33 @@ export default function GroupBooking() {
   const [numberOfGuests, setNumberOfGuests] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setTripDate(localStorage.getItem("date"));
-      setLocation(localStorage.getItem("location"));
-      setNumberOfGuests(localStorage.getItem("Guests"));
-    }
-  }, []);
-
   const params = useSearchParams();
+
+  useEffect(() => {
+    const urlLocation = params.get("location");
+    const urlDate = params.get("date");
+    const urlGuests = params.get("guests");
+
+    if (urlLocation || urlDate || urlGuests) {
+      setLocation(urlLocation);
+      setTripDate(urlDate);
+      setNumberOfGuests(urlGuests);
+    } else if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("searchData");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          setTripDate(parsed?.date ?? null);
+          setLocation(parsed?.location ?? null);
+          setNumberOfGuests(
+            parsed?.guests != null ? String(parsed.guests) : null,
+          );
+        }
+      } catch (err) {
+        console.error("Failed to parse searchData from localStorage", err);
+      }
+    }
+  }, [params]);
   const {
     register,
     handleSubmit,
@@ -87,9 +135,7 @@ export default function GroupBooking() {
           "Group booking inquiry submitted successfully!";
         toast.success(successMessage);
         if (typeof window !== "undefined") {
-          localStorage.removeItem("date");
-          localStorage.removeItem("location");
-          localStorage.removeItem("Guests");
+          localStorage.removeItem("searchData");
         }
         router.push("/group-confirmation");
       } else if (res?.error) {
@@ -119,23 +165,43 @@ export default function GroupBooking() {
   };
 
   return (
-    <div className="mt-20">
+    <div className="mt-12 md:mt-20">
       <ToastContainer />
-      <div className="py-4">
-        <div className="container mx-auto xl:px-4 lg:px-3 px-2">
-          <h1 className="text-base md:text-lg font-bold text-slate-400 leading-9">
-            {location ?? "Location not set"} / {tripDate ?? "Date not set"} /{" "}
-            {numberOfGuests ?? "Guests not set"} people
-          </h1>
+      {/* Search Criteria with Icons */}
+      <div className="container mx-auto xl:px-4 lg:px-3 px-2 py-4">
+        <div className="flex flex-wrap items-center gap-4 mt-2">
+          {location && (
+            <div className="flex items-center gap-2 text-sm md:text-base text-gray-500 font-medium">
+              <IoLocationOutline className="text-[#FF9500] h-5 w-5 flex-shrink-0" />
+              <span className="truncate max-w-[200px]">{location}</span>
+            </div>
+          )}
+
+          {tripDate && (
+            <div className="flex items-center gap-2 text-sm md:text-base text-gray-500 font-medium">
+              <IoCalendarOutline className="text-[#FF9500] h-5 w-5 flex-shrink-0" />
+              <span>{formatDisplayDate(tripDate)}</span>
+            </div>
+          )}
+
+          {numberOfGuests && parseInt(numberOfGuests, 10) > 0 && (
+            <div className="flex items-center gap-2 text-sm md:text-base text-gray-500 font-medium">
+              <IoPeopleOutline className="text-[#FF9500] h-5 w-5 flex-shrink-0" />
+              <span>
+                {numberOfGuests}{" "}
+                {parseInt(numberOfGuests, 10) === 1 ? "person" : "people"}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="container mx-auto flex flex-col gap-10  xl:px-4 lg:px-3 px-2 mb-20">
-        <div className="container mx-auto bg-slate-50 rounded-xl p-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto gap-4 md:gap-8 flex flex-col lg:px-4 md:px-3 px-2">
+        <div className="bg-slate-50 rounded-t-xl md:p-4">
+          <div className="grid lg:grid-cols-2 gap-4 md:gap-8 lg:gap-12 items-center">
             {/* Video Section */}
             <div className="relative h-full">
-              <div className="h-full min-h-[400px] bg-gray-200 rounded-xl flex items-center justify-center shadow-md">
+              <div className="h-full min-h-[400px] bg-gray-100 rounded flex items-center justify-center shadow-md">
                 <button className="w-16 h-16 rounded-full bg-[#105d9e] hover:bg-[#70b6f0] flex items-center justify-center transition">
                   <Play className="w-6 h-6 text-white ml-1" fill="white" />
                 </button>
@@ -143,77 +209,43 @@ export default function GroupBooking() {
             </div>
 
             {/* Steps Section */}
-            <div>
+            <div className="p-4 md:p-0">
               <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900">
                 How It Works
               </h2>
 
-              <div className="space-y-8">
-                {/* Step 1 */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
-                    1
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Create Your Free Account
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Sign up or log in to get started.
-                    </p>
-                  </div>
-                </div>
+              <div className="space-y-4 md:space-y-8">
+                {steps.map((step) => (
+                  <div
+                    key={step.id}
+                    className="flex items-start sm:items-center gap-4"
+                  >
+                    <div
+                      className="w-10 h-10 flex items-center justify-center 
+                        rounded-full bg-[#105d9e] text-white font-semibold 
+                        shrink-0"
+                    >
+                      {step.id}
+                    </div>
 
-                {/* Step 2 */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
-                    2
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Choose Your Fishing Style
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Select Offshore or Inshore and your target species.
-                    </p>
-                  </div>
-                </div>
+                    <div>
+                      <h3 className="font-semibold text-base sm:text-lg">
+                        {step.title}
+                      </h3>
 
-                {/* Step 3 */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
-                    3
+                      <p className="text-gray-600 text-sm sm:text-base">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">Get Matched</h3>
-                    <p className="text-gray-600 text-sm">
-                      We connect you with anglers planning the same trip.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 4 */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#105d9e] text-white font-semibold">
-                    4
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Confirm & Go Fishing
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Receive trip details by email and confirm securely. Full
-                      refund if cancelled.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-50 rounded-lg p-5 md:p-8">
-          <h2 className="text-xl md:text-3xl font-bold text-textSecondary mb-2">
+        <div className="bg-slate-50 rounded-b-lg p-5 md:p-8 mb-8 md:mb-16">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-textSecondary mb-2">
             Enter your details
           </h2>
           <p className="text-sm md:text-base text-textSecondary mb-2">

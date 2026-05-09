@@ -28,8 +28,6 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
   backgroundImageClassName,
   pathLink,
 }) => {
-  const router = useRouter();
-
   return (
     <section
       className={`${backgroundImageClassName} relative flex items-center justify-center bg-cover bg-center bg-no-repeat h-[500px] w-full ${backgroundImageClassName} `}
@@ -41,7 +39,7 @@ const ReUseAbleBanner: React.FC<BannerProps> = ({
       <div className={`absolute inset-0  rounded-2xl bg-black/40`} />
 
       <div className="relative z-10 container mx-auto flex flex-col gap-2 items-center text-center text-white px-5 lg:px-[135px]">
-        <h1 className="text-3xl md:text-4xl lg:text-4xl font-bold leading-tight">
+        <h1 className="text-2xl md:text-4xl lg:text-4xl font-bold leading-tight">
           {title ? title : ""}
         </h1>
         <p className="max-w-2xl text-base md:text-xl font-normal tracking-tight">

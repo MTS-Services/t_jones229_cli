@@ -24,7 +24,6 @@ const DetailsCarousel = ({ product }: { product: productType }) => {
         grabCursor={true}
         pagination={{
           el: ".product-pagination",
-
           clickable: true,
           type: "bullets",
         }}
@@ -55,7 +54,7 @@ const DetailsCarousel = ({ product }: { product: productType }) => {
           <button className="absolute top-[50%] left-3  translate-x-[-50%] z-[2] lg:ml-6 md:lg-5 ml-4 ">
             <IoIosArrowBack className="text-[#105d9e] text-3xl product-next" />
           </button>
-          <div className="absolute bottom-5 flex items-center justify-center z-[2] product-pagination "></div>
+          <div className="absolute bottom-5 flex items-center justify-center z-[2] product-pagination " />
           <button className="absolute top-[50%] right-3  translate-x-[-50%] z-[2]">
             <IoIosArrowForward className="text-[#105d9e] text-2xl product-prev" />
           </button>

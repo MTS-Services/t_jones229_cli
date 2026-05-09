@@ -92,7 +92,14 @@ const AuthApi = baseApi.injectEndpoints({
         url: `users/${id}`,
         method: "DELETE",
       }),
-      // Assuming this mutation is for deleting a user, it invalidates the auth tag
+      invalidatesTags: ["user", "auth"],
+    }),
+    HardDeleteUser: build.mutation({
+      query: (id) => ({
+        url: `users/hard-delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user", "auth"],
     }),
     // Contact support
     sendOtp: build.mutation({
@@ -144,6 +151,7 @@ export const {
   useGetMeQuery,
   useSentMessageCaptainMutation,
   useDeleteUserMutation,
+  useHardDeleteUserMutation,
   useSendOtpMutation,
   useChangePasswordMutation,
   useForgotPasswordMutation,

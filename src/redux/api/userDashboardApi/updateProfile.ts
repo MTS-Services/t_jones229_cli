@@ -11,7 +11,7 @@ const updateProfileApi = baseApi.injectEndpoints({
         method: "PUT",
         body: updateInfo,
       }),
-      invalidatesTags: ["userBooking"],
+      invalidatesTags: ["auth", "userBooking"],
     }),
     //  cancle membership
     cancleMemberShip: build.mutation({

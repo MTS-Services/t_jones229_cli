@@ -40,17 +40,20 @@ export default function PaymentDetails() {
     <div className="">
       {/* Header Section */}
       <div className="mb-10">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-4 bg-gray-50 p-4 rounded-lg">
           <div className="p-2 bg-blue-50 rounded-lg">
-            <User className="w-6 h-6 text-blue-600" />
+            <User className="w-4 md:w-5 h-4 md:h-5 text-blue-600" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900">
             Personal & Payment Details
           </h2>
         </div>
-        <p className="text-gray-600 text-base md:text-lg max-w-3xl">
-          We need a few details to complete your Fishing Tripper booking. Your
-          information is securely stored and only used for booking purposes.
+
+        <p className="text-gray-600 text-base md:text-sm max-w-3xl p-4 bg-yellow-50 rounded-lg border border-gray-200">
+          Please provide your contact and payout details so we can process
+          bookings and send payments to you. All information is kept secure and
+          used only for account verification and transferring your earnings
+          after completed trips.
         </p>
       </div>
 

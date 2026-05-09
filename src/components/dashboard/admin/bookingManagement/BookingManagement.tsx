@@ -1,7 +1,5 @@
 "use client";
 import { useState, useCallback } from "react";
-import TitleSection from "../../captain/TiltleSection";
-import SearchBookings from "./SearchBookings";
 import BookingsTable from "./BookingsTable";
 import { useAllBookingQuery } from "@/redux/api/userDashboardApi/userBooking";
 
@@ -32,17 +30,15 @@ export default function BookingManagement() {
   const currentPage = filters.page;
 
   return (
-    <div>
-      <TitleSection />
-      <SearchBookings filters={filters} setFilters={setFilters} />
-      <BookingsTable
-        data={data?.data || []}
-        meta={data?.meta}
-        loading={isLoading}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
-    </div>
+    <BookingsTable
+      filters={filters}
+      setFilters={setFilters}
+      data={data?.data || []}
+      meta={data?.meta}
+      loading={isLoading}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={handlePageChange}
+    />
   );
 }

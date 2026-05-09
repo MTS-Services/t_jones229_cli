@@ -3,6 +3,7 @@
 import Image from "next/image";
 import placeholder from "@/assets/placeholder.webp";
 import { useRouter } from "next/navigation";
+import { MapPin } from "lucide-react";
 
 interface CardInfo {
   image: string;
@@ -30,7 +31,7 @@ export default function SearchDestinationsCard({
 
   return (
     <div
-      className={`group cursor-pointer ${
+      className={`cursor-pointer ${
         isLast
           ? "w-full md:max-w-[352px] md:mx-auto md:col-span-2 lg:col-span-1 lg:max-w-full"
           : "w-full"
@@ -38,7 +39,7 @@ export default function SearchDestinationsCard({
       onClick={handleClick}
     >
       {/* Container for Image and Overlays */}
-      <div className="relative overflow-hidden rounded-[16px] w-full h-[380px]">
+      <div className="relative overflow-hidden rounded-sm md:rounded-2xl w-full h-[380px]">
         {/* Main Background Image */}
         <Image
           src={cardInfo.image || placeholder}
@@ -53,14 +54,8 @@ export default function SearchDestinationsCard({
         <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
         {/* 2. Flag Icon */}
-        <div className="absolute top-4 left-4 z-20 bg-white/50 rounded-full p-0.5 shadow-md">
-          <Image
-            src={cardInfo.flag}
-            alt="flag"
-            height={32}
-            width={32}
-            className="  object-cover rounded-full"
-          />
+        <div className="absolute top-4 left-4 z-20 bg-blue-800/50 backdrop-blur-sm rounded-full p-1 shadow-md">
+          <MapPin size={20} className="text-gray-200" />
         </div>
 
         {/* 3. Text Content */}

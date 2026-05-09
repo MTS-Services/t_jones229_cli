@@ -1,5 +1,3 @@
-
-
 import { jwtDecode } from "jwt-decode";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -12,7 +10,7 @@ interface DecodedToken {
   iat: number;
   exp: number;
 }
-
+// Define role-based access control
 const roleAccess = {
   SUPERADMIN: [
     "/dashboard",
@@ -78,10 +76,25 @@ export function middleware(req: NextRequest) {
   try {
     const decoded = jwtDecode<DecodedToken>(token);
     const role = decoded?.role;
+
+    // ── Token expiry check ──────────────────────────────────────
+    const isExpired =
+      decoded.exp && decoded.exp < Math.floor(Date.now() / 1000);
+    if (isExpired) {
+      const loginUrl = new URL("/login", req.url);
+      loginUrl.searchParams.set("expired", "1");
+      const response = NextResponse.redirect(loginUrl);
+      // Clear the stale cookie so middleware doesn't re-check it
+      response.cookies.delete("token");
+      response.cookies.delete("currentUserRole");
+      return response;
+    }
+    // ────────────────────────────────────────────────────────────
+
     const allowedRoutes = roleAccess[role as keyof typeof roleAccess] || [];
 
     const isAuthorized = allowedRoutes.some((route) =>
-      pathname.startsWith(route)
+      pathname.startsWith(route),
     );
 
     if (!isAuthorized) {
@@ -97,7 +110,10 @@ export function middleware(req: NextRequest) {
     }
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("redirect", fullPath);
-    return NextResponse.redirect(loginUrl);
+    const response = NextResponse.redirect(loginUrl);
+    response.cookies.delete("token");
+    response.cookies.delete("currentUserRole");
+    return response;
   }
 }
 

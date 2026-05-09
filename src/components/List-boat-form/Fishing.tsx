@@ -1,210 +1,19 @@
-// "use client";
-
-// import { Divider } from "antd";
-// import { X } from "lucide-react";
-// import React, { useState } from "react";
-// import { useFormContext } from "react-hook-form";
-// import { BsSearch } from "react-icons/bs";
-// import CheckboxGroup from "./CheckboxGroup";
-// import { fishingLocationsOptions } from "@/constant/CheckBoxLevel";
-
-// // Options and initial values for each section
-
-// const fishingTechniquesOptions = [
-//   "Light tackle",
-//   "Heavy tackle",
-//   "Bottom Fishing",
-//   "Deep Sea Fishing",
-//   "Trolling",
-//   "Spinning",
-//   "Jigging",
-//   "Popping",
-//   "Fly fishing",
-//   "Drift fishing",
-//   "Kite fishing",
-//   "Bow fishing",
-//   "Spearfishing",
-//   "Flounder gigging",
-//   "Livebaiting",
-//   "Lure Fishing",
-// ];
-
-// const policiesOptions = [
-//   "Catch and Release",
-//   "Keep Catch",
-//   "No Smoking",
-//   "Alcohol Allowed",
-// ];
-
-// const priceInclusionsOptions = [
-//   "Bait",
-//   "Tackle",
-//   "Water",
-//   "Snacks",
-//   "Lunch",
-//   "Ice",
-//   "Fuel",
-// ];
-
-// const fishingLocationsInitial = ["Lake", "River"];
-// const fishingTechniquesInitial = ["Trolling"];
-// const policiesInitial = ["Catch and Release"];
-// const priceInclusionsInitial = ["Bait", "Water"];
-
-// export default function Fishing() {
-//   const { register, setValue } = useFormContext();
-//   const [searchQuery, setSearchQuery] = useState("");
-//   const [filters, setFilters] = useState<string[]>([]);
-
-//   const removeFilter = (filterToRemove: string) => {
-//     setFilters(filters.filter((filter) => filter !== filterToRemove));
-//   };
-
-//   const handleSearch = (e: React.FormEvent) => {
-//     e.preventDefault();
-
-//     if (searchQuery.trim() && !filters.includes(searchQuery.trim())) {
-//       setFilters([...filters, searchQuery.trim()]);
-//       setValue("fishingSpecies", [...filters, searchQuery.trim()]); // Update form state with new filter
-//     }
-
-//     setSearchQuery("");
-//   };
-
-//   return (
-//     <div className="bg-white">
-//       {/* Header */}
-//       <div className="bg-[#F5F5F5] pt-16 md:pt-0 px-5 md:px-14 py-9">
-//         <h1 className="text-3xl font-bold text-textPrimary leading-normal mb-2">
-//           Fishing
-//         </h1>
-//         {/* <p className="text-base text-textPrimary font-normal leading-normal">
-//           Upload high quality photos and videos to maximise conversion rates
-//           with potential customers.
-//         </p> */}
-//       </div>
-
-//       {/* Targeted Species */}
-//       <div className="py-12 px-5 md:px-14">
-//         <div>
-//           <h1 className="text-xl md:text-3xl font-bold text-textPrimary leading-normal mb-2">
-//             Targeted Species
-//           </h1>
-//           <p className="text-base font-normal text-[#878787] mb-4">
-//             Choose which species customers can target on your trip.
-//           </p>
-
-//           <form className="w-full max-w-md py-6 space-y-4">
-//             <div>
-//               <div className="flex gap-3 custom-shadow rounded-full py-3 border border-[#F5F5F5] px-4">
-//                 <BsSearch className="text-[#e0e0e0] h-6 w-6" />
-//                 <input
-//                   type="text"
-//                   placeholder="Search species..."
-//                   value={searchQuery}
-//                   onChange={(e) => {
-//                     e.preventDefault();
-//                     setSearchQuery(e.target.value);
-//                   }}
-//                   className="w-full outline-none text-base"
-//                 />
-//               </div>
-//               <button
-//                 // type="button"
-//                 onClick={handleSearch}
-//                 className="mt-2 bg-[#ffaa33] text-white px-4 py-2 rounded-md hover:bg-[#ff9900] transition-colors"
-//               >
-//                 Add Species
-//               </button>
-//             </div>
-
-//             {filters.length > 0 && (
-//               <div className="flex flex-wrap gap-2">
-//                 {filters.map((filter) => (
-//                   <div
-//                     key={filter}
-//                     className="flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-//                   >
-//                     <span>{filter}</span>
-//                     <button
-//                       type="button"
-//                       className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
-//                       onClick={() => removeFilter(filter)}
-//                       aria-label={`Remove ${filter} filter`}
-//                     >
-//                       <X className="h-3 w-3" />
-//                     </button>
-//                   </div>
-//                 ))}
-//               </div>
-//             )}
-//           </form>
-//         </div>
-
-//         <Divider style={{ borderColor: "#d9d9d9" }} className="my-4" />
-//       </div>
-
-//       {/* Checkbox Sections */}
-//       <div className=" px-5 md:px-14">
-//         <div className="mb-8">
-//           <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4">
-//             Fishing Locations
-//           </h2>
-//           <CheckboxGroup
-//             name="fishingLocation"
-//             options={fishingLocationsOptions}
-//             selectedValues={fishingLocationsInitial}
-//             register={register}
-//           />
-//         </div>
-
-//         <div className="mb-8">
-//           <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4">
-//             Fishing Techniques
-//           </h2>
-//           <CheckboxGroup
-//             name="fishingTechnique"
-//             options={fishingTechniquesOptions}
-//             selectedValues={fishingTechniquesInitial}
-//             register={register}
-//           />
-//         </div>
-
-//         <div className="mb-8">
-//           <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4">
-//             Policies
-//           </h2>
-//           <CheckboxGroup
-//             name="policies"
-//             options={policiesOptions}
-//             selectedValues={policiesInitial}
-//             register={register}
-//           />
-//         </div>
-
-//         <div className="mb-8">
-//           <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4">
-//             Included in the Price
-//           </h2>
-//           <CheckboxGroup
-//             name="includedPrice"
-//             options={priceInclusionsOptions}
-//             selectedValues={priceInclusionsInitial}
-//             register={register}
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { Divider } from "antd";
-import { X } from "lucide-react";
+import {
+  X,
+  Search,
+  Plus,
+  Fish,
+  MapPin,
+  Wrench,
+  Package,
+  Shield,
+  Info,
+} from "lucide-react";
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { BsSearch } from "react-icons/bs";
 import CheckboxGroup from "./CheckboxGroup";
 import { fishingLocationsOptions } from "@/constant/CheckBoxLevel";
 
@@ -236,97 +45,189 @@ const priceInclusionsOptions = [
   "Ice",
 ];
 
+interface CheckboxSection {
+  title: string;
+  name: string;
+  options: string[];
+  icon?: React.ReactNode;
+}
+
 export default function Fishing() {
   const { register, setValue } = useFormContext();
   const [searchQuery, setSearchQuery] = useState("");
-  const [filters, setFilters] = useState<string[]>([]);
+  const [speciesList, setSpeciesList] = useState<string[]>([]);
 
   const addSpecies = () => {
-    if (!searchQuery.trim()) return;
+    const trimmedQuery = searchQuery.trim();
+    if (!trimmedQuery) return;
 
-    const updated = [...filters, searchQuery];
-    setFilters(updated);
+    // Prevent duplicates
+    if (speciesList.includes(trimmedQuery)) {
+      // Could show a toast notification here
+      console.warn("Species already added");
+      return;
+    }
+
+    const updated = [...speciesList, trimmedQuery];
+    setSpeciesList(updated);
     setValue("fishingSpecies", updated);
-
     setSearchQuery("");
   };
 
   const removeSpecies = (value: string) => {
-    const updated = filters.filter((f) => f !== value);
-    setFilters(updated);
+    const updated = speciesList.filter((f) => f !== value);
+    setSpeciesList(updated);
     setValue("fishingSpecies", updated);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addSpecies();
+    }
+  };
+
+  const sections: CheckboxSection[] = [
+    {
+      title: "Fishing Locations",
+      name: "fishingLocation",
+      options: fishingLocationsOptions,
+      icon: <MapPin className="h-5 w-5 text-orange-500" />,
+    },
+    {
+      title: "Fishing Techniques",
+      name: "fishingTechnique",
+      options: fishingTechniquesOptions,
+      icon: <Wrench className="h-5 w-5 text-orange-500" />,
+    },
+    {
+      title: "Included in Price",
+      name: "includedPrice",
+      options: priceInclusionsOptions,
+      icon: <Package className="h-5 w-5 text-orange-500" />,
+    },
+    {
+      title: "Policies",
+      name: "policies",
+      options: policiesOptions,
+      icon: <Shield className="h-5 w-5 text-orange-500" />,
+    },
+  ];
+
   return (
-    <div className="bg-white">
-      <div className="">
-        <h2 className="text-xl font-bold mb-2">Targeted Species</h2>
-
-        <div className="max-w-md">
-          <div className="flex gap-3 border rounded-full px-4 py-2">
-            <BsSearch className="text-gray-300" />
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search species..."
-              className="w-full outline-none"
-            />
-          </div>
-
-          <button
-            type="button"
-            onClick={addSpecies}
-            className="mt-2 bg-orange-400 text-white px-4 py-2 rounded"
-          >
-            Add Species
-          </button>
-
-          <div className="flex flex-wrap gap-2 mt-4">
-            {filters.map((item) => (
-              <span
-                key={item}
-                className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full"
-              >
-                {item}
-                <X
-                  className="h-3 w-3 cursor-pointer"
-                  onClick={() => removeSpecies(item)}
-                />
-              </span>
-            ))}
-          </div>
+    <div className="">
+      {/* Targeted Species Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Fish className="h-6 w-6 text-orange-500" />
+          <h2 className="text-xl font-bold text-gray-900">Targeted Species</h2>
         </div>
 
-        <Divider />
+        <p className="text-gray-600 mb-6">
+          Choose which species customers can target on your trip
+        </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <CheckboxGroup
-            title="Fishing Locations"
-            name="fishingLocation"
-            options={fishingLocationsOptions}
-            register={register}
-          />
+        <div className="">
+          <div className="flex gap-3 mb-4">
+            <div className="flex-1 relative">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Search for a species (e.g., Tuna, Marlin, Salmon)..."
+                className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-lg outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={addSpecies}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105 flex items-center gap-2"
+            >
+              <Plus className="h-5 w-5" />
+              Add Species
+            </button>
+          </div>
 
-          <CheckboxGroup
-            title="Fishing Techniques"
-            name="fishingTechnique"
-            options={fishingTechniquesOptions}
-            register={register}
-          />
+          {/* Species Tags */}
+          {speciesList.length > 0 && (
+            <div className="mt-4">
+              <div className="flex flex-wrap gap-2">
+                {speciesList.map((species) => (
+                  <div
+                    key={species}
+                    className="group flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-full text-sm font-medium hover:shadow-md transition-all"
+                  >
+                    <Fish className="h-3.5 w-3.5" />
+                    <span>{species}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeSpecies(species)}
+                      className="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+                      aria-label={`Remove ${species}`}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                {speciesList.length} species selected
+              </p>
+            </div>
+          )}
 
-          <CheckboxGroup
-            title="Included in Price"
-            name="includedPrice"
-            options={priceInclusionsOptions}
-            register={register}
-          />
+          {/* Empty State */}
+          {speciesList.length === 0 && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 text-center">
+              <Fish className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+              <p className="text-sm text-gray-500">
+                No species added yet. Search and add the fish species you
+                target.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
 
-          <CheckboxGroup
-            title="Policies"
-            name="policies"
-            options={policiesOptions}
-            register={register}
-          />
+      {/* Checkbox Sections Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {sections.map((section) => (
+          <div
+            key={section.name}
+            className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-100">
+              {section.icon}
+              <h3 className="text-lg font-bold text-gray-900">
+                {section.title}
+              </h3>
+            </div>
+            <CheckboxGroup
+              name={section.name}
+              options={section.options}
+              register={register}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Helpful Tips */}
+      <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+        <div className="flex items-start gap-3">
+          <Info className="h-5 w-5 text-blue-500 mt-0.5" />
+          <div>
+            <h4 className="text-sm font-semibold text-blue-900 mb-1">
+              Pro Tip
+            </h4>
+            <p className="text-sm text-blue-700">
+              Be specific about your fishing offerings! Accurate information
+              helps anglers find the perfect trip and ensures everyone has a
+              great experience on the water.
+            </p>
+          </div>
         </div>
       </div>
     </div>

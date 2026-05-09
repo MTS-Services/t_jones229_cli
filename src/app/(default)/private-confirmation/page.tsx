@@ -40,11 +40,36 @@ export default function ConfirmationPage() {
         localStorage.setItem("bookingId", bookingId);
       }
 
+      // Preferred: new searchData JSON object written by SearchBar
+      let dateFromStorage: string | null = null;
+      let guestsFromStorage: string | null = null;
+      let bookingTypeFromStorage: string | null = null;
+      let locationFromStorage: string | null = null;
+
+      try {
+        const raw = localStorage.getItem("searchData");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          dateFromStorage = parsed?.date ?? parsed?.startDate ?? null;
+          guestsFromStorage =
+            parsed?.guests != null ? String(parsed.guests) : null;
+          bookingTypeFromStorage =
+            parsed?.bookingType != null ? String(parsed.bookingType) : null;
+          locationFromStorage = parsed?.location ?? null;
+        }
+      } catch (err) {
+        console.error("Failed to parse searchData from localStorage", err);
+      }
+
       setBookingDetails({
-        tripDate: localStorage.getItem("date"),
-        numberOfGuests: localStorage.getItem("Guests"),
-        bookingType: localStorage.getItem("bookingType"),
-        location: localStorage.getItem("location"),
+        tripDate:
+          dateFromStorage ||
+          localStorage.getItem("date") ||
+          localStorage.getItem("StartDate"),
+        numberOfGuests: guestsFromStorage || localStorage.getItem("Guests"),
+        bookingType:
+          bookingTypeFromStorage || localStorage.getItem("bookingType"),
+        location: locationFromStorage || localStorage.getItem("location"),
         bookingId,
       });
     }

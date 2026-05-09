@@ -40,7 +40,8 @@ const cardElementOptions = {
     base: {
       fontSize: "16px",
       color: "#1a1a1a",
-      fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      fontFamily:
+        "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       "::placeholder": {
         color: "#a0a0a0",
       },
@@ -109,13 +110,14 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
         [elementType]: event.complete,
       };
       // Notify parent of completion status
-      const allComplete = updated.cardNumber && updated.cardExpiry && updated.cardCvc;
+      const allComplete =
+        updated.cardNumber && updated.cardExpiry && updated.cardCvc;
       if (onCardComplete) {
         onCardComplete(allComplete);
       }
       return updated;
     });
-    
+
     // Handle field-specific errors
     if (event.error) {
       setFieldErrors((prev) => ({
@@ -132,7 +134,7 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
       const hasErrors = Object.values({
         ...fieldErrors,
         [elementType]: undefined,
-      }).some(err => err !== undefined);
+      }).some((err) => err !== undefined);
       if (!hasErrors) {
         setCardError(null);
       }
@@ -163,34 +165,40 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
 
         // Validate card before creating payment method
         const cardValidation = await stripe.createToken(cardNumberElement);
-        
+
         if (cardValidation.error) {
           let errorMessage = cardValidation.error.message;
-          
+
           // Enhanced validation error messages
           switch (cardValidation.error.code) {
-            case 'expired_card':
+            case "expired_card":
               errorMessage = "Your card has expired. Please use a valid card.";
               break;
-            case 'incorrect_number':
-              errorMessage = "The card number is invalid. Please check and try again.";
+            case "incorrect_number":
+              errorMessage =
+                "The card number is invalid. Please check and try again.";
               break;
-            case 'invalid_expiry_month':
-            case 'invalid_expiry_year':
-            case 'invalid_expiry_year_past':
-              errorMessage = "The expiration date is invalid or expired. Please check and try again.";
+            case "invalid_expiry_month":
+            case "invalid_expiry_year":
+            case "invalid_expiry_year_past":
+              errorMessage =
+                "The expiration date is invalid or expired. Please check and try again.";
               break;
-            case 'incorrect_cvc':
-            case 'invalid_cvc':
-              errorMessage = "The security code (CVC) is invalid. Please check and try again.";
+            case "incorrect_cvc":
+            case "invalid_cvc":
+              errorMessage =
+                "The security code (CVC) is invalid. Please check and try again.";
               break;
-            case 'card_declined':
-              errorMessage = "Your card was declined. Please try a different card.";
+            case "card_declined":
+              errorMessage =
+                "Your card was declined. Please try a different card.";
               break;
             default:
-              errorMessage = cardValidation.error.message || "Invalid card details. Please check and try again.";
+              errorMessage =
+                cardValidation.error.message ||
+                "Invalid card details. Please check and try again.";
           }
-          
+
           throw new Error(errorMessage);
         }
 
@@ -209,35 +217,43 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
         if (error) {
           // Handle specific Stripe error types
           let errorMessage = error.message;
-          
+
           // Map Stripe error codes to user-friendly messages
           switch (error.code) {
-            case 'card_declined':
-              errorMessage = "Your card was declined. Please check your card details or try a different card.";
+            case "card_declined":
+              errorMessage =
+                "Your card was declined. Please check your card details or try a different card.";
               break;
-            case 'insufficient_funds':
-              errorMessage = "Your card has insufficient funds. Please use a different card or add funds to your account.";
+            case "insufficient_funds":
+              errorMessage =
+                "Your card has insufficient funds. Please use a different card or add funds to your account.";
               break;
-            case 'expired_card':
-              errorMessage = "Your card has expired. Please use a different card.";
+            case "expired_card":
+              errorMessage =
+                "Your card has expired. Please use a different card.";
               break;
-            case 'incorrect_cvc':
-              errorMessage = "The security code (CVC) is incorrect. Please check and try again.";
+            case "incorrect_cvc":
+              errorMessage =
+                "The security code (CVC) is incorrect. Please check and try again.";
               break;
-            case 'incorrect_number':
-              errorMessage = "The card number is incorrect. Please check and try again.";
+            case "incorrect_number":
+              errorMessage =
+                "The card number is incorrect. Please check and try again.";
               break;
-            case 'invalid_expiry_year':
-            case 'invalid_expiry_month':
-              errorMessage = "The expiration date is invalid. Please check and try again.";
+            case "invalid_expiry_year":
+            case "invalid_expiry_month":
+              errorMessage =
+                "The expiration date is invalid. Please check and try again.";
               break;
-            case 'processing_error':
-              errorMessage = "An error occurred while processing your card. Please try again.";
+            case "processing_error":
+              errorMessage =
+                "An error occurred while processing your card. Please try again.";
               break;
             default:
-              errorMessage = error.message || "Payment processing failed. Please try again.";
+              errorMessage =
+                error.message || "Payment processing failed. Please try again.";
           }
-          
+
           throw new Error(errorMessage);
         }
 
@@ -274,18 +290,18 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
 
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
-      <h3 className="text-xl font-bold text-gray-900 mb-6">Payment Information</h3>
-      
+      <h3 className="text-xl font-bold text-gray-900 mb-6">Card Information</h3>
+
       {/* Card Number */}
       <div className="w-full">
         <label className="block text-base font-semibold text-gray-900 mb-3">
           Card Number
         </label>
-        <div 
+        <div
           className={`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
-            fieldErrors.cardNumber 
-              ? 'border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500' 
-              : 'border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500'
+            fieldErrors.cardNumber
+              ? "border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500"
+              : "border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500"
           }`}
         >
           <CardNumberElement
@@ -306,11 +322,11 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
           <label className="block text-base font-semibold text-gray-900 mb-3">
             Expiration Date
           </label>
-          <div 
+          <div
             className={`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
-              fieldErrors.cardExpiry 
-                ? 'border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500' 
-                : 'border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500'
+              fieldErrors.cardExpiry
+                ? "border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500"
+                : "border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500"
             }`}
           >
             <CardExpiryElement
@@ -331,11 +347,11 @@ const StripeCardForm: React.FC<StripeCardFormProps> = ({
           <label className="block text-base font-semibold text-gray-900 mb-3">
             Security Code (CVC)
           </label>
-          <div 
+          <div
             className={`w-full border rounded-lg px-4 py-3 bg-white transition-all ${
-              fieldErrors.cardCvc 
-                ? 'border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500' 
-                : 'border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500'
+              fieldErrors.cardCvc
+                ? "border-red-500 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500"
+                : "border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500"
             }`}
           >
             <CardCvcElement

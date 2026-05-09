@@ -10,7 +10,7 @@ const calenderApi = baseApi.injectEndpoints({
         url: `/booking/calendar?month=${month}&year=${year}`,
         method: "GET",
       }),
-      providesTags: ["Calender"],
+      providesTags: ["calendar"],
     }),
   }),
 });

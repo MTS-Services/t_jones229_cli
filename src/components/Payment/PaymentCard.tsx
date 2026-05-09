@@ -29,11 +29,34 @@ export default function PaymentCard({
   const [numberOfGuests, setNumberOfGuests] = useState<string | null>(null);
   const [bookingType, setBookingType] = useState<string | null>(null);
 
-  // Load data from localStorage on client-side only
+  // Load data from localStorage on client-side only.
+  // Priority: new "searchData" JSON object → legacy individual keys.
   useEffect(() => {
-    setTripDate(localStorage.getItem("date"));
-    setNumberOfGuests(localStorage.getItem("Guests"));
-    setBookingType(localStorage.getItem("bookingType"));
+    if (typeof window === "undefined") return;
+
+    let dateFromStorage: string | null = null;
+    let guestsFromStorage: string | null = null;
+    let bookingTypeFromStorage: string | null = null;
+
+    try {
+      const raw = localStorage.getItem("searchData");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        dateFromStorage = parsed?.date ?? null;
+        guestsFromStorage =
+          parsed?.guests != null ? String(parsed.guests) : null;
+        bookingTypeFromStorage =
+          parsed?.bookingType != null ? String(parsed.bookingType) : null;
+      }
+    } catch (err) {
+      console.error("PaymentCard: failed to parse searchData", err);
+    }
+
+    setTripDate(dateFromStorage || localStorage.getItem("date"));
+    setNumberOfGuests(guestsFromStorage || localStorage.getItem("Guests"));
+    setBookingType(
+      bookingTypeFromStorage || localStorage.getItem("bookingType"),
+    );
   }, []);
 
   return (
@@ -78,7 +101,12 @@ export default function PaymentCard({
             people
           </p>
           <p>
-            <span className="font-bold">Booking type:</span> {bookingType}{" "}
+            <span className="font-bold">Booking type:</span>{" "}
+            {bookingType === "true"
+              ? "Shared"
+              : bookingType === "false"
+                ? "Private"
+                : bookingType}{" "}
             booking
           </p>
         </div>
@@ -112,8 +140,8 @@ export default function PaymentCard({
                   </span>
                 </div>
                 <p className="text-sm text-gray-600 mt-1">
-                  Pay online in full through FishingBooker and avoid unnecessary
-                  hassle with carrying extra cash.
+                  Pay online in full through FishingTripper and avoid
+                  unnecessary hassle with carrying extra cash.
                 </p>
               </div>
             </label>
@@ -134,12 +162,12 @@ export default function PaymentCard({
                 </span>
                 <div className="text-sm text-gray-600 mt-1 space-y-1">
                   <p>
-                    Pay 30% now and the rest directly to the Captain on or prior
-                    to your trip date.
+                    Pay 20% now and the rest (80%) directly to the Captain on
+                    the trip day.
                   </p>
                   <p>
-                    If you choose to pay the remaining balance by credit card,
-                    an additional 3% charge will apply.
+                    Free cancellation up to 7 days before your trip — partial
+                    refund applies if you cancel within 7 days.
                   </p>
                 </div>
               </div>
@@ -159,7 +187,7 @@ export default function PaymentCard({
               {selectedPayment === "full" ? (
                 <span>US ${filterTrip?.price}</span>
               ) : selectedPayment === "partial" ? (
-                <span>US ${(filterTrip?.price * 0.3).toFixed(2)}</span>
+                <span>US ${(filterTrip?.price * 0.2).toFixed(2)}</span>
               ) : null}
             </div>
             <p className="text-xs text-gray-500 mb-6">

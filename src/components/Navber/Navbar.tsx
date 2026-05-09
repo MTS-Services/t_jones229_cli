@@ -111,13 +111,13 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-300 ${
-          scrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled && !menuOpen
             ? "bg-white/95 backdrop-blur-md border-b border-gray-100"
             : "bg-white border-b border-gray-100"
         }`}
       >
-        <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-2 sm:gap-4">
+        <nav className="container mx-auto px-4 h-18 flex items-center justify-between gap-2 sm:gap-4">
           {/* LOGO */}
           <Link
             href="/"
@@ -231,7 +231,7 @@ export default function Navbar() {
         <div
           className={`lg:hidden overflow-hidden ${
             searchExpanded
-              ? "max-h-32 py-3 px-4 bg-gray-500 border-t border-gray-100"
+              ? "py-3 px-3 bg-gray-500/10 border-t border-gray-100"
               : "max-h-0"
           }`}
         >
@@ -244,7 +244,7 @@ export default function Navbar() {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-[998] lg:hidden animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/70 z-[998] lg:hidden animate-in fade-in duration-200"
             onClick={() => setMenuOpen(false)}
           />
 

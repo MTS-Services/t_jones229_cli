@@ -3,6 +3,7 @@
 import DashboardCard from "./AdashboardCard";
 import { useDashboardQuery } from "@/redux/api/dashboardApi";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
 
 import { LuCalendarDays, LuTrendingUp } from "react-icons/lu";
 import {
@@ -39,10 +40,28 @@ interface CustomTooltipProps {
 
 export default function Adashboard() {
   const { data, isLoading } = useDashboardQuery({});
+  const [mounted, setMounted] = useState(false);
 
-  const tripMetrics = data?.data?.tripMetrics || {};
-  const userMetrics = data?.data?.userMetrics || {};
-  const listingRequest = data?.data?.listingRequest || {};
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const tripMetrics = data?.data?.tripMetrics || {
+    PENDING: 0,
+    ONGOING: 0,
+    COMPLETED: 0,
+    CANCELLED: 0,
+    CONFIRMED: 0,
+    COMPLETE: 0,
+  };
+  const userMetrics = data?.data?.userMetrics || {
+    USER: 0,
+    CAPTAIN: 0,
+  };
+  const listingRequest =
+    typeof data?.data?.listingRequest === "number"
+      ? data.data.listingRequest
+      : 0;
 
   // Prepare data for bar chart
   const barChartData = [
@@ -87,7 +106,7 @@ export default function Adashboard() {
     title: string,
     value: number | string,
     icon: React.ReactNode,
-    link: string
+    link: string,
   ) => {
     return isLoading ? (
       <Skeleton className="h-20 rounded-lg" />
@@ -97,174 +116,210 @@ export default function Adashboard() {
   };
 
   return (
-    <main className="p-4 md:p-8 space-y-6">
-      <h2 className="text-lg font-semibold text-gray-800 mb-6">
-        Platform Metrics
-      </h2>
+    <>
+      {!mounted ? (
+        <main className="space-y-6">
+          <Skeleton className="h-8 w-48 rounded-lg mb-6" />
+          <div className="grid xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="h-[130px] sm:h-[170px] rounded-2xl"
+              />
+            ))}
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <Skeleton className="h-80 w-full rounded-lg" />
+          </div>
+        </main>
+      ) : (
+        <main className="space-y-6">
+          {/* <h2 className="text-xl font-semibold text-gray-800 mb-6">
+            Platform Metrics
+          </h2> */}
 
-      <div className="grid xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-4">
-        {renderCard(
-          DashboardCard,
-          "UPCOMING TRIPS:",
-          tripMetrics.PENDING ?? 0,
-          <LuCalendarDays className="text-[#FF9500]" size={28} />,
-          "/dashboard/trips-managment"
-        )}
+          <div className="grid xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-4">
+            {renderCard(
+              DashboardCard,
+              "UPCOMING TRIPS:",
+              tripMetrics.PENDING ?? 0,
+              <LuCalendarDays className="text-[#FF9500]" size={28} />,
+              "/dashboard/trips-managment",
+            )}
 
-        {renderCard(
-          DashboardCard,
-          "COMPLETED:",
-          tripMetrics.COMPLETE ?? 0,
-          <FaCheckCircle className="text-[#FF9500]" size={28} />,
-          "/dashboard/trips-managment"
-        )}
+            {renderCard(
+              DashboardCard,
+              "COMPLETED:",
+              tripMetrics.COMPLETE ?? 0,
+              <FaCheckCircle className="text-[#1eaa41]" size={28} />,
+              "/dashboard/trips-managment",
+            )}
 
-        {renderCard(
-          DashboardCard,
-          "CANCELLED:",
-          0,
-          <FaTimesCircle className="text-[#FF9500]" size={28} />,
-          "/dashboard/trips-managment"
-        )}
+            {renderCard(
+              DashboardCard,
+              "CANCELLED:",
+              0,
+              <FaTimesCircle className="text-red-500" size={28} />,
+              "/dashboard/trips-managment",
+            )}
 
-        {renderCard(
-          DashboardCard,
-          "ACTIVE CUSTOMERS:",
-          userMetrics.USER ?? 0,
-          <FaUsers className="text-[#FF9500]" size={28} />,
-          "/dashboard/user-management"
-        )}
+            {renderCard(
+              DashboardCard,
+              "ACTIVE USERS:",
+              userMetrics.USER ?? 0,
+              <FaUsers className="text-[#035292]" size={28} />,
+              "/dashboard/user-management",
+            )}
 
-        {renderCard(
-          DashboardCard,
-          "ACTIVE CAPTAINS:",
-          userMetrics.CAPTAIN ?? 0,
-          <FaUserTie className="text-[#FF9500]" size={28} />,
-          "/dashboard/user-management"
-        )}
+            {renderCard(
+              DashboardCard,
+              "ACTIVE CAPTAINS:",
+              userMetrics.CAPTAIN ?? 0,
+              <FaUserTie className="text-[#4961e9]" size={28} />,
+              "/dashboard/user-management",
+            )}
 
-        {renderCard(
-          DashboardCard,
-          "REFUND REQUESTS:",
-          listingRequest ?? 0,
-          <FaMoneyBillWave className="text-[#FF9500]" size={28} />,
-          "/dashboard/user-management"
-        )}
-      </div>
-
-      {/* Bar Chart Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              Trip Status Distribution
-            </h3>
-            <p className="text-gray-500 text-sm mt-1">
-              Overview of all trips by status
-            </p>
+            {renderCard(
+              DashboardCard,
+              "REFUND REQUESTS:",
+              listingRequest ?? 0,
+              <FaMoneyBillWave className="text-[#e2c20a]" size={28} />,
+              "/dashboard/user-management",
+            )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 mt-2 md:mt-0">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#FF9500]"></div>
-              <span className="text-sm text-gray-600">Upcoming</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#34C759]"></div>
-              <span className="text-sm text-gray-600">Completed</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#007AFF]"></div>
-              <span className="text-sm text-gray-600">Ongoing</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#FF3B30]"></div>
-              <span className="text-sm text-gray-600">Cancelled</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#5856D6]"></div>
-              <span className="text-sm text-gray-600">Confirmed</span>
-            </div>
-          </div>
-        </div>
+          {/* Bar Chart Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 sm:mb-6">
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                  Trip Status Distribution
+                </h3>
+                <p className="text-gray-500 text-xs sm:text-sm mt-1">
+                  Overview of all trips by status
+                </p>
+              </div>
 
-        {isLoading ? (
-          <div className="h-80">
-            <Skeleton className="h-full w-full rounded-lg" />
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 md:mt-0">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#FF9500] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Upcoming
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#34C759] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Completed
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500 flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Cancelled
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#035292] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Users
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#4961e9] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Captains
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#d6c356] flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Refund
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {isLoading ? (
+              <div className="h-80">
+                <Skeleton className="h-full w-full rounded-lg" />
+              </div>
+            ) : totalTrips === 0 ? (
+              <div className="h-80 flex flex-col items-center justify-center text-gray-500">
+                <LuTrendingUp size={48} className="mb-4 opacity-20" />
+                <p>No trip data available</p>
+                <p className="text-sm mt-2">
+                  Start creating trips to see analytics
+                </p>
+              </div>
+            ) : (
+              <div className="h-56 sm:h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={barChartData}
+                    margin={{
+                      top: 10,
+                      right: 10,
+                      left: 0,
+                      bottom: 10,
+                    }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="#f0f0f0"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#666", fontSize: 11 }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#666", fontSize: 11 }}
+                      width={28}
+                    />
+                    <Tooltip
+                      content={<CustomTooltip />}
+                      cursor={{ stroke: "rgba(0, 0, 0, 0.1)", strokeWidth: 2 }}
+                    />
+                    <Legend
+                      verticalAlign="top"
+                      height={36}
+                      iconType="circle"
+                      iconSize={8}
+                      formatter={(value) => (
+                        <span className="text-sm text-gray-600">{value}</span>
+                      )}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      name="Number of Trips"
+                      stroke="#8884d8"
+                      strokeWidth={3}
+                      dot={{
+                        r: 6,
+                        fill: "#8884d8",
+                        strokeWidth: 2,
+                        stroke: "#fff",
+                      }}
+                      activeDot={{
+                        r: 8,
+                        fill: "#8884d8",
+                        strokeWidth: 2,
+                        stroke: "#fff",
+                      }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </div>
-        ) : totalTrips === 0 ? (
-          <div className="h-80 flex flex-col items-center justify-center text-gray-500">
-            <LuTrendingUp size={48} className="mb-4 opacity-20" />
-            <p>No trip data available</p>
-            <p className="text-sm mt-2">
-              Start creating trips to see analytics
-            </p>
-          </div>
-        ) : (
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={barChartData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 20,
-                }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="#f0f0f0"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="name"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "#666", fontSize: 12 }}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "#666", fontSize: 12 }}
-                />
-                <Tooltip
-                  content={<CustomTooltip />}
-                  cursor={{ stroke: "rgba(0, 0, 0, 0.1)", strokeWidth: 2 }}
-                />
-                <Legend
-                  verticalAlign="top"
-                  height={36}
-                  iconType="circle"
-                  iconSize={8}
-                  formatter={(value) => (
-                    <span className="text-sm text-gray-600">{value}</span>
-                  )}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  name="Number of Trips"
-                  stroke="#8884d8"
-                  strokeWidth={3}
-                  dot={{
-                    r: 6,
-                    fill: "#8884d8",
-                    strokeWidth: 2,
-                    stroke: "#fff",
-                  }}
-                  activeDot={{
-                    r: 8,
-                    fill: "#8884d8",
-                    strokeWidth: 2,
-                    stroke: "#fff",
-                  }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </div>
-    </main>
+        </main>
+      )}
+    </>
   );
 }

@@ -34,12 +34,78 @@ const BookingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["booking", "userBooking"],
     }),
+    updateBookingStatus: build.mutation({
+      query: ({ id, status }: { id: string; status: string }) => ({
+        url: `/booking/status/${id}`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["booking", "userBooking"],
+    }),
     getChargeEnable: build.query({
       query: () => ({
         url: `/users/active-stripe-account`,
         method: "POST",
       }),
       providesTags: ["booking"],
+    }),
+
+    // POST /api/v1/users/active-stripe-account — returns Stripe Connect onboarding URL
+    activateStripeAccount: build.mutation<
+      { data: string; success: boolean; message: string },
+      void
+    >({
+      query: () => ({
+        url: `/users/active-stripe-account`,
+        method: "POST",
+      }),
+      invalidatesTags: ["auth"],
+    }),
+
+    /* ===== Deposit-based booking flow (new) ===== */
+
+    // POST /api/v1/booking/deposit — creates booking + holds 20% deposit
+    createBookingDeposit: build.mutation({
+      query: (data: {
+        boatId: string;
+        tripId: string;
+        tripDate: string; // ISO date
+        groupSize: number;
+        paymentMethodId: string;
+        bookingType?: boolean; // true = PRIVATE, false = GROUP
+      }) => ({
+        url: `/booking/deposit`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["booking", "userBooking"],
+    }),
+
+    // PATCH /api/v1/booking/:id/complete — captain captures deposit + transfer
+    completeTrip: build.mutation({
+      query: (id: string) => ({
+        url: `/booking/${id}/complete`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["booking", "userBooking"],
+    }),
+
+    // DELETE /api/v1/booking/:id/cancel — sliding-scale refund/payout
+    cancelBookingWithRefund: build.mutation({
+      query: ({
+        id,
+        reason,
+        actor,
+      }: {
+        id: string;
+        reason?: string;
+        actor?: "CUSTOMER" | "CAPTAIN" | "WEATHER" | "ADMIN";
+      }) => ({
+        url: `/booking/${id}/cancel`,
+        method: "DELETE",
+        body: { reason, actor },
+      }),
+      invalidatesTags: ["booking", "userBooking"],
     }),
   }),
 });
@@ -50,5 +116,10 @@ export const {
   useGetMyBookingQuery,
   useGetChargeEnableQuery,
   useCancelBookingMutation,
+  useUpdateBookingStatusMutation,
+  useCreateBookingDepositMutation,
+  useCompleteTripMutation,
+  useCancelBookingWithRefundMutation,
+  useActivateStripeAccountMutation,
 } = BookingApi;
 export default BookingApi;

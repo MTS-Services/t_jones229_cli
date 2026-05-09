@@ -1,6 +1,8 @@
 export interface tripCardProps {
   boatId: any;
-  image: string;
+  image: string | any[];
+  viewMode?: "grid" | "list";
+  imageIndex?: number;
   tripInfo: {
     id: number;
     tripName: string;

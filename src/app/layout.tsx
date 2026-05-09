@@ -7,14 +7,6 @@ import { ToastContainer } from "react-toastify";
 import Loader from "@/components/ui/Loader";
 import "./globals.css";
 
-// import HomeNavbar from "@/Components/Navber/HomeNavbar";
-
-// Correct font variable names
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
 // Viewport configuration (separate from metadata in Next.js 14+)
 export const viewport: Viewport = {
   width: "device-width",
@@ -32,11 +24,6 @@ export const metadata: Metadata = {
     title: "FishingTripper",
   },
 };
-
-
-
-
-
 
 export default function RootLayout({
   children,

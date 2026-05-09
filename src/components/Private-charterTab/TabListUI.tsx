@@ -24,7 +24,7 @@ const TabListUI: React.FC<TabListUIProps> = ({ activeKey, onTabChange }) => {
   ];
 
   return (
-    <div className="w-full xl:w-[60%] 2xl:w-[65%]">
+    <div className="w-full">
       <ConfigProvider
         theme={{
           components: {

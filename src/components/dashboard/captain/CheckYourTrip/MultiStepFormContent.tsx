@@ -8,7 +8,11 @@ import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 
 // UI Icons
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import {
+  MdKeyboardArrowLeft,
+  MdKeyboardArrowRight,
+  MdCheck,
+} from "react-icons/md";
 
 // Components
 import Information from "@/components/List-boat-form/Information";
@@ -35,7 +39,7 @@ import { useUpdateProfileMutation } from "@/redux/api/userDashboardApi/updatePro
 
 const tabs = [
   { id: 0, title: "Information" },
-  { id: 1, title: "Photos & Videos" },
+  { id: 1, title: "Photos" },
   { id: 2, title: "Fishing" },
   { id: 3, title: "Meeting Point" },
   { id: 4, title: "Map" },
@@ -93,7 +97,8 @@ export default function MultiStepFormContent() {
   const { handleSubmit, setValue, getValues } = methods;
 
   const [currentStep, setCurrentStep] = useState(0);
-  const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set([0])); // Track unlocked steps
+  const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set([0]));
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [isLicenceImage, setIsLicenceImage] = useState(false);
   const [isBoatImage, setIsBoatImage] = useState(false);
   const imageUrl = useSelector((state: RootState) => state.imageUrl.imageUrl);
@@ -124,7 +129,6 @@ export default function MultiStepFormContent() {
   // Listen for payment method creation success
   useEffect(() => {
     const handlePaymentMethodReady = () => {
-      // Re-submit the form after payment method is created
       const currentData = getValues();
       if (currentData.paymentMethodId) {
         submitFinalForm(currentData);
@@ -133,22 +137,20 @@ export default function MultiStepFormContent() {
 
     window.addEventListener("paymentMethodCreated", handlePaymentMethodReady);
     return () => {
-      window.removeEventListener("paymentMethodCreated", handlePaymentMethodReady);
+      window.removeEventListener(
+        "paymentMethodCreated",
+        handlePaymentMethodReady,
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getValues]);
 
   const handleTabNavigation = (index: number) => {
-    // For edit mode (boatId exists), allow navigation to any step
-    // For create mode, only allow navigation to visited steps
     const canNavigate = boatId || visitedSteps.has(index);
-    
+
     if (canNavigate) {
-      // Save current form data before navigating
       const currentData = getValues();
       updateFormData(currentData);
-      
-      // Navigate to the selected step
       setCurrentStep(index);
     } else {
       toast.warn("Please complete the current step first by clicking Next.");
@@ -156,10 +158,11 @@ export default function MultiStepFormContent() {
   };
 
   const handleNext = async (data: any) => {
-    // Save form data
     updateFormData(data);
 
-    // Image validation for Photos & Videos step
+    // Mark current step as completed
+    setCompletedSteps((prev) => new Set([...prev, currentStep]));
+
     if (currentStep === 1 && !imageUrl && !isBoatImage) {
       return toast.error("Upload at least one image");
     }
@@ -168,11 +171,8 @@ export default function MultiStepFormContent() {
 
     if (currentStep < lastStep) {
       const nextStep = currentStep + 1;
-      
-      // Unlock the next step by adding to visitedSteps
+
       setVisitedSteps((prev) => new Set([...prev, nextStep]));
-      
-      // Navigate to next step
       setCurrentStep(nextStep);
     } else {
       await submitFinalForm(data);
@@ -181,27 +181,27 @@ export default function MultiStepFormContent() {
 
   const submitFinalForm = async (data: any) => {
     try {
-      // Helper function to get value from formData or current data
       const getValue = (key: string) => formData?.[key] ?? data?.[key];
 
-      // Get Payment Method ID from form data (set by StripePaymentForm)
-      const paymentMethodId = data?.paymentMethodId || getValue("paymentMethodId");
+      const paymentMethodId =
+        data?.paymentMethodId || getValue("paymentMethodId");
 
-      // Validate payment method for new boats
       if (!boatId && currentStep === 7) {
         if (!paymentMethodId) {
-          // Trigger Stripe payment method creation
           window.dispatchEvent(new Event("createStripePaymentMethod"));
-          return; // Wait for payment method creation to complete
+          return;
         }
 
-        // Validate personal details
-        if (!data?.firstName || !data?.lastName || !data?.email || !data?.mobile) {
+        if (
+          !data?.firstName ||
+          !data?.lastName ||
+          !data?.email ||
+          !data?.mobile
+        ) {
           return toast.error("Please fill in all required personal details");
         }
       }
 
-      // Prepare payment info for profile update
       const fullPaymentInfo = {
         paymentMethod: {
           paymentMethod: "card",
@@ -213,7 +213,6 @@ export default function MultiStepFormContent() {
         },
       };
 
-      // Prepare final boat data
       const finalData = {
         boatInfo: {
           guests: Number(getValue("guests")) || 1,
@@ -270,19 +269,15 @@ export default function MultiStepFormContent() {
         }),
       };
 
-      // Submit boat data
       const res = boatId
         ? await updateBoat({ boatInfo: finalData, id: boatId })
         : await createBoatFN(finalData);
 
-      // Handle response
       if (!boatId && res?.data?.success) {
-        // Update user profile with payment info
         await updateProfileFN(fullPaymentInfo).unwrap();
 
         toast.success(res?.data?.message || "Boat created successfully!");
 
-        // Update cookies and Redux state
         if (res?.data?.data?.accessToken) {
           Cookies.set("token", res.data.data.accessToken);
           Cookies.set("currentUserRole", "CAPTAIN");
@@ -291,11 +286,10 @@ export default function MultiStepFormContent() {
               user: userInfo,
               token: res.data.data.accessToken,
               isAuthenticated: true,
-            })
+            }),
           );
         }
 
-        // Clear states
         dispatch(clearPaymentMethodId());
         dispatch(clearImageUrl());
 
@@ -306,7 +300,6 @@ export default function MultiStepFormContent() {
         router.push("/dashboard/boat-trip");
       }
 
-      // Handle errors
       if (res?.error) {
         if (typeof res.error === "object" && "data" in res.error) {
           const errData: any = (res.error as any).data;
@@ -355,71 +348,115 @@ export default function MultiStepFormContent() {
     }
   };
 
+  const getStepStatus = (step: number) => {
+    if (step === currentStep) return "current";
+    if (completedSteps.has(step)) return "completed";
+    if (visitedSteps.has(step)) return "visited";
+    return "upcoming";
+  };
+
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-white">
+    <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-lg">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <div className="flex-none z-50 border-b border-gray-300">
-        {/* Header */}
-        <div className="bg-[#f7f7f7] lg:px-10 md:px-8 px-6 lg:py-5 md:py-4 py-3">
-          <h1 className="md:text-3xl text-2xl font-bold text-gray-800 mb-2">
-            {currentHeading?.title}
-          </h1>
-          <p className="text-base md:text-lg text-gray-600">
-            {currentHeading?.description}
-          </p>
-        </div>
+      {/* Updated Multi-Step Header with Arrows */}
+      <div className="flex-none bg-gradient-to-br from-orange-50 to-white border-b-2 border-orange-100">
+        <div className="px-6 sm:px-8 lg:px-12 py-8">
+          {/* Step Progress Bar */}
+          <div className="relative mb-2">
+            {/* Progress Line Background */}
+            <div className="absolute top-6 left-0 w-full h-1 bg-gray-100 rounded-full" />
 
-        {/* Tab Navigation */}
-        <div className="border-b border-gray-200 bg-gray-100 lg:px-10 md:px-8 px-6">
-          <div className="flex overflow-x-auto scrollbar-hide">
-            {tabs.map((tab, index) => {
-              const isActive = currentStep === index;
-              // Disable tab if not visited (unless in edit mode with boatId)
-              const isDisabled = !boatId && !visitedSteps.has(index);
+            {/* Active Progress Line */}
+            <div
+              className="absolute top-6 left-0 h-1 bg-gradient-to-r from-[#f2a93b] to-[#ff8c00] rounded-full transition-all duration-500 ease-in-out"
+              style={{
+                width: `${(currentStep / (tabs.length - 1)) * 100}%`,
+              }}
+            />
 
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => handleTabNavigation(index)}
-                  disabled={isDisabled}
-                  className={`py-4 px-4 mr-4 font-medium transition whitespace-nowrap border-b-2 ${
-                    isActive
-                      ? "border-orange-500 text-orange-500"
-                      : "border-transparent text-gray-500 hover:text-orange-400"
-                  } ${
-                    isDisabled
-                      ? "opacity-50 cursor-not-allowed"
-                      : "cursor-pointer"
-                  }`}
-                >
-                  {tab.title}
-                </button>
-              );
-            })}
+            {/* Steps */}
+            <div className="relative flex justify-between">
+              {tabs.map((tab, index) => {
+                const status = getStepStatus(index);
+
+                return (
+                  <div key={tab.id} className="flex flex-col items-center">
+                    <button
+                      type="button"
+                      onClick={() => handleTabNavigation(index)}
+                      disabled={!boatId && status === "upcoming"}
+                      className={`
+                        relative z-10 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center
+                        transition-all duration-300 font-bold text-base sm:text-lg shadow-md hover:shadow-lg
+                        ${status === "completed" && "bg-gradient-to-br from-[#f2a93b] to-[#e0962d] text-white scale-105"}
+                        ${status === "current" && "bg-gradient-to-br from-[#f2a93b] to-[#ff8c00] text-white ring-4 ring-orange-200 scale-110 shadow-xl"}
+                        ${status === "visited" && !completedSteps.has(index) && "bg-white border-3 border-[#f2a93b] text-[#f2a93b] hover:bg-orange-50"}
+                        ${status === "upcoming" && "bg-white border-2 border-gray-300 text-gray-400 cursor-not-allowed opacity-50"}
+                      `}
+                    >
+                      {status === "completed" ? (
+                        <MdCheck size={24} className="font-bold" />
+                      ) : (
+                        index + 1
+                      )}
+                    </button>
+
+                    {/* Step Title */}
+                    <span
+                      className={`
+                        mt-3 text-xs sm:text-sm font-semibold text-center max-w-[80px] leading-tight
+                        ${status === "completed" && "text-[#f2a93b]"}
+                        ${status === "current" && "text-[#f2a93b] font-bold"}
+                        ${status === "visited" && "text-gray-700"}
+                        ${status === "upcoming" && "text-gray-400"}
+                      `}
+                    >
+                      {tab.title}
+                    </span>
+
+                    {/* Arrow between steps (except last) */}
+                    {index < tabs.length - 1 && (
+                      <div className="hidden lg:block absolute -right-4 top-4 text-gray-300">
+                        <MdKeyboardArrowRight size={24} />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Current Step Description */}
+          <div className="mt-8 text-center sm:text-left bg-white rounded-lg p-6 shadow-sm border border-orange-100">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              {currentHeading.title}
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+              {currentHeading.description}
+            </p>
           </div>
         </div>
       </div>
 
       {/* Form Content */}
-      <div className="flex-1 overflow-y-auto lg:px-10 md:px-8 px-6 py-6">
+      <div className="flex-1 overflow-y-auto lg:px-12 md:px-10 px-6 py-8">
         <RHFProvider {...methods}>
           <form
             onSubmit={handleSubmit(handleNext)}
             className="h-full flex flex-col"
           >
-            <div className="flex-1">{renderStepComponent()}</div>
+            <div className="flex-1 mb-6">{renderStepComponent()}</div>
 
             {/* Navigation Buttons */}
-            <div className="flex items-center justify-between border-t mt-10 pt-8 pb-10">
+            <div className="flex items-center justify-between border-t-2 border-gray-200 py-8 bg-gradient-to-r from-gray-50 to-white -mx-6 px-6 sm:-mx-10 sm:px-10 lg:-mx-12 lg:px-12">
               {currentStep > 0 ? (
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="flex items-center gap-2 border border-gray-300 text-gray-700 px-6 py-2 rounded-xl hover:bg-gray-100 font-medium transition"
+                  className="flex items-center gap-2 border-2 border-gray-300 text-gray-700 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl hover:bg-gray-100 hover:border-gray-400 font-semibold text-base sm:text-lg transition-all shadow-sm hover:shadow-md"
                 >
-                  <MdKeyboardArrowLeft size={20} /> Back
+                  <MdKeyboardArrowLeft size={24} /> <span>Back</span>
                 </button>
               ) : (
                 <div />
@@ -432,19 +469,22 @@ export default function MultiStepFormContent() {
                   (currentStep === 0 && !isLicenceImage) ||
                   (currentStep === 1 && !isBoatImage)
                 }
-                className={`${
-                  (currentStep === 0 && !isLicenceImage) ||
-                  (currentStep === 1 && !isBoatImage)
-                    ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-[#f2a93b] hover:bg-[#e0962d]"
-                } text-white px-12 py-3 rounded-xl font-bold transition-all shadow-md flex items-center gap-2`}
+                className={`
+                  flex items-center gap-3 px-8 sm:px-14 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95
+                  ${
+                    (currentStep === 0 && !isLicenceImage) ||
+                    (currentStep === 1 && !isBoatImage)
+                      ? "bg-gray-300 cursor-not-allowed opacity-60"
+                      : "bg-gradient-to-r from-[#f2a93b] to-[#ff8c00] hover:from-[#e0962d] hover:to-[#f77f00] text-white"
+                  }
+                `}
               >
                 {currentStep === (boatId ? 6 : 7)
                   ? isLoading
                     ? "Processing..."
                     : "Confirm Listing"
                   : "Next"}
-                <MdKeyboardArrowRight size={20} />
+                <MdKeyboardArrowRight size={24} />
               </button>
             </div>
           </form>

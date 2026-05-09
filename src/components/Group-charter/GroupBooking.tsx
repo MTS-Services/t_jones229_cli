@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useCreateBookingMutation } from "@/redux/api/bookingApi";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import Loader from "../ui/Loader";
 
 export default function BookingSection() {
@@ -160,9 +160,12 @@ export default function BookingSection() {
         toast.success(successMessage);
         // 4️⃣ Clean up
         if (typeof window !== "undefined") {
+          localStorage.removeItem("searchData"); // New object format
           localStorage.removeItem("Guests");
           localStorage.removeItem("date");
+          localStorage.removeItem("StartDate");
           localStorage.removeItem("bookingType");
+          localStorage.removeItem("location");
         }
         router.push("/group-confirmation");
       } else if (res?.error) {

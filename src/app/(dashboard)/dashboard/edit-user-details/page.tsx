@@ -1,7 +1,6 @@
 "use client";
 
-import TitleSection from "@/components/dashboard/captain/TiltleSection";
-import EditProfile from "@/components/dashboard/userDashboard/EditProfile";
+import EditProfile from "@/app/(dashboard)/dashboard/edit-user-details/components/EditProfile";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import React from "react";
@@ -13,11 +12,8 @@ export default function page() {
   );
 
   return (
-    <div>
-      <TitleSection />
-      <Elements stripe={stripePromise}>
-        <EditProfile />
-      </Elements>
-    </div>
+    <Elements stripe={stripePromise}>
+      <EditProfile />
+    </Elements>
   );
 }

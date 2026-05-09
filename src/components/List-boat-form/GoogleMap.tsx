@@ -1,31 +1,31 @@
 // components/InteractiveMap.js
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import dynamic from "next/dynamic";
+import "leaflet/dist/leaflet.css";
 
-// Dynamically import Leaflet components to avoid SSR issues
+// Dynamic imports for all react-leaflet components
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
+  { ssr: false },
 );
+
 const TileLayer = dynamic(
   () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
+  { ssr: false },
 );
+
 const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
+  { ssr: false },
 );
-const useMapEvents = dynamic(
-  () => import("react-leaflet").then((mod) => mod.useMapEvents as any),
-  { ssr: false }
-) as any;
 
 const containerStyle = {
   width: "100%",
-  height: "98vh",
+  minHeight: "50vh",
+  height: "50vh",
 };
 
 const center: [number, number] = [37.7749, -122.4194]; // San Francisco as default
@@ -37,6 +37,12 @@ interface InteractiveMapProps {
   }) => void;
   initialLocation?: { latitude: number; longitude: number };
 }
+
+// Dynamic component for map events - must be separate to use hooks properly
+const MapEvents = dynamic(
+  () => import("./MapEventsComponent").then((mod) => mod.default),
+  { ssr: false },
+);
 
 // Component to handle map click events
 function LocationMarker({
@@ -53,31 +59,16 @@ function LocationMarker({
   markerPosition: [number, number] | null;
   setMarkerPosition: (pos: [number, number]) => void;
 }) {
-  const { useMapEvents: useMapEventsHook } = require("react-leaflet");
-
-  useMapEventsHook({
-    click(e: any) {
-      const position: [number, number] = [e.latlng.lat, e.latlng.lng];
-      const location = {
-        latitude: position[0],
-        longitude: position[1],
-      };
-
-      setMarkerPosition(position);
-
-      // Update form context if available
-      if (formContext?.setValue) {
-        formContext.setValue("location", location);
-      }
-
-      // Call optional callback
-      if (onLocationSelect) {
-        onLocationSelect(location);
-      }
-    },
-  });
-
-  return markerPosition ? <Marker position={markerPosition} /> : null;
+  return (
+    <>
+      <MapEvents
+        onLocationSelect={onLocationSelect}
+        formContext={formContext}
+        setMarkerPosition={setMarkerPosition}
+      />
+      {markerPosition ? <Marker position={markerPosition} /> : null}
+    </>
+  );
 }
 
 export default function InteractiveMap({
@@ -89,53 +80,57 @@ export default function InteractiveMap({
   const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(
     initialLocation
       ? [initialLocation.latitude, initialLocation.longitude]
-      : null
+      : null,
   );
 
   useEffect(() => {
-    setMounted(true);
+    const setupLeaflet = async () => {
+      // Fix for default marker icon - load dynamically
+      const L = await import("leaflet");
 
-    // Fix for default marker icon
-    const L = require("leaflet");
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-      iconUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-      shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    });
+      // Delete the default icon URL method
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+
+      // Set new icon URLs
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+        iconUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+        shadowUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      });
+
+      setMounted(true);
+    };
+
+    setupLeaflet();
   }, []);
 
   if (!mounted) {
     return (
       <div
         style={containerStyle}
-        className="bg-gray-100 flex items-center justify-center rounded-lg"
+        className="bg-gray-100 flex items-center justify-center rounded-lg relative"
       >
-        <div className="text-gray-500">Loading map...</div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+          <div className="text-gray-600 font-medium">
+            Loading interactive map...
+          </div>
+          <div className="text-gray-500 text-sm mt-1">Please wait a moment</div>
+        </div>
       </div>
     );
   }
 
-  const {
-    MapContainer,
-    TileLayer,
-    Marker,
-    useMapEvents,
-  } = require("react-leaflet");
-
   return (
     <div style={containerStyle}>
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
-      />
       <MapContainer
         center={markerPosition || center}
-        zoom={10}
-        style={{ height: "100%", width: "100%", borderRadius: "8px" }}
+        zoom={12}
+        style={{ height: "100%", width: "100%" }}
+        className="z-10 rounded-lg"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

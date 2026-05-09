@@ -19,7 +19,7 @@ export default function Hero() {
     <div className="relative w-full h-[500px] md:h-[700px] lg:h-[800px] overflow-hidden bg-black">
       {/* Background Video */}
       <video
-        src="/intro/introVideo.webm" 
+        src="/intro/introVideo.webm"
         autoPlay
         muted
         loop
@@ -44,12 +44,12 @@ export default function Hero() {
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 md:px-8 z-20">
         {/* Heading */}
-        <h1 className="text-2xl sm:text-3xl md:text-5xl uppercase font-bold mb-4 md:mb-6 leading-tight max-w-7xl mx-auto text-white">
+        <h1 className="text-3xl sm:text-3xl md:text-5xl uppercase font-bold mb-4 md:mb-6 leading-tight max-w-7xl mx-auto text-white">
           {item.line1}
         </h1>
 
         {/* Description */}
-        <p className="max-w-md md:max-w-2xl text-white text-sm sm:text-base md:text-lg mb-8 font-light leading-relaxed">
+        <p className="max-w-md md:max-w-2xl text-white sm:text-base md:text-lg mb-8 font-light leading-relaxed">
           {item.desc}
         </p>
       </div>

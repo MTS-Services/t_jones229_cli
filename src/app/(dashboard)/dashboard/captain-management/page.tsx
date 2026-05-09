@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import TitleSection from "@/components/dashboard/captain/TiltleSection";
-import CaptainManagementComponent from "@/components/dashboard/admin/userManagment/CaptainManagement";
+import CaptainManagementComponent from "./components/CaptainManagement";
 import { useAllUserQuery } from "@/redux/api/authApi";
 
 export default function Page() {
@@ -11,12 +10,9 @@ export default function Page() {
   });
 
   return (
-    <div>
-      <TitleSection />
-      <CaptainManagementComponent
-        data={captainData?.data?.data || []}
-        isLoading={loadingCaptain}
-      />
-    </div>
+    <CaptainManagementComponent
+      data={captainData?.data?.data || []}
+      isLoading={loadingCaptain}
+    />
   );
 }
