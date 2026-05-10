@@ -12,6 +12,9 @@ export interface Booking {
   groupSize: number;
   payFirst: number;
   payDue: number;
+  totalPrice: number | null;
+  depositAmount: number | null;
+  remainingAmount: number | null;
   userId: string;
 }
 

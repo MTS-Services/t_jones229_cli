@@ -300,9 +300,12 @@ export default function TripsDetails() {
 
   const statusCfg = getStatusConfig(booking.status);
   const paymentCfg = getPaymentConfig(booking.paymentStatus);
-  const total = (booking.payFirst || 0) + (booking.payDue || 0);
+  // Prefer new deposit-flow fields; fall back to legacy payFirst/payDue
+  const depositPaid = booking.depositAmount || booking.payFirst || 0;
+  const remaining = booking.remainingAmount ?? booking.payDue ?? 0;
+  const total = booking.totalPrice || depositPaid + remaining;
   const paidPercent =
-    total > 0 ? Math.round(((booking.payFirst || 0) / total) * 100) : 0;
+    total > 0 ? Math.round((depositPaid / total) * 100) : 0;
   const StatusIcon = statusCfg.icon;
 
   const tripDays = booking.trip?.tripDays?.filter(
@@ -387,7 +390,7 @@ export default function TripsDetails() {
             </span>
           </div>
           <p className="text-xl font-bold text-gray-900">
-            {formatCurrency(booking.payDue || 0)}
+            {formatCurrency(remaining)}
           </p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -649,15 +652,15 @@ export default function TripsDetails() {
           <Card title="Payment" icon={CreditCard}>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">Paid</span>
+                <span className="text-sm text-gray-500">Deposit Paid</span>
                 <span className="text-base font-bold text-emerald-600">
-                  {formatCurrency(booking.payFirst || 0)}
+                  {formatCurrency(depositPaid)}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">Due</span>
+                <span className="text-sm text-gray-500">Due on Trip Day</span>
                 <span className="text-base font-bold text-orange-600">
-                  {formatCurrency(booking.payDue || 0)}
+                  {formatCurrency(remaining)}
                 </span>
               </div>
               <div className="border-t border-gray-100 pt-3">

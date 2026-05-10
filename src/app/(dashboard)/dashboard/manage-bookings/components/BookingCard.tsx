@@ -66,9 +66,19 @@ export default function BookingCard({
     groupSize,
     payFirst,
     payDue,
+    totalPrice,
+    depositAmount,
+    remainingAmount,
     id,
     userId,
   } = booking;
+
+  // Resolve payment figures — prefer new deposit fields over legacy payFirst/payDue
+  const paidAmount = depositAmount ?? payFirst ?? 0;
+  const dueAmount = remainingAmount ?? payDue ?? 0;
+  const totalAmount = totalPrice ?? (paidAmount + dueAmount);
+  const isDepositBooking = depositAmount != null && remainingAmount != null;
+  const depositPct = totalAmount > 0 ? Math.round((paidAmount / totalAmount) * 100) : 0;
 
   const statusConfig = getStatusConfig(status);
   const StatusIcon = statusConfig.icon;
@@ -205,20 +215,33 @@ export default function BookingCard({
 
               {/* Payment Summary */}
               <div className="flex items-center gap-3 ml-auto">
-                {(payFirst ?? 0) > 0 && (
+                {paidAmount > 0 && (
                   <div className="text-right">
-                    <p className="text-xs text-gray-500">Paid</p>
+                    <p className="text-xs text-gray-500">
+                      {isDepositBooking ? `Deposit paid (${depositPct}%)` : "Paid"}
+                    </p>
                     <p className="text-sm font-semibold text-emerald-600">
-                      {formatCurrency(payFirst)}
+                      {formatCurrency(paidAmount)}
                     </p>
                   </div>
                 )}
-                {(payDue ?? 0) > 0 && (
+                {dueAmount > 0 && (
                   <div className="text-right">
-                    <p className="text-sm text-gray-500">Due</p>
+                    <p className="text-xs text-gray-500">Due on trip day</p>
                     <p className="text-sm font-semibold text-red-500">
-                      {formatCurrency(payDue)}
+                      {formatCurrency(dueAmount)}
                     </p>
+                  </div>
+                )}
+                {isDepositBooking && totalAmount > 0 && (
+                  <div className="w-20">
+                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                      <div
+                        className="bg-emerald-500 h-1.5 rounded-full"
+                        style={{ width: `${depositPct}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-0.5 text-right">{depositPct}% paid</p>
                   </div>
                 )}
               </div>

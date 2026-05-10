@@ -109,7 +109,7 @@ export default function Description() {
           <div>
             <label className="block text-base font-semibold text-gray-700 mb-2">
               <FileText className="inline-block h-5 w-5 mr-2 text-orange-500" />
-              Tell us about your charter
+              Tell us about yourself and your charter
             </label>
 
             <textarea

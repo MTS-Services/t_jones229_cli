@@ -126,7 +126,8 @@ export default function Page() {
   // Try to get values from URL params as fallback
   const dateFromUrl = params.get("date");
   const guestsFromUrl = params.get("guests");
-  const bookingTypeFromUrl = params.get("bookingType");
+  // "bookingType" param preferred; fall back to legacy "type" param
+  const bookingTypeFromUrl = params.get("bookingType") ?? params.get("type");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -414,6 +415,13 @@ export default function Page() {
                 setSelectedPayment={setSelectedPayment}
                 selectedPayment={selectedPayment}
                 isCardComplete={isCardComplete}
+                tripDate={tripDate}
+                setTripDate={setTripDate}
+                numberOfGuests={numberOfGuests}
+                setNumberOfGuests={setNumberOfGuests}
+                bookingType={bookingType}
+                setBookingType={setBookingType}
+                boatGuests={data?.data?.guests}
               />
             </div>
           </div>

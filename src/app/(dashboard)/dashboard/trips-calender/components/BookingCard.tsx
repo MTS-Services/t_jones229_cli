@@ -85,7 +85,7 @@ export function BookingCard({
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold text-gray-900">
-              ${booking?.payFirst + booking?.payDue}
+              ${booking?.totalPrice ?? (booking?.payFirst + booking?.payDue)}
             </p>
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
               Total
@@ -179,7 +179,7 @@ export function BookingCard({
                   <div className="w-2 h-2 rounded-full bg-green-500"></div>
                   <span className="text-sm">
                     <span className="font-semibold text-gray-900">
-                      ${booking?.payFirst}
+                      ${booking?.depositAmount ?? booking?.payFirst ?? 0}
                     </span>
                     <span className="text-gray-500 text-xs ml-1">paid</span>
                   </span>
@@ -188,7 +188,7 @@ export function BookingCard({
                   <div className="w-2 h-2 rounded-full bg-orange-500"></div>
                   <span className="text-sm">
                     <span className="font-semibold text-gray-900">
-                      ${booking?.payDue}
+                      ${booking?.remainingAmount ?? booking?.payDue ?? 0}
                     </span>
                     <span className="text-gray-500 text-xs ml-1">due</span>
                   </span>
@@ -198,18 +198,20 @@ export function BookingCard({
           </div>
 
           {/* Progress bar for payment */}
-          {booking?.payFirst && booking?.payDue && (
-            <div className="mt-3">
-              <div className="w-full bg-gray-200 rounded-full h-1.5">
-                <div
-                  className="bg-blue-600 h-1.5 rounded-full"
-                  style={{
-                    width: `${(booking.payFirst / (booking.payFirst + booking.payDue)) * 100}%`,
-                  }}
-                ></div>
+          {(() => {
+            const paid = booking?.depositAmount ?? booking?.payFirst ?? 0;
+            const total = booking?.totalPrice ?? (paid + (booking?.remainingAmount ?? booking?.payDue ?? 0));
+            return total > 0 ? (
+              <div className="mt-3">
+                <div className="w-full bg-gray-200 rounded-full h-1.5">
+                  <div
+                    className="bg-blue-600 h-1.5 rounded-full"
+                    style={{ width: `${(paid / total) * 100}%` }}
+                  ></div>
+                </div>
               </div>
-            </div>
-          )}
+            ) : null;
+          })()}
         </div>
       </div>
     </div>

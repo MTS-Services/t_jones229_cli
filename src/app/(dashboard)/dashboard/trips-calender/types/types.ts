@@ -53,4 +53,7 @@ export interface Booking {
   bookingType: "PRIVATE" | "SHARED" | string;
   payDue: number;
   payFirst: number;
+  totalPrice: number | null;
+  depositAmount: number | null;
+  remainingAmount: number | null;
 }

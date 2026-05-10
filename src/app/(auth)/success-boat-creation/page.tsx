@@ -6,40 +6,8 @@ import React from "react";
 import logo from "@/assets/logo3.svg";
 import boat from "@/assets/boat2.svg";
 import Image from "next/image";
-import ChargeEnable from "@/components/ReUsible/ChargeEnable";
-import { useGetMeQuery } from "@/redux/api/authApi";
 
 export default function BoatCreator() {
-  const {
-    data: userInfo,
-    isLoading,
-    isFetching,
-    isError,
-    error,
-  } = useGetMeQuery("");
-
-  let content;
-
-  if (isLoading || isFetching) {
-    content = (
-      <div className="text-center sm:text-left">
-        Generating stripe onboarding link...
-      </div>
-    );
-  }
-
-  if (isError) {
-    content = (
-      <div className="text-center sm:text-left text-red-600">
-        Error: {JSON.stringify(error)}
-      </div>
-    );
-  }
-
-  if (userInfo && !isLoading && !isFetching && !isError) {
-    content = <ChargeEnable />;
-  }
-
   return (
     <div className="min-h-screen flex items-start sm:items-center justify-center px-4 py-6 sm:py-8 md:py-12">
       <div className="w-full max-w-4xl mx-auto">
@@ -79,9 +47,6 @@ export default function BoatCreator() {
               </div>
             </div>
           </div>
-
-          {/* Dynamic Content Section */}
-          <div className="mb-6 sm:mb-8">{content}</div>
 
           {/* Next Steps Section */}
           <div className="my-6 sm:my-8 md:my-10">

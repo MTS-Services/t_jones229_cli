@@ -57,7 +57,7 @@ export default function MultiStepFormStep() {
   const [isBoatImage, setIsBoatImage] = useState(false);
   const imageUrl = useSelector((state: RootState) => state.imageUrl.imageUrl);
   const { data: userData } = useGetMeQuery("");
-  const userInfo = userData?.data?.paymentMethod;
+  const userInfo = userData?.data;
 
   useEffect(() => {
     Object.entries(formData).forEach(([key, value]) => {
@@ -226,7 +226,12 @@ export default function MultiStepFormStep() {
             Cookies.set("currentUserRole", "CAPTAIN");
             dispatch(
               setUser({
-                user: userInfo,
+                user: {
+                  id: userInfo?.id,
+                  name: `${userInfo?.firstName || ""} ${userInfo?.lastName || ""}`.trim(),
+                  email: userInfo?.email,
+                  role: "CAPTAIN",
+                },
                 token: res?.data?.data?.accessToken,
                 isAuthenticated: true,
               })

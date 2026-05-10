@@ -90,7 +90,7 @@ export default function MultiStepFormContent() {
   const dispatch = useDispatch();
 
   const { data: userData } = useGetMeQuery("");
-  const userInfo = userData?.data?.paymentMethod;
+  const userInfo = userData?.data;
 
   const { formData, updateFormData } = useFormData();
   const methods = useForm();
@@ -283,7 +283,12 @@ export default function MultiStepFormContent() {
           Cookies.set("currentUserRole", "CAPTAIN");
           dispatch(
             setUser({
-              user: userInfo,
+              user: {
+                id: userInfo?.id,
+                name: `${userInfo?.firstName || ""} ${userInfo?.lastName || ""}`.trim(),
+                email: userInfo?.email,
+                role: "CAPTAIN",
+              },
               token: res.data.data.accessToken,
               isAuthenticated: true,
             }),

@@ -51,8 +51,9 @@ export default function ConfirmationPage() {
         if (raw) {
           const parsed = JSON.parse(raw);
           dateFromStorage = parsed?.date ?? parsed?.startDate ?? null;
-          guestsFromStorage =
-            parsed?.guests != null ? String(parsed.guests) : null;
+          // Only use searchData.guests if it's a positive number
+          const parsedGuests = parsed?.guests != null ? Number(parsed.guests) : 0;
+          guestsFromStorage = parsedGuests > 0 ? String(parsedGuests) : null;
           bookingTypeFromStorage =
             parsed?.bookingType != null ? String(parsed.bookingType) : null;
           locationFromStorage = parsed?.location ?? null;
@@ -61,12 +62,18 @@ export default function ConfirmationPage() {
         console.error("Failed to parse searchData from localStorage", err);
       }
 
+      // "Guests" key is written by PaymentCard when user enters a value — highest priority
+      const legacyGuests = localStorage.getItem("Guests");
+      const resolvedGuests =
+        (legacyGuests && Number(legacyGuests) > 0 ? legacyGuests : null) ||
+        guestsFromStorage;
+
       setBookingDetails({
         tripDate:
           dateFromStorage ||
           localStorage.getItem("date") ||
           localStorage.getItem("StartDate"),
-        numberOfGuests: guestsFromStorage || localStorage.getItem("Guests"),
+        numberOfGuests: resolvedGuests,
         bookingType:
           bookingTypeFromStorage || localStorage.getItem("bookingType"),
         location: locationFromStorage || localStorage.getItem("location"),

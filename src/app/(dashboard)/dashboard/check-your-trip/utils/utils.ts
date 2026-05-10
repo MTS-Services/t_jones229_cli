@@ -54,7 +54,6 @@ export const buildFinalData = (
   formData: Record<string, any> | null,
   data: Record<string, any>,
   boatId: string | null,
-  paymentMethodId: string | null,
 ): BoatFinalData => {
   const get = (key: string) => formData?.[key] ?? data?.[key];
 
@@ -106,11 +105,6 @@ export const buildFinalData = (
       fishingLocation: trip.fishingLocation || [],
       fishingTechnique: trip.fishingTechnique || [],
     })),
-    ...(!boatId && {
-      terms: {
-        paymentMethodId: paymentMethodId || "",
-      },
-    }),
   };
 };
 

@@ -14,6 +14,7 @@ import {
   TbRoute,
   TbCrown,
   TbLifebuoy,
+  TbCash,
 } from "react-icons/tb";
 import { MdChecklistRtl } from "react-icons/md";
 import { PiUserListBold } from "react-icons/pi";
@@ -50,6 +51,12 @@ export const sidebarItems: TSidebarItem[] = [
     roles: ["SUPERADMIN", "ADMIN"],
   },
   {
+    key: "Payout Requests",
+    icon: <TbCash />,
+    label: <Link href="/dashboard/payout-requests">Payout Requests</Link>,
+    roles: ["SUPERADMIN", "ADMIN"],
+  },
+  {
     key: "Check Your Trip",
     icon: <MdChecklistRtl />,
     label: <Link href="/dashboard/check-your-trip">Check Your Trip</Link>,
@@ -74,6 +81,12 @@ export const sidebarItems: TSidebarItem[] = [
     roles: [userRole.captain],
   },
   {
+    key: "Payout Request",
+    icon: <TbCash />,
+    label: <Link href="/dashboard/payout-request">Payout Request</Link>,
+    roles: [userRole.captain],
+  },
+  {
     key: "Trips Management",
     icon: <TbRoute />,
     label: <Link href="/dashboard/trips-managment">Trips Management</Link>,
@@ -87,12 +100,7 @@ export const sidebarItems: TSidebarItem[] = [
   //   roles: [userRole.fishingTripper, "ADMIN"],
   // },
 
-  {
-    key: "Membership",
-    icon: <TbCrown />,
-    label: <Link href="/dashboard/membership">Membership</Link>,
-    roles: [userRole.captain],
-  },
+  // Membership removed from captain dashboard
   {
     key: "Support",
     icon: <TbLifebuoy />,

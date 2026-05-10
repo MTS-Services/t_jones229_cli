@@ -30,7 +30,6 @@ import { RootState } from "@/redux/store/store";
 import { useFormData } from "@/components/List-boat-form/FormProvider";
 import { useGetMeQuery } from "@/redux/api/authApi";
 import { clearImageUrl } from "@/redux/slices/uploadImageSlice";
-import { clearPaymentMethodId } from "@/redux/slices/paymentMethodSlice";
 import { setUser } from "@/redux/slices/authSlice";
 import { useUpdateProfileMutation } from "@/redux/api/userDashboardApi/updateProfile";
 
@@ -44,7 +43,7 @@ export default function MultiStepFormContent() {
   const dispatch = useDispatch();
 
   const { data: userData } = useGetMeQuery("");
-  const userInfo = userData?.data?.paymentMethod;
+  const userInfo = userData?.data;
 
   const { formData, updateFormData } = useFormData();
   const methods = useForm();
@@ -80,24 +79,7 @@ export default function MultiStepFormContent() {
     }
   }, [formData, imageUrl]);
 
-  // Listen for payment method creation success from Terms component
-  useEffect(() => {
-    const handlePaymentMethodReady = () => {
-      const currentData = getValues();
-      if (currentData.paymentMethodId) {
-        submitFinalForm(currentData);
-      }
-    };
-
-    window.addEventListener("paymentMethodCreated", handlePaymentMethodReady);
-    return () => {
-      window.removeEventListener(
-        "paymentMethodCreated",
-        handlePaymentMethodReady,
-      );
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getValues]);
+  // Listen for payment method creation success from Terms component - removed (no card collection)
 
   const handleTabNavigation = (index: number) => {
     const canNavigate = boatId || visitedSteps.has(index);
@@ -129,14 +111,7 @@ export default function MultiStepFormContent() {
 
   const submitFinalForm = async (data: any) => {
     try {
-      const paymentMethodId =
-        data?.paymentMethodId ?? formData?.paymentMethodId ?? null;
-
       if (!boatId && currentStep === 7) {
-        if (!paymentMethodId) {
-          window.dispatchEvent(new Event("createStripePaymentMethod"));
-          return;
-        }
         if (
           !data?.firstName ||
           !data?.lastName ||
@@ -147,7 +122,7 @@ export default function MultiStepFormContent() {
         }
       }
 
-      const finalData = buildFinalData(formData, data, boatId, paymentMethodId);
+      const finalData = buildFinalData(formData, data, boatId);
       const paymentInfo = buildPaymentInfo(data, formData);
 
       const res = boatId
@@ -163,14 +138,18 @@ export default function MultiStepFormContent() {
           Cookies.set("currentUserRole", "CAPTAIN");
           dispatch(
             setUser({
-              user: userInfo,
+              user: {
+                id: userInfo?.id,
+                name: `${userInfo?.firstName || ""} ${userInfo?.lastName || ""}`.trim(),
+                email: userInfo?.email,
+                role: "CAPTAIN",
+              },
               token: res.data.data.accessToken,
               isAuthenticated: true,
             }),
           );
         }
 
-        dispatch(clearPaymentMethodId());
         dispatch(clearImageUrl());
         router.push("/success-boat-creation");
       } else if (res?.data?.success) {
@@ -182,12 +161,10 @@ export default function MultiStepFormContent() {
       if (res?.error) {
         const errData = (res.error as any)?.data || res.error;
         toast.error((errData as any)?.message || "Something went wrong");
-        dispatch(clearPaymentMethodId());
       }
     } catch (error: any) {
       console.error("Submission error:", error);
       toast.error(error?.message || "Submission failed. Please try again.");
-      dispatch(clearPaymentMethodId());
     }
   };
 
