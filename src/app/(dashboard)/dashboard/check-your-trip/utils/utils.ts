@@ -105,6 +105,9 @@ export const buildFinalData = (
       fishingLocation: trip.fishingLocation || [],
       fishingTechnique: trip.fishingTechnique || [],
     })),
+    terms: {
+      accepted: get("termsAccepted") || false,
+    },
   };
 };
 

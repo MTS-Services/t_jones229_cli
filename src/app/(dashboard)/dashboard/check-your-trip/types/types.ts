@@ -73,6 +73,7 @@ export interface BoatFinalData {
     fishingTechnique: string[];
   }[];
   terms?: {
-    paymentMethodId: string;
+    accepted: boolean;
+    paymentMethodId?: string;
   };
 }
