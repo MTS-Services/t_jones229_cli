@@ -4,6 +4,8 @@ import Image from "next/image";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
+import { DatePicker } from "antd";
+import dayjs, { Dayjs } from "dayjs";
 
 // Dynamically import map component
 const PaymentMap = dynamic(() => import("./PaymentMap"), {
@@ -250,14 +252,25 @@ export default function PaymentCard({
           {/* Trip date */}
           <div>
             <label className="font-bold block mb-1">Trip date:</label>
-            <input
-              type="date"
-              value={tripDate || ""}
-              min={new Date().toISOString().split("T")[0]}
-              onChange={(e) => handleDateChange(e.target.value)}
-              className={`w-full border rounded px-2 py-1.5 text-sm focus:outline-none focus:border-blue-500 ${
-                !tripDate || dateError ? "border-red-400" : "border-gray-300"
+            <DatePicker
+              value={tripDate ? dayjs(tripDate) : null}
+              disabledDate={(current: Dayjs) =>
+                current && current.isBefore(dayjs().startOf("day"))
+              }
+              onChange={(date: Dayjs | null) => {
+                if (date) handleDateChange(date.format("YYYY-MM-DD"));
+                else {
+                  setTripDateLocal(null);
+                  if (setTripDateProp) setTripDateProp(null);
+                }
+              }}
+              format="MM/DD/YYYY"
+              allowClear
+              className={`w-full text-sm ${
+                !tripDate || dateError ? "border-red-400" : ""
               }`}
+              style={{ width: "100%" }}
+              getPopupContainer={(trigger) => trigger.parentElement!}
             />
             {tripDays.length > 0 && (
               <p className="text-gray-500 text-xs mt-1">
