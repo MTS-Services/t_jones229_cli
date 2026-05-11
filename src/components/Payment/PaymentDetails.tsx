@@ -36,6 +36,9 @@ export default function PaymentDetails() {
     pathName === "/boat-list-form/terms" &&
     (errors.firstName || errors.lastName || errors.email || errors.mobile);
 
+  // Only show Terms checkbox on captain's boat listing pages, not on customer payment page
+  const showTermsCheckbox = pathName?.includes("/check-your-trip") || pathName?.includes("/boat-list-form");
+
   return (
     <div className="">
       {/* Header Section */}
@@ -163,7 +166,8 @@ export default function PaymentDetails() {
             )}
           </FormField>
 
-          {/* Terms & Conditions - REQUIRED */}
+          {/* Terms & Conditions - REQUIRED (captain boat listing only) */}
+          {showTermsCheckbox && (
           <div className="lg:col-span-2">
             <div className="flex gap-3 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
               <input
@@ -190,6 +194,7 @@ export default function PaymentDetails() {
               <ErrorMessage>{String(errors.termsAccepted.message)}</ErrorMessage>
             )}
           </div>
+          )}
 
           {/* Marketing Consent */}
           <div className="lg:col-span-2">
