@@ -13,6 +13,10 @@ export default function Terms() {
             Terms & Pricing
           </h1>
         </div>
+        <p className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
+          Before listing your boat, review our terms and provide your contact details below. 
+          Please complete all required fields and accept the terms to proceed.
+        </p>
       </div>
 
       {/* Main Container */}

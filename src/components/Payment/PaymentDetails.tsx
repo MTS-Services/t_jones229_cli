@@ -163,6 +163,34 @@ export default function PaymentDetails() {
             )}
           </FormField>
 
+          {/* Terms & Conditions - REQUIRED */}
+          <div className="lg:col-span-2">
+            <div className="flex gap-3 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+              <input
+                id="termsAccepted"
+                type="checkbox"
+                {...register("termsAccepted", {
+                  required: "You must accept the terms and conditions to proceed",
+                })}
+                className="mt-1 h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
+              />
+              <div className="flex-1">
+                <label
+                  htmlFor="termsAccepted"
+                  className="text-sm font-semibold text-gray-900 cursor-pointer"
+                >
+                  Terms & Conditions Acceptance <span className="text-red-500">*</span>
+                </label>
+                <p className="text-gray-700 text-sm mt-1">
+                  I have read and agree to the Terms & Conditions, including the 5% commission fee, cancellation policy, and payment terms outlined on this page.
+                </p>
+              </div>
+            </div>
+            {errors.termsAccepted && (
+              <ErrorMessage>{String(errors.termsAccepted.message)}</ErrorMessage>
+            )}
+          </div>
+
           {/* Marketing Consent */}
           <div className="lg:col-span-2">
             <div className="flex gap-3 p-4 bg-gray-50 rounded-lg">

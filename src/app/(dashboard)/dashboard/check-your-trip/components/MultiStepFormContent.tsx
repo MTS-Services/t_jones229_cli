@@ -120,6 +120,11 @@ export default function MultiStepFormContent() {
         ) {
           return toast.error("Please fill in all required personal details");
         }
+        
+        // Validate terms acceptance
+        if (!data?.termsAccepted) {
+          return toast.error("You must accept the terms and conditions to proceed");
+        }
       }
 
       const finalData = buildFinalData(formData, data, boatId);
