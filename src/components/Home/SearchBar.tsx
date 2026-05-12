@@ -271,6 +271,7 @@ function MobileWhenCard({
             <Calendar
               fullscreen={false}
               onSelect={onSelect}
+              value={selectedDate ?? undefined}
               className="custom-calendar"
             />
           </div>
@@ -587,7 +588,13 @@ function DesktopWhereDropdown({
   );
 }
 
-function DesktopWhenDropdown({ onSelect }: { onSelect: (d: Dayjs) => void }) {
+function DesktopWhenDropdown({
+  onSelect,
+  selectedDate,
+}: {
+  onSelect: (d: Dayjs) => void;
+  selectedDate: Dayjs | null;
+}) {
   return (
     <motion.div
       variants={dropdownVariants}
@@ -597,7 +604,11 @@ function DesktopWhenDropdown({ onSelect }: { onSelect: (d: Dayjs) => void }) {
       className="absolute top-[104%] left-0 z-50 bg-white shadow-2xl rounded-xl p-4 border border-gray-100"
       onClick={(e) => e.stopPropagation()}
     >
-      <Calendar fullscreen={false} onSelect={onSelect} />
+      <Calendar
+        fullscreen={false}
+        onSelect={onSelect}
+        value={selectedDate ?? undefined}
+      />
     </motion.div>
   );
 }
@@ -934,6 +945,7 @@ export default function SearchBar({ scrolled, onActiveChange }: Props) {
               <AnimatePresence>
                 {activeTab === "when" && (
                   <DesktopWhenDropdown
+                    selectedDate={selectedDate}
                     onSelect={(d) => {
                       setSelectedDate(d);
                       setActiveTab(null);
