@@ -42,6 +42,12 @@ export default function PayoutRequestPage() {
   const hasBankDetails = !!(bankDetails?.bankName && bankDetails?.bankAccountNumber);
   const earnings = earningsData?.data;
 
+  // Only completed trips are withdrawable
+  const completedAvailable = Math.max(
+    0,
+    (earnings?.completedEarnings ?? 0) - (earnings?.totalApproved ?? 0)
+  );
+
   // Bank form state
   const [editingBank, setEditingBank] = useState(false);
   const [bankForm, setBankForm] = useState({
@@ -103,7 +109,7 @@ export default function PayoutRequestPage() {
       toast.error("Please enter a valid amount");
       return;
     }
-    const available = earnings?.available ?? 0;
+    const available = completedAvailable;
     if (parsed > available) {
       toast.error(`Amount exceeds your available balance of $${available.toFixed(2)}`);
       return;
@@ -133,16 +139,19 @@ export default function PayoutRequestPage() {
       </div>
 
       {/* ── Earnings / Available Balance Banner ─────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {earningsLoading ? (
-          <div className="sm:col-span-3 h-20 bg-white rounded-2xl border border-gray-100 animate-pulse" />
+          <div className="sm:col-span-2 lg:col-span-4 h-20 bg-white rounded-2xl border border-gray-100 animate-pulse" />
         ) : (
           <>
+            {/* Card 1 – Available to Withdraw (completed trips only) */}
             <div className="bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-2xl p-5 text-white shadow-sm">
               <p className="text-sm font-medium opacity-90">Available to Withdraw</p>
-              <p className="text-3xl font-bold mt-1">${(earnings?.available ?? 0).toFixed(2)}</p>
-              <p className="text-xs opacity-75 mt-1">Total earned minus approved payouts</p>
+              <p className="text-3xl font-bold mt-1">${completedAvailable.toFixed(2)}</p>
+              <p className="text-xs opacity-75 mt-1">From completed trips only</p>
             </div>
+
+            {/* Card 2 – Total Earned */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
               <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
                 <TrendingUp className="w-4 h-4" />
@@ -158,10 +167,22 @@ export default function PayoutRequestPage() {
                 )}
               </p>
             </div>
+
+            {/* Card 3 – Upcoming (not yet withdrawable) */}
+            <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+              <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
+                <Clock className="w-4 h-4" />
+                Upcoming Earnings
+              </div>
+              <p className="text-2xl font-bold text-gray-900">${(earnings?.confirmedEarnings ?? 0).toFixed(2)}</p>
+              <p className="text-xs text-gray-400 mt-1">Locked until trip is complete</p>
+            </div>
+
+            {/* Card 4 – Pending Payout Requests */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
               <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
                 <AlertCircle className="w-4 h-4" />
-                Pending Requests
+                Pending Payout Requests
               </div>
               <p className="text-2xl font-bold text-gray-900">${(earnings?.totalPending ?? 0).toFixed(2)}</p>
               <p className="text-xs text-gray-400 mt-1">Awaiting admin approval</p>
@@ -338,13 +359,13 @@ export default function PayoutRequestPage() {
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   required
                 />
-                {earnings?.available !== undefined && (
+                {earnings !== undefined && (
                   <p className="text-xs text-gray-400 mt-1">
-                    Available: <span className="font-semibold text-gray-600">${earnings.available.toFixed(2)}</span>
-                    {earnings.available > 0 && (
+                    Available (completed trips): <span className="font-semibold text-gray-600">${completedAvailable.toFixed(2)}</span>
+                    {completedAvailable > 0 && (
                       <button
                         type="button"
-                        onClick={() => setAmount(String(earnings.available))}
+                        onClick={() => setAmount(String(completedAvailable))}
                         className="ml-2 text-yellow-600 hover:underline font-medium"
                       >
                         Request all
