@@ -84,6 +84,19 @@ const baseQueryWithHandling: BaseQueryFn<
     }
 
     // ----------------------------------------
+    // Stop retrying on any 4xx client error
+    // (e.g. duplicate email = 400, forbidden = 403, not found = 404)
+    // Retrying client errors is pointless and delays error feedback.
+    // ----------------------------------------
+    if (
+      typeof status === "number" &&
+      status >= 400 &&
+      status < 500
+    ) {
+      retry.fail(result.error);
+    }
+
+    // ----------------------------------------
     // Handle Empty 500 Server Crash
     // ----------------------------------------
     const isServerCrash =
