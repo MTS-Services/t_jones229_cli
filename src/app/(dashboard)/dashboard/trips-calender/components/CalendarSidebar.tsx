@@ -21,7 +21,7 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
       ?.flatMap((day) => day?.bookings ?? [])
       ?.reduce(
         (sum, booking) =>
-          sum + (booking?.payFirst ?? 0) + (booking?.payDue ?? 0),
+          sum + (booking?.totalPrice ?? ((booking?.payFirst ?? 0) + (booking?.payDue ?? 0))),
         0,
       ) ?? 0;
 
@@ -188,7 +188,8 @@ export function CalendarSidebar({ data }: CalendarSidebarProps) {
                               <p className="text-xs text-gray-500">
                                 $
                                 {(
-                                  booking?.payFirst + booking?.payDue
+                                  booking?.totalPrice ??
+                                  ((booking?.payFirst ?? 0) + (booking?.payDue ?? 0))
                                 ).toLocaleString()}
                               </p>
                             </div>

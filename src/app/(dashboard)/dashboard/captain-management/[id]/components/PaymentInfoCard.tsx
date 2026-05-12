@@ -1,5 +1,5 @@
 import React from "react";
-import { CreditCard, CheckCircle, XCircle } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import { CaptainUser } from "../types/types";
 
 interface PaymentInfoCardProps {
@@ -30,24 +30,6 @@ const PaymentInfoCard: React.FC<PaymentInfoCardProps> = ({ user }) => {
               Account ID
             </label>
             <p className="text-gray-900">{user.accountId || "Not connected"}</p>
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-500">
-              Charge Enable
-            </label>
-            <div className="flex items-center gap-2">
-              {user.chargeEnable ? (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium">
-                  <CheckCircle className="h-4 w-4" />
-                  Enabled
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-50 text-gray-700 rounded-full text-sm font-medium">
-                  <XCircle className="h-4 w-4" />
-                  Disabled
-                </span>
-              )}
-            </div>
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-500">

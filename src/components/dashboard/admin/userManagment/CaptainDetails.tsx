@@ -37,7 +37,6 @@ interface CaptainDetailsProps {
       phoneNumber: string | null;
       accountId: string | null;
       customerId: string;
-      chargeEnable: boolean;
       role: string;
       status: string;
       isDeleted: boolean;
@@ -265,18 +264,6 @@ export default function CaptainDetails({ userData }: CaptainDetailsProps) {
                 </div>
 
                 <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center">
-                    <CreditCard className="h-6 w-6 text-emerald-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Charge Status</p>
-                    <p className="font-semibold text-gray-900">
-                      {user.chargeEnable ? "Enabled" : "Disabled"}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
                   <div className="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center">
                     <Activity className="h-6 w-6 text-purple-600" />
                   </div>
@@ -318,25 +305,6 @@ export default function CaptainDetails({ userData }: CaptainDetailsProps) {
                 <p className="text-gray-900">
                   {user.accountId || "Not connected"}
                 </p>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-sm font-medium text-gray-500">
-                  Charge Enable
-                </label>
-                <div className="flex items-center gap-2">
-                  {user.chargeEnable ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium">
-                      <CheckCircle className="h-4 w-4" />
-                      Enabled
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-50 text-gray-700 rounded-full text-sm font-medium">
-                      <XCircle className="h-4 w-4" />
-                      Disabled
-                    </span>
-                  )}
-                </div>
               </div>
 
               <div className="space-y-1">

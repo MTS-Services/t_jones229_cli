@@ -42,13 +42,6 @@ const BookingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["booking", "userBooking"],
     }),
-    getChargeEnable: build.query({
-      query: () => ({
-        url: `/users/active-stripe-account`,
-        method: "POST",
-      }),
-      providesTags: ["booking"],
-    }),
 
     // POST /api/v1/users/active-stripe-account — returns Stripe Connect onboarding URL
     activateStripeAccount: build.mutation<
@@ -114,7 +107,6 @@ export const {
   useCreateBookingMutation,
   useGetBookingQuery,
   useGetMyBookingQuery,
-  useGetChargeEnableQuery,
   useCancelBookingMutation,
   useUpdateBookingStatusMutation,
   useCreateBookingDepositMutation,

@@ -6,7 +6,6 @@ export interface User {
   phoneNumber?: string | null;
   accountId?: string | null;
   customerId?: string;
-  chargeEnable?: boolean;
   role: string;
   status: string;
   isDeleted: boolean;

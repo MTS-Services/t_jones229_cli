@@ -49,29 +49,11 @@ const userBooking = baseApi.injectEndpoints({
       keepUnusedDataFor: 0,
     }),
 
-    updateChargeEnabled: build.mutation({
-      query: (stripeAccount: string) => ({
-        url: `/users/stripe/charge-enable?stripeAccount=${stripeAccount}`,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["auth"],
-    }),
-
-    // Admin override: force-enable charge for a captain by captainId
-    adminEnableCaptainCharge: build.mutation({
-      query: (captainId: string) => ({
-        url: `/users/stripe/charge-enable/${captainId}`,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["auth", "userBooking"],
-    }),
   }),
 });
 
 export const {
   useGetAllUserBookingQuery,
   useAllBookingQuery,
-  useUpdateChargeEnabledMutation,
-  useAdminEnableCaptainChargeMutation,
 } = userBooking;
 export default userBooking;

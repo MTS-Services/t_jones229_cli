@@ -410,20 +410,31 @@ export default function PaymentCard({
 
           {/* Price section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold text-gray-900">Trip price</span>
-              <span className="text-2xl font-bold text-gray-900">
-                ${filterTrip?.price}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm text-gray-600 mb-4">
-              <span>payment due today</span>
-              {selectedPayment === "full" ? (
-                <span>US ${filterTrip?.price}</span>
-              ) : selectedPayment === "partial" ? (
-                <span>US ${(filterTrip?.price * 0.2).toFixed(2)}</span>
-              ) : null}
-            </div>
+            {(() => {
+              const guestCount = parseInt(numberOfGuests || numberOfGuestsProp || "1", 10) || 1;
+              const totalPrice = (filterTrip?.price || 0) * guestCount;
+              const depositAmount = totalPrice * 0.2;
+              return (
+                <>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold text-gray-900">
+                      Trip price{guestCount > 1 ? ` × ${guestCount} guests` : ""}
+                    </span>
+                    <span className="text-2xl font-bold text-gray-900">
+                      ${totalPrice.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-600 mb-4">
+                    <span>payment due today</span>
+                    {selectedPayment === "full" ? (
+                      <span>US ${totalPrice.toFixed(2)}</span>
+                    ) : selectedPayment === "partial" ? (
+                      <span>US ${depositAmount.toFixed(2)}</span>
+                    ) : null}
+                  </div>
+                </>
+              );
+            })()}
             <p className="text-xs text-gray-500 mb-6">
               All local taxes & fees are included in this price
             </p>
