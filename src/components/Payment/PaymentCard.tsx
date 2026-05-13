@@ -412,13 +412,13 @@ export default function PaymentCard({
           <div className="mt-8 pt-6 border-t border-gray-200">
             {(() => {
               const guestCount = parseInt(numberOfGuests || numberOfGuestsProp || "1", 10) || 1;
-              const totalPrice = (filterTrip?.price || 0) * guestCount;
+              const totalPrice = filterTrip?.price || 0;
               const depositAmount = totalPrice * 0.2;
               return (
                 <>
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-semibold text-gray-900">
-                      Trip price{guestCount > 1 ? ` × ${guestCount} guests` : ""}
+                      Trip price
                     </span>
                     <span className="text-2xl font-bold text-gray-900">
                       ${totalPrice.toFixed(2)}
