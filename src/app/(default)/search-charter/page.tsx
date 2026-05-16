@@ -64,21 +64,10 @@ export default function Page() {
     (page: number): Record<string, string> => {
       const params: Record<string, string> = {};
 
+      // Only filter by location - ignore date, guests, and bookingType
       if (location) params.city = location;
-      if (date) {
-        params.startDate = date;
-        params.endDate = date;
-      }
-      if (
-        bookingType &&
-        bookingType !== "undefined" &&
-        bookingType !== "null"
-      ) {
-        params.sharedBooking = bookingType;
-      }
-      const guestsNum = guests ? Number(guests) : 0;
-      if (guestsNum > 0) params.guests = guestsNum.toString();
 
+      // Keep price sorting options
       if (activeKey === "2") params.h_t_l = "true";
       if (activeKey === "3") params.l_t_h = "true";
 
@@ -87,7 +76,7 @@ export default function Page() {
 
       return params;
     },
-    [activeKey, location, date, bookingType, guests],
+    [activeKey, location],
   );
 
   useEffect(() => {
@@ -97,18 +86,10 @@ export default function Page() {
   // Initial query for count (without pagination parameters)
   const initialParams = useCallback(() => {
     const params: Record<string, string> = {};
+    // Only filter by location - ignore date, guests, and bookingType
     if (location) params.city = location;
-    if (date) {
-      params.startDate = date;
-      params.endDate = date;
-    }
-    if (bookingType && bookingType !== "undefined" && bookingType !== "null") {
-      params.sharedBooking = bookingType;
-    }
-    const guestsNum = guests ? Number(guests) : 0;
-    if (guestsNum > 0) params.guests = guestsNum.toString();
     return params;
-  }, [location, date, bookingType, guests]);
+  }, [location]);
 
   const { data: countData } = useGetAllBoatQuery(initialParams());
   const { data: listingData, isLoading } = useGetAllBoatQuery(queryParams);

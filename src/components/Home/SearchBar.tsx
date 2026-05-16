@@ -273,6 +273,7 @@ function MobileWhenCard({
               onSelect={onSelect}
               value={selectedDate ?? undefined}
               className="custom-calendar"
+              disabledDate={(current) => current && current.isBefore(dayjs().startOf("day"))}
             />
           </div>
         </div>
@@ -608,6 +609,7 @@ function DesktopWhenDropdown({
         fullscreen={false}
         onSelect={onSelect}
         value={selectedDate ?? undefined}
+        disabledDate={(current) => current && current.isBefore(dayjs().startOf("day"))}
       />
     </motion.div>
   );

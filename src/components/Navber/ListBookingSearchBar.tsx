@@ -143,7 +143,11 @@ function WhenPanel({ onSelect }: { onSelect: (d: Dayjs) => void }) {
       className="fixed md:absolute top-[80px] md:top-[120%] left-4 right-4 md:left-0 md:-translate-x-1/2 md:w-[320px] bg-white shadow-2xl rounded-3xl p-4 z-[999] border border-gray-100 mx-auto"
       onClick={(e) => e.stopPropagation()}
     >
-      <Calendar fullscreen={false} onSelect={onSelect} />
+      <Calendar
+        fullscreen={false}
+        onSelect={onSelect}
+        disabledDate={(current) => current && current.isBefore(dayjs().startOf("day"))}
+      />
     </motion.div>
   );
 }
