@@ -294,7 +294,10 @@ export default function Page() {
           Cookies.set("totalTrips", "0");
           dispatch(
             setUser({
-              user: newUser,
+              user: {
+                ...newUser,
+                name: `${newUser.firstName ?? ""} ${newUser.lastName ?? ""}`.trim(),
+              },
               token: accessToken,
               isAuthenticated: true,
             }),
