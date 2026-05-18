@@ -4,8 +4,8 @@ import { useGetMeQuery } from "@/redux/api/authApi";
 import { Skeleton } from "antd";
 import { useFormContext } from "react-hook-form";
 import { usePathname, useSearchParams } from "next/navigation";
-import { User, UserPlus } from "lucide-react";
-import { useEffect } from "react";
+import { User, UserPlus, Eye, EyeOff } from "lucide-react";
+import { useEffect, useState } from "react";
 import React from "react";
 
 export default function PaymentDetails() {
@@ -50,6 +50,8 @@ export default function PaymentDetails() {
     pathName?.includes("/boat-list-form");
 
   const passwordValue = watch("password");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <div className="">
@@ -190,19 +192,30 @@ export default function PaymentDetails() {
                 <Label required htmlFor="password">
                   Password
                 </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 characters",
-                    },
-                  })}
-                  placeholder="Create a password"
-                  error={!!errors.password}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                    })}
+                    placeholder="Create a password"
+                    error={!!errors.password}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
                 {errors.password && (
                   <ErrorMessage>{String(errors.password.message)}</ErrorMessage>
                 )}
@@ -212,17 +225,28 @@ export default function PaymentDetails() {
                 <Label required htmlFor="confirmPassword">
                   Confirm Password
                 </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  {...register("confirmPassword", {
-                    required: "Please confirm your password",
-                    validate: (v) =>
-                      v === passwordValue || "Passwords do not match",
-                  })}
-                  placeholder="Repeat your password"
-                  error={!!errors.confirmPassword}
-                />
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    {...register("confirmPassword", {
+                      required: "Please confirm your password",
+                      validate: (v) =>
+                        v === passwordValue || "Passwords do not match",
+                    })}
+                    placeholder="Repeat your password"
+                    error={!!errors.confirmPassword}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
                 {errors.confirmPassword && (
                   <ErrorMessage>
                     {String(errors.confirmPassword.message)}
