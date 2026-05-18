@@ -67,7 +67,14 @@ export function middleware(req: NextRequest) {
   // Full URL with query params
   const fullPath = searchParams ? `${pathname}?${searchParams}` : pathname;
 
+  // Allow guest checkout on /payment without a token
   if (!token) {
+    const isGuestPayment =
+      pathname === "/payment" &&
+      req.nextUrl.searchParams.get("guest") === "true";
+    if (isGuestPayment) {
+      return NextResponse.next();
+    }
     // Save the original URL to redirect back after login
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("redirect", fullPath);
