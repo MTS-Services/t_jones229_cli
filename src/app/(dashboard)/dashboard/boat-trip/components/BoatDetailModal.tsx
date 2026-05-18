@@ -136,6 +136,16 @@ export const BoatDetailModal: React.FC<BoatDetailModalProps> = ({
             itemClassName="text-blue-600"
           />
 
+          {/* Charter Types */}
+          {boat.charterTypes?.length > 0 && (
+            <FacilitiesList
+              facilities={boat.charterTypes}
+              title="Charter Types"
+              className="bg-purple-50 rounded-full border-purple-100"
+              itemClassName="text-purple-600"
+            />
+          )}
+
           {/* Captain Info */}
           <CaptainInfo captain={boat.captain} />
 

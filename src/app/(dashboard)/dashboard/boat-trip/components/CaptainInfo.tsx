@@ -31,12 +31,16 @@ export const CaptainInfo: React.FC<CaptainInfoProps> = ({ captain }) => {
         </div>
         <div className="flex items-center space-x-2 text-gray-600">
           <Phone className="w-4 h-4" />
-          <a
-            href={`tel:${captain.phoneNumber}`}
-            className="hover:text-blue-600 transition-colors"
-          >
-            {captain.phoneNumber}
-          </a>
+          {captain.phoneNumber ? (
+            <a
+              href={`tel:${captain.phoneNumber}`}
+              className="hover:text-blue-600 transition-colors"
+            >
+              {captain.phoneNumber}
+            </a>
+          ) : (
+            <span className="text-gray-400 text-sm">Not provided</span>
+          )}
         </div>
       </div>
     </div>

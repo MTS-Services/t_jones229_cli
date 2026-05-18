@@ -7,29 +7,36 @@ interface PaymentMapProps {
     city?: string;
     latitude?: number;
     longitude?: number;
+    // Actual shape from Prisma MeetingPoint: location: Json stored as { lat, lng }
+    location?: { lat?: number; lng?: number } | null;
+    [key: string]: any;
   };
 }
 
-// City coordinates mapping for common locations
-const cityCoordinates: Record<string, [number, number]> = {
-  tampa: [27.9506, -82.4572],
-  miami: [25.7617, -80.1918],
-  orlando: [28.5383, -81.3792],
-  jacksonville: [30.3322, -81.6557],
-  "san francisco": [37.7749, -122.4194],
-  "los angeles": [34.0522, -118.2437],
-  "new york": [40.7128, -74.006],
-  seattle: [47.6062, -122.3321],
-  boston: [42.3601, -71.0589],
-  "san diego": [32.7157, -117.1611],
-};
+async function geocodeCity(city: string): Promise<[number, number] | null> {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
+      { headers: { "Accept-Language": "en" } },
+    );
+    const data = await res.json();
+    if (data && data.length > 0) {
+      return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+const DEFAULT_COORDS: [number, number] = [20, 0];
 
 export default function PaymentMap({ location }: PaymentMapProps) {
   const [mounted, setMounted] = useState(false);
+  const [coordinates, setCoordinates] = useState<[number, number]>(DEFAULT_COORDS);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-
     // Fix for default marker icon
     const L = require("leaflet");
     delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -41,36 +48,54 @@ export default function PaymentMap({ location }: PaymentMapProps) {
       shadowUrl:
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     });
+    setMounted(true);
   }, []);
 
-  // Get coordinates from location
-  const getCoordinates = (): [number, number] => {
-    if (location?.latitude && location?.longitude) {
-      return [location.latitude, location.longitude];
-    }
+  useEffect(() => {
+    async function resolve() {
+      // 1. Nested JSON coords from Prisma: meetingPoint.location = { lat, lng }
+      const nested = (location as any)?.location;
+      if (nested?.lat && nested?.lng) {
+        setCoordinates([nested.lat, nested.lng]);
+        setReady(true);
+        return;
+      }
 
-    if (location?.city) {
-      const cityLower = location.city.toLowerCase();
-      for (const [city, coords] of Object.entries(cityCoordinates)) {
-        if (cityLower.includes(city) || city.includes(cityLower)) {
-          return coords;
+      // 2. Direct latitude/longitude fields
+      if (location?.latitude && location?.longitude) {
+        setCoordinates([location.latitude, location.longitude]);
+        setReady(true);
+        return;
+      }
+
+      // 3. Geocode city name via Nominatim
+      if (location?.city) {
+        const coords = await geocodeCity(location.city);
+        if (coords) {
+          setCoordinates(coords);
+          setReady(true);
+          return;
         }
       }
+
+      // 4. No location data
+      setReady(true);
     }
+    resolve();
+  }, [location]);
 
-    return [27.9506, -82.4572];
-  };
-
-  if (!mounted) {
+  if (!mounted || !ready) {
     return (
-      <div className="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center">
-        <span className="text-gray-400 text-sm">Loading map...</span>
+      <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-1" />
+          <span className="text-gray-400 text-sm">Loading map...</span>
+        </div>
       </div>
     );
   }
 
   const { MapContainer, TileLayer, Marker, Popup } = require("react-leaflet");
-  const coordinates = getCoordinates();
 
   return (
     <div className="w-full h-64 relative isolate z-0">
@@ -79,6 +104,7 @@ export default function PaymentMap({ location }: PaymentMapProps) {
         href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
       />
       <MapContainer
+        key={`${coordinates[0]}-${coordinates[1]}`}
         center={coordinates}
         zoom={11}
         className="h-full w-full !z-0"

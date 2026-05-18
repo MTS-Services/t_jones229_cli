@@ -1,18 +1,15 @@
 import {
-  MapPin,
   Navigation,
   Info,
   Compass,
   Clock,
   Phone,
-  Map,
   PenTool,
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import MapLoader from "./GoogleMap";
 
 export default function MeetingPointMap() {
   const {
@@ -43,50 +40,24 @@ export default function MeetingPointMap() {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-blue-900 mb-2">
-              How to set your meeting point
+              How to write great directions
             </h3>
             <ul className="text-sm text-blue-800 space-y-1.5">
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 font-bold">•</span>
-                <span>Click anywhere on the map to place a pin</span>
+                <span>Mention nearby landmarks customers can easily spot</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 font-bold">•</span>
-                <span>The pin shows exactly where customers will meet you</span>
+                <span>Include parking details and dock or slip number</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 font-bold">•</span>
                 <span>
-                  Add detailed directions below to help customers find you
-                  easily
+                  Add contact info so guests can reach you on the day
                 </span>
               </li>
             </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Map Section */}
-      <div className="mb-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="bg-gray-50 px-5 py-4 border-b border-gray-100">
-            <div className="flex items-center gap-2">
-              <Map className="h-5 w-5 text-orange-500" />
-              <h2 className="text-lg font-semibold text-gray-900">
-                Interactive Map
-              </h2>
-            </div>
-            <p className="text-sm text-gray-500 mt-1">
-              Click anywhere on the map to set your exact meeting location
-            </p>
-          </div>
-          <div className="relative">
-            <MapLoader />
-            {/* Map Overlay Hint */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-4 py-2 rounded-full text-xs flex items-center gap-2 pointer-events-none">
-              <MapPin className="h-3 w-3" />
-              Click on map to set meeting point
-            </div>
           </div>
         </div>
       </div>

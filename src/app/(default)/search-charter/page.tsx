@@ -4,7 +4,7 @@ import TabListUI from "@/components/Private-charterTab/TabListUI";
 import TabContent from "@/components/Private-charterTab/TabContent";
 import { useGetAllBoatQuery } from "@/redux/api/boatApi";
 import { Pagination } from "@/components/dashboard/admin/button/Pagination";
-import InteractiveMap from "@/components/List-boat-form/GoogleMap";
+import SearchResultsMap from "@/components/search-charter/SearchResultsMap";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -174,7 +174,7 @@ export default function Page() {
             <div className="hidden xl:block xl:w-[40%] 2xl:w-[35%]">
               <div className="sticky top-24">
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 h-[calc(40vh-280px)] max-h-[700px] min-h-[500px]">
-                  <InteractiveMap />
+                  <SearchResultsMap location={location} boats={currentItems} />
                 </div>
               </div>
             </div>

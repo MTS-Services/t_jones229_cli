@@ -109,13 +109,13 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { X, Upload, ImageIcon } from "lucide-react";
+import { X, Upload, ImageIcon, Video } from "lucide-react";
 import Image from "next/image";
 import { Card, message } from "antd";
 
 const PhotosVideos: React.FC = () => {
   const [images, setImages] = useState<
-    { id: string; url: string; name: string; file: File }[]
+    { id: string; url: string; name: string; file: File; isVideo: boolean }[]
   >([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -128,6 +128,7 @@ const PhotosVideos: React.FC = () => {
         url: URL.createObjectURL(file),
         name: file.name,
         file: file,
+        isVideo: file.type.startsWith("video/"),
       }));
       setImages((prev) => [...prev, ...newImages]);
     }
@@ -246,12 +247,21 @@ const PhotosVideos: React.FC = () => {
               bodyStyle={{ padding: "8px" }}
             >
               <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
-                <Image
-                  src={img.url}
-                  alt="Preview"
-                  fill
-                  className="object-cover"
-                />
+                {img.isVideo ? (
+                  <video
+                    src={img.url}
+                    className="w-full h-full object-cover"
+                    muted
+                    preload="metadata"
+                  />
+                ) : (
+                  <Image
+                    src={img.url}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                )}
 
                 <button
                   onClick={() => removeImage(img.id)}
@@ -261,7 +271,11 @@ const PhotosVideos: React.FC = () => {
                 </button>
 
                 <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-[10px] px-2 py-1 rounded max-w-[90%] truncate">
-                  <ImageIcon className="h-3 w-3 inline mr-1" />
+                  {img.isVideo ? (
+                    <Video className="h-3 w-3 inline mr-1" />
+                  ) : (
+                    <ImageIcon className="h-3 w-3 inline mr-1" />
+                  )}
                   {img.name}
                 </div>
               </div>

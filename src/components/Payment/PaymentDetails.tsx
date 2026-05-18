@@ -25,6 +25,10 @@ export default function PaymentDetails() {
     { skip: isGuestMode }, // Don't fetch user data for guests
   );
 
+  const passwordValue = watch("password");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   // Auto-fill form with user data when it loads
   useEffect(() => {
     if (userInfo?.data) {
@@ -48,10 +52,6 @@ export default function PaymentDetails() {
   const showTermsCheckbox =
     pathName?.includes("/check-your-trip") ||
     pathName?.includes("/boat-list-form");
-
-  const passwordValue = watch("password");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <div className="">

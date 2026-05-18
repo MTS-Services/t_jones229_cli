@@ -5,7 +5,7 @@ export const TABS: Tab[] = [
   { id: 1, title: "Photos" },
   { id: 2, title: "Fishing Details" },
   { id: 3, title: "Meeting Point" },
-  { id: 4, title: "Map" },
+  { id: 4, title: "Direction" },
   { id: 5, title: "Description" },
   { id: 6, title: "Trips" },
   { id: 7, title: "Terms" },
@@ -29,8 +29,8 @@ export const HEADINGS: Record<number, StepHeading> = {
     description: "Set the location where customers will meet you.",
   },
   4: {
-    title: "Point on Map",
-    description: "Pinpoint your exact location on the map.",
+    title: "Direction",
+    description: "Provide directions to help guests find you.",
   },
   5: {
     title: "Listing Details",

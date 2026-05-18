@@ -44,14 +44,25 @@ export default function BoatDetailsPage() {
 
   // Memoized values
   const captainName = useMemo(
-    () => boatInfo?.captain?.firstName || "Unknown",
+    () =>
+      [boatInfo?.captain?.firstName, boatInfo?.captain?.lastName]
+        .filter(Boolean)
+        .join(" ") || "Unknown",
     [boatInfo],
   );
 
-  const meetingLocation = useMemo(
-    () => boatInfo?.meetingPoint?.[0]?.city || "Location not specified",
-    [boatInfo],
-  );
+  const meetingLocation = useMemo(() => {
+    const mp = boatInfo?.meetingPoint?.[0];
+    if (!mp) return "Location not specified";
+    return [
+      mp.street,
+      mp.city,
+      mp.state,
+      mp.country,
+    ]
+      .filter(Boolean)
+      .join(", ");
+  }, [boatInfo]);
 
   if (isLoading) return <Loader />;
 
@@ -74,6 +85,7 @@ export default function BoatDetailsPage() {
           <CaptainSection
             captainName={captainName}
             location={meetingLocation}
+            detailsHref={`/search-charter/${boatId}/details`}
           />
 
           <div className="my-4">

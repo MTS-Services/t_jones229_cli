@@ -316,6 +316,23 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
             )}
           </div>
 
+          {/* Charter Types */}
+          {boat.charterTypes && boat.charterTypes.length > 0 && (
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Tag className="h-4 w-4 text-gray-500" />
+                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                  Charter Types
+                </h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {boat.charterTypes.map((ct: string) => (
+                  <span key={ct} className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm border border-purple-100">{ct}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Meeting Points */}
           {boat.meetingPoint && boat.meetingPoint.length > 0 && (
             <div className="mb-6">
@@ -528,6 +545,34 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                               {tripItem.tripStatus}
                             </span>
                           </div>
+                          {tripItem.tripDays?.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {tripItem.tripDays.map((day: string) => (
+                                <span key={day} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">{day}</span>
+                              ))}
+                            </div>
+                          )}
+                          {tripItem.species?.length > 0 && (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {tripItem.species.map((s: string) => (
+                                <span key={s} className="px-1.5 py-0.5 bg-blue-50 text-blue-600 text-xs rounded">{s}</span>
+                              ))}
+                            </div>
+                          )}
+                          {tripItem.fishingLocation?.length > 0 && (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {tripItem.fishingLocation.map((loc: string) => (
+                                <span key={loc} className="px-1.5 py-0.5 bg-orange-50 text-orange-600 text-xs rounded">{loc}</span>
+                              ))}
+                            </div>
+                          )}
+                          {tripItem.fishingTechnique?.length > 0 && (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {tripItem.fishingTechnique.map((t: string) => (
+                                <span key={t} className="px-1.5 py-0.5 bg-green-50 text-green-600 text-xs rounded">{t}</span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

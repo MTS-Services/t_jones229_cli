@@ -7,6 +7,8 @@ import {
   Tag,
   ImageOff,
   Trash2,
+  Calendar,
+  MapPin,
 } from "lucide-react";
 import { Trip, BoatPhoto } from "../types";
 import { getTripStatusColor } from "../utils";
@@ -137,6 +139,62 @@ export const TripsList: React.FC<TripsListProps> = ({ trips, boatPhotos }) => {
                     <span>{trip.tripType}</span>
                   </div>
                 </div>
+
+                {/* Trip Days */}
+                {trip.tripDays?.length > 0 && (
+                  <div className="mt-3 flex items-start gap-1.5">
+                    <Calendar className="w-3 h-3 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex flex-wrap gap-1">
+                      {trip.tripDays.map((day) => (
+                        <span key={day} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
+                          {day}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Species */}
+                {trip.species?.length > 0 && (
+                  <div className="mt-2 flex items-start gap-1.5">
+                    <Fish className="w-3 h-3 text-blue-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex flex-wrap gap-1">
+                      {trip.species.map((s) => (
+                        <span key={s} className="px-1.5 py-0.5 bg-blue-50 text-blue-600 text-xs rounded">
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Fishing Location */}
+                {trip.fishingLocation?.length > 0 && (
+                  <div className="mt-2 flex items-start gap-1.5">
+                    <MapPin className="w-3 h-3 text-orange-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex flex-wrap gap-1">
+                      {trip.fishingLocation.map((loc) => (
+                        <span key={loc} className="px-1.5 py-0.5 bg-orange-50 text-orange-600 text-xs rounded">
+                          {loc}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Fishing Technique */}
+                {trip.fishingTechnique?.length > 0 && (
+                  <div className="mt-2 flex items-start gap-1.5">
+                    <Tag className="w-3 h-3 text-green-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex flex-wrap gap-1">
+                      {trip.fishingTechnique.map((t) => (
+                        <span key={t} className="px-1.5 py-0.5 bg-green-50 text-green-600 text-xs rounded">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
