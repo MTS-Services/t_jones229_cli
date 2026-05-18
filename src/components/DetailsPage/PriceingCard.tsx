@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import doller from "@/assets/icon/doller.svg";
 import clock from "@/assets/icon/clock.svg";
 import men from "@/assets/icon/men.svg";
 import { useRouter } from "next/navigation";
 import { tripCardProps } from "@/types/pricingCard";
 import imageUrl from "@/assets/Overlay.jpg";
+import { useSelector } from "react-redux";
+import AuthChoiceModal from "@/components/common/AuthChoiceModal";
 
 // import { useRouter } from "next/navigation";
 
@@ -19,6 +21,14 @@ const PricingCard: React.FC<tripCardProps> = ({
 }) => {
   console.log(image);
   const route = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [pendingTripParams, setPendingTripParams] = useState<any>(null);
+
+  // Check if user is authenticated
+  const isAuthenticated = useSelector(
+    (state: any) => state.auth?.isAuthenticated,
+  );
+
   const bookingType =
     typeof window !== "undefined" ? localStorage.getItem("bookingType") : null;
 
@@ -29,21 +39,29 @@ const PricingCard: React.FC<tripCardProps> = ({
     const guests =
       typeof window !== "undefined" ? localStorage.getItem("Guests") : null;
 
-    // Build URL with all necessary parameters
-    const params = new URLSearchParams({
+    const tripParams = {
       type: bookingType || "false",
       boatId: boatId,
       tripId: id.toString(),
-    });
+      ...(date ? { date } : {}),
+      ...(guests ? { guests } : {}),
+      ...(bookingType ? { bookingType } : {}),
+    };
 
-    if (date) params.append("date", date);
-    if (guests) params.append("guests", guests);
-    if (bookingType) params.append("bookingType", bookingType);
+    if (!isAuthenticated) {
+      // Show auth choice modal for unauthenticated users
+      setPendingTripParams(tripParams);
+      setModalOpen(true);
+      return;
+    }
 
+    // Already logged in – go straight to payment
+    const params = new URLSearchParams(tripParams);
     route.push(`/payment?${params.toString()}`);
   };
 
   return (
+    <>
     <div className="bg-white rounded-lg shadow-sm border mt-5 overflow-hidden">
       <div className="flex flex-col md:flex-row">
         {/* Image Section */}
@@ -142,6 +160,16 @@ const PricingCard: React.FC<tripCardProps> = ({
         </div>
       </div>
     </div>
+
+    {/* Auth choice modal – shown when user is not logged in */}
+    {pendingTripParams && (
+      <AuthChoiceModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        tripParams={pendingTripParams}
+      />
+    )}
+  </>
   );
 };
 

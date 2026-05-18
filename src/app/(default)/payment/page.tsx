@@ -7,12 +7,16 @@ import { useGetSingleBoatQuery } from "@/redux/api/boatApi";
 import {
   useCreateBookingMutation,
   useCreateBookingDepositMutation,
+  useCreateGuestBookingDepositMutation,
 } from "@/redux/api/bookingApi";
 import { useUpdateProfileMutation } from "@/redux/api/userDashboardApi/updateProfile";
+import { setUser } from "@/redux/slices/authSlice";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import Cookies from "js-cookie";
 
 // Country name to ISO 3166-1 alpha-2 code mapping
 const countryToISO: Record<string, string> = {
@@ -119,9 +123,11 @@ export default function Page() {
   const [bookingType, setBookingType] = useState<string | null>(null);
 
   const router = useRouter();
+  const dispatch = useDispatch();
   const params = useSearchParams();
   const boatID = params.get("boatId");
   const tripId = params.get("tripId");
+  const isGuestMode = params.get("guest") === "true";
 
   // Try to get values from URL params as fallback
   const dateFromUrl = params.get("date");
@@ -183,6 +189,8 @@ export default function Page() {
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
   const [createBookingDeposit, { isLoading: isDepositLoading }] =
     useCreateBookingDepositMutation();
+  const [createGuestBookingDeposit, { isLoading: isGuestDepositLoading }] =
+    useCreateGuestBookingDepositMutation();
 
   // Handle Stripe payment method creation
   const handlePaymentMethodCreated = (pmId: string) => {
@@ -255,6 +263,57 @@ export default function Page() {
       const isGroupBooking = bookingType
         ? !(bookingType.toLowerCase() === "true" || bookingType === "1")
         : false;
+
+      // ─── GUEST mode: register + deposit in one call ───
+      if (isGuestMode) {
+        const guestRes = await createGuestBookingDeposit({
+          guestInfo: {
+            firstName: data?.firstName,
+            lastName: data?.lastName,
+            email: data?.email,
+            password: data?.password,
+            phoneNumber: data?.mobile,
+          },
+          boatId: boatID!,
+          tripId: filterTrip?.id,
+          tripDate: tripDate!,
+          groupSize: parseInt(numberOfGuests ?? "1", 10),
+          paymentMethodId: paymentMethodId!,
+          bookingType: bookingType
+            ? !(bookingType.toLowerCase() === "true" || bookingType === "1")
+              ? false
+              : true
+            : true,
+        });
+
+        if ((guestRes as any)?.data?.success) {
+          const { accessToken, user: newUser } = (guestRes as any).data.data;
+          // Auto-login the newly created user
+          Cookies.set("token", accessToken);
+          Cookies.set("currentUserRole", newUser.role);
+          Cookies.set("totalTrips", "0");
+          dispatch(
+            setUser({
+              user: newUser,
+              token: accessToken,
+              isAuthenticated: true,
+            }),
+          );
+          // Clean up pending booking params if any
+          localStorage.removeItem("pendingBookingParams");
+          toast.success("Account created and booking confirmed!");
+          router.push("/private-confirmation");
+        } else {
+          const err = (guestRes as any)?.error;
+          const msg =
+            err?.data?.message ??
+            err?.message ??
+            "Booking failed. Please try again.";
+          toast.error(msg);
+        }
+        setIsProcessingPayment(false);
+        return;
+      }
 
       // ─── NEW: route to deposit flow when user picked "partial" ───
       if (selectedPayment === "partial") {
@@ -411,7 +470,7 @@ export default function Page() {
                 image={data?.data?.photos?.[0]?.url}
                 location={data?.data?.meetingPoint?.[0]}
                 filterTrip={filterTrip}
-                isLoading={isLoading || isDepositLoading || isProcessingPayment}
+                isLoading={isLoading || isDepositLoading || isGuestDepositLoading || isProcessingPayment}
                 setSelectedPayment={setSelectedPayment}
                 selectedPayment={selectedPayment}
                 isCardComplete={isCardComplete}

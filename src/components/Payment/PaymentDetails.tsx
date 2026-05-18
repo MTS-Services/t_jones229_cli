@@ -3,19 +3,27 @@
 import { useGetMeQuery } from "@/redux/api/authApi";
 import { Skeleton } from "antd";
 import { useFormContext } from "react-hook-form";
-import { usePathname } from "next/navigation";
-import { User } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { User, UserPlus } from "lucide-react";
 import { useEffect } from "react";
+import React from "react";
 
 export default function PaymentDetails() {
   const {
     register,
     formState: { errors },
     setValue,
+    watch,
   } = useFormContext();
 
   const pathName = usePathname();
-  const { data: userInfo, isLoading } = useGetMeQuery({});
+  const searchParams = useSearchParams();
+  const isGuestMode = searchParams.get("guest") === "true";
+
+  const { data: userInfo, isLoading } = useGetMeQuery(
+    {},
+    { skip: isGuestMode }, // Don't fetch user data for guests
+  );
 
   // Auto-fill form with user data when it loads
   useEffect(() => {
@@ -37,7 +45,11 @@ export default function PaymentDetails() {
     (errors.firstName || errors.lastName || errors.email || errors.mobile);
 
   // Only show Terms checkbox on captain's boat listing pages, not on customer payment page
-  const showTermsCheckbox = pathName?.includes("/check-your-trip") || pathName?.includes("/boat-list-form");
+  const showTermsCheckbox =
+    pathName?.includes("/check-your-trip") ||
+    pathName?.includes("/boat-list-form");
+
+  const passwordValue = watch("password");
 
   return (
     <div className="">
@@ -45,18 +57,23 @@ export default function PaymentDetails() {
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-4 bg-gray-50 p-4 rounded-lg">
           <div className="p-2 bg-blue-50 rounded-lg">
-            <User className="w-4 md:w-5 h-4 md:h-5 text-blue-600" />
+            {isGuestMode ? (
+              <UserPlus className="w-4 md:w-5 h-4 md:h-5 text-orange-500" />
+            ) : (
+              <User className="w-4 md:w-5 h-4 md:h-5 text-blue-600" />
+            )}
           </div>
           <h2 className="text-xl md:text-2xl font-bold text-gray-900">
-            Personal & Payment Details
+            {isGuestMode
+              ? "Create Account & Pay"
+              : "Personal & Payment Details"}
           </h2>
         </div>
 
         <p className="text-gray-600 text-base md:text-sm max-w-3xl p-4 bg-yellow-50 rounded-lg border border-gray-200">
-          Please provide your contact and payout details so we can process
-          bookings and send payments to you. All information is kept secure and
-          used only for account verification and transferring your earnings
-          after completed trips.
+          {isGuestMode
+            ? "Fill in your details below to create a free account and complete your booking — all in one step."
+            : "Please provide your contact and payout details so we can process bookings and send payments to you. All information is kept secure and used only for account verification and transferring your earnings after completed trips."}
         </p>
       </div>
 
@@ -166,34 +183,89 @@ export default function PaymentDetails() {
             )}
           </FormField>
 
+          {/* ── Guest-only: Password fields ── */}
+          {isGuestMode && (
+            <>
+              <FormField>
+                <Label required htmlFor="password">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                  })}
+                  placeholder="Create a password"
+                  error={!!errors.password}
+                />
+                {errors.password && (
+                  <ErrorMessage>{String(errors.password.message)}</ErrorMessage>
+                )}
+              </FormField>
+
+              <FormField>
+                <Label required htmlFor="confirmPassword">
+                  Confirm Password
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
+                    validate: (v) =>
+                      v === passwordValue || "Passwords do not match",
+                  })}
+                  placeholder="Repeat your password"
+                  error={!!errors.confirmPassword}
+                />
+                {errors.confirmPassword && (
+                  <ErrorMessage>
+                    {String(errors.confirmPassword.message)}
+                  </ErrorMessage>
+                )}
+              </FormField>
+            </>
+          )}
+
           {/* Terms & Conditions - REQUIRED (captain boat listing only) */}
           {showTermsCheckbox && (
-          <div className="lg:col-span-2">
-            <div className="flex gap-3 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
-              <input
-                id="termsAccepted"
-                type="checkbox"
-                {...register("termsAccepted", {
-                  required: "You must accept the terms and conditions to proceed",
-                })}
-                className="mt-1 h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
-              />
-              <div className="flex-1">
-                <label
-                  htmlFor="termsAccepted"
-                  className="text-sm font-semibold text-gray-900 cursor-pointer"
-                >
-                  Terms & Conditions Acceptance <span className="text-red-500">*</span>
-                </label>
-                <p className="text-gray-700 text-sm mt-1">
-                  I have read and agree to the Terms & Conditions, including the 5% commission fee, cancellation policy, and payment terms outlined on this page.
-                </p>
+            <div className="lg:col-span-2">
+              <div className="flex gap-3 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+                <input
+                  id="termsAccepted"
+                  type="checkbox"
+                  {...register("termsAccepted", {
+                    required:
+                      "You must accept the terms and conditions to proceed",
+                  })}
+                  className="mt-1 h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
+                />
+                <div className="flex-1">
+                  <label
+                    htmlFor="termsAccepted"
+                    className="text-sm font-semibold text-gray-900 cursor-pointer"
+                  >
+                    Terms & Conditions Acceptance{" "}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-gray-700 text-sm mt-1">
+                    I have read and agree to the Terms & Conditions, including
+                    the 5% commission fee, cancellation policy, and payment
+                    terms outlined on this page.
+                  </p>
+                </div>
               </div>
+              {errors.termsAccepted && (
+                <ErrorMessage>
+                  {String(errors.termsAccepted.message)}
+                </ErrorMessage>
+              )}
             </div>
-            {errors.termsAccepted && (
-              <ErrorMessage>{String(errors.termsAccepted.message)}</ErrorMessage>
-            )}
-          </div>
           )}
 
           {/* Marketing Consent */}

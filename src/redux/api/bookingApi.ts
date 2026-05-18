@@ -100,6 +100,30 @@ const BookingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["booking", "userBooking"],
     }),
+
+    // POST /api/v1/booking/guest-deposit — creates user account + 20% deposit in one call
+    createGuestBookingDeposit: build.mutation({
+      query: (data: {
+        guestInfo: {
+          firstName: string;
+          lastName: string;
+          email: string;
+          password: string;
+          phoneNumber?: string;
+        };
+        boatId: string;
+        tripId: string;
+        tripDate: string;
+        groupSize: number;
+        paymentMethodId: string;
+        bookingType?: boolean;
+      }) => ({
+        url: `/booking/guest-deposit`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["booking", "userBooking", "auth"],
+    }),
   }),
 });
 
@@ -113,5 +137,6 @@ export const {
   useCompleteTripMutation,
   useCancelBookingWithRefundMutation,
   useActivateStripeAccountMutation,
+  useCreateGuestBookingDepositMutation,
 } = BookingApi;
 export default BookingApi;
