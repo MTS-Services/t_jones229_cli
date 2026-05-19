@@ -111,8 +111,8 @@ const PricingCard: React.FC<tripCardProps> = ({
           </p>
 
           {/* Feature Tags */}
-          <div className="flex justify-between gap-2 md:gap-3">
-            <div className="flex  gap-2 md:gap-3">
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+            <div className="flex flex-wrap gap-2 md:gap-3">
               <div className="flex items-center gap-1.5 bg-[#EDF1FF] px-3 py-1.5 rounded-full border border-[#b2c3ff] text-[#242424] text-xs md:text-sm">
                 <Image
                   src={men}
@@ -151,7 +151,7 @@ const PricingCard: React.FC<tripCardProps> = ({
             <div>
               <button
                 onClick={() => handleclick(tripInfo?.id)}
-                className="bg-orange-400 hover:bg-orange-500 text-white px-5 py-2 rounded-lg font-satoshi text-sm md:text-base transition-colors flex-shrink-0"
+                className="bg-orange-400 hover:bg-orange-500 text-white px-5 py-2 rounded-lg font-satoshi text-sm md:text-base transition-colors w-full sm:w-auto flex-shrink-0"
               >
                 Reserve with 20% deposit
               </button>
