@@ -28,7 +28,7 @@ const TopChartersCard: React.FC<TopChartersCardProps> = ({ boatInfo }) => {
         </div>
 
         {/* Location Badge */}
-        <div className="absolute top-4 right-4 translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20">
+        <div className="absolute top-4 right-4 md:translate-y-[-10px] md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-500 z-20">
           <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
             <FiMapPin size={12} />
             {boatInfo?.meetingPoint?.[0]?.city}
@@ -37,7 +37,7 @@ const TopChartersCard: React.FC<TopChartersCardProps> = ({ boatInfo }) => {
 
         {/* Content */}
         <div className="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end h-full z-20">
-          <div className="transform translate-y-[60px] group-hover:translate-y-0 transition-transform duration-500">
+          <div className="transform md:translate-y-[60px] md:group-hover:translate-y-0 transition-transform duration-500">
             <h3 className="text-2xl font-bold text-white mb-1">
               {boatInfo?.descriptions?.[0]?.listingTypeTitle}
             </h3>
@@ -56,7 +56,7 @@ const TopChartersCard: React.FC<TopChartersCardProps> = ({ boatInfo }) => {
               </span>
             </div>
 
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 space-y-4">
+            <div className="md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 space-y-4">
               <p className="text-slate-300 text-sm line-clamp-2">
                 {boatInfo?.descriptions?.[0]?.listingTypeDescription}
               </p>

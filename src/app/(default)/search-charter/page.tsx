@@ -4,26 +4,41 @@ import TabListUI from "@/components/Private-charterTab/TabListUI";
 import TabContent from "@/components/Private-charterTab/TabContent";
 import { useGetAllBoatQuery } from "@/redux/api/boatApi";
 import { Pagination } from "@/components/dashboard/admin/button/Pagination";
-import SearchResultsMap from "@/components/search-charter/SearchResultsMap";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+
 import {
   IoCalendarOutline,
   IoLocationOutline,
   IoPeopleOutline,
 } from "react-icons/io5";
 
+const SearchResultsMap = dynamic(
+  () => import("@/components/search-charter/SearchResultsMap"),
+  { ssr: false, loading: () => null },
+);
+
 export default function Page() {
   const searchParams = useSearchParams();
   const [activeKey, setActiveKey] = useState<string>("1");
   const [currentPage, setCurrentPage] = useState(1);
   const [queryParams, setQueryParams] = useState<Record<string, string>>({});
+  const [isDesktop, setIsDesktop] = useState(false);
 
   // Read from localStorage searchData, fall back to URL params
   const [location, setLocation] = useState("");
   const [guests, setGuests] = useState(0);
   const [date, setDate] = useState("");
   const [bookingType, setBookingType] = useState("");
+
+  // Only show map on xl+ screens (≥1280px) to prevent Leaflet crashes on mobile
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1280);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     try {
@@ -170,14 +185,16 @@ export default function Page() {
               )}
             </div>
 
-            {/* Right side - Sticky Map */}
-            <div className="hidden xl:block xl:w-[40%] 2xl:w-[35%]">
-              <div className="sticky top-24">
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 h-[calc(40vh-280px)] max-h-[700px] min-h-[500px]">
-                  <SearchResultsMap location={location} boats={currentItems} />
+            {/* Right side - Sticky Map (desktop only — never rendered on mobile to prevent Leaflet crashes) */}
+            {isDesktop && (
+              <div className="hidden xl:block xl:w-[40%] 2xl:w-[35%]">
+                <div className="sticky top-24">
+                  <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 h-[calc(40vh-280px)] max-h-[700px] min-h-[500px]">
+                    <SearchResultsMap location={location} boats={currentItems} />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
