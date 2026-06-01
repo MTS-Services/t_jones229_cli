@@ -37,12 +37,12 @@ export default function Terms() {
 
             <p>
               It&apos;s free to create an account and list your boat on
-              FishingTripper. We charge a 5% commission based on the total trip
+              The Fishing Hub. We charge a 5% commission based on the total trip
               price for all completed bookings made through the platform.
             </p>
             <p>
               Customers pay a 20% deposit at the time of booking. This deposit
-              is held securely by FishingTripper.
+              is held securely by The Fishing Hub.
             </p>
             <p>
               Upon successful completion of the trip, the deposit will be
@@ -74,7 +74,7 @@ export default function Terms() {
             <p>
               If a trip is canceled by the charter operator or due to unsafe
               weather conditions, the customer will receive a full refund of the
-              deposit, and FishingTripper will not charge a commission.
+              deposit, and The Fishing Hub will not charge a commission.
             </p>
 
             <hr className="border-gray-300" />
@@ -83,7 +83,7 @@ export default function Terms() {
               Commission on cancellations
             </p>
             <p>
-              In the event of a customer cancellation, FishingTripper applies
+              In the event of a customer cancellation, The Fishing Hub applies
               its 5% commission only to amounts actually received by the charter
               operator.
             </p>

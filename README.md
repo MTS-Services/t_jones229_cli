@@ -1,6 +1,6 @@
-# Fishing Tripper — Front-end
+# The Fishing Hub — Front-end
 
-This document explains how to use and run the Fishing Tripper front-end on a client machine. This repository is delivered as a ZIP file (not a Git repo). The ZIP is encrypted with the code: `15963` — see the "Unzip / decrypt" section below for exact commands per OS.
+This document explains how to use and run the The Fishing Hub front-end on a client machine. This repository is delivered as a ZIP file (not a Git repo). The ZIP is encrypted with the code: `15963` — see the "Unzip / decrypt" section below for exact commands per OS.
 
 ## Contents
 
@@ -217,7 +217,7 @@ Contact: include the client's preferred contact details here.
 
 Summary: unzip with password `15963`, install Node dependencies, optionally set `.env.local` variables, then use `npm run dev` for local development or `npm run build` + `npm run start` to run the production server (on port 3007 by default).
 
-Enjoy exploring the Fishing Tripper front-end!
+Enjoy exploring the The Fishing Hub front-end!
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

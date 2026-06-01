@@ -16,7 +16,7 @@ import type { RootState } from "../store/store";
 // --------------------------------------------------
 const getBaseUrl = (): string => {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "https://api.fishingtripper.com";
+    process.env.NEXT_PUBLIC_API_URL || "https://api.thefishinghub.com";
 
   return `${baseUrl}/api/v1`;
 };

@@ -14,7 +14,7 @@ export default function Page() {
         >
           <Image
             src={logo2}
-            alt="FishingTripper Logo - Return to homepage"
+            alt="The Fishing Hub Logo - Return to homepage"
             height={100}
             width={200}
             className="h-20 w-44 md:h-28 md:w-52 drop-shadow-sm"

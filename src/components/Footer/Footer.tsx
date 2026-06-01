@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
             <div className="flex flex-col items-start gap-6">
               <Image
                 src={logo}
-                alt="Fishing Tripper"
+                alt="The Fishing Hub"
                 height={100}
                 width={100}
                 className="w-36"
@@ -78,7 +78,7 @@ const Footer: React.FC = () => {
         {/* Copyright */}
         <div className="border-t border-slate-800 py-4 text-center md:text-left">
           <p className="text-sm text-center text-slate-500">
-            © {new Date().getFullYear()} Fishing Tripper. All rights reserved.
+            © {new Date().getFullYear()} The Fishing Hub. All rights reserved.
           </p>
         </div>
       </div>

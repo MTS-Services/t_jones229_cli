@@ -374,7 +374,7 @@ export default function PaymentCard({
                   </span>
                 </div>
                 <p className="text-sm text-gray-600 mt-1">
-                  Pay online in full through FishingTripper and avoid
+                  Pay online in full through The Fishing Hub and avoid
                   unnecessary hassle with carrying extra cash.
                 </p>
               </div>

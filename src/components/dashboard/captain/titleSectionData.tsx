@@ -34,13 +34,13 @@ export const titleSectionData = [
     path: "/dashboard/all-customer",
     title: "Customer Management",
     description:
-      "Here you can see all of the customers signed up to Fishing Tripper",
+      "Here you can see all of the customers signed up to The Fishing Hub",
   },
   {
     path: "/dashboard/all-captain",
     title: "Captain Management",
     description:
-      "Here you can see all of the customers signed up to Fishing Tripper",
+      "Here you can see all of the customers signed up to The Fishing Hub",
   },
   {
     path: "/dashboard/membership",

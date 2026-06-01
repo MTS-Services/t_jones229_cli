@@ -47,7 +47,7 @@ const FAQ_DATA: FAQSection[] = [
         id: 4,
         question: "How do I avoid double bookings?",
         answer:
-          "Once your listing has been verified, you will have access to the dashboard page. From there you can view and manage your calendar. If you receive a booking from outside of FishingTripper you can block the day off in your calendar so that you don't get double booked.",
+          "Once your listing has been verified, you will have access to the dashboard page. From there you can view and manage your calendar. If you receive a booking from outside of The Fishing Hub you can block the day off in your calendar so that you don't get double booked.",
       },
       {
         id: 5,
@@ -106,7 +106,7 @@ const FAQ_DATA: FAQSection[] = [
         id: 12,
         question: "How do Shared Trips work?",
         answer:
-          "When you create your listing, you can choose whether to accept Shared Trips. If enabled, your charter can be booked by individual anglers who are grouped together to split the cost of the trip. FishingTripper handles the grouping, booking, and payments, so there's no extra admin for you. You'll simply see multiple anglers on the same trip instead of a single private group, with all participant details provided in advance.",
+          "When you create your listing, you can choose whether to accept Shared Trips. If enabled, your charter can be booked by individual anglers who are grouped together to split the cost of the trip. The Fishing Hub handles the grouping, booking, and payments, so there's no extra admin for you. You'll simply see multiple anglers on the same trip instead of a single private group, with all participant details provided in advance.",
       },
     ],
   },

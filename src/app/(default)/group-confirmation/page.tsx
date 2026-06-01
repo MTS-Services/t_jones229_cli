@@ -51,11 +51,11 @@ export default function page() {
               <div className="">
                 <p className="text-sm">Questions?</p>
                 <a
-                  href="mailto:tom@fishingtripper.com"
+                  href="mailto:tom@thefishinghub.com"
                   className="font-semibold flex gap-2 items-center text-slate-800 hover:text-blue-600 transition"
                 >
                   <MdEmail className="text-blue-500 text-xl" />{" "}
-                  tom@fishingtripper.com
+                  tom@thefishinghub.com
                 </a>
               </div>
             </div>

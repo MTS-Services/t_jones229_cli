@@ -28,7 +28,7 @@ export default function ListYourBoat() {
 
   return (
     <ReUseAbleBanner
-      title="Join FishingTripper’s global network of Charter Captains and Guides"
+      title="Join The Fishing Hub’s global network of Charter Captains and Guides"
       backgroundImage={banner.src}
       boardImage={board.src}
       button={true}

@@ -74,7 +74,7 @@ const CaptainsInfoPage = () => {
               {[
                 "Zero monthly fees or commitments",
                 "Perfect for seasonal operations",
-                "Pay only on FishingTripper bookings",
+                "Pay only on The Fishing Hub bookings",
                 "Full platform access including all features",
                 "Cancel anytime, no questions asked",
               ].map((feature, index) => (

@@ -16,12 +16,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "FishingTripper",
+  title: "The Fishing Hub",
   description: "Plan Your Perfect Day on the Water",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "FishingTripper",
+    title: "The Fishing Hub",
   },
 };
 

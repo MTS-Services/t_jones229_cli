@@ -57,7 +57,7 @@ const Terms: React.FC = () => {
               </div>
 
               <h2 className="text-[#1A1A1A] text-[26px] font-bold mb-2 tracking-tight">
-                Fishing Tripper Membership
+                The Fishing Hub Membership
               </h2>
 
               <p className="text-gray-400 text-[15px] mb-8 font-medium">

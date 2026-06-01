@@ -9,7 +9,7 @@ export default function AboutUsPage() {
         <Container>
           <div className="text-center">
             <h1 className="text-4xl text-gray-200 md:text-5xl font-bold mb-6">
-              About FishingTripper
+              About The Fishing Hub
             </h1>
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
               Connecting anglers, sharing adventures, and making fishing
@@ -30,7 +30,7 @@ export default function AboutUsPage() {
             <div className="">
               <div className="bg-white space-y-8 text-gray-500 text-lg rounded-xl p-8 shadow-sm border border-gray-200 leading-relaxed">
                 <p className="">
-                  Fishing Tripper started with a simple problem I wanted to
+                  The Fishing Hub started with a simple problem I wanted to
                   solve for myself.
                 </p>
 
@@ -48,7 +48,7 @@ export default function AboutUsPage() {
                   week.
                 </p>
 
-                <p className="">That's what led to Fishing Tripper.</p>
+                <p className="">That's what led to The Fishing Hub.</p>
 
                 <p className="">
                   I wanted to create a platform that allows anglers to book
@@ -59,13 +59,13 @@ export default function AboutUsPage() {
                 </p>
 
                 <p className="">
-                  At the same time, FishingTripper is designed to give charter
+                  At the same time, The Fishing Hub is designed to give charter
                   operators a simple, reliable booking system that works for
                   both shared and private trips - without the admin headaches.
                 </p>
 
                 <p className="">
-                  FishingTripper is built around fairness, flexibility, and
+                  The Fishing Hub is built around fairness, flexibility, and
                   trust, with the goal of making it easier for anglers to get on
                   the water and easier for captains to run their businesses.
                 </p>
@@ -77,7 +77,7 @@ export default function AboutUsPage() {
                   <div className="text-lg">
                     <strong>Tom</strong>
                     <br />
-                    <span className="text-white">Founder, Fishing Tripper</span>
+                    <span className="text-white">Founder, The Fishing Hub</span>
                   </div>
                 </div>
               </div>
@@ -92,7 +92,7 @@ export default function AboutUsPage() {
           <div className=" max-w-4xl mx-auto">
             <p className="text-gray-300 capitalize font-bold text-center text-4xl mb-8">
               Join thousands of anglers who've found their perfect fishing trips
-              through FishingTripper.
+              through The Fishing Hub.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/">

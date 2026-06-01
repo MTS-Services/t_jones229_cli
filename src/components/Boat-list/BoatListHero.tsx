@@ -6,7 +6,7 @@ export default function BoatListHero() {
   return (
     <Container>
       <ReUseAbleBanner
-        title="List your business on FishingTripper – Connect with anglers from around the world."
+        title="List your business on The Fishing Hub – Connect with anglers from around the world."
         backgroundImage={"/bannerImg.jpg"}
         backgroundImageClassName="!rounded-2xl"
         className={"!bg-black/20"}
