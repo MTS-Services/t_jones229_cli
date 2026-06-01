@@ -26,7 +26,6 @@ yarn-error.log*
 
 # Local env files
 .env*.local
-.env
 
 # Vercel
 .vercel
@@ -56,3 +55,4 @@ lerna-debug.log*
 package-lock.json  # if using yarn or bun
 # yarn.lock          # if using npm or bun
 bun.lockb            # if using npm or yarn
+config.bat
