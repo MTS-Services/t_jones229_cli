@@ -1,5 +1,5 @@
 import { FaCheckCircle, FaSignInAlt, FaUserPlus } from "react-icons/fa";
-import logo2 from "@/assets/logo.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -42,10 +42,11 @@ const RegistrationSuccess = ({ setRegistrationSuccess }) => {
               className="mb-8 transform hover:scale-110 transition-all duration-300 ease-in-out"
             >
               <Image
-                src={logo2}
+                src={BRAND_LOGO_URL}
                 alt="Company Logo"
                 height={120}
                 width={120}
+                unoptimized
                 className="h-20 sm:h-24 w-auto object-contain drop-shadow-md"
                 priority
               />

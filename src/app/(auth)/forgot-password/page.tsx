@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Button from "@/components/ReUsible/Button";
 import image from "@/assets/signup.png";
-import logo2 from "@/assets/logo.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import { useForgotPasswordMutation } from "@/redux/api/authApi";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
@@ -39,11 +39,12 @@ const ForgotPassword = () => {
         {/* Logo */}
         <Link href={"/"} className="mb-5">
           <Image
-            src={logo2}
+            src={BRAND_LOGO_URL}
             alt="logo"
             height={100}
             width={100}
-            className="h-28 w-52 mx-auto"
+            unoptimized
+            className="h-28 w-52 mx-auto object-contain"
           />
         </Link>
 

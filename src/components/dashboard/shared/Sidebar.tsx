@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sidebarItems } from "./sidebarItems";
 import { HiX } from "react-icons/hi";
-import logo from "@/assets/logo.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import { useGetMyBoatQuery } from "@/redux/api/boatApi";
 
 interface SidebarProps {
@@ -114,15 +114,16 @@ const Sidebar = ({ externalOpen, onExternalClose }: SidebarProps = {}) => {
       {/* Desktop Sidebar */}
       <div className="hidden lg:block bg-slate-100 lg:w-64 h-screen lg:sticky lg:top-0 lg:left-0 lg:overflow-y-auto lg:flex-shrink-0">
         {/* Logo Section */}
-        <div className="h-36 ">
-          <Link href={"/"} className="h-24 w-full">
+        <div className="h-36 flex items-center justify-center px-4">
+          <Link href={"/"} className="inline-block">
             <Image
-              src={logo}
+              src={BRAND_LOGO_URL}
               alt="logo"
               height={200}
               width={200}
+              unoptimized
               priority
-              className="h-28 w-full"
+              className="h-24 w-auto max-w-full object-contain"
             />
           </Link>
         </div>
@@ -184,7 +185,14 @@ const Sidebar = ({ externalOpen, onExternalClose }: SidebarProps = {}) => {
           >
             {/* Header */}
             <div className="flex items-center justify-between h-16 px-4 border-b">
-              <Image src={logo} alt="logo" className="w-16 h-auto" />
+              <Image
+                src={BRAND_LOGO_URL}
+                alt="logo"
+                width={100}
+                height={100}
+                unoptimized
+                className="w-16 h-auto object-contain"
+              />
 
               <button
                 onClick={closeMobileMenu}

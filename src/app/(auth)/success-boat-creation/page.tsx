@@ -3,7 +3,7 @@
 import Button from "@/components/ReUsible/Button";
 import { Calendar, Check, Search, Sailboat } from "lucide-react";
 import React from "react";
-import logo from "@/assets/logo3.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import boat from "@/assets/boat2.svg";
 import Image from "next/image";
 
@@ -18,11 +18,12 @@ export default function BoatCreator() {
             {/* Logo - Responsive sizing */}
             <div className="flex-shrink-0">
               <Image
-                src={logo}
+                src={BRAND_LOGO_URL}
                 alt="The Fishing Hub Logo"
                 height={200}
                 width={200}
-                className="w-32 sm:w-40 md:w-48 lg:w-56 h-auto"
+                unoptimized
+                className="w-32 sm:w-40 md:w-48 lg:w-56 h-auto object-contain"
               />
             </div>
 

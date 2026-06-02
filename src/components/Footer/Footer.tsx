@@ -1,7 +1,8 @@
 import React from "react";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
-import logo from "@/assets/logo2.svg";
 import Image from "next/image";
+import Link from "next/link";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 
 const Footer: React.FC = () => {
   const footerLinks = [
@@ -32,13 +33,16 @@ const Footer: React.FC = () => {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <div className="flex flex-col items-start gap-6">
-              <Image
-                src={logo}
-                alt="The Fishing Hub"
-                height={100}
-                width={100}
-                className="w-36"
-              />
+              <Link href="/" className="inline-block">
+                <Image
+                  src={BRAND_LOGO_URL}
+                  alt={BRAND_LOGO_ALT}
+                  height={100}
+                  width={100}
+                  unoptimized
+                  className="w-36 h-auto object-contain"
+                />
+              </Link>
 
               <div className="flex gap-6">
                 {socialLinks.map(({ icon: Icon, href, label }) => (

@@ -173,6 +173,7 @@ export const baseApi = createApi({
     "dashboard",
     "booking",
     "payout",
+    "refund",
   ],
 
   endpoints: () => ({}),

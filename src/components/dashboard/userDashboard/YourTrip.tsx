@@ -240,7 +240,9 @@ function TripCard({
                     <p className="text-sm font-medium text-gray-900">
                       {captain.firstName} {captain.lastName}
                     </p>
-                    <p className="text-xs text-gray-500">Captain</p>
+                    <p className="text-xs text-gray-500">
+                      {captain.email || "Captain"}
+                    </p>
                   </div>
                 </div>
               )}
@@ -273,6 +275,18 @@ function TripCard({
                   <MailIcon className="w-5 h-5 text-blue-600" />
                   <EmailModal
                     reciverId={userRole === "CAPTAIN" ? userId : captain.id}
+                    recipientName={
+                      userRole === "CAPTAIN"
+                        ? booking.user
+                          ? `${booking.user.firstName || ""} ${booking.user.lastName || ""}`.trim()
+                          : ""
+                        : `${captain.firstName || ""} ${captain.lastName || ""}`.trim()
+                    }
+                    recipientEmail={
+                      userRole === "CAPTAIN"
+                        ? booking.user?.email
+                        : captain.email
+                    }
                   />
                 </div>
               )}

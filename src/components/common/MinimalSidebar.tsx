@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/assets/logo.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import { TbSailboat } from "react-icons/tb";
 
 const MinimalSidebar = () => {
@@ -14,11 +14,12 @@ const MinimalSidebar = () => {
       <div className="h-36">
         <Link href="/" className="h-24 w-full">
           <Image
-            src={logo}
+            src={BRAND_LOGO_URL}
             alt="logo"
             height={200}
             width={200}
-            className="h-32 w-full"
+            unoptimized
+            className="h-24 w-auto max-w-full object-contain mx-auto"
           />
         </Link>
       </div>

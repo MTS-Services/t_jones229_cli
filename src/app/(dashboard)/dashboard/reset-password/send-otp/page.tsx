@@ -3,7 +3,7 @@
 import Button from "@/components/ReUsible/Button";
 import Image from "next/image";
 import React, { Suspense } from "react";
-import logo2 from "@/assets/logo.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import { useForm } from "react-hook-form";
 import { useChangePasswordMutation } from "@/redux/api/authApi";
 import { toast, ToastContainer } from "react-toastify";
@@ -95,10 +95,11 @@ export default function Page() {
       <ToastContainer />
       <div className="container mx-auto py-28 flex flex-col justify-center items-center text-white">
         <Image
-          src={logo2}
+          src={BRAND_LOGO_URL}
           alt="logo"
           height={100}
           width={100}
+          unoptimized
           className="h-28 w-52"
         />
         <div className="text-center mx-auto w-full md:w-2/4 px-5">

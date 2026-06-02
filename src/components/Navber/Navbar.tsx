@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import logo2 from "@/assets/logo2.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { logout } from "@/redux/slices/authSlice";
@@ -124,9 +124,12 @@ export default function Navbar() {
             className="flex-shrink-0 transition-transform hover:scale-105 active:scale-95"
           >
             <Image
-              src={logo2}
+              src={BRAND_LOGO_URL}
               alt="Logo"
-              className="object-cover w-auto h-16 md:h-20"
+              width={100}
+              height={100}
+              unoptimized
+              className="object-contain transition-all duration-700 ease-in-out"
               priority
             />
           </Link>

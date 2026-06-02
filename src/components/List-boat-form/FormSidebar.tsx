@@ -4,7 +4,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import { useEffect, useState, useMemo } from "react";
 import { FormSidebarItems } from "./FormSidebarItems";
 import Image from "next/image";
-import logo from "@/assets/logo.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -55,11 +55,12 @@ const FormSidebar = () => {
       <div className="flex items-center justify-center h-36">
         <Link href={"/"}>
           <Image
-            src={logo}
+            src={BRAND_LOGO_URL}
             alt="logo"
             width={200}
             height={200}
-            className="h-32 w-full"
+            unoptimized
+            className="h-24 w-auto max-w-full object-contain mx-auto"
           />
         </Link>
       </div>

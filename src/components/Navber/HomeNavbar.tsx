@@ -4,8 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-// import logo from "@/assets/logo.svg";
-import logo from "@/assets/logo2.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { logout } from "@/redux/slices/authSlice";
@@ -95,12 +94,13 @@ export default function HomeNavbar() {
           <div className="transition-all duration-700 ease-in-out origin-center transform hover:scale-105">
             <Link href="/">
               <Image
-                src={logo}
+                src={BRAND_LOGO_URL}
                 alt="Logo"
                 width={scrolled ? 80 : 100}
                 height={scrolled ? 80 : 100}
+                unoptimized
                 className="object-contain transition-all duration-700 ease-in-out"
-                priority={true}
+                priority
               />
             </Link>
           </div>

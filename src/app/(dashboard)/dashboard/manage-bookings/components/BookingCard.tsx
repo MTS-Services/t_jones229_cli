@@ -71,7 +71,12 @@ export default function BookingCard({
     remainingAmount,
     id,
     userId,
+    user: bookingUser,
   } = booking;
+
+  const customerName = bookingUser
+    ? `${bookingUser.firstName || ""} ${bookingUser.lastName || ""}`.trim()
+    : "";
 
   // Resolve payment figures — prefer new deposit fields over legacy payFirst/payDue
   const paidAmount = depositAmount ?? payFirst ?? 0;
@@ -83,6 +88,9 @@ export default function BookingCard({
   const statusConfig = getStatusConfig(status);
   const StatusIcon = statusConfig.icon;
   const captain = boat?.captain;
+  const captainName = captain
+    ? `${captain.firstName || ""} ${captain.lastName || ""}`.trim()
+    : "";
   const photo = boat?.photos?.[0]?.url;
   const meetingPoint = boat?.meetingPoint?.[0];
 
@@ -189,10 +197,10 @@ export default function BookingCard({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900">
-                      Customer
+                      {customerName || "Customer"}
                     </p>
                     <p className="text-xs text-gray-500">
-                      Booking ID: {id.slice(0, 8)}
+                      {bookingUser?.email || `Booking ID: ${id.slice(0, 8)}`}
                     </p>
                   </div>
                 </div>
@@ -208,7 +216,9 @@ export default function BookingCard({
                     <p className="text-sm font-medium text-gray-900">
                       {captain.firstName} {captain.lastName}
                     </p>
-                    <p className="text-xs text-gray-500">Captain</p>
+                    <p className="text-xs text-gray-500">
+                      {captain.email || "Captain"}
+                    </p>
                   </div>
                 </div>
               )}
@@ -254,6 +264,14 @@ export default function BookingCard({
                 <EmailModal
                   reciverId={
                     userRole === "CAPTAIN" ? userId : captain?.id || ""
+                  }
+                  recipientName={
+                    userRole === "CAPTAIN" ? customerName : captainName
+                  }
+                  recipientEmail={
+                    userRole === "CAPTAIN"
+                      ? bookingUser?.email
+                      : captain?.email
                   }
                 />
               </div>

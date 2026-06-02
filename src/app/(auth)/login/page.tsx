@@ -1,4 +1,4 @@
-import logo2 from "@/assets/logo.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "@/app/(auth)/login/components/LoginForm";
@@ -13,11 +13,12 @@ export default function Page() {
           className="mb-4 transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-200 rounded-lg"
         >
           <Image
-            src={logo2}
+            src={BRAND_LOGO_URL}
             alt="The Fishing Hub Logo - Return to homepage"
             height={100}
             width={200}
-            className="h-20 w-44 md:h-28 md:w-52 drop-shadow-sm"
+            unoptimized
+            className="h-20 w-auto max-w-[11rem] md:h-24 md:max-w-[13rem] object-contain drop-shadow-sm"
             priority
           />
         </Link>

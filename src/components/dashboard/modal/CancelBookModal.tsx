@@ -1,6 +1,7 @@
 "use client";
 
 import { useCancelBookingWithRefundMutation } from "@/redux/api/bookingApi";
+import { useGetPublicRefundPolicyQuery } from "@/redux/api/refundApi";
 import { RootState } from "@/redux/store/store";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -19,6 +20,12 @@ export default function CancelBookModal({
 }) {
   const [cancelBookingWithRefund, { isLoading }] =
     useCancelBookingWithRefundMutation();
+  const { data: policyData } = useGetPublicRefundPolicyQuery(undefined, {
+    skip: !isOpen,
+  });
+  const policyRules: any[] = policyData?.data?.rules ?? [];
+  const customerRefundMode =
+    policyData?.data?.settings?.customerRefundMode ?? "AUTO_STRIPE";
   const [error, setError] = useState<string | null>(null);
   const [reason, setReason] = useState("");
   const router = useRouter();
@@ -62,11 +69,23 @@ export default function CancelBookModal({
         <h2 className="text-xl font-semibold mb-2">
           Are You Sure You Want to Cancel This Trip?
         </h2>
-        <p className="text-gray-600 text-sm mb-4">
-          Refund depends on how close to the trip date you cancel. 7+ days early
-          refunds the full deposit; closer to the trip date a partial refund
-          applies.
+        <p className="text-gray-600 text-sm mb-2">
+          Refund depends on how many days before the trip you cancel (see policy
+          below). Refunds are{" "}
+          {customerRefundMode === "MANUAL"
+            ? "processed manually by our team after cancellation."
+            : "processed automatically via Stripe when possible."}
         </p>
+        {policyRules.length > 0 && (
+          <ul className="text-left text-xs text-gray-600 mb-4 bg-gray-50 rounded-lg p-3 space-y-1 max-h-32 overflow-y-auto">
+            {policyRules.map((r: any) => (
+              <li key={r.label}>
+                <b>{r.minDaysBeforeTrip}+ days:</b> {r.refundPercentOfDeposit}%
+                of deposit — {r.label}
+              </li>
+            ))}
+          </ul>
+        )}
 
         {isPrivileged && (
           <div className="mb-3 text-left">

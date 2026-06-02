@@ -2,6 +2,13 @@ import { LucideIcon } from "lucide-react";
 
 export type TabKey = "today" | "upcoming" | "past";
 
+export interface BookingUser {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 export interface Booking {
   id: string;
   trip: Trip;
@@ -16,6 +23,7 @@ export interface Booking {
   depositAmount: number | null;
   remainingAmount: number | null;
   userId: string;
+  user?: BookingUser;
 }
 
 export interface Trip {
@@ -36,6 +44,7 @@ export interface Captain {
   id: string;
   firstName: string;
   lastName: string;
+  email?: string;
 }
 
 export interface Photo {

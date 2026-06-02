@@ -1,6 +1,6 @@
 "use client";
 
-import logo2 from "@/assets/logo.svg";
+import { BRAND_LOGO_ALT, BRAND_LOGO_URL } from "@/constant/brand.constants";
 import Button from "@/components/ReUsible/Button";
 import Loader from "@/components/ui/Loader";
 import { useSignupMutation } from "@/redux/api/authApi";
@@ -137,10 +137,11 @@ export default function Page() {
                 className="mb-2 transform hover:scale-105 transition-transform duration-300"
               >
                 <Image
-                  src={logo2}
+                  src={BRAND_LOGO_URL}
                   alt="logo"
                   height={100}
                   width={100}
+                  unoptimized
                   className="h-20 sm:h-24 w-auto object-contain"
                   priority
                 />

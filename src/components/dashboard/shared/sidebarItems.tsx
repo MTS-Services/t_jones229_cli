@@ -57,6 +57,12 @@ export const sidebarItems: TSidebarItem[] = [
     roles: ["SUPERADMIN", "ADMIN"],
   },
   {
+    key: "Refund Management",
+    icon: <TbCash />,
+    label: <Link href="/dashboard/refund-management">Refund Management</Link>,
+    roles: ["SUPERADMIN", "ADMIN"],
+  },
+  {
     key: "Check Your Trip",
     icon: <MdChecklistRtl />,
     label: <Link href="/dashboard/check-your-trip">Check Your Trip</Link>,
