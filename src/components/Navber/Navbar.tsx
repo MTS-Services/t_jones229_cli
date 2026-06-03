@@ -126,10 +126,10 @@ export default function Navbar() {
             <Image
               src={BRAND_LOGO_URL}
               alt="Logo"
-              width={100}
+              width={200}
               height={100}
               unoptimized
-              className="object-contain transition-all duration-700 ease-in-out"
+              className="object-contain w-auto h-12 sm:h-14 md:h-16 lg:h-20 transition-all duration-700 ease-in-out"
               priority
             />
           </Link>

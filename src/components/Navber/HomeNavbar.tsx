@@ -86,20 +86,22 @@ export default function HomeNavbar() {
       <header
         className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 bg-white  ${
           scrolled
-            ? "h-[100px] md:h-[80px] bg-white/95 backdrop-blur-md border-b border-gray-100"
-            : "h-[150px] z-50"
+            ? "h-[88px] md:h-[80px] bg-white/95 backdrop-blur-md border-b border-gray-100"
+            : "h-[120px] md:h-[150px] z-50"
         }`}
       >
-        <nav className="container mx-auto xl:px-4 lg:px-3 px-2 flex items-center justify-between">
-          <div className="transition-all duration-700 ease-in-out origin-center transform hover:scale-105">
-            <Link href="/">
+        <nav className="container mx-auto xl:px-4 lg:px-3 px-2 flex items-center justify-between min-h-0">
+          <div className="shrink-0 max-w-[42%] sm:max-w-none transition-all duration-700 ease-in-out origin-center transform hover:scale-105">
+            <Link href="/" className="block">
               <Image
                 src={BRAND_LOGO_URL}
                 alt="Logo"
                 width={scrolled ? 80 : 100}
                 height={scrolled ? 80 : 100}
                 unoptimized
-                className="object-contain transition-all duration-700 ease-in-out"
+                className={`object-contain w-auto transition-all duration-700 ease-in-out ${
+                  scrolled ? "h-10 md:h-20" : "h-14 md:h-[100px]"
+                }`}
                 priority
               />
             </Link>
