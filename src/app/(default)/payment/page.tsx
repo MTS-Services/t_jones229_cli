@@ -259,9 +259,9 @@ export default function Page() {
         },
       };
 
-      // Determine if this is a GROUP booking (bookingType === false)
+      // PaymentCard uses "true" = shared/group, "false" = private
       const isGroupBooking = bookingType
-        ? !(bookingType.toLowerCase() === "true" || bookingType === "1")
+        ? bookingType.toLowerCase() === "true" || bookingType === "1"
         : false;
 
       // ─── GUEST mode: register + deposit in one call ───
@@ -279,11 +279,7 @@ export default function Page() {
           tripDate: tripDate!,
           groupSize: parseInt(numberOfGuests ?? "1", 10),
           paymentMethodId: paymentMethodId!,
-          bookingType: bookingType
-            ? !(bookingType.toLowerCase() === "true" || bookingType === "1")
-              ? false
-              : true
-            : true,
+          bookingType: !isGroupBooking, // true = PRIVATE, false = GROUP
         });
 
         if ((guestRes as any)?.data?.success) {
