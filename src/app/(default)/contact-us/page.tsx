@@ -187,10 +187,10 @@ export default function Page() {
                           Email Support
                         </h3>
                         <a
-                          href="mailto:tom@thefishinghub.com"
+                          href="mailto:tom@fishingtripper.com"
                           className="text-[#0f5a8b] hover:text-[#1376af] transition-colors"
                         >
-                          tom@thefishinghub.com
+                          tom@fishingtripper.com
                         </a>
                       </div>
                     </div>

@@ -85,7 +85,7 @@ export default function ConfirmationPage() {
   const downloadReceipt = () => {
     // Implement receipt download functionality
     const receiptContent = `
-      THE FISHING HUB - BOOKING CONFIRMATION
+      FISHING TRIPPER - BOOKING CONFIRMATION
       Booking ID: ${bookingDetails.bookingId}
       Date: ${new Date().toLocaleDateString()}
       
@@ -235,11 +235,11 @@ export default function ConfirmationPage() {
                     </p>
                     <div className="space-y-2">
                       <a
-                        href="mailto:tom@thefishinghub.com"
+                        href="mailto:tom@fishingtripper.com"
                         className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
                       >
                         <Mail className="w-4 h-4" />
-                        tom@thefishinghub.com
+                        tom@fishingtripper.com
                       </a>
                       <p className="text-sm text-gray-500 mt-4">
                         Response time: Typically within 1-2 hours

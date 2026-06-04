@@ -27,7 +27,7 @@ export default function WellComeVideo() {
             className="text-2xl sm:text-3xl md:text-5xl 
                          mb-3 font-bold leading-tight text-white"
           >
-            Welcome to <span>The Fishing Hub!</span>
+            Welcome to <span>FishingTripper!</span>
           </h1>
 
           <p

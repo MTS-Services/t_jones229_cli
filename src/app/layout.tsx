@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "The Fishing Hub",
+  title: "FishingTripper",
   description: "Plan Your Perfect Day on the Water",
   icons: {
     icon: [{ url: BRAND_LOGO_URL, type: "image/png" }],
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "The Fishing Hub",
+    title: "FishingTripper",
   },
 };
 

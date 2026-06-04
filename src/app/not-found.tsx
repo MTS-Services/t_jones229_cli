@@ -68,7 +68,7 @@ export default function NotFound() {
           <h1>Get in touch with the site owner</h1>
           <h1 className="text-base font-normal text-[#1565D8] leading-6 flex gap-5 items-center mt-4">
             <PiEnvelopeSimpleOpenBold className="h-5 w-5 text-black font-bold " />
-            tom@thefishinghub.com
+            Fishingtripper@gmail.com
           </h1>
         </div>
       </div>

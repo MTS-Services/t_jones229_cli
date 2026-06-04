@@ -1,8 +1,8 @@
-# The Fishing Hub - Enterprise SaaS Platform Documentation
+# Fishing Tripper - Enterprise SaaS Platform Documentation
 
 ## Executive Summary
 
-**Platform Name:** The Fishing Hub  
+**Platform Name:** Fishing Tripper  
 **Platform Type:** Boat Charter Booking & Management SaaS  
 **Architecture:** Full-stack Next.js 15 application with REST API backend  
 **Payment Provider:** Stripe  
@@ -16,7 +16,7 @@
 
 ### 1.1 Platform Purpose and Core Value
 
-The Fishing Hub is a **multi-sided marketplace** that connects:
+Fishing Tripper is a **multi-sided marketplace** that connects:
 - **Customers** seeking fishing charter experiences
 - **Captains** offering boat charter services  
 - **Administrators** managing platform operations
@@ -40,7 +40,7 @@ The Fishing Hub is a **multi-sided marketplace** that connects:
 ┌──────────────────▼──────────────────────────────────────┐
 │                    Backend API Layer                     │
 │  Express.js / Node.js REST API                          │
-│  Base URL: https://api.thefishinghub.com/api/v1       │
+│  Base URL: https://api.fishingtripper.com/api/v1       │
 └──────────────────┬──────────────────────────────────────┘
                    │
     ┌──────────────┼──────────────┐
@@ -296,13 +296,13 @@ Booking status → CANCELLED, paymentStatus → REFUNDED
 #### Account Verification Email
 
 **Trigger:** User registers with email/password  
-**Sender:** noreply@thefishinghub.com  
-**Subject:** Verify your Fishing Hub account
+**Sender:** noreply@fishingtripper.com  
+**Subject:** Verify your Fishing Tripper account
 
 ```
 Hi {{firstName}},
 
-Welcome to The Fishing Hub! 
+Welcome to Fishing Tripper! 
 
 Please verify your email address to activate your account:
 [Verify Email Button]
@@ -310,13 +310,13 @@ Please verify your email address to activate your account:
 If you didn't create this account, you can safely ignore this email.
 
 Happy fishing!
-The The Fishing Hub Team
+The Fishing Tripper Team
 ```
 
 #### Booking Confirmation Email
 
 **Trigger:** Booking successfully created  
-**Sender:** bookings@thefishinghub.com  
+**Sender:** bookings@fishingtripper.com  
 **Subject:** Booking Confirmed - {{tripName}} on {{tripDate}}
 
 ```
@@ -339,13 +339,13 @@ Booking ID: {{bookingId}}
 [View Booking Details]
 
 See you on the water!
-The Fishing Hub Team
+Fishing Tripper Team
 ```
 
 #### Payment Success Email
 
 **Trigger:** Payment charged successfully  
-**Sender:** payments@thefishinghub.com  
+**Sender:** payments@fishingtripper.com  
 **Subject:** Payment Received - ${{amount}}
 
 ```
@@ -361,13 +361,13 @@ Payment Details:
 
 [Download Receipt]
 
-Thanks for choosing The Fishing Hub!
+Thanks for choosing Fishing Tripper!
 ```
 
 #### Payment Failed Email
 
 **Trigger:** Payment authorization failed  
-**Sender:** payments@thefishinghub.com  
+**Sender:** payments@fishingtripper.com  
 **Subject:** Payment Failed - Action Required
 
 ```
@@ -382,15 +382,15 @@ Please update your payment method to complete your booking:
 
 Your booking will be held for 24 hours.
 
-Need help? Contact support@thefishinghub.com
+Need help? Contact support@fishingtripper.com
 
-The Fishing Hub Team
+Fishing Tripper Team
 ```
 
 #### Refund Processed Email
 
 **Trigger:** Refund issued to customer  
-**Sender:** payments@thefishinghub.com  
+**Sender:** payments@fishingtripper.com  
 **Subject:** Refund Processed - ${{refundAmount}}
 
 ```
@@ -409,7 +409,7 @@ The refund will appear on your {{paymentMethod}} ending in {{last4}}.
 
 Questions? Reply to this email or contact support.
 
-The Fishing Hub Team
+Fishing Tripper Team
 ```
 
 ---
@@ -563,7 +563,7 @@ Booking Amount (Customer Pays) → Platform Fee (%) → Captain Payout
 #### Captain Approval Email
 
 **Trigger:** Admin approves boat listing  
-**Sender:** admin@thefishinghub.com  
+**Sender:** admin@fishingTripper.com  
 **Subject:** Your Boat Listing Has Been Approved!
 
 ```
@@ -584,13 +584,13 @@ Next Steps:
 [Complete Setup]
 
 Welcome aboard!
-The The Fishing Hub Team
+The Fishing Tripper Team
 ```
 
 #### Captain Rejection Email
 
 **Trigger:** Admin rejects boat listing  
-**Sender:** admin@thefishinghub.com  
+**Sender:** admin@fishingTripper.com  
 **Subject:** Boat Listing Requires Updates
 
 ```
@@ -603,15 +603,15 @@ Reason: {{rejectionReason}}
 Please update your listing and resubmit:
 [Update Listing]
 
-Questions? Contact support@thefishinghub.com
+Questions? Contact support@fishingtripper.com
 
-The Fishing Hub Team
+Fishing Tripper Team
 ```
 
 #### New Booking Notification
 
 **Trigger:** Customer books a trip  
-**Sender:** bookings@thefishinghub.com  
+**Sender:** bookings@fishingtripper.com  
 **Subject:** New Booking - {{tripName}} on {{tripDate}}
 
 ```
@@ -632,13 +632,13 @@ Booking ID: {{bookingId}}
 [View Booking] [Contact Customer]
 
 See you on the water!
-The Fishing Hub Team
+Fishing Tripper Team
 ```
 
 #### Trip Completed Summary
 
 **Trigger:** Trip marked as completed  
-**Sender:** trips@thefishinghub.com  
+**Sender:** trips@fishingtripper.com  
 **Subject:** Trip Completed - Payment Processing
 
 ```
@@ -660,13 +660,13 @@ Expected in your account: {{payoutDate}}
 [View Trip Details]
 
 Thanks for being an amazing captain!
-The Fishing Hub Team
+Fishing Tripper Team
 ```
 
 #### Payout Initiated Email
 
 **Trigger:** Payout transfer started  
-**Sender:** payments@thefishinghub.com  
+**Sender:** payments@fishingtripper.com  
 **Subject:** Payout Initiated - ${{payoutAmount}}
 
 ```
@@ -685,13 +685,13 @@ Bank Account: ****{{last4}}
 
 [View Transaction History]
 
-The Fishing Hub Team
+Fishing Tripper Team
 ```
 
 #### Payout Completed Email
 
 **Trigger:** Funds deposited to captain's account  
-**Sender:** payments@thefishinghub.com  
+**Sender:** payments@fishingtripper.com  
 **Subject:** Payout Complete - ${{payoutAmount}}
 
 ```
@@ -707,7 +707,7 @@ Payout Details:
 [Download Statement]
 
 Keep up the great work!
-The Fishing Hub Team
+Fishing Tripper Team
 ```
 
 ---
@@ -800,7 +800,7 @@ The Fishing Hub Team
 #### Refund Confirmation (Admin-Initiated)
 
 **Trigger:** Admin processes manual refund  
-**Sender:** support@thefishinghub.com  
+**Sender:** support@fishingtripper.com  
 **Subject:** Refund Issued - Booking #{{bookingId}}
 
 ```
@@ -820,13 +820,13 @@ The refund will be credited to your original payment method.
 If you have any questions, please reply to this email.
 
 Best regards,
-The Fishing Hub Support Team
+Fishing Tripper Support Team
 ```
 
 #### Dispute Resolution Notice
 
 **Trigger:** Admin resolves a dispute  
-**Sender:** support@thefishinghub.com  
+**Sender:** support@fishingtripper.com  
 **Subject:** Dispute Resolution - Booking #{{bookingId}}
 
 ```
@@ -845,13 +845,13 @@ If a refund was issued, it will appear in 5-10 business days.
 We appreciate your patience. If you need further assistance, please contact us.
 
 Best regards,
-The Fishing Hub Support Team
+Fishing Tripper Support Team
 ```
 
 #### System Alert - Failed Payment
 
 **Trigger:** Payment webhook fails or critical payment error  
-**Sender:** alerts@thefishinghub.com (internal)  
+**Sender:** alerts@fishingtripper.com (internal)  
 **Subject:** [ALERT] Payment Failed - Booking #{{bookingId}}
 
 ```
@@ -873,7 +873,7 @@ Action Required:
 
 [View Booking in Dashboard]
 
-System Alerts - The Fishing Hub
+System Alerts - Fishing Tripper
 ```
 
 ---
@@ -1455,7 +1455,7 @@ Same flow as Scenario 1:
 [Scenario 3: Dispute Resolution]
 
 Customer OR Captain contacts:
-  support@thefishinghub.com
+  support@fishingtripper.com
     ↓
 Support ticket created
     ↓
@@ -1582,12 +1582,12 @@ Admin reviews for pattern/fraud prevention
 
 | Sender Address | Purpose | Example Use Cases |
 |----------------|---------|-------------------|
-| `noreply@thefishinghub.com` | System notifications | Password resets, system updates |
-| `bookings@thefishinghub.com` | Booking-related | Confirmations, cancellations |
-| `payments@thefishinghub.com` | Payment notifications | Payment success, refunds, payouts |
-| `support@thefishinghub.com` | Customer support | Dispute resolutions, help responses |
-| `admin@thefishinghub.com` | Admin actions | Approvals, rejections |
-| `alerts@thefishinghub.com` | Internal system alerts | Failed payments, errors |
+| `noreply@fishingtripper.com` | System notifications | Password resets, system updates |
+| `bookings@fishingtripper.com` | Booking-related | Confirmations, cancellations |
+| `payments@fishingtripper.com` | Payment notifications | Payment success, refunds, payouts |
+| `support@fishingtripper.com` | Customer support | Dispute resolutions, help responses |
+| `admin@fishingTripper.com` | Admin actions | Approvals, rejections |
+| `alerts@fishingtripper.com` | Internal system alerts | Failed payments, errors |
 
 **Subject Line Best Practices:**
 
@@ -1727,7 +1727,7 @@ Admin reviews for pattern/fraud prevention
   <div class="email-container">
     <!-- Header -->
     <div class="email-header">
-      <h1>The Fishing Hub</h1>
+      <h1>Fishing Tripper</h1>
     </div>
     
     <!-- Body -->
@@ -1761,16 +1761,16 @@ Admin reviews for pattern/fraud prevention
       
       <p style="margin-top: 20px;">
         <strong>{{signatureName}}</strong><br>
-        The The Fishing Hub Team
+        The Fishing Tripper Team
       </p>
     </div>
     
     <!-- Footer -->
     <div class="email-footer">
-      <p>© 2026 The Fishing Hub. All rights reserved.</p>
+      <p>© 2026 Fishing Tripper. All rights reserved.</p>
       <p>
         Questions? Reply to this email or contact 
-        <a href="mailto:support@thefishinghub.com">support@thefishinghub.com</a>
+        <a href="mailto:support@fishingtripper.com">support@fishingtripper.com</a>
       </p>
       <p style="margin-top: 10px;">
         <a href="{{unsubscribeUrl}}" style="color: #999;">Unsubscribe</a> | 
@@ -1785,7 +1785,7 @@ Admin reviews for pattern/fraud prevention
 **Plain Text Alternative (Required for Email Deliverability):**
 
 ```
-THE FISHING HUB
+FISHING TRIPPER
 
 Hi {{firstName}},
 
@@ -1803,11 +1803,11 @@ Hi {{firstName}},
 {{closingMessage}}
 
 {{signatureName}}
-The The Fishing Hub Team
+The Fishing Tripper Team
 
 ---
-© 2026 The Fishing Hub. All rights reserved.
-Questions? Reply to this email or contact support@thefishinghub.com
+© 2026 Fishing Tripper. All rights reserved.
+Questions? Reply to this email or contact support@fishingtripper.com
 ```
 
 ### 9.4 Personalization Variables ({{placeholders}})
@@ -1945,7 +1945,7 @@ Questions? Reply to this email or contact support@thefishinghub.com
 
 ### 10.1 Base URL
 ```
-Production: https://api.thefishinghub.com/api/v1
+Production: https://api.fishingtripper.com/api/v1
 Development: Configure via NEXT_PUBLIC_API_URL environment variable
 ```
 
@@ -2073,7 +2073,7 @@ Development: Configure via NEXT_PUBLIC_API_URL environment variable
 | **Booking Status** | Lifecycle state: PENDING, CONFIRMED, CANCELLED, COMPLETED |
 | **Payment Status** | Payment state: UNPAID, PAID, PARTIAL, REFUNDED |
 | **Payout** | Transfer of funds to captain after trip completion |
-| **Platform Fee** | Percentage commission retained by The Fishing Hub (typically 15%) |
+| **Platform Fee** | Percentage commission retained by Fishing Tripper (typically 15%) |
 | **Stripe Connect** | Stripe product enabling marketplace payouts to captains |
 | **Payment Intent** | Stripe object representing a customer payment |
 | **Payment Method** | Tokenized representation of card or payment source |
@@ -2221,7 +2221,7 @@ Development: Configure via NEXT_PUBLIC_API_URL environment variable
 **Version:** 1.0  
 **Last Updated:** February 5, 2026  
 **Prepared By:** Senior Product Designer & Enterprise SaaS Architect  
-**Document Owner:** The Fishing Hub Product Team  
+**Document Owner:** Fishing Tripper Product Team  
 **Review Cycle:** Quarterly  
 **Next Review Date:** May 5, 2026
 

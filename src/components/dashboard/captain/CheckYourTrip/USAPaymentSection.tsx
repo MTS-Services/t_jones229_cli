@@ -57,7 +57,7 @@ const USAPaymentSection: React.FC = () => {
           </h2>
         </div>
         <p className="text-gray-600 text-base md:text-lg max-w-3xl">
-          We need a few details to complete your Fishing Hub booking. Your
+          We need a few details to complete your Fishing Tripper booking. Your
           information is securely stored and only used for booking purposes.
         </p>
       </div>

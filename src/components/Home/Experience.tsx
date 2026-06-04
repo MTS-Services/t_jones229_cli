@@ -8,7 +8,7 @@ export default function Experience() {
       <div className="container mx-auto py-10 lg:py-12 xl:py-20 xl:px-6 lg:px-5 md:px-4 px-3">
         <div className="text-center">
           <p className="font-bold text-white text-sm md:text-lg uppercase mb-2 tracking-wide">
-            WHY CHOOSE THE FISHING HUB?
+            WHY CHOOSE FISHING TRIPPER?
           </p>
           <h1 className="md:my-4 my-3 text-white text-3xl md:text-5xl font-normal">
             Experience Fishing Like Never Before

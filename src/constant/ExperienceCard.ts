@@ -15,6 +15,6 @@ export const cardData = [
     icon: "/Experience/Thumb_Up.png",
     title: "No customer fees",
     description:
-      "There are no hidden fees or commissions when you book through The Fishing Hub",
+      "There are no hidden fees or commissions when you book through FishingTripper",
   },
 ];

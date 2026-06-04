@@ -174,7 +174,7 @@ export default function Support() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800 mb-1">Company</p>
-                  <p className="text-gray-600">The Fishing Hub Admin</p>
+                  <p className="text-gray-600">Fishing Tripper Admin</p>
                 </div>
               </div>
 

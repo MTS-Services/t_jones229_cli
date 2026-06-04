@@ -19,7 +19,7 @@ export default function BoatCreator() {
             <div className="flex-shrink-0">
               <Image
                 src={BRAND_LOGO_URL}
-                alt="The Fishing Hub Logo"
+                alt="Fishing Tripper Logo"
                 height={200}
                 width={200}
                 unoptimized
@@ -36,7 +36,7 @@ export default function BoatCreator() {
 
               {/* Description */}
               <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-4 sm:mb-5 md:mb-6 leading-relaxed">
-                Thanks for listing your boat with The Fishing Hub! Your payment
+                Thanks for listing your boat with Fishing Tripper! Your payment
                 is set up, and your listing is now under review.
               </p>
               {/* Status Badge - Full width on mobile, auto on larger screens */}

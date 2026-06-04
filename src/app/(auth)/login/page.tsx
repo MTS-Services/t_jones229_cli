@@ -14,7 +14,7 @@ export default function Page() {
         >
           <Image
             src={BRAND_LOGO_URL}
-            alt="The Fishing Hub Logo - Return to homepage"
+            alt="FishingTripper Logo - Return to homepage"
             height={100}
             width={200}
             unoptimized
