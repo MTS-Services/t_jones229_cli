@@ -1,5 +1,5 @@
 export const BRAND_LOGO_URL =
-  "https://res.cloudinary.com/dfpjphjff/image/upload/v1780399460/logo.png";
+  "https://res.cloudinary.com/dp73fgjub/image/upload/v1759903295/cd9fd8629144cf90a194585b23cc5f92a899a445_ro9p4j.png";
 
 export const BRAND_LOGO_ALT = "Fishing Tripper";
 
