@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Popover } from "antd";
-import dayjs, { Dayjs } from "dayjs";
-import { CalendarDays, ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import dayjs from "dayjs";
+import { CalendarDays, Clock, X } from "lucide-react";
 import {
   groupSchedulesByDate,
   GroupedScheduleDay,
@@ -17,21 +17,24 @@ interface TripScheduleHoverViewProps {
   departureTime?: string;
 }
 
-const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-
-function getCalendarDays(viewMonth: Dayjs): Dayjs[] {
-  const monthStart = viewMonth.startOf("month");
-  const monthEnd = viewMonth.endOf("month");
-  const gridStart = monthStart.subtract(monthStart.day(), "day");
-  const gridEnd = monthEnd.add(6 - monthEnd.day(), "day");
-
-  const days: Dayjs[] = [];
-  let current = gridStart;
-  while (current.isBefore(gridEnd) || current.isSame(gridEnd, "day")) {
-    days.push(current);
-    current = current.add(1, "day");
+function groupByMonth(days: GroupedScheduleDay[]) {
+  const map = new Map<string, GroupedScheduleDay[]>();
+  for (const day of days) {
+    const key = dayjs(day.date).format("YYYY-MM");
+    const bucket = map.get(key) ?? [];
+    bucket.push(day);
+    map.set(key, bucket);
   }
-  return days;
+  return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+}
+
+function slotHours(startTime: string, endTime: string): string {
+  const [sh, sm] = startTime.split(":").map(Number);
+  const [eh, em] = endTime.split(":").map(Number);
+  const mins = eh * 60 + em - (sh * 60 + sm);
+  if (mins <= 0) return "";
+  const h = mins / 60;
+  return h % 1 === 0 ? `${h}h` : `${h.toFixed(1)}h`;
 }
 
 export default function TripScheduleHoverView({
@@ -44,20 +47,21 @@ export default function TripScheduleHoverView({
     () => groupSchedulesByDate(schedules),
     [schedules],
   );
-  const scheduleByDate = useMemo(
-    () => new Map(grouped.map((day) => [day.date, day])),
-    [grouped],
-  );
-  const [viewMonth, setViewMonth] = useState<Dayjs>(
-    () => dayjs(grouped[0]?.date || undefined),
-  );
-  const [activeDate, setActiveDate] = useState<string | null>(null);
+  const months = useMemo(() => groupByMonth(grouped), [grouped]);
   const [open, setOpen] = useState(false);
+  const [monthFilter, setMonthFilter] = useState<string>("all");
+  const [mounted, setMounted] = useState(false);
 
-  const calendarDays = useMemo(
-    () => getCalendarDays(viewMonth),
-    [viewMonth],
-  );
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   if (grouped.length === 0) {
     const hasLegacy =
@@ -96,164 +100,176 @@ export default function TripScheduleHoverView({
   }
 
   const totalSlots = grouped.reduce((sum, day) => sum + day.slots.length, 0);
-  const activeDay: GroupedScheduleDay | undefined = activeDate
-    ? scheduleByDate.get(activeDate)
-    : undefined;
+  const firstDate = dayjs(grouped[0].date).format("MMM D");
+  const lastDate = dayjs(grouped[grouped.length - 1].date).format("MMM D, YYYY");
 
-  const selectDate = (key: string, hasSlots: boolean) => {
-    if (!hasSlots) return;
-    setActiveDate(key);
-  };
+  const visibleDays =
+    monthFilter === "all"
+      ? grouped
+      : grouped.filter((d) => dayjs(d.date).format("YYYY-MM") === monthFilter);
 
-  const popoverContent = (
-    <div className="w-[min(calc(100vw-2rem),320px)] sm:w-[340px]">
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <div>
-          <p className="text-sm font-semibold text-gray-900">
-            Available dates &amp; times
-          </p>
-          <p className="mt-0.5 text-[11px] leading-snug text-gray-500">
-            Tap or hover a highlighted date to view slots
-          </p>
-        </div>
-        <span className="shrink-0 rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-medium text-orange-700">
-          {grouped.length} dates
-        </span>
-      </div>
-
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-3 py-2">
-          <button
-            type="button"
-            aria-label="Previous month"
-            onClick={() => setViewMonth((m) => m.subtract(1, "month"))}
-            className="rounded-md p-1 text-gray-500 transition-colors hover:bg-white hover:text-gray-800"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <span className="text-sm font-semibold text-gray-800">
-            {viewMonth.format("MMMM YYYY")}
-          </span>
-          <button
-            type="button"
-            aria-label="Next month"
-            onClick={() => setViewMonth((m) => m.add(1, "month"))}
-            className="rounded-md p-1 text-gray-500 transition-colors hover:bg-white hover:text-gray-800"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-7 gap-0.5 px-2 pt-2">
-          {WEEKDAYS.map((label) => (
-            <div
-              key={label}
-              className="py-1 text-center text-[10px] font-semibold uppercase tracking-wide text-gray-400"
-            >
-              {label}
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-7 gap-1 px-2 pb-3 pt-1">
-          {calendarDays.map((date) => {
-            const key = date.format("YYYY-MM-DD");
-            const daySchedule = scheduleByDate.get(key);
-            const hasSlots = !!daySchedule;
-            const isActive = activeDate === key;
-            const isCurrentMonth = date.month() === viewMonth.month();
-
-            return (
-              <button
-                key={key}
-                type="button"
-                disabled={!hasSlots}
-                onMouseEnter={() => selectDate(key, hasSlots)}
-                onFocus={() => selectDate(key, hasSlots)}
-                onClick={() => selectDate(key, hasSlots)}
-                className={`flex min-h-[44px] flex-col items-center justify-center rounded-lg px-0.5 py-1 text-center transition-colors sm:min-h-[48px] ${
-                  isActive
-                    ? "bg-orange-500 text-white ring-2 ring-orange-300 ring-inset"
-                    : hasSlots
-                      ? "cursor-pointer bg-orange-50 font-semibold text-orange-700 hover:bg-orange-100"
-                      : isCurrentMonth
-                        ? "text-gray-400"
-                        : "text-gray-300"
-                }`}
-              >
-                <span className="text-xs leading-none sm:text-sm">
-                  {date.date()}
-                </span>
-                {daySchedule ? (
-                  <span
-                    className={`mt-0.5 text-[9px] leading-tight ${
-                      isActive ? "text-orange-50" : "text-orange-600"
-                    }`}
-                  >
-                    {daySchedule.slots.length} slot
-                    {daySchedule.slots.length !== 1 ? "s" : ""}
-                  </span>
-                ) : null}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="mt-3 h-24 overflow-y-auto rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5">
-        {activeDay ? (
-          <>
-            <p className="text-xs font-semibold text-gray-800">
-              {dayjs(activeDay.date).format("ddd, MMM D, YYYY")}
-            </p>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {activeDay.slots.map((slot, index) => (
-                <span
-                  key={`${activeDay.date}-${index}`}
-                  className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-700"
-                >
-                  <Clock className="h-3 w-3 shrink-0 text-orange-500" />
-                  {slot.startTime} – {slot.endTime}
-                </span>
-              ))}
-            </div>
-          </>
-        ) : (
-          <p className="text-xs italic text-gray-400">
-            Select a highlighted date to view its times
-          </p>
-        )}
-      </div>
-    </div>
-  );
-
-  return (
-    <Popover
-      content={popoverContent}
-      trigger="click"
-      placement="bottomLeft"
-      open={open}
-      onOpenChange={(nextOpen) => {
-        setOpen(nextOpen);
-        if (!nextOpen) setActiveDate(null);
-      }}
-      overlayStyle={{ zIndex: 10050, maxWidth: "calc(100vw - 16px)" }}
-      overlayInnerStyle={{ padding: 12 }}
-      autoAdjustOverflow
-      destroyOnHidden={false}
+  const modal = open ? (
+    <div
+      className="fixed inset-0 z-[10060] flex items-end justify-center p-0 sm:items-center sm:p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="trip-schedule-title"
     >
       <button
         type="button"
-        className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
-        aria-label="View trip schedule"
-        aria-expanded={open}
+        className="absolute inset-0 bg-black/50"
+        aria-label="Close schedule"
+        onClick={() => setOpen(false)}
+      />
+
+      <div className="relative flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[85vh] sm:max-w-lg sm:rounded-2xl">
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-gray-100 bg-gradient-to-r from-orange-50 to-blue-50 px-4 py-4 sm:px-5">
+          <div className="min-w-0">
+            <div className="mb-1 flex items-center gap-2">
+              <div className="rounded-lg bg-white p-1.5 shadow-sm">
+                <CalendarDays className="h-4 w-4 text-orange-500" />
+              </div>
+              <h3
+                id="trip-schedule-title"
+                className="text-base font-bold text-gray-900 sm:text-lg"
+              >
+                Trip schedule
+              </h3>
+            </div>
+            <p className="text-xs text-gray-600 sm:text-sm">
+              {grouped.length} date{grouped.length !== 1 ? "s" : ""} ·{" "}
+              {totalSlots} time slot{totalSlots !== 1 ? "s" : ""} · {firstDate}
+              – {lastDate}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-white/80 hover:text-gray-800"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {months.length > 1 && (
+          <div className="shrink-0 border-b border-gray-100 px-4 py-3 sm:px-5">
+            <div className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <button
+                type="button"
+                onClick={() => setMonthFilter("all")}
+                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                  monthFilter === "all"
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                All dates
+              </button>
+              {months.map(([key, days]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setMonthFilter(key)}
+                  className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                    monthFilter === key
+                      ? "bg-orange-500 text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  {dayjs(`${key}-01`).format("MMM YYYY")} ({days.length})
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-5 sm:py-4">
+          <div className="space-y-3">
+            {visibleDays.map((day) => (
+              <article
+                key={day.date}
+                className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4"
+              >
+                <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {dayjs(day.date).format("dddd, MMM D, YYYY")}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {day.slots.length} time slot
+                      {day.slots.length !== 1 ? "s" : ""} available
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-orange-50 px-2.5 py-1 text-[11px] font-semibold text-orange-700">
+                    {dayjs(day.date).format("ddd")}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {day.slots.map((slot, index) => {
+                    const hours = slotHours(slot.startTime, slot.endTime);
+                    return (
+                      <div
+                        key={`${day.date}-${index}`}
+                        className="flex items-center gap-2.5 rounded-lg border border-orange-100 bg-orange-50/60 px-3 py-2.5"
+                      >
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+                          <Clock className="h-4 w-4 text-orange-500" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-gray-900">
+                            {slot.startTime} – {slot.endTime}
+                          </p>
+                          {hours ? (
+                            <p className="text-[11px] text-gray-500">
+                              {hours} trip
+                            </p>
+                          ) : null}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="shrink-0 border-t border-gray-100 px-4 py-3 sm:px-5">
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="w-full rounded-xl bg-gray-900 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : null;
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex max-w-full items-center gap-2 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-2 text-left text-xs font-medium text-blue-800 transition-all hover:border-blue-300 hover:shadow-sm sm:text-sm"
+        aria-label="View full trip schedule"
       >
-        <CalendarDays className="h-3.5 w-3.5 shrink-0" />
-        <span className="truncate">
-          {grouped.length} date{grouped.length !== 1 ? "s" : ""} · {totalSlots}{" "}
-          slot{totalSlots !== 1 ? "s" : ""}
+        <CalendarDays className="h-4 w-4 shrink-0 text-blue-600" />
+        <span className="min-w-0">
+          <span className="block font-semibold">
+            {grouped.length} date{grouped.length !== 1 ? "s" : ""} · {totalSlots}{" "}
+            slot{totalSlots !== 1 ? "s" : ""}
+          </span>
+          <span className="block truncate text-[11px] font-normal text-blue-600/80 sm:text-xs">
+            Tap to view all times
+          </span>
         </span>
       </button>
-    </Popover>
+
+      {mounted && modal ? createPortal(modal, document.body) : null}
+    </>
   );
 }
