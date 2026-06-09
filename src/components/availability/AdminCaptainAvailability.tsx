@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Ban, CalendarIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Calendar } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import { Ban, CalendarDays } from "lucide-react";
 import { toast } from "react-toastify";
 import AvailabilityBlocksList from "./AvailabilityBlocksList";
 import {
   useCreateAdminBlockMutation,
   useGetAvailabilityBlocksQuery,
+  useGetCaptainScheduleMonthQuery,
   useGetCaptainScheduledTimesQuery,
   type CaptainScheduledTime,
 } from "@/redux/api/availabilityApi";
@@ -20,20 +23,31 @@ export default function AdminCaptainAvailability({
   captainId,
   captainName,
 }: AdminCaptainAvailabilityProps) {
-  const today = new Date().toISOString().split("T")[0];
-  const [activeDate, setActiveDate] = useState(today);
+  const today = dayjs().startOf("day");
+  const todayStr = today.format("YYYY-MM-DD");
+  const [viewMonth, setViewMonth] = useState<Dayjs>(today);
+  const [activeDate, setActiveDate] = useState(todayStr);
   const [selectedSlotIds, setSelectedSlotIds] = useState<Set<string>>(
     new Set(),
   );
   const [reason, setReason] = useState("");
   const [blockFullDay, setBlockFullDay] = useState(false);
 
-  const now = new Date();
+  const calendarMonth = viewMonth.month() + 1;
+  const calendarYear = viewMonth.year();
+
   const { data: blocks = [], refetch: refetchBlocks } =
     useGetAvailabilityBlocksQuery({
       captainId,
-      month: now.getMonth() + 1,
-      year: now.getFullYear(),
+      month: calendarMonth,
+      year: calendarYear,
+    });
+
+  const { data: monthDays = [], isFetching: loadingMonth } =
+    useGetCaptainScheduleMonthQuery({
+      captainId,
+      month: calendarMonth,
+      year: calendarYear,
     });
 
   const { data: scheduledTimes = [], isFetching: loadingTimes } =
@@ -44,12 +58,23 @@ export default function AdminCaptainAvailability({
 
   const [createAdminBlock, { isLoading }] = useCreateAdminBlockMutation();
 
+  const monthDayMap = useMemo(
+    () => new Map(monthDays.map((d) => [d.date, d])),
+    [monthDays],
+  );
+
   const availableSlots = scheduledTimes.filter((slot) => slot.available);
+  const activeDaySummary = monthDayMap.get(activeDate);
 
   useEffect(() => {
     setSelectedSlotIds(new Set());
     setBlockFullDay(false);
   }, [activeDate]);
+
+  const selectCalendarDate = (date: Dayjs) => {
+    if (date.isBefore(today, "day")) return;
+    setActiveDate(date.format("YYYY-MM-DD"));
+  };
 
   const toggleSlot = (scheduleId: string) => {
     setBlockFullDay(false);
@@ -130,15 +155,7 @@ export default function AdminCaptainAvailability({
     return blockDate === activeDate;
   });
 
-  const formattedDate = new Date(activeDate + "T12:00:00").toLocaleDateString(
-    "en-US",
-    {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    },
-  );
+  const formattedDate = dayjs(activeDate).format("ddd, MMM D, YYYY");
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
@@ -151,135 +168,187 @@ export default function AdminCaptainAvailability({
             Block Captain Availability
           </h2>
           <p className="text-sm text-gray-500">
-            Pick a date, select one or more of {captainName || "captain"}&apos;s
-            scheduled times to block, or block the entire day.
+            Use the calendar to pick a day with {captainName || "captain"}&apos;s
+            trip times, select slots to block, or block the full day.
           </p>
         </div>
       </div>
 
-      <div className="mb-4 max-w-sm">
-        <label className="flex items-center gap-2 text-sm text-gray-700 mb-2">
-          <CalendarIcon className="h-4 w-4 text-gray-400" />
-          Select date
-        </label>
-        <input
-          type="date"
-          value={activeDate}
-          min={today}
-          onChange={(e) => setActiveDate(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-        />
-      </div>
-
-      <div className="mb-4 border border-blue-100 rounded-lg p-4 bg-blue-50/50">
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <h3 className="text-sm font-semibold text-gray-900">
-            Available times on {formattedDate}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Captain schedule calendar (same style as client trip picker) */}
+        <div className="border border-gray-200 rounded-xl p-4 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+            <CalendarDays className="h-4 w-4 text-orange-500" />
+            Captain trip calendar
           </h3>
-          {availableSlots.length > 0 && (
-            <span className="text-xs text-gray-500">
-              Click to select · {selectedSlotIds.size} selected
-            </span>
-          )}
-        </div>
-
-        {loadingTimes ? (
-          <p className="text-xs text-gray-500">Loading captain times...</p>
-        ) : scheduledTimes.length === 0 ? (
-          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
-            No trip schedules on this date. The captain has not added calendar
-            times for this day yet.
+          <p className="text-xs text-gray-500 mb-3">
+            Orange = has scheduled times · Green count = still available
           </p>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {scheduledTimes.map((slot) => {
-              const isSelected = selectedSlotIds.has(slot.scheduleId);
-              const isDisabled = !slot.available;
 
-              return (
-                <button
-                  key={slot.scheduleId}
-                  type="button"
-                  disabled={isDisabled}
-                  onClick={() => !isDisabled && toggleSlot(slot.scheduleId)}
-                  className={`rounded-lg border px-3 py-2 text-left text-sm transition-all min-w-[140px] ${
-                    isDisabled
-                      ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : isSelected
-                        ? "border-red-600 bg-red-600 text-white font-bold shadow-md ring-2 ring-red-300"
-                        : "border-gray-200 bg-white text-gray-800 hover:border-red-300 hover:bg-red-50"
-                  }`}
-                >
-                  <span className="block font-semibold">
-                    {slot.startTime} – {slot.endTime}
-                  </span>
-                  <span
-                    className={`block text-xs mt-0.5 ${
-                      isSelected ? "text-red-100" : "text-gray-500"
+          <div className="bg-white border border-gray-200 rounded-lg p-2">
+            <Calendar
+              fullscreen={false}
+              value={dayjs(activeDate)}
+              onPanelChange={(date) => setViewMonth(date)}
+              onSelect={selectCalendarDate}
+              disabledDate={(current) =>
+                current ? current.isBefore(today, "day") : false
+              }
+              fullCellRender={(date) => {
+                const key = date.format("YYYY-MM-DD");
+                const summary = monthDayMap.get(key);
+                const isSelected = key === activeDate;
+                const hasSlots = !!summary && summary.totalSlots > 0;
+
+                return (
+                  <div
+                    className={`mx-auto rounded px-0.5 py-1 text-center min-h-[42px] ${
+                      isSelected
+                        ? "bg-blue-600 text-white font-bold ring-2 ring-blue-300"
+                        : hasSlots
+                          ? "bg-orange-100 text-orange-800 font-semibold"
+                          : ""
                     }`}
                   >
-                    {slot.tripName}
-                    {slot.booked && " · Booked"}
-                    {slot.blocked && " · Blocked"}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      <AvailabilityBlocksList
-        blocks={blocksForActiveDate}
-        onDeleted={() => refetchBlocks()}
-      />
-
-      <div className="space-y-4 border-t border-gray-100 pt-4 mt-4">
-        <input
-          type="text"
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          placeholder="Reason (optional)"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm max-w-md"
-        />
-
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            disabled={isLoading || selectedSlotIds.size === 0}
-            onClick={handleBlockSelectedSlots}
-            className="py-2 px-5 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg"
-          >
-            {isLoading
-              ? "Blocking..."
-              : selectedSlotIds.size > 0
-                ? `Block ${selectedSlotIds.size} Selected Time${selectedSlotIds.size !== 1 ? "s" : ""}`
-                : "Block Selected Times"}
-          </button>
-
-          <label className="flex items-center gap-2 text-sm cursor-pointer">
-            <input
-              type="checkbox"
-              checked={blockFullDay}
-              onChange={(e) => {
-                setBlockFullDay(e.target.checked);
-                if (e.target.checked) setSelectedSlotIds(new Set());
+                    <div>{date.date()}</div>
+                    {hasSlots && (
+                      <div
+                        className={`text-[9px] leading-tight ${
+                          isSelected ? "text-blue-100" : "text-orange-600"
+                        }`}
+                      >
+                        {summary.availableSlots}/{summary.totalSlots} free
+                      </div>
+                    )}
+                  </div>
+                );
               }}
-              className="rounded"
             />
-            Block entire day
-          </label>
+          </div>
 
-          {blockFullDay && (
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={handleBlockFullDay}
-              className="py-2 px-5 bg-red-800 hover:bg-red-900 disabled:opacity-50 text-white text-sm font-medium rounded-lg"
-            >
-              Confirm Full Day Block
-            </button>
+          {loadingMonth && (
+            <p className="text-xs text-gray-400 mt-2">Loading calendar...</p>
           )}
+        </div>
+
+        {/* Time slots for selected day */}
+        <div className="border border-blue-100 rounded-xl p-4 bg-blue-50/30 flex flex-col">
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <h3 className="text-sm font-semibold text-gray-900">
+              Times on {formattedDate}
+            </h3>
+            {availableSlots.length > 0 && (
+              <span className="text-xs text-gray-500">
+                {selectedSlotIds.size} selected
+              </span>
+            )}
+          </div>
+
+          {activeDaySummary && (
+            <p className="text-xs text-gray-600 mb-3">
+              {activeDaySummary.availableSlots} of {activeDaySummary.totalSlots}{" "}
+              slot{activeDaySummary.totalSlots !== 1 ? "s" : ""} still available
+            </p>
+          )}
+
+          {loadingTimes ? (
+            <p className="text-xs text-gray-500">Loading times...</p>
+          ) : scheduledTimes.length === 0 ? (
+            <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+              No trip schedules on this date. Pick an orange date on the
+              calendar or the captain must add times first.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-2 flex-1 content-start">
+              {scheduledTimes.map((slot) => {
+                const isSelected = selectedSlotIds.has(slot.scheduleId);
+                const isDisabled = !slot.available;
+
+                return (
+                  <button
+                    key={slot.scheduleId}
+                    type="button"
+                    disabled={isDisabled}
+                    onClick={() => !isDisabled && toggleSlot(slot.scheduleId)}
+                    className={`rounded-lg border px-3 py-2 text-left text-sm transition-all min-w-[150px] ${
+                      isDisabled
+                        ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : isSelected
+                          ? "border-red-600 bg-red-600 text-white font-bold shadow-md ring-2 ring-red-300"
+                          : "border-gray-200 bg-white text-gray-800 hover:border-red-300 hover:bg-red-50"
+                    }`}
+                  >
+                    <span className="block font-semibold">
+                      {slot.startTime} – {slot.endTime}
+                    </span>
+                    <span
+                      className={`block text-xs mt-0.5 ${
+                        isSelected ? "text-red-100" : "text-gray-500"
+                      }`}
+                    >
+                      {slot.tripName}
+                      {slot.booked && " · Booked"}
+                      {slot.blocked && " · Blocked"}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <AvailabilityBlocksList
+            blocks={blocksForActiveDate}
+            onDeleted={() => refetchBlocks()}
+          />
+
+          <div className="space-y-3 border-t border-gray-200 pt-4 mt-4">
+            <input
+              type="text"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="Reason (optional)"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+            />
+
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                disabled={isLoading || selectedSlotIds.size === 0}
+                onClick={handleBlockSelectedSlots}
+                className="py-2 px-5 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg"
+              >
+                {isLoading
+                  ? "Blocking..."
+                  : selectedSlotIds.size > 0
+                    ? `Block ${selectedSlotIds.size} Selected`
+                    : "Block Selected Times"}
+              </button>
+
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={blockFullDay}
+                  onChange={(e) => {
+                    setBlockFullDay(e.target.checked);
+                    if (e.target.checked) setSelectedSlotIds(new Set());
+                  }}
+                  className="rounded"
+                />
+                Block entire day
+              </label>
+
+              {blockFullDay && (
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={handleBlockFullDay}
+                  className="py-2 px-5 bg-red-800 hover:bg-red-900 disabled:opacity-50 text-white text-sm font-medium rounded-lg"
+                >
+                  Confirm Full Day Block
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

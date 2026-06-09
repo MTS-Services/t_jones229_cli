@@ -41,6 +41,12 @@ export interface CaptainScheduledTime {
   available: boolean;
 }
 
+export interface CaptainScheduleDaySummary {
+  date: string;
+  totalSlots: number;
+  availableSlots: number;
+}
+
 export interface CreateBlockPayload {
   captainId?: string;
   date: string;
@@ -62,6 +68,19 @@ const availabilityApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (response: { data: CaptainScheduledTime[] }) =>
+        response.data,
+      providesTags: ["availability"],
+    }),
+
+    getCaptainScheduleMonth: build.query<
+      CaptainScheduleDaySummary[],
+      { captainId: string; month: number; year: number }
+    >({
+      query: ({ captainId, month, year }) => ({
+        url: `/availability/captain-schedule-month?captainId=${captainId}&month=${month}&year=${year}`,
+        method: "GET",
+      }),
+      transformResponse: (response: { data: CaptainScheduleDaySummary[] }) =>
         response.data,
       providesTags: ["availability"],
     }),
@@ -137,6 +156,7 @@ const availabilityApi = baseApi.injectEndpoints({
 
 export const {
   useGetCaptainScheduledTimesQuery,
+  useGetCaptainScheduleMonthQuery,
   useGetTimeSlotsQuery,
   useLazyGetTimeSlotsQuery,
   useCheckTripAvailabilityQuery,
