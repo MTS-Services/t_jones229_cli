@@ -102,9 +102,9 @@ export default function TripScheduleHoverView({
 
             return (
               <div
-                className={`mx-auto rounded px-0.5 py-1 text-center transition-colors ${
+                className={`mx-auto min-h-[40px] rounded px-0.5 py-1 text-center transition-colors ${
                   isHovered
-                    ? "bg-orange-500 text-white shadow-sm"
+                    ? "bg-orange-500 text-white ring-2 ring-orange-400 ring-inset"
                     : hasSlots
                       ? "bg-orange-100 font-semibold text-orange-700 cursor-pointer hover:bg-orange-200"
                       : ""
@@ -133,7 +133,7 @@ export default function TripScheduleHoverView({
         />
       </div>
 
-      <div className="mt-3 min-h-[72px] rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5">
+      <div className="mt-3 h-24 overflow-y-auto rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5">
         {hoveredDay ? (
           <>
             <p className="text-xs font-semibold text-gray-800">
@@ -164,9 +164,11 @@ export default function TripScheduleHoverView({
     <Popover
       content={popoverContent}
       title="Available dates & times"
-      trigger={["hover", "click"]}
+      trigger="click"
       placement="topLeft"
       overlayStyle={{ zIndex: 10050 }}
+      autoAdjustOverflow={false}
+      destroyOnHidden={false}
       onOpenChange={(open) => {
         if (!open) setHoveredDate(null);
       }}
