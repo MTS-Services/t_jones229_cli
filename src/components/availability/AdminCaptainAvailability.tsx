@@ -124,7 +124,9 @@ export default function AdminCaptainAvailability({
     });
   };
 
-  const blockOneSlot = async (slot: CaptainScheduledTime) => {
+  const blockOneSlot = async (
+    slot: CaptainScheduledTime,
+  ): Promise<{ ok: boolean; message?: string }> => {
     try {
       await createAdminBlock({
         captainId,
@@ -134,9 +136,12 @@ export default function AdminCaptainAvailability({
         endTime: slot.endTime,
         reason: reason || `Blocked: ${slot.tripName}`,
       }).unwrap();
-      return true;
-    } catch {
-      return false;
+      return { ok: true };
+    } catch (err: any) {
+      return {
+        ok: false,
+        message: err?.data?.message || "Could not block this time slot",
+      };
     }
   };
 
@@ -150,10 +155,20 @@ export default function AdminCaptainAvailability({
       selectedSlotIds.has(s.scheduleId),
     );
 
+    if (slotsToBlock.length === 0) {
+      toast.error(
+        "Selected slots are no longer available. Refresh and try again.",
+      );
+      return;
+    }
+
     let successCount = 0;
+    let lastError: string | undefined;
+
     for (const slot of slotsToBlock) {
-      const ok = await blockOneSlot(slot);
-      if (ok) successCount++;
+      const result = await blockOneSlot(slot);
+      if (result.ok) successCount++;
+      else lastError = result.message;
     }
 
     if (successCount > 0) {
@@ -166,7 +181,7 @@ export default function AdminCaptainAvailability({
       setReason("");
       refetchBlocks();
     } else {
-      toast.error("Could not block selected times");
+      toast.error(lastError || "Could not block selected times");
     }
   };
 

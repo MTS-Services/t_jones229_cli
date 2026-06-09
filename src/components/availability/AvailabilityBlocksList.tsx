@@ -12,25 +12,28 @@ interface AvailabilityBlocksListProps {
   onDeleted?: () => void;
 }
 
-function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+/** Format stored block/booking instants as wall-clock HH:mm (matches trip schedule strings on UTC server) */
+export function formatWallClockTime(iso: string | Date): string {
+  const d = typeof iso === "string" ? new Date(iso) : iso;
+  const h = String(d.getUTCHours()).padStart(2, "0");
+  const m = String(d.getUTCMinutes()).padStart(2, "0");
+  return `${h}:${m}`;
 }
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
+/** Format stored block/booking instants as calendar date (UTC wall-clock day) */
+export function formatWallClockDate(iso: string | Date): string {
+  const d = typeof iso === "string" ? new Date(iso) : iso;
+  return d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
+    timeZone: "UTC",
   });
 }
 
 function getBlockLabel(block: AvailabilityBlock): string {
-  const startDate = formatDate(block.startDateTime);
-  const endDate = formatDate(block.endDateTime);
+  const startDate = formatWallClockDate(block.startDateTime);
+  const endDate = formatWallClockDate(block.endDateTime);
 
   if (block.isFullDay && startDate !== endDate) {
     return `${startDate} – ${endDate}`;
@@ -40,7 +43,7 @@ function getBlockLabel(block: AvailabilityBlock): string {
     return `Full day · ${startDate}`;
   }
 
-  return `${formatTime(block.startDateTime)} – ${formatTime(block.endDateTime)} · ${startDate}`;
+  return `${formatWallClockTime(block.startDateTime)} – ${formatWallClockTime(block.endDateTime)} · ${startDate}`;
 }
 
 export default function AvailabilityBlocksList({
