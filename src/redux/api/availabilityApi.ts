@@ -29,6 +29,18 @@ export interface BoatTimeSlot {
   reason?: string;
 }
 
+export interface CaptainScheduledTime {
+  scheduleId: string;
+  tripId: string;
+  tripName: string;
+  boatId: string;
+  startTime: string;
+  endTime: string;
+  booked: boolean;
+  blocked: boolean;
+  available: boolean;
+}
+
 export interface CreateBlockPayload {
   captainId?: string;
   date: string;

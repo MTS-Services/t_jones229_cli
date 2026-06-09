@@ -62,6 +62,7 @@ const BookingApi = baseApi.injectEndpoints({
       query: (data: {
         boatId: string;
         tripId: string;
+        scheduleId?: string;
         tripDate: string; // ISO date
         groupSize: number;
         paymentMethodId: string;
@@ -113,6 +114,7 @@ const BookingApi = baseApi.injectEndpoints({
         };
         boatId: string;
         tripId: string;
+        scheduleId?: string;
         tripDate: string;
         groupSize: number;
         paymentMethodId: string;
