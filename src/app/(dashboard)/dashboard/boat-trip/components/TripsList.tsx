@@ -1,13 +1,10 @@
 import React from "react";
 import {
   Fish,
-  Clock,
   DollarSign,
-  Clock3,
   Tag,
   ImageOff,
   Trash2,
-  Calendar,
   MapPin,
 } from "lucide-react";
 import { Trip, BoatPhoto } from "../types";
@@ -15,6 +12,7 @@ import { getTripStatusColor } from "../utils";
 import { useDeleteTripMutation } from "@/redux/api/boatApi";
 import { toast } from "react-toastify";
 import { DeleteConfirmModal } from "./DeleteConfirmModal";
+import TripScheduleHoverView from "@/components/availability/TripScheduleHoverView";
 
 interface TripsListProps {
   trips: Trip[];
@@ -122,17 +120,9 @@ export const TripsList: React.FC<TripsListProps> = ({ trips, boatPhotos }) => {
                   {trip.description}
                 </p>
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="flex items-center space-x-1 text-sm text-gray-600">
-                    <Clock className="w-3 h-3 flex-shrink-0" />
-                    <span>{trip.duration}h</span>
-                  </div>
                   <div className="flex items-center space-x-1 text-sm text-green-700">
                     <DollarSign className="w-3 h-3 flex-shrink-0 " />
-                    <span>{trip.price}</span>
-                  </div>
-                  <div className="flex items-center space-x-1 text-sm text-gray-600">
-                    <Clock3 className="w-3 h-3 flex-shrink-0" />
-                    <span>{trip.departureTime}:00</span>
+                    <span>${trip.price}</span>
                   </div>
                   <div className="flex items-center space-x-1 text-sm text-gray-600">
                     <Tag className="w-3 h-3 flex-shrink-0" />
@@ -140,19 +130,14 @@ export const TripsList: React.FC<TripsListProps> = ({ trips, boatPhotos }) => {
                   </div>
                 </div>
 
-                {/* Trip Days */}
-                {trip.tripDays?.length > 0 && (
-                  <div className="mt-3 flex items-start gap-1.5">
-                    <Calendar className="w-3 h-3 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div className="flex flex-wrap gap-1">
-                      {trip.tripDays.map((day) => (
-                        <span key={day} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
-                          {day}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <div className="mt-3">
+                  <TripScheduleHoverView
+                    schedules={trip.schedules}
+                    duration={trip.duration}
+                    tripDays={trip.tripDays}
+                    departureTime={trip.departureTime}
+                  />
+                </div>
 
                 {/* Species */}
                 {trip.species?.length > 0 && (

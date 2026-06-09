@@ -97,9 +97,12 @@ export const buildFinalData = (
     trips: (get("trips") || []).map((trip: TripFormItem) => ({
       tripName: trip.tripName || "",
       description: trip.tripsdescription || "",
-      duration: Number(trip.tripsduration) || 1,
-      tripDays: trip.tripDays || [],
-      departureTime: trip.departureTime || "08:00",
+      duration: 0,
+      tripDays: [],
+      departureTime: "",
+      schedules: trip.schedules || [],
+      bookingType: (trip as TripFormItem & { bookingType?: string | string[] })
+        .bookingType,
       price: Number(trip.tripsprice) || 0,
       species: trip.tripsSpecies || [],
       fishingLocation: trip.fishingLocation || [],

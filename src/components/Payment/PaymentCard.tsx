@@ -6,6 +6,10 @@ import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
+import {
+  useGetTimeSlotsQuery,
+  type BoatTimeSlot,
+} from "@/redux/api/availabilityApi";
 
 // Dynamically import map component
 const PaymentMap = dynamic(() => import("./PaymentMap"), {
@@ -29,7 +33,13 @@ const DAY_NAME_TO_INDEX: Record<string, number> = {
 };
 
 export default function PaymentCard({
+  boatId,
   filterTrip,
+  allTrips,
+  selectedTripId,
+  selectedScheduleId,
+  onTripSelect,
+  onScheduleSelect,
   image,
   location,
   isLoading,
@@ -49,7 +59,14 @@ export default function PaymentCard({
   const [numberOfGuests, setNumberOfGuestsLocal] = useState<string | null>(null);
   const [bookingType, setBookingType] = useState<string | null>(null);
   const [dateError, setDateError] = useState<string | null>(null);
+  const [slotError, setSlotError] = useState<string | null>(null);
   const [guestError, setGuestError] = useState<string | null>(null);
+
+  const { data: timeSlots = [], isFetching: loadingSlots } =
+    useGetTimeSlotsQuery(
+      { boatId: boatId!, tripDate: tripDateProp || tripDate || "" },
+      { skip: !boatId || !(tripDateProp || tripDate) },
+    );
 
   // ── Derived values from the trip ─────────────────────────────────
   // Days of week when this trip operates (e.g. ["Monday", "Saturday"])
@@ -98,29 +115,111 @@ export default function PaymentCard({
     }
   }, [filterTrip?.tripType]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const getAllTripDays = (): string[] => {
+    const days = new Set<string>();
+    (allTrips ?? []).forEach((t: any) => {
+      (t.tripDays ?? []).forEach((d: string) => days.add(d));
+    });
+    return days.size > 0 ? Array.from(days) : tripDays;
+  };
+
+  const getAvailableDayIndices = (): number[] => {
+    return getAllTripDays()
+      .map((d: string) => DAY_NAME_TO_INDEX[d] ?? -1)
+      .filter((i: number) => i !== -1);
+  };
+
   // ── Handlers ────────────────────────────────────────────────────
   const isDateAvailable = (dateStr: string): boolean => {
-    if (!dateStr || availableDayIndices.length === 0) return true;
-    // Use local date to avoid timezone shifting
+    const dayIndices = getAvailableDayIndices();
+    if (!dateStr || dayIndices.length === 0) return true;
     const [y, m, d] = dateStr.split("-").map(Number);
     const date = new Date(y, m - 1, d);
-    return availableDayIndices.includes(date.getDay());
+    return dayIndices.includes(date.getDay());
   };
 
   const handleDateChange = (val: string) => {
     if (!isDateAvailable(val)) {
       setDateError(
-        `Not available on that day. Available days: ${tripDays.join(", ")}.`
+        `Not available on that day. Available days: ${getAllTripDays().join(", ")}.`,
       );
       setTripDateLocal(null);
       if (setTripDateProp) setTripDateProp(null);
+      onTripSelect?.(null);
+      onScheduleSelect?.(null);
+      setSlotError(null);
       return;
     }
+
     setDateError(null);
+    setSlotError(null);
     setTripDateLocal(val);
     if (setTripDateProp) setTripDateProp(val);
+    onTripSelect?.(null);
+    onScheduleSelect?.(null);
     if (typeof window !== "undefined") localStorage.setItem("date", val);
   };
+
+  const formatSlotLabel = (slot: BoatTimeSlot) => {
+    const status = slot.available ? "" : ` (${slot.reason ?? "Unavailable"})`;
+    return `${slot.departureTime} – ${slot.endTime} · ${slot.tripName} · ${slot.duration}h · $${slot.price}${status}`;
+  };
+
+  const slotKey = (slot: BoatTimeSlot) => slot.scheduleId || slot.tripId;
+
+  const handleSlotChange = (key: string) => {
+    const slot = timeSlots.find((s) => slotKey(s) === key);
+    if (!slot) return;
+    if (!slot.available) {
+      setSlotError(slot.reason || "This time slot is not available.");
+      return;
+    }
+    setSlotError(null);
+    onTripSelect?.(slot.tripId);
+    onScheduleSelect?.(slot.scheduleId || null);
+  };
+
+  const selectedSlotKey =
+    selectedScheduleId ||
+    (selectedTripId
+      ? timeSlots.find((s) => s.tripId === selectedTripId && !s.scheduleId)
+          ?.tripId
+      : null) ||
+    "";
+
+  // Auto-select first available slot when date changes
+  useEffect(() => {
+    if (!timeSlots.length || loadingSlots) return;
+
+    const currentStillValid = timeSlots.find(
+      (s) =>
+        s.available &&
+        (selectedScheduleId
+          ? s.scheduleId === selectedScheduleId
+          : s.tripId === selectedTripId && !s.scheduleId),
+    );
+    if (currentStillValid) return;
+
+    const preferred = selectedScheduleId
+      ? timeSlots.find(
+          (s) => s.scheduleId === selectedScheduleId && s.available,
+        )
+      : selectedTripId
+        ? timeSlots.find((s) => s.tripId === selectedTripId && s.available)
+        : null;
+    const firstAvailable =
+      preferred ?? timeSlots.find((s) => s.available) ?? null;
+
+    if (firstAvailable) {
+      onTripSelect?.(firstAvailable.tripId);
+      onScheduleSelect?.(firstAvailable.scheduleId || null);
+      setSlotError(null);
+    } else {
+      onTripSelect?.(null);
+      onScheduleSelect?.(null);
+      setSlotError("No time slots available on this date. Please choose another date.");
+    }
+  }, [timeSlots, loadingSlots]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleGuestsChange = (val: string) => {
     const num = parseInt(val, 10);
@@ -215,6 +314,9 @@ export default function PaymentCard({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const availableSlots = timeSlots.filter((s) => s.available);
+  const allTripDaysList = getAllTripDays();
+
   return (
     <div className="bg-[#F7F7F7] shadow-md w-full lg:w-[345px]">
       {/* Image */}
@@ -230,8 +332,14 @@ export default function PaymentCard({
       <div className="p-4">
         {/* Title & Location */}
         <h2 className="text-xl font-normal text-[#242424]">
-          {filterTrip?.tripName}
+          {filterTrip?.tripName || "Select a trip"}
         </h2>
+        {filterTrip?.departureTime && (
+          <p className="text-sm text-gray-500 mt-1">
+            Departs {filterTrip.departureTime}
+            {filterTrip.duration ? ` · ${filterTrip.duration} hours` : ""}
+          </p>
+        )}
         <div className="flex items-center mt-4 mb-4 text-[#242424]">
           <FaMapMarkerAlt className="text-yellow-500 mr-2" />
           <span>{location?.city}</span>
@@ -254,9 +362,13 @@ export default function PaymentCard({
             <label className="font-bold block mb-1">Trip date:</label>
             <DatePicker
               value={tripDate ? dayjs(tripDate) : null}
-              disabledDate={(current: Dayjs) =>
-                current && current.isBefore(dayjs().startOf("day"))
-              }
+              disabledDate={(current: Dayjs) => {
+                if (!current) return false;
+                if (current.isBefore(dayjs().startOf("day"))) return true;
+                const dayIndices = getAvailableDayIndices();
+                if (dayIndices.length === 0) return false;
+                return !dayIndices.includes(current.day());
+              }}
               onChange={(date: Dayjs | null) => {
                 if (date) handleDateChange(date.format("YYYY-MM-DD"));
                 else {
@@ -272,9 +384,9 @@ export default function PaymentCard({
               style={{ width: "100%" }}
               getPopupContainer={(trigger) => trigger.parentElement!}
             />
-            {tripDays.length > 0 && (
+            {allTripDaysList.length > 0 && (
               <p className="text-gray-500 text-xs mt-1">
-                Available days: {tripDays.join(", ")}
+                Available days: {allTripDaysList.join(", ")}
               </p>
             )}
             {dateError && (
@@ -286,6 +398,57 @@ export default function PaymentCard({
               </p>
             )}
           </div>
+
+          {/* Time slot — captain-created trip times */}
+          {tripDate && (
+            <div>
+              <label className="font-bold block mb-1">Time slot:</label>
+              {loadingSlots ? (
+                <p className="text-gray-500 text-xs">Loading available times...</p>
+              ) : timeSlots.length === 0 ? (
+                <p className="text-red-500 text-xs">
+                  No trips run on this day. Pick another date.
+                </p>
+              ) : (
+                <select
+                  value={selectedSlotKey}
+                  onChange={(e) => handleSlotChange(e.target.value)}
+                  className={`w-full border rounded px-2 py-1.5 text-sm focus:outline-none focus:border-blue-500 bg-white ${
+                    !selectedSlotKey || slotError
+                      ? "border-red-400"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <option value="" disabled>
+                    Select a time slot
+                  </option>
+                  {timeSlots.map((slot) => (
+                    <option
+                      key={slotKey(slot)}
+                      value={slotKey(slot)}
+                      disabled={!slot.available}
+                    >
+                      {formatSlotLabel(slot)}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {availableSlots.length > 0 && (
+                <p className="text-gray-500 text-xs mt-1">
+                  {availableSlots.length} slot
+                  {availableSlots.length === 1 ? "" : "s"} available
+                </p>
+              )}
+              {slotError && (
+                <p className="text-red-500 text-xs mt-1">{slotError}</p>
+              )}
+              {!selectedSlotKey && !slotError && timeSlots.length > 0 && !loadingSlots && (
+                <p className="text-red-500 text-xs mt-1">
+                  Please select a time slot.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Group size */}
           <div>

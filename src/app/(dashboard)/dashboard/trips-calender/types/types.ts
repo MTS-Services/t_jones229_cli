@@ -13,12 +13,24 @@ export interface CalendarData {
   };
   dailyServiceCounts: DailyServiceCount[];
   timeline: Timeline;
+  availabilityBlocks?: AvailabilityBlock[];
+}
+
+export interface AvailabilityBlock {
+  id: string;
+  captainId: string;
+  startDateTime: string;
+  endDateTime: string;
+  isFullDay: boolean;
+  reason?: string;
+  blockType: "MANUAL_CAPTAIN" | "MANUAL_ADMIN";
 }
 
 export interface DailyServiceCount {
   date: string;
   count: number;
   bookings: Booking[];
+  blocks?: AvailabilityBlock[];
 }
 
 export interface Timeline {

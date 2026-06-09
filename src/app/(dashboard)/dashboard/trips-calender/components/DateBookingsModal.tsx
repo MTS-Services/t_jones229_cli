@@ -1,19 +1,25 @@
 "use client";
 
 import { X, CalendarIcon } from "lucide-react";
-import { Booking } from "../types/types";
+import { Booking, AvailabilityBlock } from "../types/types";
 import { BookingCard } from "./BookingCard";
+import BlockAvailabilityForm from "@/components/availability/BlockAvailabilityForm";
+import AvailabilityBlocksList from "@/components/availability/AvailabilityBlocksList";
 
 interface DateBookingsModalProps {
   selectedDate: string | null;
   bookings: Booking[];
+  blocks?: AvailabilityBlock[];
   onClose: () => void;
+  onRefresh?: () => void;
 }
 
 export default function DateBookingsModal({
   selectedDate,
   bookings,
+  blocks = [],
   onClose,
+  onRefresh,
 }: DateBookingsModalProps) {
   if (!selectedDate) return null;
 
@@ -50,6 +56,7 @@ export default function DateBookingsModal({
               </h2>
               <p className="text-xs sm:text-sm text-blue-100">
                 {bookings.length} booking{bookings.length !== 1 ? "s" : ""}
+                {blocks.length > 0 && ` · ${blocks.length} blocked`}
               </p>
             </div>
           </div>
@@ -63,14 +70,16 @@ export default function DateBookingsModal({
         </div>
 
         {/* Modal Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6">
+          <AvailabilityBlocksList blocks={blocks} onDeleted={onRefresh} />
+
           {bookings.length > 0 ? (
             <div>
               {bookings.map((booking) => (
                 <BookingCard key={booking?.id} booking={booking} />
               ))}
             </div>
-          ) : (
+          ) : blocks.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
               <CalendarIcon className="h-16 w-16 text-gray-300 mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -80,6 +89,13 @@ export default function DateBookingsModal({
                 No bookings found for this date
               </p>
             </div>
+          ) : null}
+
+          {selectedDate && (
+            <BlockAvailabilityForm
+              date={selectedDate}
+              onSuccess={onRefresh}
+            />
           )}
         </div>
 

@@ -6,10 +6,10 @@ import {
   CaptainHeader,
   PersonalInfoCard,
   AccountStatusCard,
-  PaymentInfoCard,
   BoatsTableCard,
 } from ".";
 import type { Boat, CaptainDetailsProps } from ".";
+import AdminCaptainAvailability from "@/components/availability/AdminCaptainAvailability";
 
 // Main component
 export default function CaptainDetails({ userData }: CaptainDetailsProps) {
@@ -37,7 +37,10 @@ export default function CaptainDetails({ userData }: CaptainDetailsProps) {
           <AccountStatusCard user={user} boatCount={boat?.length || 0} />
         </div>
 
-        <PaymentInfoCard user={user} />
+        <AdminCaptainAvailability
+          captainId={user.id}
+          captainName={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
+        />
         <BoatsTableCard boats={boat} onViewBoat={handleViewBoat} />
       </div>
 

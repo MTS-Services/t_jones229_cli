@@ -61,9 +61,20 @@ export function CalendarDashboard({
     calenderHandler({ month: currentMonth + 1, year: currentYear });
   }, [currentMonth, currentYear, calenderHandler]);
 
+  const getDayData = (date: string) => {
+    return data?.dailyServiceCounts?.find((d) => d?.date === date);
+  };
+
   const getBookingsForDate = (date: string) => {
-    const dayData = data?.dailyServiceCounts?.find((d) => d?.date === date);
-    return dayData?.bookings ?? [];
+    return getDayData(date)?.bookings ?? [];
+  };
+
+  const getBlocksForDate = (date: string) => {
+    return getDayData(date)?.blocks ?? [];
+  };
+
+  const refreshCalendar = () => {
+    calenderHandler({ month: currentMonth + 1, year: currentYear });
   };
 
   const renderCalendarDays = () => {
@@ -84,11 +95,13 @@ export function CalendarDashboard({
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = formatCalendarDate(day, currentMonth, currentYear);
       const bookings = getBookingsForDate(dateStr);
+      const blocks = getBlocksForDate(dateStr);
       const isToday =
         todayDate.toDateString() ===
         new Date(currentYear, currentMonth, day).toDateString();
       const isSelected = selectedDate === dateStr;
       const hasBookings = bookings.length > 0;
+      const hasBlocks = blocks.length > 0;
 
       days.push(
         <div
@@ -106,14 +119,19 @@ export function CalendarDashboard({
             }`}
           >
             <span className="text-[10px] md:text-xs font-medium">{day}</span>
-            {hasBookings && (
-              <div className="flex items-center space-x-0.5 md:space-x-1">
-                <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
-                <span className="hidden md:inline text-[10px] text-gray-500">
-                  {bookings.length}
-                </span>
-              </div>
-            )}
+            <div className="flex items-center space-x-0.5 md:space-x-1">
+              {hasBookings && (
+                <>
+                  <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
+                  <span className="hidden md:inline text-[10px] text-gray-500">
+                    {bookings.length}
+                  </span>
+                </>
+              )}
+              {hasBlocks && (
+                <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-red-500 rounded-full" title="Blocked" />
+              )}
+            </div>
           </div>
 
           {/* Booking pills — hidden on mobile to keep cells compact */}
@@ -295,7 +313,9 @@ export function CalendarDashboard({
       <DateBookingsModal
         selectedDate={selectedDate}
         bookings={selectedBookings}
+        blocks={selectedDate ? getBlocksForDate(selectedDate) : []}
         onClose={() => setSelectedDate(null)}
+        onRefresh={refreshCalendar}
       />
     </div>
   );

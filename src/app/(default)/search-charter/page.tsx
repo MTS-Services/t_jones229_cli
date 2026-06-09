@@ -32,6 +32,12 @@ export default function Page() {
   const [date, setDate] = useState("");
   const [bookingType, setBookingType] = useState("");
 
+  const normalizeBookingType = (val: unknown): string => {
+    if (val === true || val === "true") return "true";
+    if (val === false || val === "false") return "false";
+    return "";
+  };
+
   // Only show map on xl+ screens (≥1280px) to prevent Leaflet crashes on mobile
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1280);
@@ -51,7 +57,9 @@ export default function Page() {
         );
         setDate(parsed?.date || searchParams.get("date") || "");
         setBookingType(
-          parsed?.bookingType || searchParams.get("bookingType") || "",
+          normalizeBookingType(
+            parsed?.bookingType ?? searchParams.get("bookingType"),
+          ),
         );
         return;
       }
@@ -62,7 +70,7 @@ export default function Page() {
     setLocation(searchParams.get("location") || "");
     setGuests(Number(searchParams.get("guests")) || 0);
     setDate(searchParams.get("date") || "");
-    setBookingType(searchParams.get("bookingType") || "");
+    setBookingType(normalizeBookingType(searchParams.get("bookingType")));
   }, [searchParams]);
 
   // Helper function to format date
@@ -79,10 +87,13 @@ export default function Page() {
     (page: number): Record<string, string> => {
       const params: Record<string, string> = {};
 
-      // Only filter by location - ignore date, guests, and bookingType
       if (location) params.city = location;
+      if (date) params.startDate = date;
+      if (guests > 0) params.guests = guests.toString();
+      if (bookingType === "true" || bookingType === "false") {
+        params.sharedBooking = bookingType;
+      }
 
-      // Keep price sorting options
       if (activeKey === "2") params.h_t_l = "true";
       if (activeKey === "3") params.l_t_h = "true";
 
@@ -91,7 +102,7 @@ export default function Page() {
 
       return params;
     },
-    [activeKey, location],
+    [activeKey, location, date, guests, bookingType],
   );
 
   useEffect(() => {
@@ -101,13 +112,23 @@ export default function Page() {
   // Initial query for count (without pagination parameters)
   const initialParams = useCallback(() => {
     const params: Record<string, string> = {};
-    // Only filter by location - ignore date, guests, and bookingType
     if (location) params.city = location;
+    if (date) params.startDate = date;
+    if (guests > 0) params.guests = guests.toString();
+    if (bookingType === "true" || bookingType === "false") {
+      params.sharedBooking = bookingType;
+    }
     return params;
-  }, [location]);
+  }, [location, date, guests, bookingType]);
 
-  const { data: countData } = useGetAllBoatQuery(initialParams());
-  const { data: listingData, isLoading } = useGetAllBoatQuery(queryParams);
+  const canSearch = !!date;
+
+  const { data: countData } = useGetAllBoatQuery(initialParams(), {
+    skip: !canSearch,
+  });
+  const { data: listingData, isLoading } = useGetAllBoatQuery(queryParams, {
+    skip: !canSearch,
+  });
 
   const currentItems = listingData?.data?.data || [];
   const totalPages = listingData?.data?.meta?.totalPage || 1;
@@ -124,7 +145,9 @@ export default function Page() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="">
             <h1 className="text-lg md:text-2xl font-semibold text-[#242424]">
-              {countData?.data?.meta?.total ?? 0} Charters available
+              {!canSearch
+                ? "Select a date to search available charters"
+                : `${countData?.data?.meta?.total ?? 0} Charters available`}
             </h1>
 
             {/* Search Criteria with Icons */}
@@ -167,11 +190,21 @@ export default function Page() {
           <div className="flex flex-col xl:flex-row gap-8">
             {/* Left side - Boat listings */}
             <div className="w-full xl:w-[60%] 2xl:w-[65%]">
-              <TabContent
-                activeKey={activeKey}
-                currentItems={currentItems}
-                isLoading={isLoading}
-              />
+              {!canSearch ? (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-800">
+                  <p className="font-medium">Date required for search</p>
+                  <p className="mt-1 text-sm text-amber-700">
+                    Pick a trip date on the home page to see boats with open
+                    time slots. Fully booked boats are hidden for that day.
+                  </p>
+                </div>
+              ) : (
+                <TabContent
+                  activeKey={activeKey}
+                  currentItems={currentItems}
+                  isLoading={isLoading}
+                />
+              )}
 
               {/* Pagination */}
               {totalPages > 1 && (

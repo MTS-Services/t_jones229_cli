@@ -742,6 +742,7 @@ export default function SearchBar({ scrolled, onActiveChange }: Props) {
   }, [isMobileModalOpen]);
 
   const handleSearch = () => {
+    if (!selectedDate) return;
     const state: SearchState = { location, selectedDate, guests, selected };
     writeSearchData(state);
     setIsMobileModalOpen(false);
@@ -1029,7 +1030,9 @@ export default function SearchBar({ scrolled, onActiveChange }: Props) {
             <div className="p-1.5">
               <button
                 onClick={handleSearch}
-                className={`flex items-center justify-center bg-[#105d9e] hover:bg-[#0c4a7e] text-white rounded-full transition-all duration-500 ease-in-out shadow-md hover:shadow-xl active:scale-90 ${
+                disabled={!selectedDate}
+                title={!selectedDate ? "Select a date first" : "Search"}
+                className={`flex items-center justify-center bg-[#105d9e] hover:bg-[#0c4a7e] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-full transition-all duration-500 ease-in-out shadow-md hover:shadow-xl active:scale-90 ${
                   isExpanded ? "w-24 h-12 lg:w-28 lg:h-14" : "w-10 h-10"
                 }`}
               >

@@ -3,7 +3,8 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { X } from "lucide-react";
-import CheckboxGroup from "./CheckboxGroup"; // make sure you have this
+import CheckboxGroup from "./CheckboxGroup";
+import TripSchedulePicker from "@/components/availability/TripSchedulePicker";
 
 export interface Trip {
   tripName?: string;
@@ -90,59 +91,11 @@ const TripForm: React.FC<{
         />
       </div>
 
-      {/* Duration */}
       <div className="mb-4">
-        <label className="block mb-1">Duration (hours)</label>
-        <input
-          type="number"
-          {...register(`trips.${index}.tripsduration`, { valueAsNumber: true })}
-          className="w-full border p-2"
+        <TripSchedulePicker
+          value={watch(`trips.${index}.schedules`) || []}
+          onChange={(val) => setValue(`trips.${index}.schedules`, val)}
         />
-      </div>
-
-      {/* Days */}
-      <div className="mb-4">
-        <label className="block mb-1">Available Days</label>
-        <div className="flex flex-wrap gap-3">
-          {[
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-          ].map((day) => (
-            <label key={day}>
-              <input
-                type="checkbox"
-                value={day}
-                {...register(`trips.${index}.tripDays`)}
-              />{" "}
-              {day}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Departure Time */}
-      <div className="mb-4">
-        <label className="block mb-1">Departure Time</label>
-        <select
-          {...register(`trips.${index}.departureTime`)}
-          className="w-full border p-2"
-        >
-          <option value="">Select time</option>
-          {[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map((h) => (
-            <option key={h} value={h}>
-              {h < 12
-                ? `${h}:00 AM`
-                : h === 12
-                ? "12:00 PM"
-                : `${h - 12}:00 PM`}
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Price */}

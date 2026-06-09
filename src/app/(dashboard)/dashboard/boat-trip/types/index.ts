@@ -17,6 +17,13 @@ export interface TripPhoto {
   url: string;
 }
 
+export interface TripSchedule {
+  id: string;
+  scheduleDate: string;
+  startTime: string;
+  endTime: string;
+}
+
 export interface Trip {
   id: string;
   tripName: string;
@@ -24,6 +31,7 @@ export interface Trip {
   duration: number;
   tripDays: string[];
   departureTime: string;
+  schedules?: TripSchedule[];
   price: number;
   species: string[];
   fishingLocation: string[];

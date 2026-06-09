@@ -4,19 +4,17 @@ import CheckboxGroup from "./CheckboxGroup";
 import {
   X,
   Plus,
-  Clock,
   Calendar,
   DollarSign,
   Users,
   Fish,
-  MapPin,
-  Wrench,
   Trash2,
   Info,
   Search,
-  Clock3,
-  CalendarDays,
+  Wrench,
+  MapPin,
 } from "lucide-react";
+import TripSchedulePicker from "@/components/availability/TripSchedulePicker";
 
 const fishingLocationsOptions = [
   "River",
@@ -47,16 +45,6 @@ const fishingTechniquesOptions = [
   "Spearfishing",
   "Ice fishing",
   "Flounder gigging",
-];
-
-const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
 ];
 
 const bookingTypes = [
@@ -158,53 +146,23 @@ export default function TripForm({
       {/* Form Content */}
       <div className="p-6 space-y-6">
         {/* Trip Name & Description */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Trip Name
-            </label>
-            <input
-              type="text"
-              {...register(`trips.${index}.tripName`, {
-                required: "Trip name is required",
-              })}
-              className={`w-full p-3 border-2 rounded-lg outline-none transition-all ${
-                getTripError("tripName")
-                  ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
-                  : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
-              }`}
-              placeholder="e.g., Morning Fishing Adventure"
-            />
-            <ErrorMessage error={getTripError("tripName")?.message as string} />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Duration
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                {...register(`trips.${index}.tripsduration`, {
-                  required: "Duration is required",
-                  min: { value: 1, message: "Minimum 1 hour" },
-                  valueAsNumber: true,
-                })}
-                className={`flex-1 p-3 border-2 rounded-lg outline-none transition-all ${
-                  getTripError("tripsduration")
-                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
-                    : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
-                }`}
-                placeholder="Hours"
-              />
-              <div className="px-3 py-3 bg-gray-100 rounded-lg text-gray-600 text-sm">
-                hours
-              </div>
-            </div>
-            <ErrorMessage
-              error={getTripError("tripsduration")?.message as string}
-            />
-          </div>
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Trip Name
+          </label>
+          <input
+            type="text"
+            {...register(`trips.${index}.tripName`, {
+              required: "Trip name is required",
+            })}
+            className={`w-full p-3 border-2 rounded-lg outline-none transition-all ${
+              getTripError("tripName")
+                ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                : "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+            }`}
+            placeholder="e.g., Morning Fishing Adventure"
+          />
+          <ErrorMessage error={getTripError("tripName")?.message as string} />
         </div>
 
         {/* Description */}
@@ -233,14 +191,13 @@ export default function TripForm({
           />
         </div>
 
-        {/* Days & Time */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-3">
               <Users className="inline-block h-4 w-4 mr-2 text-orange-500" />
               Booking Type
             </label>
-            <div className="flex  gap-3">
+            <div className="flex gap-3">
               {bookingTypes.map((type) => (
                 <label
                   key={type.value}
@@ -252,45 +209,14 @@ export default function TripForm({
                     {...register(`trips.${index}.bookingType`)}
                     className="mt-2 w-4 h-4 cursor-pointer text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                   />
-                  <div>
-                    <span className="block text-sm font-medium text-gray-700 group-hover:text-orange-600">
-                      {type.label}
-                    </span>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
-              <CalendarDays className="inline-block h-4 w-4 mr-2 text-orange-500" />
-              Available Days
-            </label>
-            <div className="flex flex-wrap gap-3">
-              {daysOfWeek.map((day) => (
-                <label
-                  key={day}
-                  className="flex items-center gap-2 cursor-pointer group"
-                >
-                  <input
-                    type="checkbox"
-                    value={day}
-                    {...register(`trips.${index}.tripDays`)}
-                    className="w-4 h-4 text-orange-500 cursor-pointer border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700 group-hover:text-orange-600 transition-colors">
-                    {day.slice(0, 3)}
+                  <span className="block text-sm font-medium text-gray-700 group-hover:text-orange-600">
+                    {type.label}
                   </span>
                 </label>
               ))}
             </div>
           </div>
-        </div>
 
-        <hr />
-        {/* Price & Booking Type */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               <DollarSign className="inline-block h-4 w-4 mr-2 text-orange-500" />
@@ -319,34 +245,16 @@ export default function TripForm({
               error={getTripError("tripsprice")?.message as string}
             />
           </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              <Clock3 className="inline-block h-4 w-4 mr-2 text-orange-500" />
-              Departure Time
-            </label>
-            <select
-              {...register(`trips.${index}.departureTime`, {
-                required: "Departure time is required",
-              })}
-              className="w-full p-3 border-2 border-gray-200 rounded-lg outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white"
-            >
-              <option value="">Select departure time</option>
-              {[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map((h) => (
-                <option key={h} value={h}>
-                  {h < 12
-                    ? `${h}:00 AM`
-                    : h === 12
-                      ? "12:00 PM"
-                      : `${h - 12}:00 PM`}
-                </option>
-              ))}
-            </select>
-            <ErrorMessage
-              error={getTripError("departureTime")?.message as string}
-            />
-          </div>
         </div>
+
+        <TripSchedulePicker
+          value={watch(`trips.${index}.schedules`) || []}
+          onChange={(val) =>
+            setValue(`trips.${index}.schedules`, val, { shouldValidate: true })
+          }
+        />
+
+        <hr />
 
         {/* Note Box */}
         <div className="bg-slate-50 rounded-lg p-4 border border-blue-100">

@@ -10,12 +10,18 @@ export interface StepHeading {
 
 export type StepStatus = "current" | "completed" | "visited" | "upcoming";
 
+export interface TripScheduleSlot {
+  date: string;
+  slots: { startTime: string; endTime: string }[];
+}
+
 export interface TripFormItem {
   tripName: string;
   tripsdescription: string;
-  tripsduration: string | number;
-  tripDays: string[];
-  departureTime: string;
+  tripsduration?: string | number;
+  tripDays?: string[];
+  departureTime?: string;
+  schedules?: TripScheduleSlot[];
   tripsprice: string | number;
   tripsSpecies: string[];
   fishingLocation: string[];
@@ -67,6 +73,7 @@ export interface BoatFinalData {
     duration: number;
     tripDays: string[];
     departureTime: string;
+    schedules: TripScheduleSlot[];
     price: number;
     species: string[];
     fishingLocation: string[];

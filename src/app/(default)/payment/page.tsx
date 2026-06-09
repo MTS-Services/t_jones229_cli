@@ -126,8 +126,14 @@ export default function Page() {
   const dispatch = useDispatch();
   const params = useSearchParams();
   const boatID = params.get("boatId");
-  const tripId = params.get("tripId");
+  const tripIdFromUrl = params.get("tripId");
   const isGuestMode = params.get("guest") === "true";
+  const [selectedTripId, setSelectedTripId] = useState<string | null>(
+    tripIdFromUrl,
+  );
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(
+    null,
+  );
 
   // Try to get values from URL params as fallback
   const dateFromUrl = params.get("date");
@@ -184,7 +190,13 @@ export default function Page() {
 
   const { data } = useGetSingleBoatQuery(boatID);
 
-  const filterTrip = data?.data?.trips?.find((trip: any) => trip.id === tripId);
+  useEffect(() => {
+    if (tripIdFromUrl) setSelectedTripId(tripIdFromUrl);
+  }, [tripIdFromUrl]);
+
+  const filterTrip = data?.data?.trips?.find(
+    (trip: any) => trip.id === selectedTripId,
+  );
   const [updateProfileFN] = useUpdateProfileMutation();
   const [bookingFN, { isLoading }] = useCreateBookingMutation();
   const [createBookingDeposit, { isLoading: isDepositLoading }] =
@@ -233,9 +245,9 @@ export default function Page() {
         return;
       }
 
-      if (!boatID || !tripId) {
+      if (!boatID || !selectedTripId) {
         toast.error(
-          "Booking information is incomplete. Please start the booking process again.",
+          "Please select a date and time slot before continuing.",
         );
         setIsProcessingPayment(false);
         return;
@@ -276,6 +288,7 @@ export default function Page() {
           },
           boatId: boatID!,
           tripId: filterTrip?.id,
+          scheduleId: selectedScheduleId || undefined,
           tripDate: tripDate!,
           groupSize: parseInt(numberOfGuests ?? "1", 10),
           paymentMethodId: paymentMethodId!,
@@ -319,6 +332,7 @@ export default function Page() {
         const depositRes = await createBookingDeposit({
           boatId: boatID,
           tripId: filterTrip?.id,
+          scheduleId: selectedScheduleId || undefined,
           tripDate,
           groupSize: parseInt(numberOfGuests ?? "0", 10),
           paymentMethodId,
@@ -466,9 +480,15 @@ export default function Page() {
 
             <div>
               <PaymentCard
+                boatId={boatID}
                 image={data?.data?.photos?.[0]?.url}
                 location={data?.data?.meetingPoint?.[0]}
                 filterTrip={filterTrip}
+                allTrips={data?.data?.trips}
+                selectedTripId={selectedTripId}
+                selectedScheduleId={selectedScheduleId}
+                onTripSelect={setSelectedTripId}
+                onScheduleSelect={setSelectedScheduleId}
                 isLoading={isLoading || isDepositLoading || isGuestDepositLoading || isProcessingPayment}
                 setSelectedPayment={setSelectedPayment}
                 selectedPayment={selectedPayment}

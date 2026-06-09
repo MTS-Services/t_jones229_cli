@@ -15,12 +15,12 @@ export default function Trips() {
   // Add an initial trip if the array is empty (only runs once)
   React.useEffect(() => {
     if (fields.length === 0) {
-      append({});
+      append({ schedules: [] });
     }
   }, [fields, append]);
 
   const handleAddTrip = () => {
-    append({});
+    append({ schedules: [] });
     // Scroll to the new trip form
     setTimeout(() => {
       const tripForms = document.querySelectorAll("[data-trip-form]");

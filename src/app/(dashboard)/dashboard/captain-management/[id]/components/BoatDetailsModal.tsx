@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useUpdateBoatStatusMutation } from "@/redux/api/boatApi";
 import { toast } from "react-toastify";
+import TripScheduleHoverView from "@/components/availability/TripScheduleHoverView";
 
 interface BoatDetailsModalProps {
   boat: any;
@@ -519,14 +520,10 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                           >
                             {tripItem.description}
                           </p>
-                          <div className="flex flex-wrap gap-3 mt-2">
-                            <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                              <Clock className="h-3 w-3" />
-                              {tripItem.duration}h
-                            </span>
+                          <div className="flex flex-wrap items-center gap-3 mt-2">
                             <span className="inline-flex items-center text-xs text-gray-500">
                               <DollarSign className="h-3 w-3" />
-                              {tripItem.price}
+                              ${tripItem.price}
                             </span>
                             <span
                               className={`inline-flex items-center gap-1 text-xs ${
@@ -545,13 +542,14 @@ const BoatDetailsModal: React.FC<BoatDetailsModalProps> = ({
                               {tripItem.tripStatus}
                             </span>
                           </div>
-                          {tripItem.tripDays?.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1">
-                              {tripItem.tripDays.map((day: string) => (
-                                <span key={day} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">{day}</span>
-                              ))}
-                            </div>
-                          )}
+                          <div className="mt-2">
+                            <TripScheduleHoverView
+                              schedules={tripItem.schedules}
+                              duration={tripItem.duration}
+                              tripDays={tripItem.tripDays}
+                              departureTime={tripItem.departureTime}
+                            />
+                          </div>
                           {tripItem.species?.length > 0 && (
                             <div className="mt-1 flex flex-wrap gap-1">
                               {tripItem.species.map((s: string) => (

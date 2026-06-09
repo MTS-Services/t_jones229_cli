@@ -14,8 +14,13 @@ const BoatApi = baseApi.injectEndpoints({
         if (params.guests) query.append("guests", params.guests);
         if (params.startDate) query.append("startDate", params.startDate);
         if (params.endDate) query.append("endDate", params.endDate);
-        if (params.sharedBooking)
-          query.append("sharedBooking", params.sharedBooking);
+        if (
+          params.sharedBooking !== undefined &&
+          params.sharedBooking !== null &&
+          params.sharedBooking !== ""
+        ) {
+          query.append("sharedBooking", String(params.sharedBooking));
+        }
         if (params.city) query.append("city", params.city);
         if (params.h_t_l) query.append("h_t_l", params.h_t_l);
         if (params.l_t_h) query.append("l_t_h", params.l_t_h);
