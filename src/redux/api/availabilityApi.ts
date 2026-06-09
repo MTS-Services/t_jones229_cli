@@ -85,6 +85,19 @@ const availabilityApi = baseApi.injectEndpoints({
       providesTags: ["availability"],
     }),
 
+    getCaptainScheduleOverview: build.query<
+      CaptainScheduleDaySummary[],
+      { captainId: string }
+    >({
+      query: ({ captainId }) => ({
+        url: `/availability/captain-schedule-overview?captainId=${captainId}`,
+        method: "GET",
+      }),
+      transformResponse: (response: { data: CaptainScheduleDaySummary[] }) =>
+        response.data,
+      providesTags: ["availability"],
+    }),
+
     getTimeSlots: build.query<BoatTimeSlot[], { boatId: string; tripDate: string }>({
       query: ({ boatId, tripDate }) => ({
         url: `/availability/slots?boatId=${boatId}&tripDate=${tripDate}`,
@@ -157,6 +170,7 @@ const availabilityApi = baseApi.injectEndpoints({
 export const {
   useGetCaptainScheduledTimesQuery,
   useGetCaptainScheduleMonthQuery,
+  useGetCaptainScheduleOverviewQuery,
   useGetTimeSlotsQuery,
   useLazyGetTimeSlotsQuery,
   useCheckTripAvailabilityQuery,

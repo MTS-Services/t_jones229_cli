@@ -10,6 +10,7 @@ import {
   useCreateAdminBlockMutation,
   useGetAvailabilityBlocksQuery,
   useGetCaptainScheduleMonthQuery,
+  useGetCaptainScheduleOverviewQuery,
   useGetCaptainScheduledTimesQuery,
   type CaptainScheduledTime,
 } from "@/redux/api/availabilityApi";
@@ -32,6 +33,7 @@ export default function AdminCaptainAvailability({
   );
   const [reason, setReason] = useState("");
   const [blockFullDay, setBlockFullDay] = useState(false);
+  const [calendarInitialized, setCalendarInitialized] = useState(false);
 
   const calendarMonth = viewMonth.month() + 1;
   const calendarYear = viewMonth.year();
@@ -43,6 +45,12 @@ export default function AdminCaptainAvailability({
       year: calendarYear,
     });
 
+  const {
+    data: allScheduleDays = [],
+    isFetching: loadingOverview,
+    isError: overviewError,
+  } = useGetCaptainScheduleOverviewQuery({ captainId });
+
   const { data: monthDays = [], isFetching: loadingMonth } =
     useGetCaptainScheduleMonthQuery({
       captainId,
@@ -50,21 +58,52 @@ export default function AdminCaptainAvailability({
       year: calendarYear,
     });
 
-  const { data: scheduledTimes = [], isFetching: loadingTimes } =
-    useGetCaptainScheduledTimesQuery(
-      { captainId, date: activeDate },
-      { skip: !activeDate },
-    );
+  const {
+    data: scheduledTimes = [],
+    isFetching: loadingTimes,
+    isError: timesError,
+  } = useGetCaptainScheduledTimesQuery(
+    { captainId, date: activeDate },
+    { skip: !activeDate },
+  );
 
   const [createAdminBlock, { isLoading }] = useCreateAdminBlockMutation();
 
-  const monthDayMap = useMemo(
-    () => new Map(monthDays.map((d) => [d.date, d])),
-    [monthDays],
-  );
+  const scheduleDayMap = useMemo(() => {
+    const map = new Map(allScheduleDays.map((d) => [d.date, d]));
+    monthDays.forEach((d) => map.set(d.date, d));
+    return map;
+  }, [allScheduleDays, monthDays]);
 
   const availableSlots = scheduledTimes.filter((slot) => slot.available);
-  const activeDaySummary = monthDayMap.get(activeDate);
+  const activeDaySummary = scheduleDayMap.get(activeDate);
+  const isPastDate = dayjs(activeDate).isBefore(today, "day");
+  const upcomingScheduleDays = useMemo(
+    () => allScheduleDays.filter((d) => d.date >= todayStr && d.totalSlots > 0),
+    [allScheduleDays, todayStr],
+  );
+  const hasOnlyPastSchedules =
+    allScheduleDays.length > 0 && upcomingScheduleDays.length === 0;
+
+  useEffect(() => {
+    if (calendarInitialized || loadingOverview) return;
+
+    const pickDay =
+      upcomingScheduleDays[0] ??
+      allScheduleDays.find((d) => d.totalSlots > 0);
+
+    if (pickDay) {
+      setActiveDate(pickDay.date);
+      setViewMonth(dayjs(pickDay.date));
+    }
+
+    setCalendarInitialized(true);
+  }, [
+    allScheduleDays,
+    calendarInitialized,
+    loadingOverview,
+    upcomingScheduleDays,
+  ]);
 
   useEffect(() => {
     setSelectedSlotIds(new Set());
@@ -72,7 +111,6 @@ export default function AdminCaptainAvailability({
   }, [activeDate]);
 
   const selectCalendarDate = (date: Dayjs) => {
-    if (date.isBefore(today, "day")) return;
     setActiveDate(date.format("YYYY-MM-DD"));
   };
 
@@ -182,8 +220,16 @@ export default function AdminCaptainAvailability({
             Captain trip calendar
           </h3>
           <p className="text-xs text-gray-500 mb-3">
-            Orange = has scheduled times · Green count = still available
+            Orange = has scheduled times · Click any orange date to view times
           </p>
+
+          {hasOnlyPastSchedules && (
+            <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-3">
+              This captain has no upcoming trip times. Ask them to add future
+              dates in their trip calendar. Past scheduled dates are still shown
+              in orange.
+            </p>
+          )}
 
           <div className="bg-white border border-gray-200 rounded-lg p-2">
             <Calendar
@@ -191,14 +237,12 @@ export default function AdminCaptainAvailability({
               value={dayjs(activeDate)}
               onPanelChange={(date) => setViewMonth(date)}
               onSelect={selectCalendarDate}
-              disabledDate={(current) =>
-                current ? current.isBefore(today, "day") : false
-              }
               fullCellRender={(date) => {
                 const key = date.format("YYYY-MM-DD");
-                const summary = monthDayMap.get(key);
+                const summary = scheduleDayMap.get(key);
                 const isSelected = key === activeDate;
                 const hasSlots = !!summary && summary.totalSlots > 0;
+                const isPast = date.isBefore(today, "day");
 
                 return (
                   <div
@@ -206,7 +250,9 @@ export default function AdminCaptainAvailability({
                       isSelected
                         ? "bg-blue-600 text-white font-bold ring-2 ring-blue-300"
                         : hasSlots
-                          ? "bg-orange-100 text-orange-800 font-semibold"
+                          ? isPast
+                            ? "bg-orange-50 text-orange-700 font-semibold border border-orange-200"
+                            : "bg-orange-100 text-orange-800 font-semibold"
                           : ""
                     }`}
                   >
@@ -226,8 +272,15 @@ export default function AdminCaptainAvailability({
             />
           </div>
 
-          {loadingMonth && (
+          {(loadingMonth || loadingOverview) && (
             <p className="text-xs text-gray-400 mt-2">Loading calendar...</p>
+          )}
+
+          {overviewError && (
+            <p className="text-xs text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2 mt-2">
+              Could not load captain schedule calendar. Redeploy the API with the
+              latest availability endpoints.
+            </p>
           )}
         </div>
 
@@ -251,18 +304,31 @@ export default function AdminCaptainAvailability({
             </p>
           )}
 
-          {loadingTimes ? (
+          {isPastDate && scheduledTimes.length > 0 && (
+            <p className="text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-3">
+              Past date — times are shown for reference. Blocking is only for
+              today and future dates.
+            </p>
+          )}
+
+          {timesError ? (
+            <p className="text-xs text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+              Could not load times for this date. Check API is running and
+              redeployed.
+            </p>
+          ) : loadingTimes ? (
             <p className="text-xs text-gray-500">Loading times...</p>
           ) : scheduledTimes.length === 0 ? (
             <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
-              No trip schedules on this date. Pick an orange date on the
-              calendar or the captain must add times first.
+              {allScheduleDays.length === 0
+                ? "This captain has no trip calendar yet. They must add dates and times when listing or editing their trip."
+                : "No trip schedules on this date. Click an orange date on the calendar."}
             </p>
           ) : (
             <div className="flex flex-wrap gap-2 flex-1 content-start">
               {scheduledTimes.map((slot) => {
                 const isSelected = selectedSlotIds.has(slot.scheduleId);
-                const isDisabled = !slot.available;
+                const isDisabled = isPastDate || !slot.available;
 
                 return (
                   <button
@@ -313,7 +379,9 @@ export default function AdminCaptainAvailability({
             <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
-                disabled={isLoading || selectedSlotIds.size === 0}
+                disabled={
+                  isPastDate || isLoading || selectedSlotIds.size === 0
+                }
                 onClick={handleBlockSelectedSlots}
                 className="py-2 px-5 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg"
               >
@@ -324,10 +392,15 @@ export default function AdminCaptainAvailability({
                     : "Block Selected Times"}
               </button>
 
-              <label className="flex items-center gap-2 text-sm cursor-pointer">
+              <label
+                className={`flex items-center gap-2 text-sm ${
+                  isPastDate ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
+              >
                 <input
                   type="checkbox"
                   checked={blockFullDay}
+                  disabled={isPastDate}
                   onChange={(e) => {
                     setBlockFullDay(e.target.checked);
                     if (e.target.checked) setSelectedSlotIds(new Set());
@@ -337,7 +410,7 @@ export default function AdminCaptainAvailability({
                 Block entire day
               </label>
 
-              {blockFullDay && (
+              {blockFullDay && !isPastDate && (
                 <button
                   type="button"
                   disabled={isLoading}
