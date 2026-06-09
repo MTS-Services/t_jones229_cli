@@ -16,6 +16,7 @@ export interface TripScheduleSlot {
 }
 
 export interface TripFormItem {
+  id?: string;
   tripName: string;
   tripsdescription: string;
   tripsduration?: string | number;

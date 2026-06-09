@@ -95,6 +95,7 @@ export const buildFinalData = (
       listingTypeDescription: get("listingTypeDescription") || "",
     },
     trips: (get("trips") || []).map((trip: TripFormItem) => ({
+      ...(trip.id ? { id: trip.id } : {}),
       tripName: trip.tripName || "",
       description: trip.tripsdescription || "",
       duration: 0,

@@ -189,6 +189,7 @@ export default function MultiStepFormStep() {
             listingTypeDescription: getValue("listingTypeDescription") || "",
           },
           trips: (getValue("trips") || []).map((trip: any) => ({
+            ...(trip.id ? { id: trip.id } : {}),
             tripName: trip.tripName || "",
             description: trip.tripsdescription || "",
             duration: 0,
