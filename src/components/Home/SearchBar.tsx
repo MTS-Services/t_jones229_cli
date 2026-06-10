@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { IoIosSearch } from "react-icons/io";
+import { SearchButtonSpinner } from "@/components/ui/Loader";
+import { markCharterSearchPending } from "@/lib/searchLoading";
 import { GoPlusCircle } from "react-icons/go";
 import { CiCircleMinus } from "react-icons/ci";
 import {
@@ -91,7 +93,7 @@ function writeSearchData(state: SearchState): void {
     location: state.location,
     date: formattedDate,
     startDate: formattedDate,
-    bookingType: String(state.selected?.value),
+    bookingType: state.selected ? String(state.selected.value) : "",
     guests: state.guests.toString(),
     timestamp: new Date().toISOString(),
   };
@@ -103,13 +105,22 @@ function buildSearchUrl(state: SearchState): string {
     ? state.selectedDate.format("YYYY-MM-DD")
     : "";
   const params = new URLSearchParams();
-  if (state.location) params.set("location", state.location);
+  if (state.location.trim()) params.set("location", state.location.trim());
   if (formattedDate) params.set("date", formattedDate);
   if (state.guests > 0) params.set("guests", state.guests.toString());
   if (state.selected) params.set("bookingType", String(state.selected.value));
   const base =
     state.selected?.value === true ? "/group-charter" : "/search-charter";
   return params.toString() ? `${base}?${params}` : base;
+}
+
+function hasSearchCriteria(state: SearchState): boolean {
+  return !!(
+    state.location.trim() ||
+    state.selectedDate ||
+    state.guests > 0 ||
+    state.selected
+  );
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -482,23 +493,35 @@ function MobileSearchFooter({
   location,
   selectedDate,
   selected,
+  guests,
+  isSearching,
   onSearch,
 }: {
   location: string;
   selectedDate: Dayjs | null;
   selected: BookingType | null;
+  guests: number;
+  isSearching: boolean;
   onSearch: () => void;
 }) {
-  const isReady = !!location && !!selectedDate && !!selected;
+  const isReady = hasSearchCriteria({ location, selectedDate, guests, selected });
   return (
     <div className="p-4 bg-white/95 backdrop-blur-sm border-t border-gray-100/50">
       <button
         onClick={onSearch}
-        disabled={!isReady}
+        disabled={!isReady || isSearching}
         className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] transition-all duration-200"
       >
-        <IoIosSearch className="text-xl" />
-        {isReady ? "Search Fishing Trips" : "Complete Fields to Search"}
+        {isSearching ? (
+          <SearchButtonSpinner className="h-5 w-5" />
+        ) : (
+          <IoIosSearch className="text-xl" />
+        )}
+        {isSearching
+          ? "Searching..."
+          : isReady
+            ? "Search Fishing Trips"
+            : "Add at least one filter to search"}
       </button>
       {!isReady && (
         <div className="flex items-center justify-center mt-3 space-x-4">
@@ -702,6 +725,7 @@ export default function SearchBar({ scrolled, onActiveChange }: Props) {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -742,8 +766,10 @@ export default function SearchBar({ scrolled, onActiveChange }: Props) {
   }, [isMobileModalOpen]);
 
   const handleSearch = () => {
-    if (!selectedDate) return;
     const state: SearchState = { location, selectedDate, guests, selected };
+    if (!hasSearchCriteria(state) || isSearching) return;
+    setIsSearching(true);
+    markCharterSearchPending();
     writeSearchData(state);
     setIsMobileModalOpen(false);
     router.push(buildSearchUrl(state));
@@ -847,6 +873,8 @@ export default function SearchBar({ scrolled, onActiveChange }: Props) {
                   location={location}
                   selectedDate={selectedDate}
                   selected={selected}
+                  guests={guests}
+                  isSearching={isSearching}
                   onSearch={handleSearch}
                 />
               </motion.div>
@@ -1030,15 +1058,29 @@ export default function SearchBar({ scrolled, onActiveChange }: Props) {
             <div className="p-1.5">
               <button
                 onClick={handleSearch}
-                disabled={!selectedDate}
-                title={!selectedDate ? "Select a date first" : "Search"}
+                disabled={
+                  isSearching ||
+                  !hasSearchCriteria({
+                    location,
+                    selectedDate,
+                    guests,
+                    selected,
+                  })
+                }
+                title="Search"
                 className={`flex items-center justify-center bg-[#105d9e] hover:bg-[#0c4a7e] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-full transition-all duration-500 ease-in-out shadow-md hover:shadow-xl active:scale-90 ${
                   isExpanded ? "w-24 h-12 lg:w-28 lg:h-14" : "w-10 h-10"
                 }`}
               >
-                <IoIosSearch
-                  className={`transition-all duration-500 ease-in-out ${isExpanded ? "text-2xl w-6 h-6" : "text-lg"}`}
-                />
+                {isSearching ? (
+                  <SearchButtonSpinner
+                    className={isExpanded ? "h-6 w-6" : "h-4 w-4"}
+                  />
+                ) : (
+                  <IoIosSearch
+                    className={`transition-all duration-500 ease-in-out ${isExpanded ? "text-2xl w-6 h-6" : "text-lg"}`}
+                  />
+                )}
               </button>
             </div>
           </div>

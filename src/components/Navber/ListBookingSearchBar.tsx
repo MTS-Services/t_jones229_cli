@@ -2,9 +2,11 @@
 
 import { Calendar } from "antd";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
+import { SearchButtonSpinner } from "@/components/ui/Loader";
+import { markCharterSearchPending } from "@/lib/searchLoading";
 import { GoPlusCircle } from "react-icons/go";
 import { CiCircleMinus } from "react-icons/ci";
 import { useGetBoatListByLocationQuery } from "@/redux/api/boatApi";
@@ -234,9 +236,11 @@ export default function ListBookingSearchBar({ onActiveChange }: Props) {
   const [guests, setGuests] = useState(0);
   const [location, setLocation] = useState("");
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { data } = useGetBoatListByLocationQuery({});
   const destinations: { city: string }[] = data?.data || [];
@@ -256,6 +260,10 @@ export default function ListBookingSearchBar({ onActiveChange }: Props) {
       if (match) setSelected(match);
     }
   }, []);
+
+  useEffect(() => {
+    setIsSearching(false);
+  }, [searchParams]);
 
   // Notify parent when a dropdown opens / closes
   useEffect(() => {
@@ -277,13 +285,16 @@ export default function ListBookingSearchBar({ onActiveChange }: Props) {
   }, []);
 
   const handleSearch = () => {
+    if (isSearching) return;
     const formattedDate = selectedDate ? selectedDate.format("YYYY-MM-DD") : "";
 
+    setIsSearching(true);
+    markCharterSearchPending();
     writeSearchData({
       location,
       date: formattedDate,
       startDate: formattedDate,
-      bookingType: String(selected?.value),
+      bookingType: selected ? String(selected.value) : "",
       guests: guests.toString(),
       timestamp: new Date().toISOString(),
     });
@@ -405,9 +416,14 @@ export default function ListBookingSearchBar({ onActiveChange }: Props) {
           <div className="p-1">
             <button
               onClick={handleSearch}
-              className="bg-[#105d9e] text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg"
+              disabled={isSearching}
+              className="bg-[#105d9e] text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              <IoIosSearch className="text-lg" />
+              {isSearching ? (
+                <SearchButtonSpinner className="h-4 w-4" />
+              ) : (
+                <IoIosSearch className="text-lg" />
+              )}
             </button>
           </div>
         </div>

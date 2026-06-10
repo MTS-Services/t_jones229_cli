@@ -11,7 +11,7 @@ export default function Recommended({
   isLoading,
 }: RecommendedProps) {
   if (isLoading) {
-    return <Loader />;
+    return <Loader compact message="Loading charters..." />;
   }
   return (
     <div>

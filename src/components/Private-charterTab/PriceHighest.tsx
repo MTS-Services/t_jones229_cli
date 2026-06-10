@@ -14,7 +14,7 @@ export default function PriceHighest({
   isLoading,
 }: PriceHighestProps) {
   if (isLoading) {
-    return <Loader />;
+    return <Loader compact message="Loading charters..." />;
   }
   return (
     <div>
