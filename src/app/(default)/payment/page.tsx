@@ -247,7 +247,7 @@ export default function Page() {
 
       if (!boatID || !selectedTripId) {
         toast.error(
-          "Please select a date and time slot before continuing.",
+          "Please select a date and available time slot before continuing.",
         );
         setIsProcessingPayment(false);
         return;
@@ -370,6 +370,7 @@ export default function Page() {
       const bookingInfo: any = {
         boatId: boatID,
         tripId: filterTrip?.id,
+        scheduleId: selectedScheduleId || undefined,
         tripDate: tripDate,
         amount: selectedPayment,
         bookingType: !isGroupBooking, // true = PRIVATE, false = GROUP

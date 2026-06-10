@@ -61,6 +61,7 @@ export default function PaymentCard({
   const [dateError, setDateError] = useState<string | null>(null);
   const [slotError, setSlotError] = useState<string | null>(null);
   const [guestError, setGuestError] = useState<string | null>(null);
+  const [explicitSlotKey, setExplicitSlotKey] = useState<string>("");
 
   const { data: timeSlots = [], isFetching: loadingSlots } =
     useGetTimeSlotsQuery(
@@ -147,6 +148,7 @@ export default function PaymentCard({
       if (setTripDateProp) setTripDateProp(null);
       onTripSelect?.(null);
       onScheduleSelect?.(null);
+      setExplicitSlotKey("");
       setSlotError(null);
       return;
     }
@@ -157,12 +159,8 @@ export default function PaymentCard({
     if (setTripDateProp) setTripDateProp(val);
     onTripSelect?.(null);
     onScheduleSelect?.(null);
+    setExplicitSlotKey("");
     if (typeof window !== "undefined") localStorage.setItem("date", val);
-  };
-
-  const formatSlotLabel = (slot: BoatTimeSlot) => {
-    const status = slot.available ? "" : ` (${slot.reason ?? "Unavailable"})`;
-    return `${slot.departureTime} – ${slot.endTime} · ${slot.tripName} · ${slot.duration}h · $${slot.price}${status}`;
   };
 
   const slotKey = (slot: BoatTimeSlot) => slot.scheduleId || slot.tripId;
@@ -175,51 +173,44 @@ export default function PaymentCard({
       return;
     }
     setSlotError(null);
+    setExplicitSlotKey(key);
     onTripSelect?.(slot.tripId);
     onScheduleSelect?.(slot.scheduleId || null);
   };
 
-  const selectedSlotKey =
-    selectedScheduleId ||
-    (selectedTripId
-      ? timeSlots.find((s) => s.tripId === selectedTripId && !s.scheduleId)
-          ?.tripId
-      : null) ||
-    "";
+  const selectedSlot = timeSlots.find((s) => slotKey(s) === explicitSlotKey);
+  const hasValidTimeSelection = !!selectedSlot?.available;
 
-  // Auto-select first available slot when date changes
+  // Warn when slots exist but user has not picked one; clear stale unavailable picks
   useEffect(() => {
-    if (!timeSlots.length || loadingSlots) return;
+    if (!tripDate || loadingSlots) return;
 
-    const currentStillValid = timeSlots.find(
-      (s) =>
-        s.available &&
-        (selectedScheduleId
-          ? s.scheduleId === selectedScheduleId
-          : s.tripId === selectedTripId && !s.scheduleId),
-    );
-    if (currentStillValid) return;
+    if (timeSlots.length === 0) {
+      setSlotError("No time slots available on this date. Please choose another date.");
+      return;
+    }
 
-    const preferred = selectedScheduleId
-      ? timeSlots.find(
-          (s) => s.scheduleId === selectedScheduleId && s.available,
-        )
-      : selectedTripId
-        ? timeSlots.find((s) => s.tripId === selectedTripId && s.available)
-        : null;
-    const firstAvailable =
-      preferred ?? timeSlots.find((s) => s.available) ?? null;
-
-    if (firstAvailable) {
-      onTripSelect?.(firstAvailable.tripId);
-      onScheduleSelect?.(firstAvailable.scheduleId || null);
-      setSlotError(null);
-    } else {
+    if (explicitSlotKey && selectedSlot && !selectedSlot.available) {
+      setSlotError(selectedSlot.reason || "This time slot is no longer available.");
       onTripSelect?.(null);
       onScheduleSelect?.(null);
-      setSlotError("No time slots available on this date. Please choose another date.");
+      setExplicitSlotKey("");
+      return;
     }
-  }, [timeSlots, loadingSlots]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    if (explicitSlotKey && selectedSlot?.available) {
+      setSlotError(null);
+    }
+  }, [timeSlots, loadingSlots, explicitSlotKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const canContinue =
+    !!tripDate &&
+    hasValidTimeSelection &&
+    !!numberOfGuests &&
+    numberOfGuests !== "0" &&
+    !!bookingType &&
+    !dateError &&
+    !guestError;
 
   const handleGuestsChange = (val: string) => {
     const num = parseInt(val, 10);
@@ -374,6 +365,9 @@ export default function PaymentCard({
                 else {
                   setTripDateLocal(null);
                   if (setTripDateProp) setTripDateProp(null);
+                  setExplicitSlotKey("");
+                  onTripSelect?.(null);
+                  onScheduleSelect?.(null);
                 }
               }}
               format="MM/DD/YYYY"
@@ -399,7 +393,7 @@ export default function PaymentCard({
             )}
           </div>
 
-          {/* Time slot — captain-created trip times */}
+          {/* Time slot — captain available times on selected date */}
           {tripDate && (
             <div>
               <label className="font-bold block mb-1">Time slot:</label>
@@ -410,41 +404,55 @@ export default function PaymentCard({
                   No trips run on this day. Pick another date.
                 </p>
               ) : (
-                <select
-                  value={selectedSlotKey}
-                  onChange={(e) => handleSlotChange(e.target.value)}
-                  className={`w-full border rounded px-2 py-1.5 text-sm focus:outline-none focus:border-blue-500 bg-white ${
-                    !selectedSlotKey || slotError
-                      ? "border-red-400"
-                      : "border-gray-300"
-                  }`}
-                >
-                  <option value="" disabled>
-                    Select a time slot
-                  </option>
-                  {timeSlots.map((slot) => (
-                    <option
-                      key={slotKey(slot)}
-                      value={slotKey(slot)}
-                      disabled={!slot.available}
-                    >
-                      {formatSlotLabel(slot)}
-                    </option>
-                  ))}
-                </select>
+                <div className="space-y-2">
+                  <div className="flex flex-wrap gap-2">
+                    {timeSlots.map((slot) => {
+                      const key = slotKey(slot);
+                      const isSelected = explicitSlotKey === key;
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          disabled={!slot.available}
+                          onClick={() => handleSlotChange(key)}
+                          className={`px-3 py-1.5 rounded text-xs border transition-colors ${
+                            isSelected
+                              ? "bg-yellow-400 border-yellow-500 text-black font-medium"
+                              : slot.available
+                                ? "bg-white border-gray-300 hover:border-yellow-400"
+                                : "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed line-through"
+                          }`}
+                          title={
+                            slot.available
+                              ? `${slot.tripName} · ${slot.duration}h · $${slot.price}`
+                              : slot.reason || "Unavailable"
+                          }
+                        >
+                          {slot.departureTime} – {slot.endTime}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedSlot && (
+                    <p className="text-sm text-gray-700">
+                      {selectedSlot.tripName} · {selectedSlot.duration}h · $
+                      {selectedSlot.price}
+                    </p>
+                  )}
+                </div>
               )}
               {availableSlots.length > 0 && (
                 <p className="text-gray-500 text-xs mt-1">
                   {availableSlots.length} slot
-                  {availableSlots.length === 1 ? "" : "s"} available
+                  {availableSlots.length === 1 ? "" : "s"} available — select one to continue
                 </p>
               )}
               {slotError && (
                 <p className="text-red-500 text-xs mt-1">{slotError}</p>
               )}
-              {!selectedSlotKey && !slotError && timeSlots.length > 0 && !loadingSlots && (
+              {!hasValidTimeSelection && !slotError && timeSlots.length > 0 && !loadingSlots && (
                 <p className="text-red-500 text-xs mt-1">
-                  Please select a time slot.
+                  Please select an available time slot.
                 </p>
               )}
             </div>
@@ -604,7 +612,7 @@ export default function PaymentCard({
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !canContinue}
               className={`w-full text-black font-medium py-3 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
             >
               {isLoading ? "Processing..." : "Continue"}
