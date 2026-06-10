@@ -28,6 +28,7 @@ import { clearImageUrl } from "@/redux/slices/uploadImageSlice";
 import { useGetMeQuery } from "@/redux/api/authApi";
 import Cookies from "js-cookie";
 import { setUser } from "@/redux/slices/authSlice";
+import { schedulesHaveOverlaps } from "@/components/availability/tripScheduleUtils";
 import { useUpdateProfileMutation } from "@/redux/api/userDashboardApi/updateProfile";
 
 export default function MultiStepFormStep() {
@@ -216,6 +217,16 @@ export default function MultiStepFormStep() {
             },
           }),
         };
+
+        const tripsPayload = getValue("trips") || [];
+        for (let i = 0; i < tripsPayload.length; i++) {
+          if (schedulesHaveOverlaps(tripsPayload[i]?.schedules || [])) {
+            toast.error(
+              `Trip ${i + 1} has overlapping time slots on the same day. Please fix them before saving.`,
+            );
+            return;
+          }
+        }
 
         try {
           const res = boatId

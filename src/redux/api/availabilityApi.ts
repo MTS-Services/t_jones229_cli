@@ -61,12 +61,16 @@ const availabilityApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getCaptainScheduledTimes: build.query<
       CaptainScheduledTime[],
-      { captainId: string; date: string }
+      { captainId?: string; date: string }
     >({
-      query: ({ captainId, date }) => ({
-        url: `/availability/captain-times?captainId=${captainId}&date=${date}`,
-        method: "GET",
-      }),
+      query: ({ captainId, date }) => {
+        const params = new URLSearchParams({ date });
+        if (captainId) params.set("captainId", captainId);
+        return {
+          url: `/availability/captain-times?${params.toString()}`,
+          method: "GET",
+        };
+      },
       transformResponse: (response: { data: CaptainScheduledTime[] }) =>
         response.data,
       providesTags: ["availability"],
@@ -74,12 +78,19 @@ const availabilityApi = baseApi.injectEndpoints({
 
     getCaptainScheduleMonth: build.query<
       CaptainScheduleDaySummary[],
-      { captainId: string; month: number; year: number }
+      { captainId?: string; month: number; year: number }
     >({
-      query: ({ captainId, month, year }) => ({
-        url: `/availability/captain-schedule-month?captainId=${captainId}&month=${month}&year=${year}`,
-        method: "GET",
-      }),
+      query: ({ captainId, month, year }) => {
+        const params = new URLSearchParams({
+          month: String(month),
+          year: String(year),
+        });
+        if (captainId) params.set("captainId", captainId);
+        return {
+          url: `/availability/captain-schedule-month?${params.toString()}`,
+          method: "GET",
+        };
+      },
       transformResponse: (response: { data: CaptainScheduleDaySummary[] }) =>
         response.data,
       providesTags: ["availability"],

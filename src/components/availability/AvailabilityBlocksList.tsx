@@ -10,6 +10,8 @@ import {
 interface AvailabilityBlocksListProps {
   blocks: AvailabilityBlock[];
   onDeleted?: () => void;
+  /** When false, captains cannot delete admin-created blocks */
+  allowDeleteAdminBlocks?: boolean;
 }
 
 /** Format stored block/booking instants as wall-clock HH:mm (matches trip schedule strings on UTC server) */
@@ -49,6 +51,7 @@ function getBlockLabel(block: AvailabilityBlock): string {
 export default function AvailabilityBlocksList({
   blocks,
   onDeleted,
+  allowDeleteAdminBlocks = true,
 }: AvailabilityBlocksListProps) {
   const [deleteBlock, { isLoading }] = useDeleteAvailabilityBlockMutation();
 
@@ -71,7 +74,11 @@ export default function AvailabilityBlocksList({
         Blocked Periods ({blocks.length})
       </h3>
       <div className="space-y-2">
-        {blocks.map((block) => (
+        {blocks.map((block) => {
+          const isAdminBlock = block.blockType === "MANUAL_ADMIN";
+          const canDelete = allowDeleteAdminBlocks || !isAdminBlock;
+
+          return (
           <div
             key={block.id}
             className="flex items-center justify-between bg-red-50 border border-red-100 rounded-lg px-3 py-2"
@@ -83,20 +90,29 @@ export default function AvailabilityBlocksList({
               {block.reason && (
                 <p className="text-xs text-gray-500 mt-0.5">{block.reason}</p>
               )}
-              {block.blockType === "MANUAL_ADMIN" && (
-                <p className="text-xs text-orange-600 mt-0.5">Blocked by admin</p>
+              {isAdminBlock && (
+                <p className="text-xs text-orange-600 mt-0.5">
+                  Blocked by admin — cannot be removed
+                </p>
               )}
             </div>
-            <button
-              onClick={() => handleDelete(block.id)}
-              disabled={isLoading}
-              className="p-1.5 text-red-600 hover:bg-red-100 rounded transition-colors"
-              title="Remove block"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
+            {canDelete ? (
+              <button
+                onClick={() => handleDelete(block.id)}
+                disabled={isLoading}
+                className="p-1.5 text-red-600 hover:bg-red-100 rounded transition-colors"
+                title="Remove block"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            ) : (
+              <span className="rounded-md bg-orange-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-orange-700">
+                Admin
+              </span>
+            )}
           </div>
-        ))}
+        );
+        })}
       </div>
     </div>
   );

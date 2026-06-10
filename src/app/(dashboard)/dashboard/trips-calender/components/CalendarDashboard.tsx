@@ -13,6 +13,7 @@ import { useEffect, useState, useMemo } from "react";
 import { CalendarData } from "../types/types";
 import { CalendarSidebar } from "./CalendarSidebar";
 import DateBookingsModal from "./DateBookingsModal";
+import { useGetCaptainScheduleMonthQuery } from "@/redux/api/availabilityApi";
 import {
   MONTHS,
   WEEK_DAYS,
@@ -27,12 +28,14 @@ interface CalendarDashboardProps {
   data: CalendarData | undefined;
   calenderHandler: (params: { month: number; year: number }) => void;
   onMonthChange?: (month: number, year: number) => void;
+  captainId?: string;
 }
 
 export function CalendarDashboard({
   data,
   calenderHandler,
   onMonthChange,
+  captainId,
 }: CalendarDashboardProps) {
   const today = useMemo(() => new Date(), []);
 
@@ -49,6 +52,20 @@ export function CalendarDashboard({
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const { data: scheduleMonth = [] } = useGetCaptainScheduleMonthQuery(
+    {
+      captainId,
+      month: currentMonth + 1,
+      year: currentYear,
+    },
+    { skip: !captainId },
+  );
+
+  const scheduleByDate = useMemo(
+    () => new Map(scheduleMonth.map((d) => [d.date, d])),
+    [scheduleMonth],
+  );
 
   useEffect(() => {
     if (data?.filter) {
@@ -102,6 +119,8 @@ export function CalendarDashboard({
       const isSelected = selectedDate === dateStr;
       const hasBookings = bookings.length > 0;
       const hasBlocks = blocks.length > 0;
+      const tripSchedule = scheduleByDate.get(dateStr);
+      const hasTripTimes = !!tripSchedule && tripSchedule.totalSlots > 0;
 
       days.push(
         <div
@@ -122,14 +141,20 @@ export function CalendarDashboard({
             <div className="flex items-center space-x-0.5 md:space-x-1">
               {hasBookings && (
                 <>
-                  <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
+                  <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" title="Bookings" />
                   <span className="hidden md:inline text-[10px] text-gray-500">
                     {bookings.length}
                   </span>
                 </>
               )}
-              {hasBlocks && (
+              {!hasBookings && hasBlocks && (
                 <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-red-500 rounded-full" title="Blocked" />
+              )}
+              {!hasBookings && !hasBlocks && hasTripTimes && (
+                <div
+                  className="w-1 h-1 md:w-1.5 md:h-1.5 bg-orange-500 rounded-full"
+                  title="Trip times scheduled"
+                />
               )}
             </div>
           </div>
@@ -257,6 +282,20 @@ export function CalendarDashboard({
 
               {/* Month select + Today */}
               <div className="flex bg-white items-center space-x-2">
+                <div className="hidden sm:flex items-center gap-3 mr-2 text-[11px] text-gray-500">
+                  <span className="inline-flex items-center gap-1">
+                    <span className="h-2 w-2 rounded-full bg-orange-500" />
+                    Trip times
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="h-2 w-2 rounded-full bg-red-500" />
+                    Blocked
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="h-2 w-2 rounded-full bg-blue-500" />
+                    Bookings
+                  </span>
+                </div>
                 <Select
                   value={MONTHS[currentMonth]}
                   onValueChange={handleMonthSelect}

@@ -10,6 +10,65 @@ export interface GroupedScheduleDay {
   slots: { startTime: string; endTime: string }[];
 }
 
+export interface ScheduleSlot {
+  startTime: string;
+  endTime: string;
+}
+
+export function parseTimeToMinutes(time: string): number {
+  const [h, m] = time.split(":").map(Number);
+  return h * 60 + (m || 0);
+}
+
+/** True when two slots share any time (touching endpoints like 11:00–12:00 are allowed). */
+export function timeSlotsOverlap(
+  start1: string,
+  end1: string,
+  start2: string,
+  end2: string,
+): boolean {
+  const a1 = parseTimeToMinutes(start1);
+  const a2 = parseTimeToMinutes(end1);
+  const b1 = parseTimeToMinutes(start2);
+  const b2 = parseTimeToMinutes(end2);
+  if (a1 >= a2 || b1 >= b2) return false;
+  return a1 < b2 && b1 < a2;
+}
+
+/** Slot indices on a day that participate in at least one overlap. */
+export function getOverlappingSlotIndices(slots: ScheduleSlot[]): Set<number> {
+  const overlapping = new Set<number>();
+  for (let i = 0; i < slots.length; i++) {
+    for (let j = i + 1; j < slots.length; j++) {
+      const a = slots[i];
+      const b = slots[j];
+      if (timeSlotsOverlap(a.startTime, a.endTime, b.startTime, b.endTime)) {
+        overlapping.add(i);
+        overlapping.add(j);
+      }
+    }
+  }
+  return overlapping;
+}
+
+export function dayHasOverlappingSlots(slots: ScheduleSlot[]): boolean {
+  return getOverlappingSlotIndices(slots).size > 0;
+}
+
+export function schedulesHaveOverlaps(
+  schedules: GroupedScheduleDay[],
+): boolean {
+  return schedules.some((day) => dayHasOverlappingSlots(day.slots));
+}
+
+export function formatOverlapMessage(date: string, slots: ScheduleSlot[]): string {
+  const indices = getOverlappingSlotIndices(slots);
+  const labels = [...indices]
+    .sort((a, b) => a - b)
+    .map((i) => `${slots[i].startTime}–${slots[i].endTime}`);
+  return `Overlapping times on ${date}: ${labels.join(", ")}`;
+}
+
 /** Normalize API scheduleDate to YYYY-MM-DD (matches captain picker date) */
 export function toScheduleDateKey(scheduleDate: string | Date): string {
   const iso =

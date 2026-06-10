@@ -23,6 +23,7 @@ import MeetingPointMap from "@/components/List-boat-form/MeetingPointMap";
 import Discription from "@/components/List-boat-form/Discription";
 import Trips from "@/components/List-boat-form/Trips";
 import Terms from "@/components/List-boat-form/Terms";
+import { schedulesHaveOverlaps } from "@/components/availability/tripScheduleUtils";
 
 // API & State
 import {
@@ -270,6 +271,16 @@ export default function MultiStepFormContent() {
           },
         }),
       };
+
+      const tripsPayload = getValue("trips") || [];
+      for (let i = 0; i < tripsPayload.length; i++) {
+        if (schedulesHaveOverlaps(tripsPayload[i]?.schedules || [])) {
+          toast.error(
+            `Trip ${i + 1} has overlapping time slots on the same day. Please fix them before saving.`,
+          );
+          return;
+        }
+      }
 
       const res = boatId
         ? await updateBoat({ boatInfo: finalData, id: boatId })

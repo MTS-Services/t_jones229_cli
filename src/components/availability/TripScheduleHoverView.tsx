@@ -8,6 +8,8 @@ import {
   groupSchedulesByDate,
   GroupedScheduleDay,
   TripScheduleRecord,
+  getOverlappingSlotIndices,
+  dayHasOverlappingSlots,
 } from "./tripScheduleUtils";
 
 interface TripScheduleHoverViewProps {
@@ -209,19 +211,34 @@ export default function TripScheduleHoverView({
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {day.slots.map((slot, index) => {
                     const hours = slotHours(slot.startTime, slot.endTime);
+                    const overlapping = getOverlappingSlotIndices(day.slots);
+                    const isOverlapping = overlapping.has(index);
+
                     return (
                       <div
                         key={`${day.date}-${index}`}
-                        className="flex items-center gap-2.5 rounded-lg border border-orange-100 bg-orange-50/60 px-3 py-2.5"
+                        className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 ${
+                          isOverlapping
+                            ? "border-red-300 bg-red-50"
+                            : "border-orange-100 bg-orange-50/60"
+                        }`}
                       >
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
-                          <Clock className="h-4 w-4 text-orange-500" />
+                          <Clock
+                            className={`h-4 w-4 ${
+                              isOverlapping ? "text-red-500" : "text-orange-500"
+                            }`}
+                          />
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-bold text-gray-900">
                             {slot.startTime} – {slot.endTime}
                           </p>
-                          {hours ? (
+                          {isOverlapping ? (
+                            <p className="text-[11px] font-medium text-red-600">
+                              Overlaps another slot
+                            </p>
+                          ) : hours ? (
                             <p className="text-[11px] text-gray-500">
                               {hours} trip
                             </p>
@@ -231,6 +248,12 @@ export default function TripScheduleHoverView({
                     );
                   })}
                 </div>
+                {dayHasOverlappingSlots(day.slots) && (
+                  <p className="mt-2 text-xs font-medium text-red-600">
+                    This day has overlapping times — edit the trip schedule to
+                    fix it.
+                  </p>
+                )}
               </article>
             ))}
           </div>
