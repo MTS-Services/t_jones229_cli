@@ -5,7 +5,9 @@ import { Calendar } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { Ban, CalendarDays } from "lucide-react";
 import { toast } from "react-toastify";
-import AvailabilityBlocksList from "./AvailabilityBlocksList";
+import AvailabilityBlocksList, {
+  formatWallClockDateKey,
+} from "./AvailabilityBlocksList";
 import {
   useCreateAdminBlockMutation,
   useGetAvailabilityBlocksQuery,
@@ -76,7 +78,13 @@ export default function AdminCaptainAvailability({
   }, [allScheduleDays, monthDays]);
 
   const availableSlots = scheduledTimes.filter((slot) => slot.available);
+  const blockedSlots = scheduledTimes.filter((slot) => slot.blocked);
   const activeDaySummary = scheduleDayMap.get(activeDate);
+  const displayTotalSlots = scheduledTimes.length || activeDaySummary?.totalSlots || 0;
+  const displayAvailableSlots =
+    scheduledTimes.length > 0
+      ? availableSlots.length
+      : activeDaySummary?.availableSlots ?? 0;
   const isPastDate = dayjs(activeDate).isBefore(today, "day");
   const upcomingScheduleDays = useMemo(
     () => allScheduleDays.filter((d) => d.date >= todayStr && d.totalSlots > 0),
@@ -204,8 +212,9 @@ export default function AdminCaptainAvailability({
   };
 
   const blocksForActiveDate = blocks.filter((b) => {
-    const blockDate = new Date(b.startDateTime).toISOString().split("T")[0];
-    return blockDate === activeDate;
+    const startKey = formatWallClockDateKey(b.startDateTime);
+    const endKey = formatWallClockDateKey(b.endDateTime);
+    return activeDate >= startKey && activeDate <= endKey;
   });
 
   const formattedDate = dayjs(activeDate).format("ddd, MMM D, YYYY");
@@ -258,6 +267,8 @@ export default function AdminCaptainAvailability({
                 const isSelected = key === activeDate;
                 const hasSlots = !!summary && summary.totalSlots > 0;
                 const isPast = date.isBefore(today, "day");
+                const allBlocked =
+                  hasSlots && summary.availableSlots === 0;
 
                 return (
                   <div
@@ -267,7 +278,9 @@ export default function AdminCaptainAvailability({
                         : hasSlots
                           ? isPast
                             ? "bg-orange-50 text-orange-700 font-semibold border border-orange-200"
-                            : "bg-orange-100 text-orange-800 font-semibold"
+                            : allBlocked
+                              ? "bg-red-50 text-red-700 font-semibold border border-red-200"
+                              : "bg-orange-100 text-orange-800 font-semibold"
                           : ""
                     }`}
                   >
@@ -275,10 +288,14 @@ export default function AdminCaptainAvailability({
                     {hasSlots && (
                       <div
                         className={`text-[9px] leading-tight ${
-                          isSelected ? "text-blue-100" : "text-orange-600"
+                          isSelected
+                            ? "text-blue-100"
+                            : allBlocked
+                              ? "text-red-600"
+                              : "text-orange-600"
                         }`}
                       >
-                        {summary.availableSlots}/{summary.totalSlots} free
+                        {summary.availableSlots}/{summary.totalSlots} avail
                       </div>
                     )}
                   </div>
@@ -312,10 +329,24 @@ export default function AdminCaptainAvailability({
             )}
           </div>
 
-          {activeDaySummary && (
+          {(activeDaySummary || scheduledTimes.length > 0) && (
             <p className="text-xs text-gray-600 mb-3">
-              {activeDaySummary.availableSlots} of {activeDaySummary.totalSlots}{" "}
-              slot{activeDaySummary.totalSlots !== 1 ? "s" : ""} still available
+              {displayAvailableSlots} of {displayTotalSlots} slot
+              {displayTotalSlots !== 1 ? "s" : ""} available
+              {blockedSlots.length > 0 && (
+                <span className="text-red-600">
+                  {" "}
+                  · {blockedSlots.length} blocked
+                  {blockedSlots.some((s) => s.blockedBy === "captain") &&
+                  blockedSlots.some((s) => s.blockedBy === "admin")
+                    ? " (captain & admin)"
+                    : blockedSlots[0]?.blockedBy === "captain"
+                      ? " by captain"
+                      : blockedSlots[0]?.blockedBy === "admin"
+                        ? " by admin"
+                        : ""}
+                </span>
+              )}
             </p>
           )}
 
@@ -344,6 +375,15 @@ export default function AdminCaptainAvailability({
               {scheduledTimes.map((slot) => {
                 const isSelected = selectedSlotIds.has(slot.scheduleId);
                 const isDisabled = isPastDate || !slot.available;
+                const blockLabel = slot.booked
+                  ? "Booked"
+                  : slot.blockedBy === "admin"
+                    ? "Blocked by admin"
+                    : slot.blockedBy === "captain"
+                      ? "Blocked by captain"
+                      : slot.blocked
+                        ? "Blocked"
+                        : null;
 
                 return (
                   <button
@@ -353,7 +393,9 @@ export default function AdminCaptainAvailability({
                     onClick={() => !isDisabled && toggleSlot(slot.scheduleId)}
                     className={`rounded-lg border px-3 py-2 text-left text-sm transition-all min-w-[150px] ${
                       isDisabled
-                        ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                        ? slot.blocked
+                          ? "border-red-200 bg-red-50 text-red-400 cursor-not-allowed"
+                          : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
                         : isSelected
                           ? "border-red-600 bg-red-600 text-white font-bold shadow-md ring-2 ring-red-300"
                           : "border-gray-200 bg-white text-gray-800 hover:border-red-300 hover:bg-red-50"
@@ -368,8 +410,7 @@ export default function AdminCaptainAvailability({
                       }`}
                     >
                       {slot.tripName}
-                      {slot.booked && " · Booked"}
-                      {slot.blocked && " · Blocked"}
+                      {blockLabel && ` · ${blockLabel}`}
                     </span>
                   </button>
                 );

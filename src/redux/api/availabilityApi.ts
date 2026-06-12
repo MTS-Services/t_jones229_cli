@@ -38,6 +38,7 @@ export interface CaptainScheduledTime {
   endTime: string;
   booked: boolean;
   blocked: boolean;
+  blockedBy?: "captain" | "admin";
   available: boolean;
 }
 
@@ -175,6 +176,46 @@ const availabilityApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["availability", "calendar"],
     }),
+
+    createTripScheduleSlot: build.mutation<
+      unknown,
+      {
+        tripId: string;
+        date: string;
+        startTime: string;
+        endTime: string;
+      }
+    >({
+      query: (body) => ({
+        url: "/availability/trip-schedules",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["availability", "calendar", "boat"],
+    }),
+
+    updateTripScheduleSlot: build.mutation<
+      unknown,
+      { scheduleId: string; startTime: string; endTime: string }
+    >({
+      query: ({ scheduleId, ...body }) => ({
+        url: `/availability/trip-schedules/${scheduleId}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["availability", "calendar", "boat"],
+    }),
+
+    deleteTripScheduleSlot: build.mutation<
+      unknown,
+      string
+    >({
+      query: (scheduleId) => ({
+        url: `/availability/trip-schedules/${scheduleId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["availability", "calendar", "boat"],
+    }),
   }),
 });
 
@@ -190,6 +231,9 @@ export const {
   useCreateCaptainBlockMutation,
   useCreateAdminBlockMutation,
   useDeleteAvailabilityBlockMutation,
+  useCreateTripScheduleSlotMutation,
+  useUpdateTripScheduleSlotMutation,
+  useDeleteTripScheduleSlotMutation,
 } = availabilityApi;
 
 export default availabilityApi;

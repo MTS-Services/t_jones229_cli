@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Ban, Clock, Plus, X } from "lucide-react";
+import { Ban } from "lucide-react";
 import { toast } from "react-toastify";
 import {
   useCreateCaptainBlockMutation,
@@ -79,12 +79,7 @@ export default function BlockAvailabilityForm({
   );
   const [isFullDay, setIsFullDay] = useState(false);
   const [blockReason, setBlockReason] = useState("");
-  const [startTime, setStartTime] = useState("08:00");
-  const [endTime, setEndTime] = useState("12:00");
-  const [customReason, setCustomReason] = useState("");
-  const [savingAction, setSavingAction] = useState<
-    "block" | "custom" | null
-  >(null);
+  const [savingAction, setSavingAction] = useState(false);
 
   const [createCaptainBlock, { isLoading }] = useCreateCaptainBlockMutation();
 
@@ -102,7 +97,6 @@ export default function BlockAvailabilityForm({
     setSelectedSlotKeys(new Set());
     setIsFullDay(false);
     setBlockReason("");
-    setCustomReason("");
   }, [date]);
 
   const availableSlots = scheduledTimes.filter(
@@ -146,7 +140,7 @@ export default function BlockAvailabilityForm({
     const uniqueDays = [...new Set(days.filter(Boolean))];
 
     if (isFullDay) {
-      setSavingAction("block");
+      setSavingAction(true);
       try {
         for (const day of uniqueDays) {
           await createCaptainBlock({
@@ -164,7 +158,7 @@ export default function BlockAvailabilityForm({
       } catch (err: any) {
         toast.error(err?.data?.message || "Failed to block full day");
       } finally {
-        setSavingAction(null);
+        setSavingAction(false);
       }
       return;
     }
@@ -178,7 +172,7 @@ export default function BlockAvailabilityForm({
       selectedSlotKeys.has(slotKey(s)),
     );
 
-    setSavingAction("block");
+    setSavingAction(true);
     let successCount = 0;
     try {
       for (const slot of slotsToBlock) {
@@ -207,58 +201,12 @@ export default function BlockAvailabilityForm({
         afterSave();
       }
     } finally {
-      setSavingAction(null);
-    }
-  };
-
-  const handleAddCustomTime = async () => {
-    if (isPastDate) {
-      toast.error("Cannot block past dates");
-      return;
-    }
-
-    if (startTime >= endTime) {
-      toast.error("End time must be after start time");
-      return;
-    }
-
-    const uniqueDays = lockDate ? [date] : [...new Set(days.filter(Boolean))];
-
-    setSavingAction("custom");
-    let successCount = 0;
-    try {
-      for (const day of uniqueDays) {
-        try {
-          await createCaptainBlock({
-            date: day,
-            isFullDay: false,
-            startTime,
-            endTime,
-            reason: customReason || undefined,
-          }).unwrap();
-          successCount++;
-        } catch (err: any) {
-          toast.error(
-            err?.data?.message ||
-              "Failed to block this time. It may already be blocked.",
-          );
-          break;
-        }
-      }
-      if (successCount > 0) {
-        toast.success("Custom time blocked");
-        setCustomReason("");
-        setDays([date]);
-        afterSave();
-      }
-    } finally {
-      setSavingAction(null);
+      setSavingAction(false);
     }
   };
 
   const canBlockTripTimes =
     !isPastDate && (isFullDay || selectedSlotKeys.size > 0);
-  const canSaveCustomTime = !isPastDate && startTime < endTime;
 
   return (
     <div className="mt-4 space-y-6 border-t border-gray-100 pt-4">
@@ -370,110 +318,7 @@ export default function BlockAvailabilityForm({
           <SaveButton
             onClick={handleBlockTripTimes}
             disabled={!canBlockTripTimes}
-            loading={savingAction === "block" && isLoading}
-          />
-        </div>
-      </section>
-
-      {/* ——— Add custom blocked time ——— */}
-      <section className="space-y-3 rounded-xl border border-gray-200 bg-white p-4">
-        <div>
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-            <Clock className="h-4 w-4 text-[#035292]" />
-            Add new blocked time
-          </h3>
-          <p className="mt-1 text-xs text-gray-500">
-            Block a custom time range that is not in your trip schedule.
-          </p>
-        </div>
-
-        {!lockDate && (
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-700">Dates</p>
-            {days.map((day, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <input
-                  type="date"
-                  value={day}
-                  min={today}
-                  onChange={(e) => updateDay(index, e.target.value)}
-                  className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm"
-                />
-                {days.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeDay(index)}
-                    className="rounded-lg p-2 text-gray-400 hover:text-red-600"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addAnotherDay}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
-            >
-              <Plus className="h-4 w-4" />
-              Add another day
-            </button>
-          </div>
-        )}
-
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">
-              Start time
-            </label>
-            <select
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-            >
-              {TIME_OPTIONS.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">
-              End time
-            </label>
-            <select
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-            >
-              {TIME_OPTIONS.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label className="mb-1 block text-xs text-gray-500">
-            Reason (optional)
-          </label>
-          <input
-            type="text"
-            value={customReason}
-            onChange={(e) => setCustomReason(e.target.value)}
-            placeholder="e.g. Maintenance"
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-          />
-        </div>
-
-        <div className="flex justify-end pt-1">
-          <SaveButton
-            onClick={handleAddCustomTime}
-            disabled={!canSaveCustomTime}
-            loading={savingAction === "custom" && isLoading}
+            loading={savingAction && isLoading}
           />
         </div>
       </section>

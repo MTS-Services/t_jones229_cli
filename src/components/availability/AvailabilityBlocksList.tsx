@@ -22,6 +22,15 @@ export function formatWallClockTime(iso: string | Date): string {
   return `${h}:${m}`;
 }
 
+/** Format stored block/booking instants as YYYY-MM-DD (UTC wall-clock day) */
+export function formatWallClockDateKey(iso: string | Date): string {
+  const d = typeof iso === "string" ? new Date(iso) : iso;
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 /** Format stored block/booking instants as calendar date (UTC wall-clock day) */
 export function formatWallClockDate(iso: string | Date): string {
   const d = typeof iso === "string" ? new Date(iso) : iso;
@@ -90,10 +99,13 @@ export default function AvailabilityBlocksList({
               {block.reason && (
                 <p className="text-xs text-gray-500 mt-0.5">{block.reason}</p>
               )}
-              {isAdminBlock && (
+              {isAdminBlock ? (
                 <p className="text-xs text-orange-600 mt-0.5">
-                  Blocked by admin — cannot be removed
+                  Blocked by admin
+                  {!allowDeleteAdminBlocks ? " — cannot be removed by captain" : ""}
                 </p>
+              ) : (
+                <p className="text-xs text-blue-700 mt-0.5">Blocked by captain</p>
               )}
             </div>
             {canDelete ? (
