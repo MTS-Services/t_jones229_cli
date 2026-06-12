@@ -32,7 +32,7 @@ const BookingApi = baseApi.injectEndpoints({
         url: `/booking/cancel-booking/${id}`,
         method: "PUT",
       }),
-      invalidatesTags: ["booking", "userBooking"],
+      invalidatesTags: ["booking", "userBooking", "availability", "calendar"],
     }),
     updateBookingStatus: build.mutation({
       query: ({ id, status }: { id: string; status: string }) => ({
@@ -40,7 +40,7 @@ const BookingApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: { status },
       }),
-      invalidatesTags: ["booking", "userBooking"],
+      invalidatesTags: ["booking", "userBooking", "availability", "calendar"],
     }),
 
     // POST /api/v1/users/active-stripe-account — returns Stripe Connect onboarding URL
@@ -99,7 +99,7 @@ const BookingApi = baseApi.injectEndpoints({
         method: "DELETE",
         body: { reason, actor },
       }),
-      invalidatesTags: ["booking", "userBooking"],
+      invalidatesTags: ["booking", "userBooking", "availability", "calendar"],
     }),
 
     // POST /api/v1/booking/guest-deposit — creates user account + 20% deposit in one call

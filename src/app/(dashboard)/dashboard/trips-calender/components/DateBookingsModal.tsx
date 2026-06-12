@@ -4,6 +4,7 @@ import { X, CalendarIcon } from "lucide-react";
 import { Booking, AvailabilityBlock } from "../types/types";
 import { BookingCard } from "./BookingCard";
 import BlockAvailabilityForm from "@/components/availability/BlockAvailabilityForm";
+import TripScheduleDayManager from "@/components/availability/TripScheduleDayManager";
 import AvailabilityBlocksList from "@/components/availability/AvailabilityBlocksList";
 
 interface DateBookingsModalProps {
@@ -94,6 +95,11 @@ export default function DateBookingsModal({
               </p>
             </div>
           ) : null}
+
+          <TripScheduleDayManager
+            date={selectedDate}
+            onSuccess={onRefresh}
+          />
 
           <BlockAvailabilityForm
             date={selectedDate}
