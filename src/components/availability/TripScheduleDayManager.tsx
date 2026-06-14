@@ -22,6 +22,12 @@ interface TripScheduleDayManagerProps {
   onSuccess?: () => void;
 }
 
+interface CaptainTripOption {
+  id: string;
+  tripName: string;
+  boatName: string;
+}
+
 function isRealScheduleId(id: string) {
   return id && !id.startsWith("legacy-");
 }
@@ -34,12 +40,12 @@ export default function TripScheduleDayManager({
   const isPastDate = date < today;
 
   const { data: boatsData, isLoading: loadingBoats } = useGetMyBoatQuery({});
-  const trips = useMemo(() => {
+  const trips = useMemo((): CaptainTripOption[] => {
     const boats = boatsData?.data ?? [];
-    return boats.flatMap((boat: any) =>
-      (boat.trips ?? []).map((trip: any) => ({
-        id: trip.id as string,
-        tripName: trip.tripName as string,
+    return boats.flatMap((boat: { boatName?: string; name?: string; trips?: Array<{ id: string; tripName: string }> }) =>
+      (boat.trips ?? []).map((trip) => ({
+        id: trip.id,
+        tripName: trip.tripName,
         boatName: boat.boatName ?? boat.name ?? "Boat",
       })),
     );
